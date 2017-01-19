@@ -1,0 +1,137 @@
+-optimizationpasses 5
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-verbose
+-ignorewarnings
+-keepattributes *Annotation*, Signature, SourceFile, LineNumberTable
+
+####################################################################################
+
+-dontnote java.awt.**
+-dontwarn java.awt.**
+
+-dontwarn com.badlogic.gdx.**
+-dontwarn com.badlogic.gdx.backends.**
+-dontwarn com.badlogic.gdx.backends.android.AndroidFragmentApplication
+-dontwarn com.badlogic.gdx.utils.GdxBuild
+-dontwarn com.badlogic.gdx.physics.box2d.utils.Box2DBuild
+
+-keep class com.bda.** {*;}
+
+-keep class com.badlogic.** {*;}
+-keep class com.badlogic.gdx.backends.** {*;}
+-keep class com.badlogic.gdx.backends.lwjgl.** {*;}
+-keep class com.badlogic.gdx.backends.android.** {*;}
+-keep class * implements com.badlogic.gdx.utils.Json* {*;}
+-keep class com.badlogic.gdx.scenes.scene2d.ui.utils.DesktopClipboard
+
+-keepclassmembers class com.badlogic.gdx.backends.android.AndroidInput* {
+   <init>(com.badlogic.gdx.Application, android.content.Context, java.lang.Object, com.badlogic.gdx.backends.android.AndroidApplicationConfiguration);
+}
+
+-keepclassmembers class com.badlogic.gdx.physics.box2d.World {
+   boolean contactFilter(long, long);
+   void    beginContact(long);
+   void    endContact(long);
+   void    preSolve(long, long);
+   void    postSolve(long, long);
+   boolean reportFixture(long);
+   float   reportRayFixture(long, float, float, float, float, float);
+}
+
+####################################################################################
+
+-dontwarn sun.misc.Unsafe
+-dontwarn com.google.**
+-dontwarn com.google.android.gms.*
+-dontwarn com.google.common.collect.MinMaxPriorityQueue
+-dontwarn android.support.**
+
+-keep interface com.google.** {*;}
+-keep class com.google.** {*;}
+-keep class com.google.api.services.drive.** {*;}
+-keep class * extends com.google.api.client.json.GenericJson {*;}
+
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class com.android.vending.licensing.ILicensingService
+-keep class com.android.vending.billing.IInAppBillingService
+
+####################################################################################
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+   public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembernames class * {
+   @ccom.google.android.gms.common.annotation.KeepName *;
+}
+
+-keepnames class * implements android.os.Parcelable {
+   public static final ** CREATOR;
+}
+
+-keep class * extends java.util.ListResourceBundle {
+   protected Object[][] getContents();
+}
+
+-keep class * extends java.util.ListResourceBundle {
+   protected Object[][] getContents();
+}
+
+-keepclassmembers class * implements java.io.Serializable {
+   static final long serialVersionUID;
+   private static final java.io.ObjectStreamField[] serialPersistentFields;
+   private void writeObject(java.io.ObjectOutputStream);
+   private void readObject(java.io.ObjectInputStream);
+   java.lang.Object writeReplace();
+   java.lang.Object readResolve();
+}
+
+-keepclasseswithmembernames class * {
+   native <methods>;
+}
+
+-keepclassmembers public class * extends android.view.View {
+   void set*(***);
+   *** get*();
+}
+
+-keepclassmembers class * extends android.content.Context {
+   public void *(android.view.View);
+   public void *(android.view.MenuItem);
+}
+
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
+-keepclassmembers enum * {
+   public static **[] values();
+   public static ** valueOf(java.lang.String);
+}
+
+-keep class * implements android.os.Parcelable {
+   public static final android.os.Parcelable$Creator *;
+}
+
+-keepclassmembers class **.R$* {
+   public static <fields>;
+}
+
+
+#Var3D-Start
+-dontwarn var3d.net.center.**
+#-keep class var3d.net.center.VGame{*;}
+#-keep class var3d.net.demo.StageTest{*;}
+#-keep class net.var3d.tankwar.DialogAD{*;}
+#Var3D-end

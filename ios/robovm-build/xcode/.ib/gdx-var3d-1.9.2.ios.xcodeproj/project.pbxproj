@@ -1,0 +1,250 @@
+{
+	"archiveVersion" = "1";
+	"classes" =
+		{
+		};
+	"objectVersion" = "46";
+	"objects" =
+		{
+			"100000000000000000000002" =
+				{
+					"isa" = "PBXGroup";
+					"children" =
+						("0AE9DE79B06D4CA7A8A51F91", "15AC808130504E6EAB3D8F9A");
+					"sourceTree" = "<group>";
+				};
+			"100000000000000000000006" =
+				{
+					"isa" = "PBXNativeTarget";
+					"buildPhases" =
+						("100000000000000000000007");
+					"buildRules" =
+						();
+					"dependencies" =
+						();
+					"name" = "test";
+					"productName" = "test";
+					"productType" = "com.apple.product-type.application";
+				};
+			"100000000000000000000001" =
+				{
+					"isa" = "PBXProject";
+					"attributes" =
+						{
+							"LastUpgradeCheck" = "0620";
+						};
+					"buildConfigurationList" = "100000000000000000000003";
+					"compatibilityVersion" = "Xcode 3.2";
+					"developmentRegion" = "English";
+					"hasScannedForEncodings" = "0";
+					"knownRegions" =
+						("en");
+					"mainGroup" = "100000000000000000000002";
+					"projectDirPath" = "";
+					"projectRoot" = "";
+					"targets" =
+						("100000000000000000000006");
+				};
+			"100000000000000000000007" =
+				{
+					"isa" = "PBXSourcesBuildPhase";
+					"buildActionMask" = "2147483647";
+					"files" =
+						();
+					"runOnlyForDeploymentPostprocessing" = "0";
+				};
+			"100000000000000000000004" =
+				{
+					"isa" = "XCBuildConfiguration";
+					"buildSettings" =
+						{
+							"INFOPLIST_FILE" = "/Users/fengyu/Desktop/work3/gdx-var3d-1.9.2/ios/Info.plist.xml";
+							"SDKROOT" = "iphoneos";
+							"TARGETED_DEVICE_FAMILY" = "1,2";
+							"GCC_PRECOMPILE_PREFIX_HEADER" = "YES";
+							"GCC_PREFIX_HEADER" = "/Users/fengyu/Desktop/work3/gdx-var3d-1.9.2/ios/robovm-build/xcode/.ib/Prefix.pch";
+						};
+					"name" = "Debug";
+				};
+			"100000000000000000000005" =
+				{
+					"isa" = "XCBuildConfiguration";
+					"buildSettings" =
+						{
+							"INFOPLIST_FILE" = "/Users/fengyu/Desktop/work3/gdx-var3d-1.9.2/ios/Info.plist.xml";
+							"SDKROOT" = "iphoneos";
+							"TARGETED_DEVICE_FAMILY" = "1,2";
+							"GCC_PRECOMPILE_PREFIX_HEADER" = "YES";
+							"GCC_PREFIX_HEADER" = "/Users/fengyu/Desktop/work3/gdx-var3d-1.9.2/ios/robovm-build/xcode/.ib/Prefix.pch";
+						};
+					"name" = "Release";
+				};
+			"100000000000000000000003" =
+				{
+					"isa" = "XCConfigurationList";
+					"buildConfigurations" =
+						("100000000000000000000004", "100000000000000000000005");
+					"defaultConfigurationIsVisible" = "0";
+					"defaultConfigurationName" = "Release";
+				};
+			"DDF5E279411C4474839CC2B5" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "InfoPlist.strings";
+					"lastKnownFileType" = "text.plist.strings";
+					"sourceTree" = "<group>";
+					"path" = "InfoPlist.strings";
+				};
+			"0AE9DE79B06D4CA7A8A51F91" =
+				{
+					"isa" = "PBXGroup";
+					"children" =
+						("D137161339314E889AC999E4", "7E498E4F4DD94EE9B481F529", "AC33BCEEE9204ADC886141FC",
+ "141ECD49D0FB4D3686DDAF06", "824D775ABE6D46878148597B", "3612125583B848809D2E8F30",
+ "F0988B6D1AFF468FA9E611A2", "3A72FA2890AC44BB89BE6C99", "FF5CB19A96D94CEBABA6CD14",
+ "AA73B775E4D84B6EAD483BDB", "8F4F45A8E8D447B5BE08B27C", "42E635B9823F4D2E9A0E0307"
+);
+					"name" = "Resources";
+					"sourceTree" = "<absolute>";
+					"path" = "/Users/fengyu/Desktop/work3/gdx-var3d-1.9.2/ios/data";
+				};
+			"5E925F3E2DDE4B8981E88A36" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Localizable.strings";
+					"lastKnownFileType" = "text.plist.strings";
+					"sourceTree" = "<group>";
+					"path" = "Localizable.strings";
+				};
+			"2737308F4A6645CA9F0AD325" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "InfoPlist.strings";
+					"lastKnownFileType" = "text.plist.strings";
+					"sourceTree" = "<group>";
+					"path" = "InfoPlist.strings";
+				};
+			"49C9415F09CD4D90ADEEBE1F" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "InfoPlist.strings";
+					"lastKnownFileType" = "text.plist.strings";
+					"sourceTree" = "<group>";
+					"path" = "InfoPlist.strings";
+				};
+			"D137161339314E889AC999E4" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "badlogic.jpg";
+					"lastKnownFileType" = "image.jpeg";
+					"sourceTree" = "<group>";
+					"path" = "badlogic.jpg";
+				};
+			"7E498E4F4DD94EE9B481F529" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Default-375w-667h@2x.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Default-375w-667h@2x.png";
+				};
+			"AC33BCEEE9204ADC886141FC" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Default-414w-736h@3x.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Default-414w-736h@3x.png";
+				};
+			"141ECD49D0FB4D3686DDAF06" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Default-568h@2x.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Default-568h@2x.png";
+				};
+			"824D775ABE6D46878148597B" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Default.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Default.png";
+				};
+			"3612125583B848809D2E8F30" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Default@2x.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Default@2x.png";
+				};
+			"F0988B6D1AFF468FA9E611A2" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Default@2x~ipad.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Default@2x~ipad.png";
+				};
+			"3A72FA2890AC44BB89BE6C99" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Default~ipad.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Default~ipad.png";
+				};
+			"FF5CB19A96D94CEBABA6CD14" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Icon-72.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Icon-72.png";
+				};
+			"AA73B775E4D84B6EAD483BDB" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Icon-72@2x.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Icon-72@2x.png";
+				};
+			"8F4F45A8E8D447B5BE08B27C" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Icon.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Icon.png";
+				};
+			"42E635B9823F4D2E9A0E0307" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Icon@2x.png";
+					"lastKnownFileType" = "image.png";
+					"sourceTree" = "<group>";
+					"path" = "Icon@2x.png";
+				};
+			"0951E5F8E4E841E6BFD0F20A" =
+				{
+					"isa" = "PBXFileReference";
+					"name" = "Info.plist";
+					"explicitFileType" = "text.plist.info";
+					"sourceTree" = "<group>";
+					"path" = "Info.plist.xml";
+				};
+			"15AC808130504E6EAB3D8F9A" =
+				{
+					"isa" = "PBXGroup";
+					"children" =
+						("0951E5F8E4E841E6BFD0F20A");
+					"name" = "Supporting Files";
+					"sourceTree" = "<absolute>";
+					"path" = "/Users/fengyu/Desktop/work3/gdx-var3d-1.9.2/ios";
+				};
+		};
+	"rootObject" = "100000000000000000000001";
+}
