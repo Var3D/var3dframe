@@ -1,3 +1,8 @@
+apply plugin: "java"
+apply plugin: "maven"
+group = "com.github.whitecostume"
+
+
 buildscript {
     repositories {
         mavenCentral()
@@ -10,7 +15,6 @@ buildscript {
     }
 }
 
-group = "com.github.whitecostume"
 
 allprojects {
     apply plugin: "eclipse"
