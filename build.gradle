@@ -10,6 +10,8 @@ buildscript {
     }
 }
 
+group = "com.github.whitecostume"
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
