@@ -22,6 +22,11 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
+    }
+
     version = '1.0'
     ext {
         appName = "gdx-var3d-1.9.2"
@@ -42,7 +47,8 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java"
-
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
     dependencies {
         compile project(":core")
@@ -70,7 +76,8 @@ project(":android") {
 project(":ios") {
     apply plugin: "java"
     apply plugin: "robovm"
-
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
     dependencies {
         compile project(":core")
@@ -84,7 +91,8 @@ project(":ios") {
 project(":core") {
     apply plugin: "java"
 
-
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     }
@@ -92,4 +100,39 @@ project(":core") {
 
 tasks.eclipse.doLast {
     delete ".project"
+}
+
+task packJar(type: Jar) {
+    doFirst {
+        from files(project(":core").sourceSets.main.output.classesDir);
+        from files(project(":desktop").sourceSets.main.output.classesDir);
+        from files(project(":ios").sourceSets.main.output.classesDir);
+        from fileTree(dir: "android/build/intermediates/classes/main/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/test");
+    }
+}
+def preCompile = [":core:coreClasses", ":desktop:coreClasses", ":ios:coreClasses", ":android:compileCoreReleaseJavaWithJavac"];
+
+//packJar.dependsOn preCompile
+
+task packDoc(dependsOn: ":core:javadoc", type: Jar) {
+    classifier = "javadoc"
+    from project(":core").tasks["javadoc"].destinationDir
+}
+
+task packSources(type: Jar) {
+    classifier = "sources"
+    doFirst {
+        from files(project(":core").sourceSets.main.allJava)
+        from files(project(":desktop").sourceSets.main.allJava)
+        from files(project(":ios").sourceSets.main.allJava)
+        from files(":android/src")
+    }
+}
+
+task packAll(dependsOn: ['packJar', 'packSources'])
+
+artifacts {
+    archives packJar
+//    archives packDoc
+    archives packSources
 }
