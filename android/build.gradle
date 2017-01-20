@@ -2,17 +2,29 @@ android {
     buildToolsVersion "23.0.3"
     compileSdkVersion 23
 
+    productFlavors {
+        main
+        core
+    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
+            java.srcDirs = ['src/main/java', "src/core/java"]
+            aidl.srcDirs = ['src/main/java', "src/core/java"]
+            renderscript.srcDirs = ['src/main/java', "src/core/java"]
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
         }
-        instrumentTest.setRoot('tests')
+        core {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/core/java']
+            aidl.srcDirs = ['src/core/java']
+            renderscript.srcDirs = ['src/core/java']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+        }
     }
     defaultConfig {
         applicationId "var3d.net.demo"

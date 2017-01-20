@@ -3,13 +3,13 @@ apply plugin: "java"
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-project.ext.mainClassName = "var3d.net.demo.desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../android/assets");
-
-
 sourceSets {
     main {
-        java.srcDirs = ["src"]
+        java.srcDirs = ["src/main/java", "src/core/java"]
+    }
+    core {
+        java.srcDirs = ["src/core/java"]
+        compileClasspath += sourceSets.main.runtimeClasspath;
     }
 }
 

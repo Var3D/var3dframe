@@ -104,15 +104,15 @@ tasks.eclipse.doLast {
 
 task packJar(type: Jar) {
     doFirst {
-        from files(project(":core").sourceSets.main.output.classesDir);
-        from files(project(":desktop").sourceSets.main.output.classesDir);
-        from files(project(":ios").sourceSets.main.output.classesDir);
-        from fileTree(dir: "android/build/intermediates/classes/main/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/test");
+        from files(project(":core").sourceSets.core.output.classesDir);
+        from files(project(":desktop").sourceSets.core.output.classesDir);
+        from files(project(":ios").sourceSets.core.output.classesDir);
+        from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
     }
 }
 def preCompile = [":core:coreClasses", ":desktop:coreClasses", ":ios:coreClasses", ":android:compileCoreReleaseJavaWithJavac"];
 
-//packJar.dependsOn preCompile
+packJar.dependsOn preCompile
 
 task packDoc(dependsOn: ":core:javadoc", type: Jar) {
     classifier = "javadoc"
@@ -122,17 +122,17 @@ task packDoc(dependsOn: ":core:javadoc", type: Jar) {
 task packSources(type: Jar) {
     classifier = "sources"
     doFirst {
-        from files(project(":core").sourceSets.main.allJava)
-        from files(project(":desktop").sourceSets.main.allJava)
-        from files(project(":ios").sourceSets.main.allJava)
-        from files(":android/src")
+        from files(project(":core").sourceSets.core.allJava)
+        from files(project(":desktop").sourceSets.core.allJava)
+        from files(project(":ios").sourceSets.core.allJava)
+        from files(":android/src/core/java")
     }
 }
 
-task packAll(dependsOn: ['packJar', 'packSources'])
+task packAll(dependsOn: ['packJar', 'packDoc', 'packSources'])
 
 artifacts {
     archives packJar
-//    archives packDoc
+    archives packDoc
     archives packSources
 }
