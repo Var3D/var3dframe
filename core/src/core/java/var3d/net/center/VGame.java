@@ -197,6 +197,7 @@ public abstract class VGame implements ApplicationListener {
 		fonts.put("font", font);
 		setStageLoad(StageLoad.class);
 		init();
+		var3dListener.create();
 	}
 
 	private String language;

@@ -1,4 +1,4 @@
-package var3d.net;
+package core.java.var3d.net;
 
 public class R {
 

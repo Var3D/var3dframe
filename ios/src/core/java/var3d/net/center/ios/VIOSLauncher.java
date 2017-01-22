@@ -326,4 +326,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
 	public void unProtect(String... names) {
 	}
+
+	public void create() {
+	}
 }

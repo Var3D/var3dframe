@@ -355,4 +355,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
 	public void unProtect(String... names) {
 	}
+
+	public void create() {
+	}
 }
