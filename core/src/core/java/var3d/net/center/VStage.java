@@ -34,6 +34,11 @@ public abstract class VStage extends Stage {
         set(game);
     }
 
+    public VStage(VGame game, int width, int height) {
+        super(new ScalingViewport(Scaling.stretch, width, height));
+        set(game);
+    }
+
     private void set(VGame game) {
         bgList = new ArrayList<Actor>();
         this.game = game;

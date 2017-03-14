@@ -671,8 +671,8 @@ public abstract class VGame implements ApplicationListener {
 
 	public void resume() {
 		var3dListener.onIOSResume();
-		if (isMusic != false && music != null)
-			music.play();
+//		if (isMusic != false && music != null)
+//			music.play();
 		if (stage != null)
 			stage.resume();
 	}
