@@ -1,5 +1,6 @@
 package var3d.net.demo;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Align;
 
@@ -11,6 +12,7 @@ import var3d.net.center.VStage;
  * Created by fengyu on 16/4/8.
  */
 public class StageTest extends VStage {
+    public VLabel text;
 
     public StageTest(VGame game) {
         super(game);
@@ -19,8 +21,8 @@ public class StageTest extends VStage {
     @Override
     public void init() {
         setBackground(Color.BLACK);
-        final VLabel text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).getActor();
-        text.setPosition(0, game.HEIGHT, Align.topLeft);
+        text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).getActor();
+        text.setPosition(48, 398);
         addActor(text);
     }
 

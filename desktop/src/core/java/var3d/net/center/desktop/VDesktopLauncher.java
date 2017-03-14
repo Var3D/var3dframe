@@ -1,10 +1,14 @@
 package var3d.net.center.desktop;
 
 import java.awt.BasicStroke;
+import java.awt.Button;
+import java.awt.Canvas;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
+import java.awt.Frame;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Robot;
@@ -19,28 +23,49 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.text.AttributedString;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
+import var3d.net.center.VStage;
 import var3d.net.center.freefont.FreePaint;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.LifecycleListener;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
 
 public abstract class VDesktopLauncher implements VListener {
@@ -501,5 +526,90 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     public void create() {
+    }
+
+    private boolean isEdit = false;
+    private HashMap<Actor, Data> allDatas = new HashMap<Actor, Data>();
+    //private ToolFrame toolFrame;
+
+    public class Data {
+        public Array<EventListener> allListeners;//该Actor本来的监听
+        public boolean isEdit = false;//是否被编辑
+        public Field filed;
+
+    }
+
+    public void edit(VStage stage) {
+        if (isEdit) {
+            isEdit = false;
+            for (final Actor actor : stage.getRoot().getChildren()) {
+                actor.setDebug(false);
+                actor.clearListeners();
+                Array<EventListener> listeners = allDatas.get(actor).allListeners;
+                if (listeners != null) {
+                    for (EventListener listener : listeners) {
+                        actor.addListener(listener);
+                    }
+                }
+            }
+        } else {
+            isEdit = true;
+            //用反射取得该Actor的变量名
+            Class clazz = stage.getClass();
+            Field[] fields = clazz.getDeclaredFields();
+            for (final Actor actor : stage.getRoot().getChildren()) {
+                final Data data = new Data();
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    try {
+                        Object object = field.get(stage);
+                        if (!(object instanceof Actor)) {
+                            continue;
+                        } else if (actor == object) {
+                            data.filed = field;
+                            break;
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                actor.setDebug(true);
+                data.allListeners = actor.getListeners();
+                allDatas.put(actor, data);
+                actor.clearListeners();
+                actor.addListener(new InputListener() {
+                    private float starX, starY;
+
+                    public boolean touchDown(InputEvent event, float px, float py, int pointer, int but) {
+                        starX = px;
+                        starY = py;
+                        return true;
+                    }
+
+                    public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                        actor.moveBy(x - starX, y - starY);
+                        data.isEdit = true;
+                        Display.setTitle(actor.getClass().getSimpleName() + ":" + data.filed.getName()
+                                + "(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
+                    }
+
+                    public void touchUp(InputEvent event, float px, float py,
+                                        int pointer, int but) {
+//                        StackTraceElement[] elements = new Throwable().getStackTrace();
+//                        for (StackTraceElement element : elements) {
+//                            String name = element.getLineNumber() + "";
+//                            Gdx.app.log("aaaaa", name);
+//                        }
+                        Clipboard clip = Gdx.app.getClipboard();
+                        clip.setContents(".setPosition(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
+                    }
+                });
+            }
+        }
+    }
+
+    //保存编辑过的Actor
+    public void saveUI(VStage stage) {
+
     }
 }

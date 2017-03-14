@@ -8,7 +8,7 @@ import var3d.net.demo.Game;
 public class DesktopLauncher extends VDesktopLauncher {
 
     public static void main(String[] arg) {
-        new LwjglApplication(new Game(new DesktopLauncher()), getConfig(480, 800));
+        new LwjglApplication(new Game(new DesktopLauncher()), getConfig(800, 480));
     }
 
     public void create() {

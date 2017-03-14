@@ -8,6 +8,7 @@ import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
+import var3d.net.center.VStage;
 import var3d.net.center.freefont.FreePaint;
 
 import android.app.AlertDialog;
@@ -357,5 +358,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 	}
 
 	public void create() {
+	}
+
+	public void edit(VStage stage) {
+	}
+
+	public void saveUI(VStage stage) {
 	}
 }

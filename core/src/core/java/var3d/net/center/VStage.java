@@ -135,6 +135,12 @@ public abstract class VStage extends Stage {
             } else if (arg0 == Input.Keys.F) {
                 // 截图
                 game.var3dListener.Screenshot(game);
+            } else if (arg0 == Input.Keys.E) {
+                // 编辑UI
+                game.var3dListener.edit(this);
+            } else if (arg0 == Input.Keys.P) {
+                // 保存UI
+                game.var3dListener.saveUI(this);
             }
         } else if (arg0 == Input.Keys.BACK) {
             if (getRoot().getTouchable() == Touchable.enabled) {
