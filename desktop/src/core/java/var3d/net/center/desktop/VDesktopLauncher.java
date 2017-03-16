@@ -1,14 +1,29 @@
 package var3d.net.center.desktop;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Clipboard;
+import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.StringBuilder;
+
+import org.lwjgl.opengl.Display;
+
 import java.awt.BasicStroke;
-import java.awt.Button;
-import java.awt.Canvas;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
-import java.awt.Frame;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Robot;
@@ -24,49 +39,24 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.text.AttributedString;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
+import var3d.net.center.UI;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
 import var3d.net.center.freefont.FreePaint;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.LifecycleListener;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Clipboard;
-import com.badlogic.gdx.utils.I18NBundle;
+import var3d.net.demo.Game;
+import var3d.net.demo.desktop.DesktopLauncher;
 
 public abstract class VDesktopLauncher implements VListener {
     private VGame game;
@@ -583,23 +573,22 @@ public abstract class VDesktopLauncher implements VListener {
                     public boolean touchDown(InputEvent event, float px, float py, int pointer, int but) {
                         starX = px;
                         starY = py;
+                        String name = data.filed == null ? "局部变量" : data.filed.getName();
+                        Display.setTitle(actor.getClass().getSimpleName() + ":" + name
+                                + "(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
                         return true;
                     }
 
                     public void touchDragged(InputEvent event, float x, float y, int pointer) {
                         actor.moveBy(x - starX, y - starY);
                         data.isEdit = true;
-                        Display.setTitle(actor.getClass().getSimpleName() + ":" + data.filed.getName()
+                        String name = data.filed == null ? "局部变量" : data.filed.getName();
+                        Display.setTitle(actor.getClass().getSimpleName() + ":" + name
                                 + "(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
                     }
 
                     public void touchUp(InputEvent event, float px, float py,
                                         int pointer, int but) {
-//                        StackTraceElement[] elements = new Throwable().getStackTrace();
-//                        for (StackTraceElement element : elements) {
-//                            String name = element.getLineNumber() + "";
-//                            Gdx.app.log("aaaaa", name);
-//                        }
                         Clipboard clip = Gdx.app.getClipboard();
                         clip.setContents(".setPosition(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
                     }
@@ -610,6 +599,113 @@ public abstract class VDesktopLauncher implements VListener {
 
     //保存编辑过的Actor
     public void saveUI(VStage stage) {
+        //遍历stage中的actor，并找出该actor在stage初始化时的行号位置
+        //获取stage的java文件
+        String proName = Gdx.files.getLocalStoragePath().replaceAll("\\/android\\/assets\\/", "");
+        String pack = stage.getClass().getPackage().toString().replaceAll("package ", "");
+        pack = pack.replaceAll("\\.", "/");
+        String tryPath = proName + "/core/src/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
+        FileHandle fileHandle = Gdx.files.absolute(tryPath);
+        if (!fileHandle.exists()) {
+            //如果不存在，则找另一个路径
+            tryPath = proName + "/core/src/main/java/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
+            fileHandle = Gdx.files.absolute(tryPath);
+        }
+        if (!fileHandle.exists()) return;//如果还是读取不到，中断所有操作
+        String javaStr = fileHandle.readString();
+        String[] javaStrLines = javaStr.split("\n");//把代码按行号存放进数组中
+        for (final Actor actor : stage.getRoot().getChildren()) {
+            Data data = allDatas.get(actor);
+            if (data.isEdit) {
+                StackTraceElement[] elements = allStacks.get(actor);
+                if (elements == null) continue;
+                String str_class = elements[2].getClassName();
+                if (str_class.equals(stage.getClass().getName())) {
+                    int linNumber = elements[2].getLineNumber();
+                    int firstLinNumber = linNumber;
+                    Array<String> javaStrArr = new Array<>();
+                    for (int i = linNumber - 1; i > 1; i--) {
+                        String javaStrLine = javaStrLines[i].replaceAll(" ", "");
+                        int idex0;
+                        if ((idex0 = javaStrLine.indexOf("new")) != -1) {
+                            //含有new字符,判断new前面是否为=号或(
+                            if (idex0 > 0) {
+                                String pref = javaStrLine.charAt(idex0 - 1) + "";
+                                if (pref.equals("(") || pref.equals("=") || pref.equals(";")) {
+                                    javaStrLine = javaStrLine.replaceAll("new", "new ");
+                                }
+                            }
+                        }
+                        //移除注释
+                        String noAnnotations = javaStrLine.replaceAll("\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
+                        javaStrArr.add(noAnnotations);
+                        javaStrLines[i] = "";
+                        if (noAnnotations.indexOf("game.") != -1) {
+                            break;
+                        }
+                    }
+                    firstLinNumber -= javaStrArr.size;
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (int i = javaStrArr.size - 1; i > -1; i--) {
+                        String strLine = javaStrArr.get(i);
+                        stringBuilder.append(strLine);
+                    }
+                    String codeStr = stringBuilder.toString();
+                    int idex;
+                    if ((idex = codeStr.lastIndexOf("setPosition(")) != -1) {
+                        //说明拥有setPosition方法
+                        String s1 = codeStr.substring(idex);
+                        s1 = s1.substring(0, s1.indexOf(")") + 1);
+                        codeStr = codeStr.replace(s1, "setPosition(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
+                    } else {
+                        //如果没有setPosition方法,找到倒数第一个点
+                        idex = codeStr.lastIndexOf(".");
+                        //接着把字符分为两段
+                        String s1 = codeStr.substring(0, idex);
+                        String s2 = codeStr.substring(idex);
+                        codeStr = s1 + ".setPosition(" + (int) actor.getX() + "," + (int) actor.getY() + ")" + s2;
+                    }
+                    List<String> listStr = new ArrayList<String>();
+                    int len = codeStr.length();
+                    int width = 100;
+                    int lineNum = len % width == 0 ? len / width : len / width + 1;
+                    String subStr;
+                    for (int i = 1; i <= lineNum; i++) {
+                        if (i < lineNum) {
+                            subStr = codeStr.substring((i - 1) * width, i * width);
+                        } else {
+                            subStr = codeStr.substring((i - 1) * width, len);
+                        }
+                        listStr.add(subStr);
+                    }
+                    StringBuilder out = new StringBuilder();
+                    for (int i = 0; i < listStr.size(); i++) {
+                        out.append("        ");
+                        out.append(listStr.get(i));
+                        if (i < listStr.size() - 1) out.append("\n");
+                    }
+                    javaStrLines[firstLinNumber] = out.toString();
+                }
+            }
+        }
+        //重新组装java代码
+        StringBuilder out = new StringBuilder();
+        for (int i = 0; i < javaStrLines.length; i++) {
+            out.append(javaStrLines[i]);
+            if (i < javaStrLines.length - 1) out.append("\n");
+        }
+        //保存java代码
+        fileHandle.writeString(out.toString(), false);
+        //关闭窗口
+        Gdx.app.exit();
+    }
 
+
+    private HashMap<Actor, StackTraceElement[]> allStacks = new HashMap<>();
+
+    public void getLineNumber(Actor actor) {
+        if (allStacks.get(actor) != null) return;
+        StackTraceElement[] elements = new Throwable().getStackTrace();
+        allStacks.put(actor, elements);
     }
 }

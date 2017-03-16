@@ -16,7 +16,7 @@ public class Game extends VGame {
     public void init() {
         openProtect("image");//加密image文件夹资源
         //unProtect("image");
-        showFps();//显示fps
+        // showFps();//显示fps
         //FreePaint paint = new FreePaint("font/test.ttf");
         setFont("test", new FreeBitmapFont(this, new FreePaint("font/DroidSans.ttf")));
         setStage(StageTest.class);//设置入口界面
