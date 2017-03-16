@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
@@ -539,6 +540,7 @@ public abstract class VDesktopLauncher implements VListener {
             }
         } else {
             isEdit = true;
+            //new SubFrame();
             //用反射取得该Actor的变量名
             Class clazz = stage.getClass();
             Field[] fields = clazz.getDeclaredFields();
@@ -589,6 +591,16 @@ public abstract class VDesktopLauncher implements VListener {
                     }
                 });
             }
+        }
+    }
+
+    private class SubFrame extends JFrame {
+        public SubFrame() {
+            setTitle("子窗口");
+            setSize(400, 300);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setLocationByPlatform(true);
+            setVisible(true);
         }
     }
 
