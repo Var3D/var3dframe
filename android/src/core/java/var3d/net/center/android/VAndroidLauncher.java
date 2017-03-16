@@ -1,16 +1,5 @@
 package var3d.net.center.android;
 
-import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Locale;
-
-import var3d.net.center.VGame;
-import var3d.net.center.VListener;
-import var3d.net.center.VPayListener;
-import var3d.net.center.VShopListener;
-import var3d.net.center.VStage;
-import var3d.net.center.freefont.FreePaint;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,6 +26,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Locale;
+
+import var3d.net.center.VGame;
+import var3d.net.center.VListener;
+import var3d.net.center.VPayListener;
+import var3d.net.center.VShopListener;
+import var3d.net.center.VStage;
+import var3d.net.center.freefont.FreePaint;
 
 public abstract class VAndroidLauncher extends AndroidApplication implements
         VListener {
@@ -367,8 +367,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     public void saveUI(VStage stage) {
     }
 
-    @Override
-    public void getLineNumber(Actor actor) {
 
+    public void getLineNumber(Actor actor) {
     }
 }

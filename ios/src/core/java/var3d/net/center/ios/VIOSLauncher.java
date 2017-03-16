@@ -340,6 +340,5 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     @Override
     public void getLineNumber(Actor actor) {
-
     }
 }
