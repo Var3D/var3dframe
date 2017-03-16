@@ -10,7 +10,3 @@ sourceSets {
         compileClasspath += sourceSets.main.runtimeClasspath;
     }
 }
-
-dependencies {
-    compile files('lib/javassist-3.9.0.jar')
-}

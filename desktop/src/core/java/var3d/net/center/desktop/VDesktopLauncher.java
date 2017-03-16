@@ -1,8 +1,6 @@
 package var3d.net.center.desktop;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -48,15 +46,12 @@ import java.util.Locale;
 
 import javax.imageio.ImageIO;
 
-import var3d.net.center.UI;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
 import var3d.net.center.freefont.FreePaint;
-import var3d.net.demo.Game;
-import var3d.net.demo.desktop.DesktopLauncher;
 
 public abstract class VDesktopLauncher implements VListener {
     private VGame game;
