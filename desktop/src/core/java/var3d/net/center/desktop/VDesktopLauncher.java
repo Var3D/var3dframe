@@ -527,6 +527,7 @@ public abstract class VDesktopLauncher implements VListener {
         public Touchable prefTouchable;//最初的Actor响应属性
     }
 
+
     public void edit(VStage stage) {
         if (isEdit) {
             isEdit = false;
