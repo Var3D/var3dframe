@@ -549,6 +549,7 @@ public abstract class VDesktopLauncher implements VListener {
                     }
                 }
             }
+            allDatas.clear();
         } else {
             isEdit = true;
             //new SubFrame();
@@ -671,8 +672,8 @@ public abstract class VDesktopLauncher implements VListener {
                                 "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
                         javaStrArr.add(noAnnotations);
                         javaStrLines[i] = "";
-                        if ((data.filed == null && noAnnotations.indexOf("game.") != -1)
-                                || noAnnotations.indexOf(data.filed.getName() + "=game.") != -1) {
+                        if ((data.filed == null && noAnnotations.indexOf("game.") != -1) || (data.filed
+                                != null && noAnnotations.indexOf(data.filed.getName() + "=game.") != -1)) {
                             break;
                         }
                     }
