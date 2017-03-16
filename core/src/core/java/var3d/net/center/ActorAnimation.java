@@ -29,7 +29,7 @@ public class ActorAnimation extends Actor {
      */
     public ActorAnimation(TextureRegion[] walkFrames) {
         setSize(walkFrames[0].getRegionWidth(), walkFrames[0].getRegionHeight());
-        animation = new Animation(frameTime, walkFrames);
+        animation = new Animation(frameTime, (Object[]) walkFrames);
         animation.setPlayMode(playMode);
     }
 
@@ -57,7 +57,7 @@ public class ActorAnimation extends Actor {
             }
         }
         setSize(walkFrames[0].getRegionWidth(), walkFrames[0].getRegionHeight());
-        animation = new Animation(frameTime, walkFrames);
+        animation = new Animation(frameTime, (Object[]) walkFrames);
         animation.setPlayMode(playMode);
     }
 
