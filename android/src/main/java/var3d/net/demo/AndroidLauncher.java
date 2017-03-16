@@ -3,6 +3,7 @@ package var3d.net.demo;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import var3d.net.center.android.VAndroidLauncher;
 
@@ -12,9 +13,5 @@ public class AndroidLauncher extends VAndroidLauncher {
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new Game(this), config);
-    }
-
-    public void openFullAd() {
-        //加广告
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
 import org.robovm.apple.coregraphics.CGRect;
@@ -335,5 +336,10 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     public void saveUI(VStage stage) {
+    }
+
+    @Override
+    public void getLineNumber(Actor actor) {
+
     }
 }
