@@ -1,5 +1,6 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -210,6 +211,21 @@ public class UI<T extends Actor> {
     public UI<T> copyBounds(Actor actor) {
         t.setBounds(actor.getX(), actor.getY(), actor.getWidth(),
                 actor.getHeight());
+        return this;
+    }
+
+    public UI<T> setStroke(Color strokeColor) {
+        if (t instanceof VLabel) {
+            ((VLabel) t).setStroke(strokeColor);
+        } else Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor)方法仅在类型VLabel上有效");
+        return this;
+    }
+
+    public UI<T> setStroke(Color strokeColor, float strokeWidth) {
+        if (t instanceof VLabel) {
+            ((VLabel) t).setStroke(strokeColor, strokeWidth);
+        } else
+            Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor, float strokeWidth)方法仅在类型VLabel上有效");
         return this;
     }
 }

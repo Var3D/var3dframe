@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -499,8 +501,7 @@ public abstract class VDesktopLauncher implements VListener {
         Display.setTitle(load.getName() + "加密完成");
     }
 
-    public static LwjglApplicationConfiguration getConfig(int width,
-                                                          int height, float scale) {
+    public static LwjglApplicationConfiguration getConfig(int width, int height, float scale) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = (int) (width * scale);
         config.height = (int) (height * scale);
@@ -519,21 +520,31 @@ public abstract class VDesktopLauncher implements VListener {
     //private ToolFrame toolFrame;
 
     public class Data {
+        public HashMap<Actor, Data> sonDatas = new HashMap<Actor, Data>();//用来保存儿子们的属性
         public Array<EventListener> allListeners;//该Actor本来的监听
         public boolean isEdit = false;//是否被编辑
-        public Field filed;
-
+        public Field filed;//保存对应的对象
+        public Touchable prefTouchable;//最初的Actor响应属性
     }
 
     public void edit(VStage stage) {
         if (isEdit) {
             isEdit = false;
             for (final Actor actor : stage.getRoot().getChildren()) {
+                Data data = allDatas.get(actor);
                 actor.setDebug(false);
+                actor.setTouchable(data.prefTouchable);
+                if (actor instanceof Group) {
+                    //如果是Group，那就需要想办法把儿子们禁止响应了
+                    Group group = (Group) actor;
+                    for (Actor son : group.getChildren()) {
+                        Data sonData = data.sonDatas.get(son);
+                        son.setTouchable(sonData.prefTouchable);
+                    }
+                }
                 actor.clearListeners();
-                Array<EventListener> listeners = allDatas.get(actor).allListeners;
-                if (listeners != null) {
-                    for (EventListener listener : listeners) {
+                if (data.allListeners != null) {
+                    for (EventListener listener : data.allListeners) {
                         actor.addListener(listener);
                     }
                 }
@@ -560,8 +571,20 @@ public abstract class VDesktopLauncher implements VListener {
                         e.printStackTrace();
                     }
                 }
+                data.prefTouchable = actor.getTouchable();
                 actor.setDebug(true);
+                actor.setTouchable(Touchable.enabled);
                 data.allListeners = actor.getListeners();
+                if (actor instanceof Group) {
+                    //如果是Group，那就需要想办法把儿子们禁止响应了
+                    Group group = (Group) actor;
+                    for (Actor son : group.getChildren()) {
+                        Data sonData = new Data();
+                        sonData.prefTouchable = son.getTouchable();
+                        data.sonDatas.put(son, sonData);
+                        son.setTouchable(Touchable.disabled);
+                    }
+                }
                 allDatas.put(actor, data);
                 actor.clearListeners();
                 actor.addListener(new InputListener() {
@@ -644,10 +667,12 @@ public abstract class VDesktopLauncher implements VListener {
                             }
                         }
                         //移除注释
-                        String noAnnotations = javaStrLine.replaceAll("\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
+                        String noAnnotations = javaStrLine.replaceAll(
+                                "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
                         javaStrArr.add(noAnnotations);
                         javaStrLines[i] = "";
-                        if (noAnnotations.indexOf("game.") != -1) {
+                        if ((data.filed == null && noAnnotations.indexOf("game.") != -1)
+                                || noAnnotations.indexOf(data.filed.getName() + "=game.") != -1) {
                             break;
                         }
                     }
@@ -665,8 +690,9 @@ public abstract class VDesktopLauncher implements VListener {
                         s1 = s1.substring(0, s1.indexOf(")") + 1);
                         codeStr = codeStr.replace(s1, "setPosition(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
                     } else {
-                        //如果没有setPosition方法,找到倒数第一个点
-                        idex = codeStr.lastIndexOf(".");
+                        //如果没有setPosition方法,那么去定位show,getActor()
+                        idex = codeStr.lastIndexOf(".show(");
+                        if (idex == -1) idex = codeStr.lastIndexOf(".getActor(");
                         //接着把字符分为两段
                         String s1 = codeStr.substring(0, idex);
                         String s2 = codeStr.substring(idex);
@@ -674,7 +700,7 @@ public abstract class VDesktopLauncher implements VListener {
                     }
                     List<String> listStr = new ArrayList<String>();
                     int len = codeStr.length();
-                    int width = 100;
+                    int width = 90;
                     int lineNum = len % width == 0 ? len / width : len / width + 1;
                     String subStr;
                     for (int i = 1; i <= lineNum; i++) {
@@ -697,9 +723,18 @@ public abstract class VDesktopLauncher implements VListener {
         }
         //重新组装java代码
         StringBuilder out = new StringBuilder();
+        boolean prefLineIsNull = false;
         for (int i = 0; i < javaStrLines.length; i++) {
+            String thisline = javaStrLines[i];
+            boolean nowNull = thisline.replaceAll(" ", "").length() == 0;
+            if (prefLineIsNull && nowNull) {
+                prefLineIsNull = nowNull;
+                continue;
+            } else {
+                prefLineIsNull = nowNull;
+            }
             out.append(javaStrLines[i]);
-            if (i < javaStrLines.length - 1) out.append("\n");
+            out.append("\n");
         }
         //保存java代码
         fileHandle.writeString(out.toString(), false);

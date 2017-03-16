@@ -20,10 +20,16 @@ public class StageTest extends VStage {
     @Override
     public void init() {
         setBackground(Color.BLACK);
-        text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).setPosition(209, 285).show();
-        game.getImage(R.image.tank_4).setPosition(427, 129).show();
+        text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).setStroke(Color.RED).setPosition
+                (381, 266).show();
 
-        game.getUI(new Actor()).setSize(100, 100).setPosition(144, 138).show();
+        game.getImage(R.image.tank_4).setPosition(573, 279).show();
+
+        game.getUI(new Actor()).setSize(100, 100).setPosition(380, 335).show();
+
+        game.getGroup(300, 300).setPosition(43, 91).show();
+
+        game.getImage(R.image.badlogic).setPosition(462, 73).show();
     }
 
     @Override
