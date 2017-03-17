@@ -105,7 +105,6 @@ public abstract class VGame implements ApplicationListener {
     // private String prefStageName;// 上一个页面的名字
     @SuppressWarnings("rawtypes")
     private Class prefStage;
-    private Class resource;
     public int fontSize = 30;
     public VBundle bundle;// 文本国际化
     public Preferences save;// 数据保存
@@ -166,12 +165,24 @@ public abstract class VGame implements ApplicationListener {
         isMusic = save.getBoolean("isMusic", true);
         isSound = save.getBoolean("isSound", true);
         // 全球化字体方案
-        bundle = new VBundle(var3dListener);
+        if (bundle == null) bundle = new VBundle(var3dListener);
+        // 创建一个默认动态文本
+        FreeBitmapFont font = new FreeBitmapFont(this, new FreePaint(
+                getDefaultFontSize()));
+        font.appendText("01234567890LoadingC" + getHeap());
+        fonts.put("font", font);
+        setStageLoad(StageLoad.class);
+        init();
+        var3dListener.create();
+    }
+
+    //设置R文件
+    public <T> void setResources(Class<T> resource) {
+        if (bundle == null) bundle = new VBundle(var3dListener);
         // 将多语言本地文本赋值到R文件，如果有的话
         try {
-            Gdx.app.log("aaaaaaa", (resource == null) + "");
             @SuppressWarnings("rawtypes")
-            Class R_clazz = resource == null ? Class.forName(getProjectName() + ".R") : resource;
+            Class R_clazz = resource;
             @SuppressWarnings("rawtypes")
             Class innerClazz[] = R_clazz.getDeclaredClasses();
             for (@SuppressWarnings("rawtypes")
@@ -187,24 +198,9 @@ public abstract class VGame implements ApplicationListener {
                     break;
                 }
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        // 创建一个默认动态文本
-        FreeBitmapFont font = new FreeBitmapFont(this, new FreePaint(
-                getDefaultFontSize()));
-        font.appendText("01234567890LoadingC" + getHeap());
-        fonts.put("font", font);
-        setStageLoad(StageLoad.class);
-        init();
-        var3dListener.create();
-    }
-
-    //设置R文件
-    public <T> void setResources(Class<T> resource) {
-        this.resource = resource;
     }
 
     private String language;
