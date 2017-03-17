@@ -105,6 +105,7 @@ public abstract class VGame implements ApplicationListener {
     // private String prefStageName;// 上一个页面的名字
     @SuppressWarnings("rawtypes")
     private Class prefStage;
+    private Class resource;
     public int fontSize = 30;
     public VBundle bundle;// 文本国际化
     public Preferences save;// 数据保存
@@ -168,8 +169,9 @@ public abstract class VGame implements ApplicationListener {
         bundle = new VBundle(var3dListener);
         // 将多语言本地文本赋值到R文件，如果有的话
         try {
+            Gdx.app.log("aaaaaaa", (resource == null) + "");
             @SuppressWarnings("rawtypes")
-            Class R_clazz = Class.forName(getProjectName() + ".R");
+            Class R_clazz = resource == null ? Class.forName(getProjectName() + ".R") : resource;
             @SuppressWarnings("rawtypes")
             Class innerClazz[] = R_clazz.getDeclaredClasses();
             for (@SuppressWarnings("rawtypes")
@@ -198,6 +200,11 @@ public abstract class VGame implements ApplicationListener {
         setStageLoad(StageLoad.class);
         init();
         var3dListener.create();
+    }
+
+    //设置R文件
+    public <T> void setResources(Class<T> resource) {
+        this.resource = resource;
     }
 
     private String language;

@@ -10,6 +10,7 @@ public class Game extends VGame {
     public Game(VListener varListener) {
         super(varListener);
         setSize(800, 480);
+        setResources(R.class);//如果要混淆apk,需要加上这句,否则混淆会报错
     }
 
     @Override
