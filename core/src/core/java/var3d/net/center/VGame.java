@@ -270,7 +270,7 @@ public abstract class VGame implements ApplicationListener {
      * @param
      */
     public <T> void setStageLoad(Class<T> type) {
-        this.stageLoad = getStage(type);
+        this.stageLoad = getStageLoad(type);
     }
 
     public boolean getIsLoading() {
@@ -440,6 +440,48 @@ public abstract class VGame implements ApplicationListener {
      */
 
     private <T> VStage getStage(Class<T> type) {
+        String name = type.getName();
+        VStage dStage = pool.get(name);
+        if (dStage != null) {
+            stage = dStage;
+            dStage.reStart();
+            return dStage;
+        }
+        try {
+            dStage = (VStage) type.getConstructor(VGame.class)
+                    .newInstance(this);
+            isLoading = true;
+            pool.put(name, dStage);
+            return dStage;
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    private <T> VStage getStageLoad(Class<T> type) {
         String name = type.getName();
         VStage dStage = pool.get(name);
         if (dStage != null) {
