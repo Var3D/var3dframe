@@ -657,25 +657,27 @@ public abstract class VDesktopLauncher implements VListener {
                     int firstLinNumber = linNumber;
                     Array<String> javaStrArr = new Array<>();
                     for (int i = linNumber - 1; i > 1; i--) {
-                        String javaStrLine = javaStrLines[i].replaceAll(" ", "");
-                        int idex0;
-                        if ((idex0 = javaStrLine.indexOf("new")) != -1) {
-                            //含有new字符,判断new前面是否为=号或(
-                            if (idex0 > 0) {
-                                String pref = javaStrLine.charAt(idex0 - 1) + "";
-                                if (pref.equals("(") || pref.equals("=") || pref.equals(";")) {
-                                    javaStrLine = javaStrLine.replaceAll("new", "new ");
-                                }
-                            }
-                        }
+                        String javaStrLine = javaStrLines[i].trim();
+                        javaStrLine = javaStrLine.replaceAll(" +", " ");
+                        javaStrLine = javaStrLine.replaceAll(" \\.", ".");
+                        javaStrLine = javaStrLine.replaceAll("\\. ", ".");
+                        javaStrLine = javaStrLine.replaceAll(" ", "㜶");
                         //移除注释
                         String noAnnotations = javaStrLine.replaceAll(
                                 "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
                         javaStrArr.add(noAnnotations);
                         javaStrLines[i] = "";
-                        if ((data.filed == null && noAnnotations.indexOf("game.") != -1) || (data.filed
-                                != null && noAnnotations.indexOf(data.filed.getName() + "=game.") != -1)) {
-                            break;
+                        if (data.filed == null) {
+                            if (noAnnotations.indexOf("game") != -1) {
+                                break;
+                            }
+                        } else {
+                            if (noAnnotations.indexOf(data.filed.getName() + "=game") != -1
+                                    || noAnnotations.indexOf(data.filed.getName() + "㜶=game") != -1
+                                    || noAnnotations.indexOf(data.filed.getName() + "=㜶game") != -1
+                                    || noAnnotations.indexOf(data.filed.getName() + "㜶=㜶game") != -1) {
+                                break;
+                            }
                         }
                     }
                     firstLinNumber -= javaStrArr.size;
@@ -701,22 +703,31 @@ public abstract class VDesktopLauncher implements VListener {
                         codeStr = s1 + ".setPosition(" + (int) actor.getX() + "," + (int) actor.getY() + ")" + s2;
                     }
                     List<String> listStr = new ArrayList<String>();
-                    int len = codeStr.length();
-                    int width = 90;
-                    int lineNum = len % width == 0 ? len / width : len / width + 1;
-                    String subStr;
-                    for (int i = 1; i <= lineNum; i++) {
-                        if (i < lineNum) {
-                            subStr = codeStr.substring((i - 1) * width, i * width);
-                        } else {
-                            subStr = codeStr.substring((i - 1) * width, len);
+                    String subStr, prefStr = "";
+                    int prefIndex = 0, width = 90;
+                    for (int i = 0; ; i++) {
+                        int index = codeStr.indexOf(".", i);
+                        if (index == -1) {
+                            listStr.add(prefStr + codeStr.substring(prefIndex));
+                            break;
                         }
-                        listStr.add(subStr);
+                        subStr = codeStr.substring(prefIndex, index);
+                        if (prefStr.length() + subStr.length() > width) {
+                            listStr.add(prefStr);
+                            prefIndex = index;
+                            prefStr = subStr;
+                        } else {
+                            prefStr += subStr;
+                            prefIndex = index;
+                        }
                     }
                     StringBuilder out = new StringBuilder();
                     for (int i = 0; i < listStr.size(); i++) {
                         out.append("        ");
-                        out.append(listStr.get(i));
+                        String sline = listStr.get(i).replaceAll("㜶", " ");
+                        sline = sline.replaceAll(" \\.", ".");
+                        sline = sline.replaceAll("\\. ", ".");
+                        out.append(sline);
                         if (i < listStr.size() - 1) out.append("\n");
                     }
                     javaStrLines[firstLinNumber] = out.toString();
