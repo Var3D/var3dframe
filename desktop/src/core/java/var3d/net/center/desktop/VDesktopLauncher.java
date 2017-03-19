@@ -515,6 +515,8 @@ public abstract class VDesktopLauncher implements VListener {
     public void create() {
     }
 
+    //以下是简易UI编辑器
+
     private boolean isEdit = false;
     private HashMap<Actor, Data> allDatas = new HashMap<Actor, Data>();
     //private ToolFrame toolFrame;
@@ -525,6 +527,8 @@ public abstract class VDesktopLauncher implements VListener {
         public boolean isEdit = false;//是否被编辑
         public Field filed;//保存对应的对象
         public Touchable prefTouchable;//最初的Actor响应属性
+        public int variableType = 1;//成员变量1，局部变量2，匿名变量0, 暂不可保存变量-1
+        public String name = null;//变量名
     }
 
 
@@ -567,6 +571,8 @@ public abstract class VDesktopLauncher implements VListener {
                             continue;
                         } else if (actor == object) {
                             data.filed = field;
+                            data.variableType = 1;
+                            data.name = data.filed.getName();
                             break;
                         }
                     } catch (IllegalAccessException e) {
@@ -588,6 +594,18 @@ public abstract class VDesktopLauncher implements VListener {
                     }
                 }
                 allDatas.put(actor, data);
+                if (data.filed == null) {
+                    //说明是匿名变量或者局部变量，直接抓源码分析
+                    String name = getPartialVariable(stage, actor);
+                    if (name == null) {
+                        data.variableType = -1;
+                    } else if (name.equals("?")) {
+                        data.variableType = 0;
+                    } else {
+                        data.variableType = 2;
+                        data.name = name;
+                    }
+                }
                 actor.clearListeners();
                 actor.addListener(new InputListener() {
                     private float starX, starY;
@@ -595,18 +613,14 @@ public abstract class VDesktopLauncher implements VListener {
                     public boolean touchDown(InputEvent event, float px, float py, int pointer, int but) {
                         starX = px;
                         starY = py;
-                        String name = data.filed == null ? "局部变量" : data.filed.getName();
-                        Display.setTitle(actor.getClass().getSimpleName() + ":" + name
-                                + "(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
+                        msg(actor, data);
                         return true;
                     }
 
                     public void touchDragged(InputEvent event, float x, float y, int pointer) {
                         actor.moveBy(x - starX, y - starY);
                         data.isEdit = true;
-                        String name = data.filed == null ? "局部变量" : data.filed.getName();
-                        Display.setTitle(actor.getClass().getSimpleName() + ":" + name
-                                + "(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
+                        msg(actor, data);
                     }
 
                     public void touchUp(InputEvent event, float px, float py,
@@ -619,6 +633,25 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
+
+    private void msg(Actor actor, Data data) {
+        String name, type = "";
+        if (data.variableType == -1) {
+            name = "无法保存的Actor";
+        } else if (data.variableType == 1) {
+            type = "成员变量";
+            name = data.name;
+        } else if (data.variableType == 2) {
+            type = "局部变量";
+            name = data.name;
+        } else {
+            type = "匿名变量";
+            name = "";
+        }
+        Display.setTitle(type + ":" + name + " 类型:" + actor.getClass().getSimpleName()
+                + " 坐标" + (int) actor.getX() + "," + (int) actor.getY());
+    }
+
     private class SubFrame extends JFrame {
         public SubFrame() {
             setTitle("子窗口");
@@ -629,21 +662,75 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
+
+    //用来获取actor的局部变量名，除非为匿名变量
+    private String getPartialVariable(VStage stage, Actor actor) {
+        FileHandle fileHandle = getStageJavaFile(stage);
+        if (fileHandle == null) return null;
+        String javaStr = fileHandle.readString();
+        String[] javaStrLines = javaStr.split("\n");//把代码按行号存放进数组中
+        Data data = allDatas.get(actor);
+        StackTraceElement[] elements = allStacks.get(actor);
+        if (elements == null) return null;//为null表示这是非UI类创建的控件，以后再实现非UI类创建的控件
+        String str_class = elements[2].getClassName();//变量所在的类全名
+        if (str_class.equals(stage.getClass().getName())) {//如果所在的类就是传入的这个Stage
+            int linNumber = elements[2].getLineNumber();//获取该变量调用初始化所在的行号
+            Array<String> javaStrArr = new Array<>();
+            int partNumber = 0;
+            for (int i = linNumber - 1; i > 1; i--) {
+                String javaStrLine = javaStrLines[i].trim();
+                javaStrLine = javaStrLine.replaceAll(" +", " ");
+                javaStrLine = javaStrLine.replaceAll(" \\.", ".");
+                javaStrLine = javaStrLine.replaceAll("\\. ", ".");
+                javaStrLine = javaStrLine.replaceAll(" ", "㜶");
+                //移除注释
+                String noAnnotations = javaStrLine.replaceAll(
+                        "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
+                if (noAnnotations.indexOf(";") != -1) {
+                    partNumber++;
+                    if (partNumber == 2) {
+                        int i1 = noAnnotations.lastIndexOf(";");
+                        javaStrArr.add(noAnnotations.substring(i1 + 1));
+                        //javaStrLines[i] = noAnnotations.substring(0, i1);
+                        break;
+                    } else {
+                        javaStrArr.add(noAnnotations);
+                    }
+                } else {
+                    javaStrArr.add(noAnnotations);
+                    //javaStrLines[i] = "";
+                }
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = javaStrArr.size - 1; i > -1; i--) {
+                String strLine = javaStrArr.get(i);
+                stringBuilder.append("㜶");
+                stringBuilder.append(strLine);
+            }
+            String codeStr = stringBuilder.toString();
+            int idex;
+            if ((idex = codeStr.indexOf("=")) != -1) {
+                String name = codeStr.substring(0, idex).replaceAll("㜶", " ").trim();
+                name = name.replaceAll(" +", " ");
+                idex = name.lastIndexOf(" ");
+                if (idex != -1) {
+                    name = name.substring(name.lastIndexOf(" "));
+                }
+                return name.trim();
+            } else {
+                return "?";//匿名变量
+            }
+        }
+
+
+        return null;
+    }
+
     //保存编辑过的Actor
     public void saveUI(VStage stage) {
         //遍历stage中的actor，并找出该actor在stage初始化时的行号位置
-        //获取stage的java文件
-        String proName = Gdx.files.getLocalStoragePath().replaceAll("\\/android\\/assets\\/", "");
-        String pack = stage.getClass().getPackage().toString().replaceAll("package ", "");
-        pack = pack.replaceAll("\\.", "/");
-        String tryPath = proName + "/core/src/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
-        FileHandle fileHandle = Gdx.files.absolute(tryPath);
-        if (!fileHandle.exists()) {
-            //如果不存在，则找另一个路径
-            tryPath = proName + "/core/src/main/java/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
-            fileHandle = Gdx.files.absolute(tryPath);
-        }
-        if (!fileHandle.exists()) return;//如果还是读取不到，中断所有操作
+        FileHandle fileHandle = getStageJavaFile(stage);
+        if (fileHandle == null) return;
         String javaStr = fileHandle.readString();
         String[] javaStrLines = javaStr.split("\n");//把代码按行号存放进数组中
         for (final Actor actor : stage.getRoot().getChildren()) {
@@ -656,6 +743,7 @@ public abstract class VDesktopLauncher implements VListener {
                     int linNumber = elements[2].getLineNumber();
                     int firstLinNumber = linNumber;
                     Array<String> javaStrArr = new Array<>();
+                    int partNumber = 0;
                     for (int i = linNumber - 1; i > 1; i--) {
                         String javaStrLine = javaStrLines[i].trim();
                         javaStrLine = javaStrLine.replaceAll(" +", " ");
@@ -665,28 +753,33 @@ public abstract class VDesktopLauncher implements VListener {
                         //移除注释
                         String noAnnotations = javaStrLine.replaceAll(
                                 "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
-                        javaStrArr.add(noAnnotations);
-                        javaStrLines[i] = "";
-                        if (data.filed == null) {
-                            if (noAnnotations.indexOf("game") != -1) {
+                        if (noAnnotations.indexOf(";") != -1) {
+                            partNumber++;
+                            if (partNumber == 2) {
+                                int i1 = noAnnotations.lastIndexOf(";");
+                                javaStrArr.add(noAnnotations.substring(i1 + 1));
                                 break;
+                            } else {
+                                javaStrArr.add(noAnnotations);
+                                javaStrLines[i] = "";
                             }
                         } else {
-                            if (noAnnotations.indexOf(data.filed.getName() + "=game") != -1
-                                    || noAnnotations.indexOf(data.filed.getName() + "㜶=game") != -1
-                                    || noAnnotations.indexOf(data.filed.getName() + "=㜶game") != -1
-                                    || noAnnotations.indexOf(data.filed.getName() + "㜶=㜶game") != -1) {
-                                break;
-                            }
+                            javaStrArr.add(noAnnotations);
+                            javaStrLines[i] = "";
                         }
                     }
-                    firstLinNumber -= javaStrArr.size;
+                    firstLinNumber -= javaStrArr.size - 1;
                     StringBuilder stringBuilder = new StringBuilder();
-                    for (int i = javaStrArr.size - 1; i > -1; i--) {
-                        String strLine = javaStrArr.get(i);
+                    for (int len = javaStrArr.size - 1, i = len; i > -1; i--) {
+                        String strLine = javaStrArr.get(i).trim();
+                        stringBuilder.append("㜶");
                         stringBuilder.append(strLine);
                     }
-                    String codeStr = stringBuilder.toString();
+                    String codeStr = stringBuilder.toString().replaceAll("㜶+", "㜶");
+                    if (codeStr.startsWith("㜶")) {
+                        codeStr = codeStr.substring(1);
+                    }
+                   // Gdx.app.log("aaaaaa", codeStr);
                     int idex;
                     if ((idex = codeStr.lastIndexOf("setPosition(")) != -1) {
                         //说明拥有setPosition方法
@@ -724,13 +817,16 @@ public abstract class VDesktopLauncher implements VListener {
                     StringBuilder out = new StringBuilder();
                     for (int i = 0; i < listStr.size(); i++) {
                         out.append("        ");
+                        // Gdx.app.log("bbbbbb", listStr.get(i));
                         String sline = listStr.get(i).replaceAll("㜶", " ");
+                        //Gdx.app.log("cccccc", sline);
                         sline = sline.replaceAll(" \\.", ".");
                         sline = sline.replaceAll("\\. ", ".");
                         out.append(sline);
                         if (i < listStr.size() - 1) out.append("\n");
                     }
                     javaStrLines[firstLinNumber] = out.toString();
+                   // Gdx.app.log("bbbbbb", out.toString());
                 }
             }
         }
@@ -755,7 +851,27 @@ public abstract class VDesktopLauncher implements VListener {
         Gdx.app.exit();
     }
 
+    //读取Stage java文件
+    private HashMap<VStage, FileHandle> stageFiles = new HashMap<VStage, FileHandle>();
 
+    private FileHandle getStageJavaFile(VStage stage) {
+        if (stageFiles.get(stage) != null) return stageFiles.get(stage);
+        String proName = Gdx.files.getLocalStoragePath().replaceAll("\\/android\\/assets\\/", "");
+        String pack = stage.getClass().getPackage().toString().replaceAll("package ", "");
+        pack = pack.replaceAll("\\.", "/");
+        String tryPath = proName + "/core/src/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
+        FileHandle fileHandle = Gdx.files.absolute(tryPath);
+        if (!fileHandle.exists()) {
+            //如果不存在，则找另一个路径
+            tryPath = proName + "/core/src/main/java/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
+            fileHandle = Gdx.files.absolute(tryPath);
+        }
+        if (!fileHandle.exists()) return null;
+        stageFiles.put(stage, fileHandle);
+        return fileHandle;
+    }
+
+    //获取行号接口实现
     private HashMap<Actor, StackTraceElement[]> allStacks = new HashMap<>();
 
     public void getLineNumber(Actor actor) {

@@ -1,6 +1,8 @@
 package var3d.net.demo;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import var3d.net.center.VGame;
@@ -20,12 +22,27 @@ public class StageTest extends VStage {
     @Override
     public void init() {
         setBackground(Color.BLACK);
-        VLabel text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).setStroke(Color.RED)
-                .setPosition(285, 330).show();
-        text.setPosition(10, 10);
 
-        game.getImage(R.image.tank_4).setPosition(641, 340).show();
 
+
+        text = game.getLabel(R.strings
+                .logo
+        ).setColor(  Color .YELLOW).           setStroke(Color.RED)
+        .setPosition(313
+                ,411).show();
+
+
+
+        game.getImage(R.image.tank_4)
+                .show();
+
+
+
+        Button button = game.getButton(
+                R.image.badlogic).setPosition(       349
+                //变态注释
+
+                ,188).show();
     }
 
     @Override
