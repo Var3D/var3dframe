@@ -370,4 +370,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     public void getLineNumber(Actor actor) {
     }
+
+    public void keyDown(int key) {
+
+    }
+
+    public void keyUp(int key) {
+    }
 }

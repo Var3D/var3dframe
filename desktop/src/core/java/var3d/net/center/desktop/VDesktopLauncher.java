@@ -1,6 +1,7 @@
 package var3d.net.center.desktop;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -11,7 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -531,6 +534,72 @@ public abstract class VDesktopLauncher implements VListener {
         public String name = null;//变量名
     }
 
+    private int nowKey = -1;//用来实现组合键功能
+
+    public void keyDown(int key) {
+        if (nowKey == Input.Keys.SHIFT_LEFT || nowKey == Input.Keys.SHIFT_RIGHT) {
+            if (nowActor != null) {
+                Stage father = nowActor.getStage();
+                if (father != null) {
+                    switch (key) {
+                        case Input.Keys.C: //actor相对于父元素居中
+                            nowActor.setPosition(father.getWidth() / 2, father.getHeight() / 2, Align.center);
+                            break;
+                        case Input.Keys.LEFT://。。。。居左
+                            nowActor.setX(0);
+                            break;
+                        case Input.Keys.RIGHT://....居右
+                            nowActor.setPosition(father.getWidth(), nowActor.getY(), Align.bottomRight);
+                            break;
+                        case Input.Keys.UP://。。。。居上
+                            nowActor.setPosition(nowActor.getX(), father.getHeight(), Align.topLeft);
+                            break;
+                        case Input.Keys.DOWN://....居下
+                            nowActor.setY(0);
+                            break;
+                    }
+                }
+                nowKey = Input.Keys.SHIFT_LEFT;
+            }
+        } else {
+            if (nowActor != null) {
+                switch (key) {
+                    case Input.Keys.LEFT://左
+                        nowActor.moveBy(-1, 0);
+                        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
+                        break;
+                    case Input.Keys.RIGHT://右
+                        nowActor.moveBy(1, 0);
+                        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
+                        break;
+                    case Input.Keys.UP://上
+                        nowActor.moveBy(0, 1);
+                        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
+                        break;
+                    case Input.Keys.DOWN://下
+                        nowActor.moveBy(0, -1);
+                        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
+                        break;
+                }
+            }
+            nowKey = key;
+        }
+    }
+
+    public void keyUp(int key) {
+        if (nowKey == Input.Keys.SHIFT_LEFT) {
+            if (key == Input.Keys.C || key == Input.Keys.UP || key == Input.Keys.DOWN
+                    || key == Input.Keys.LEFT || key == Input.Keys.RIGHT) {
+                nowKey = Input.Keys.SHIFT_LEFT;
+            } else {
+                nowKey = -1;
+            }
+        } else {
+            nowKey = -1;
+        }
+    }
+
+    private Actor nowActor;//当前编辑的Actor
 
     public void edit(VStage stage) {
         if (isEdit) {
@@ -611,16 +680,35 @@ public abstract class VDesktopLauncher implements VListener {
                     private float starX, starY;
 
                     public boolean touchDown(InputEvent event, float px, float py, int pointer, int but) {
+                        nowActor = actor;
                         starX = px;
                         starY = py;
-                        msg(actor, data);
+                        String xy = "";
+                        if (nowKey == -1) {
+                            xy = "X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
+                        } else if (nowKey == Input.Keys.X) {
+                            xy = "X:" + (int) actor.getX() + ",锁定Y:" + (int) actor.getY();
+                        } else if (nowKey == Input.Keys.Y) {
+                            xy = "锁定X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
+                        }
+                        msg(actor, data, xy);
                         return true;
                     }
 
                     public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                        actor.moveBy(x - starX, y - starY);
+                        String xy = "";
+                        if (nowKey == -1) {
+                            actor.moveBy(x - starX, y - starY);
+                            xy = "X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
+                        } else if (nowKey == Input.Keys.X) {
+                            actor.moveBy(x - starX, 0);
+                            xy = "X:" + (int) actor.getX() + ",锁定Y:" + (int) actor.getY();
+                        } else if (nowKey == Input.Keys.Y) {
+                            xy = "锁定X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
+                            actor.moveBy(0, y - starY);
+                        }
                         data.isEdit = true;
-                        msg(actor, data);
+                        msg(actor, data, xy);
                     }
 
                     public void touchUp(InputEvent event, float px, float py,
@@ -634,7 +722,7 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    private void msg(Actor actor, Data data) {
+    private void msg(Actor actor, Data data, String xy) {
         String name, type = "";
         if (data.variableType == -1) {
             name = "无法保存的Actor";
@@ -649,7 +737,7 @@ public abstract class VDesktopLauncher implements VListener {
             name = "";
         }
         Display.setTitle(type + ":" + name + " 类型:" + actor.getClass().getSimpleName()
-                + " 坐标" + (int) actor.getX() + "," + (int) actor.getY());
+                + " 坐标:" + xy);
     }
 
     private class SubFrame extends JFrame {
@@ -660,6 +748,7 @@ public abstract class VDesktopLauncher implements VListener {
             setLocationByPlatform(true);
             setVisible(true);
         }
+
     }
 
 
@@ -779,7 +868,7 @@ public abstract class VDesktopLauncher implements VListener {
                     if (codeStr.startsWith("㜶")) {
                         codeStr = codeStr.substring(1);
                     }
-                   // Gdx.app.log("aaaaaa", codeStr);
+                    // Gdx.app.log("aaaaaa", codeStr);
                     int idex;
                     if ((idex = codeStr.lastIndexOf("setPosition(")) != -1) {
                         //说明拥有setPosition方法
@@ -826,7 +915,7 @@ public abstract class VDesktopLauncher implements VListener {
                         if (i < listStr.size() - 1) out.append("\n");
                     }
                     javaStrLines[firstLinNumber] = out.toString();
-                   // Gdx.app.log("bbbbbb", out.toString());
+                    // Gdx.app.log("bbbbbb", out.toString());
                 }
             }
         }

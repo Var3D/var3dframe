@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -128,6 +129,7 @@ public abstract class VStage extends Stage {
         if (isOff == true)
             return false;
         if (Gdx.app.getType() == ApplicationType.Desktop) {
+            game.var3dListener.keyDown(arg0);
             if (arg0 == Input.Keys.DEL) {
                 back();
             } else if (arg0 == Input.Keys.F) {
@@ -144,6 +146,15 @@ public abstract class VStage extends Stage {
             if (getRoot().getTouchable() == Touchable.enabled) {
                 back();
             }
+        }
+        return false;
+    }
+
+    public boolean keyUp(int arg0) {
+        if (isOff == true)
+            return false;
+        if (Gdx.app.getType() == ApplicationType.Desktop) {
+            game.var3dListener.keyUp(arg0);
         }
         return false;
     }

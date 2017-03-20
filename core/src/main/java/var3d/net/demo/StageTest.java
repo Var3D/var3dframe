@@ -22,27 +22,12 @@ public class StageTest extends VStage {
     @Override
     public void init() {
         setBackground(Color.BLACK);
+        text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).setStroke(Color.RED) 
+        .setPosition(342,225).show();
+        game.getImage(R.image.tank_4).setPosition(347,187).show();
+        Button button = game.getButton(R.image.badlogic).setPosition(347,187).show();
 
-
-
-        text = game.getLabel(R.strings
-                .logo
-        ).setColor(  Color .YELLOW).           setStroke(Color.RED)
-        .setPosition(313
-                ,411).show();
-
-
-
-        game.getImage(R.image.tank_4)
-                .show();
-
-
-
-        Button button = game.getButton(
-                R.image.badlogic).setPosition(       349
-                //变态注释
-
-                ,188).show();
+        button.setTransform(true);
     }
 
     @Override
