@@ -18,6 +18,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import org.lwjgl.opengl.Display;
@@ -46,8 +48,10 @@ import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -534,114 +538,169 @@ public abstract class VDesktopLauncher implements VListener {
         public String name = null;//变量名
     }
 
-    private int nowKey = -1;//用来实现组合键功能
+    private String getPrefName() {
+        Data data = allDatas.get(prefActor);
+        if (data == null) return "匿名控件";
+        if (data.variableType == -1) {
+            return "匿名控件";
+        } else if (data.variableType == 1) {
+            return data.name + "控件";
+        } else if (data.variableType == 2) {
+            return data.name + "控件";
+        } else {
+            return "匿名控件";
+        }
+    }
+
+    private IntArray keys = new IntArray();
 
     public void keyDown(int key) {
-        if (nowKey == Input.Keys.SHIFT_LEFT || nowKey == Input.Keys.SHIFT_RIGHT) {
-            if (nowActor != null) {
-                Stage father = nowActor.getStage();
-                if (father != null) {
-                    switch (key) {
-                        case Input.Keys.C: //actor相对于父元素居中
-                            nowActor.setPosition(father.getWidth() / 2, father.getHeight() / 2, Align.center);
-                            msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            break;
-                        case Input.Keys.LEFT://。。。。居左
-                            nowActor.setX(0);
-                            msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            break;
-                        case Input.Keys.RIGHT://....居右
-                            nowActor.setPosition(father.getWidth(), nowActor.getY(), Align.bottomRight);
-                            msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            break;
-                        case Input.Keys.UP://。。。。居上
-                            nowActor.setPosition(nowActor.getX(), father.getHeight(), Align.topLeft);
-                            msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            break;
-                        case Input.Keys.DOWN://....居下
-                            nowActor.setY(0);
-                            msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            break;
-                        case Input.Keys.Y://自动对齐Y轴
-                            if (prefActor != null) nowActor.setY(prefActor.getY());
-                            msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            break;
-                        case Input.Keys.X://自动对齐X轴
-                            if (prefActor != null) nowActor.setX(prefActor.getX());
-                            msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            break;
-                    }
-                }
-                nowKey = Input.Keys.SHIFT_LEFT;
+        keys.add(key);
+        if (nowActor == null) return;
+        if (keys.size == 1) {
+            //单按钮
+            switch (key) {
+                case Input.Keys.LEFT://左移
+                    moveByActor(-1, 0);
+                    break;
+                case Input.Keys.RIGHT://右移
+                    moveByActor(1, 0);
+                    break;
+                case Input.Keys.UP://上移
+                    moveByActor(0, 1);
+                    break;
+                case Input.Keys.DOWN://下移
+                    moveByActor(0, -1);
+                    break;
             }
-        } else {
-            if (nowActor != null) {
-                int speed = 1;
-                if (nowKey == Input.Keys.ALT_LEFT || nowKey == Input.Keys.ALT_RIGHT) {
-                    speed = 10;
-                    nowKey = Input.Keys.ALT_LEFT;
-                } else {
-                    nowKey = key;
-                }
+        } else if (keys.size == 2) {
+            //双按钮组合
+            int fistKey = keys.get(0);
+            if (fistKey == Input.Keys.SHIFT_RIGHT) fistKey = Input.Keys.SHIFT_LEFT;
+            if (7 < fistKey && fistKey < 11) {
+                int speed = fistKey == 8 ? 10 : fistKey == 9 ? 50 : 100;
                 switch (key) {
-                    case Input.Keys.LEFT://左
-                        nowActor.moveBy(-speed, 0);
-                        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
+                    case Input.Keys.LEFT://左移
+                        moveByActor(-speed, 0);
                         break;
-                    case Input.Keys.RIGHT://右
-                        nowActor.moveBy(speed, 0);
-                        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
+                    case Input.Keys.RIGHT://右移
+                        moveByActor(speed, 0);
                         break;
-                    case Input.Keys.UP://上
-                        nowActor.moveBy(0, speed);
-                        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
+                    case Input.Keys.UP://上移
+                        moveByActor(0, speed);
                         break;
-                    case Input.Keys.DOWN://下
-                        nowActor.moveBy(0, -speed);
-                        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                        break;
-                    case Input.Keys.X:
-                        if (speed == 10) {
-                            if (prefActor != null) {
-                                nowActor.setX(prefActor.getX(Align.center) - nowActor.getWidth() / 2);
-                                msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            }
-                        }
-                        break;
-                    case Input.Keys.Y:
-                        if (speed == 10) {
-                            if (prefActor != null) {
-                                nowActor.setY(prefActor.getY(Align.center) - nowActor.getHeight() / 2);
-                                msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
-                            }
-                        }
+                    case Input.Keys.DOWN://下移
+                        moveByActor(0, -speed);
                         break;
                 }
             } else {
-                nowKey = key;
+                switch (fistKey) {
+                    case Input.Keys.SHIFT_LEFT:
+                        switch (keys.get(1)) {
+                            case Input.Keys.C: //居中对齐
+                                if (prefActor != null) {
+                                    messeg = "相对" + getPrefName() + "居中对齐";
+                                    moveActor(prefActor.getX(Align.center), prefActor.getY(Align.center), Align.center);
+                                }
+                                break;
+                            case Input.Keys.LEFT://居左对齐
+                                if (prefActor != null) {
+                                    messeg = "相对" + getPrefName() + "居左对齐";
+                                    moveActor(prefActor.getX(), nowActor.getY(), Align.bottomLeft);
+                                }
+                                break;
+                            case Input.Keys.RIGHT://居右对齐
+                                if (prefActor != null) {
+                                    messeg = "相对" + getPrefName() + "居右对齐";
+                                    moveActor(prefActor.getRight(), nowActor.getY(), Align.bottomRight);
+                                }
+                                break;
+                            case Input.Keys.UP://居上对齐
+                                if (prefActor != null) {
+                                    messeg = "相对" + getPrefName() + "居上对齐";
+                                    moveActor(nowActor.getX(), prefActor.getTop(), Align.topLeft);
+                                }
+                                break;
+                            case Input.Keys.DOWN://居下对齐
+                                if (prefActor != null) {
+                                    messeg = "相对" + getPrefName() + "居下对齐";
+                                    moveActor(nowActor.getX(), prefActor.getY(), Align.bottomLeft);
+                                }
+                                break;
+                        }
+                        break;
+                    case Input.Keys.TAB:
+                        Stage father = nowActor.getStage();
+                        switch (key) {
+                            case Input.Keys.C: //actor相对于父元素居中
+                                messeg = "相对父元素居中对齐";
+                                moveActor(father.getWidth() / 2, father.getHeight() / 2, Align.center);
+                                break;
+                            case Input.Keys.LEFT://。。。。居左
+                                messeg = "相对父元素居左对齐";
+                                moveActor(0, nowActor.getY(), Align.bottomLeft);
+                                break;
+                            case Input.Keys.RIGHT://....居右
+                                messeg = "相对父元素居右对齐";
+                                moveActor(father.getWidth(), nowActor.getY(), Align.bottomRight);
+                                break;
+                            case Input.Keys.UP://。。。。居上
+                                messeg = "相对父元素居上对齐";
+                                moveActor(nowActor.getX(), father.getHeight(), Align.topLeft);
+                                break;
+                            case Input.Keys.DOWN://....居下
+                                messeg = "相对父元素居下对齐";
+                                moveActor(nowActor.getX(), 0, Align.bottomLeft);
+                                break;
+                        }
+                        break;
+                    case Input.Keys.ALT_LEFT:
+                        break;
+                }
+            }
+        } else if (keys.size == 3) {
+            //三按钮组合
+            int fistKey = keys.get(0);
+            if (fistKey == Input.Keys.SHIFT_RIGHT) fistKey = Input.Keys.SHIFT_LEFT;
+            switch (fistKey) {
+                case Input.Keys.SHIFT_LEFT:
+                    if ((keys.get(1) == Input.Keys.LEFT && keys.get(2) == Input.Keys.RIGHT)
+                            || (keys.get(1) == Input.Keys.RIGHT && keys.get(2) == Input.Keys.LEFT)) {
+                        //同时按下左右键，x居中对齐
+                        if (prefActor != null) {
+                            messeg = "相对" + getPrefName() + "水平居中对齐";
+                            moveActor(prefActor.getX(Align.center), nowActor.getY(), Align.bottom);
+                        }
+                    } else if ((keys.get(1) == Input.Keys.UP && keys.get(2) == Input.Keys.DOWN)
+                            || (keys.get(1) == Input.Keys.DOWN && keys.get(2) == Input.Keys.UP)) {
+                        //同时按下上下键，y居中对齐
+                        if (prefActor != null) {
+                            messeg = "相对" + getPrefName() + "垂直居中对齐";
+                            moveActor(nowActor.getX(), prefActor.getY(Align.center), Align.left);
+                        }
+                    }
+                    break;
             }
         }
     }
 
-
     public void keyUp(int key) {
-        if (nowKey == Input.Keys.SHIFT_LEFT) {
-            if (key == Input.Keys.C || key == Input.Keys.UP || key == Input.Keys.DOWN
-                    || key == Input.Keys.LEFT || key == Input.Keys.RIGHT) {
-                nowKey = Input.Keys.SHIFT_LEFT;
-            } else {
-                nowKey = -1;
-            }
-        } else if (nowKey == Input.Keys.ALT_LEFT) {
-            if (key == Input.Keys.UP || key == Input.Keys.DOWN
-                    || key == Input.Keys.LEFT || key == Input.Keys.RIGHT) {
-                nowKey = Input.Keys.ALT_LEFT;
-            } else {
-                nowKey = -1;
-            }
-        } else {
-            nowKey = -1;
-        }
+        keys.removeValue(key);
+    }
+
+    private void moveByActor(float x, float y) {
+        if (nowActor == null) return;
+        nowActor.moveBy(x, y);
+        String fx = x < 0 ? "左" : x > 0 ? "右" : y < 0 ? "下" : "上";
+        int speed = (int) Math.abs(x) + (int) Math.abs(y);
+        messeg = fx + "移" + speed + "像素";
+        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
+    }
+
+    private void moveActor(float x, float y, int align) {
+        if (nowActor == null) return;
+        nowActor.setPosition(x, y, align);
+        msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
     }
 
     private Actor prefActor, nowActor;//当前编辑的Actor
@@ -728,6 +787,7 @@ public abstract class VDesktopLauncher implements VListener {
 
                     public boolean touchDown(InputEvent event, float px, float py, int pointer, int but) {
                         if (nowActor != actor) {
+                            messeg = "选取";
                             if (prefActor != null) prefActor.setDebug(false);
                             prefActor = nowActor;
                             if (prefActor != null) prefActor.setDebug(true);
@@ -736,32 +796,28 @@ public abstract class VDesktopLauncher implements VListener {
                         }
                         starX = px;
                         starY = py;
-                        String xy = "";
-                        if (nowKey == -1) {
-                            xy = "X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
-                        } else if (nowKey == Input.Keys.X) {
-                            xy = "X:" + (int) actor.getX() + ",锁定Y:" + (int) actor.getY();
-                        } else if (nowKey == Input.Keys.Y) {
-                            xy = "锁定X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
-                        }
+                        String xy;
+                        xy = "X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
                         msg(actor, data, xy);
                         return true;
                     }
 
                     public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                        String xy = "";
-                        if (nowKey == -1) {
+                        if (keys.size == 0) {
+                            messeg = "拖动";
                             actor.moveBy(x - starX, y - starY);
-                            xy = "X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
-                        } else if (nowKey == Input.Keys.X) {
-                            actor.moveBy(x - starX, 0);
-                            xy = "X:" + (int) actor.getX() + ",锁定Y:" + (int) actor.getY();
-                        } else if (nowKey == Input.Keys.Y) {
-                            xy = "锁定X:" + (int) actor.getX() + ",Y:" + (int) actor.getY();
-                            actor.moveBy(0, y - starY);
+                        } else if (keys.size == 1) {
+                            int key = keys.get(0);
+                            if (key == Input.Keys.X) {
+                                messeg = "垂直锁定";
+                                actor.moveBy(x - starX, 0);
+                            } else if (key == Input.Keys.Y) {
+                                messeg = "水平锁定";
+                                actor.moveBy(0, y - starY);
+                            }
                         }
                         data.isEdit = true;
-                        msg(actor, data, xy);
+                        msg(actor, data, "X:" + (int) actor.getX() + ",Y:" + (int) actor.getY());
                     }
 
                     public void touchUp(InputEvent event, float px, float py,
@@ -774,6 +830,8 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
+
+    private String messeg = "";//操作消息
 
     private void msg(Actor actor, Data data, String xy) {
         String name, type = "";
@@ -790,7 +848,7 @@ public abstract class VDesktopLauncher implements VListener {
             name = "";
         }
         Display.setTitle(type + ":" + name + " 类型:" + actor.getClass().getSimpleName()
-                + " 坐标:" + xy);
+                + " 坐标:" + xy + " 消息:" + messeg);
     }
 
     private class SubFrame extends JFrame {
