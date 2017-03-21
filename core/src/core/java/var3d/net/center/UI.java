@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.utils.Align;
 
 public class UI<T extends Actor> {
     private T t;
@@ -30,8 +31,7 @@ public class UI<T extends Actor> {
     }
 
     public T show() {
-        game.getStage().addActor(t);
-        game.var3dListener.getLineNumber(t);
+        show(game.getStage());
         return t;
     }
 
@@ -44,6 +44,48 @@ public class UI<T extends Actor> {
     public T show(Stage stage) {
         stage.addActor(t);
         game.var3dListener.getLineNumber(t);
+        return t;
+    }
+
+    public T show(int aglin) {
+        show(game.getStage(), .5f, .5f, aglin);
+        return t;
+    }
+
+    public T show(Stage stage, int aglin) {
+        show(stage, .5f, .5f, aglin);
+        return t;
+    }
+
+    //设置actor在stage中的比例坐标
+    public T show(float sx, float sy) {
+        show(game.getStage(), sx, sy);
+        return t;
+    }
+
+    //设置actor在stage中的比例坐标
+    public T show(float sx, float sy, int aglin) {
+        show(game.getStage(), sx, sy, aglin);
+        return t;
+    }
+
+    //设置actor在stage中的比例坐标
+    public T show(Stage stage, float sx, float sy) {
+        show(stage, sx, sy, Align.bottomLeft);
+        return t;
+    }
+
+    //设置actor在stage中的比例坐标
+    public T show(Stage stage, float sx, float sy, int aglin) {
+        stage.addActor(t);
+        game.var3dListener.getLineNumber(t);
+        if (stage instanceof VStage) {
+            VStage vStage = (VStage) stage;
+            t.setPosition(vStage.getFullWidth() * sx - vStage.getCutWidth(), vStage.getFullHeight() * sy
+                    - vStage.getCutHeight(), aglin);
+        } else {
+            t.setPosition(stage.getWidth() * sx, stage.getHeight() * sy, aglin);
+        }
         return t;
     }
 

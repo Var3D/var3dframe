@@ -84,6 +84,14 @@ public abstract class VStage extends Stage {
         return cutHeight;
     }
 
+    public float getFullWidth() {
+        return getWidth() + cutWidth * 2;
+    }
+
+    public float getFullHeight() {
+        return getHeight() + cutHeight * 2;
+    }
+
     public String getName() {
         return name;
     }
