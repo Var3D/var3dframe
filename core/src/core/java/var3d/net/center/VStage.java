@@ -77,19 +77,27 @@ public abstract class VStage extends Stage {
     }
 
     public float getCutWidth() {
-        return cutWidth;
+        return cutWidth / getRoot().getScaleX();
     }
 
     public float getCutHeight() {
-        return cutHeight;
+        return cutHeight / getRoot().getScaleY();
+    }
+
+    public float getCutAndWidth() {
+        return getWidth() + cutWidth / getRoot().getScaleX();
+    }
+
+    public float getCutAndHeight() {
+        return getHeight() + cutHeight / getRoot().getScaleY();
     }
 
     public float getFullWidth() {
-        return getWidth() + cutWidth * 2;
+        return getWidth() + cutWidth / getRoot().getScaleX() * 2;
     }
 
     public float getFullHeight() {
-        return getHeight() + cutHeight * 2;
+        return getHeight() + cutHeight / getRoot().getScaleY() * 2;
     }
 
     public String getName() {
