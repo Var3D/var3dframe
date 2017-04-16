@@ -129,6 +129,12 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
+    public void openAd(int aglin) {
+    }
+
+    public void openAdbig(int aglin) {
+    }
+
     @Override
     public void closeAd() {
 

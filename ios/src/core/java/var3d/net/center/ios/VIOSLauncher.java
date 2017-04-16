@@ -215,6 +215,12 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     }
 
+    public void openAd(int aglin) {
+    }
+
+    public void openAdbig(int aglin) {
+    }
+
     @Override
     public void closeAd() {
 

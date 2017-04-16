@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import org.lwjgl.opengl.Display;
@@ -48,10 +47,8 @@ import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -152,6 +149,12 @@ public abstract class VDesktopLauncher implements VListener {
     public void openAd(String str) {
         // TODO Auto-generated method stub
 
+    }
+
+    public void openAd(int aglin) {
+    }
+
+    public void openAdbig(int aglin) {
     }
 
     @Override
