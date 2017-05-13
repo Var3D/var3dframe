@@ -22,6 +22,7 @@ import android.widget.EditText;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.badlogic.gdx.backends.android.AndroidGraphics;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -50,6 +51,12 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_IMMERSIVE);
         }
+    }
+
+    protected void onResume() {
+        super.onResume();
+        AndroidGraphics graphics= (AndroidGraphics) getGraphics();
+        graphics.getView().requestFocus();
     }
 
     public void setGame(VGame game) {
