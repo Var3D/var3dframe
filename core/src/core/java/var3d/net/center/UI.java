@@ -140,8 +140,18 @@ public class UI<T extends Actor> {
         return this;
     }
 
+    public UI<T> setX(Actor actor) {
+        t.setX(actor.getX());
+        return this;
+    }
+
     public UI<T> setY(float y) {
         t.setY(y);
+        return this;
+    }
+
+    public UI<T> setY(Actor actor) {
+        t.setY(actor.getY());
         return this;
     }
 
@@ -150,13 +160,28 @@ public class UI<T extends Actor> {
         return this;
     }
 
+    public UI<T> setPosition(Actor actor) {
+        t.setPosition(actor.getX(), actor.getY());
+        return this;
+    }
+
     public UI<T> setPosition(float x, float y, int align) {
         t.setPosition(x, y, align);
         return this;
     }
 
+    public UI<T> setPosition(Actor actor, int align) {
+        t.setPosition(actor.getX(), actor.getY(), align);
+        return this;
+    }
+
     public UI<T> setWidth(float width) {
-        t.setX(width);
+        t.setWidth(width);
+        return this;
+    }
+
+    public UI<T> setWidth(Actor actor) {
+        t.setWidth(actor.getWidth());
         return this;
     }
 
@@ -165,13 +190,28 @@ public class UI<T extends Actor> {
         return this;
     }
 
+    public UI<T> setHeight(Actor actor) {
+        t.setHeight(actor.getHeight());
+        return this;
+    }
+
     public UI<T> setSize(float width, float height) {
         t.setSize(width, height);
         return this;
     }
 
+    public UI<T> setSize(Actor actor) {
+        t.setSize(actor.getWidth(), actor.getHeight());
+        return this;
+    }
+
     public UI<T> setBounds(float x, float y, float width, float height) {
         t.setBounds(x, y, width, height);
+        return this;
+    }
+
+    public UI<T> setBounds(Actor actor) {
+        t.setBounds(actor.getX(), actor.getY(), actor.getWidth(), actor.getHeight());
         return this;
     }
 
@@ -268,12 +308,6 @@ public class UI<T extends Actor> {
 
     public UI<T> addAction(Action action) {
         t.addAction(action);
-        return this;
-    }
-
-    public UI<T> copyBounds(Actor actor) {
-        t.setBounds(actor.getX(), actor.getY(), actor.getWidth(),
-                actor.getHeight());
         return this;
     }
 

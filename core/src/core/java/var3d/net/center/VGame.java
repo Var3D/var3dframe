@@ -1138,6 +1138,42 @@ public abstract class VGame implements ApplicationListener {
     }
 
     /**
+     * 创建UI
+     */
+    public <T extends Actor> UI<T> getUI(Class<T> type, Object... objects) {
+        T actor = null;
+        try {
+            Class<?> types[] = new Class[objects.length];
+            for (int i = 0; i < objects.length; i++) {
+                types[i] = objects[i].getClass();
+            }
+            actor = type.getConstructor(types).newInstance(objects);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        UI<T> ui = new UI<T>(this);
+        ui.setActor(actor);
+        return ui;
+    }
+
+
+    /**
      * 创建Image
      */
     public UI<Image> getImage(String imageName) {
