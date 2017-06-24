@@ -61,6 +61,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
@@ -72,22 +73,22 @@ import var3d.net.center.freefont.FreePaint;
  * @version 1.6.0
  */
 public abstract class VGame implements ApplicationListener {
-    public int NOEFFECTE = 0;// 无效果
-    public int MOVELEFT = 10;// 从右到左
-    public int MOVERIGHT = 11;// 从左到右
-    public int MOVEODOWN = 12;// 从上到下
-    public int MOVEUP = 13;// 从下到上
-    public int FADEIN = 14;// 渐洳
-    public int POPUP = 15;// 弹出(目前只支持dialog)
+    public final int NOEFFECTE = 0;// 无效果
+    public final int MOVELEFT = 10;// 从右到左
+    public final int MOVERIGHT = 11;// 从左到右
+    public final int MOVEODOWN = 12;// 从上到下
+    public final int MOVEUP = 13;// 从下到上
+    public final int FADEIN = 14;// 渐洳
+    public final int POPUP = 15;// 弹出(目前只支持dialog)
     public int WIDTH = 480;// 宽
     public int HEIGHT = 800;// 高
     private int centerX = 240;// 一半宽
     private int centerY = 400;// 一半高
-    public int shortScreenWidth = 1242;
-    public int shortScreenHeight = 2208;
+    public final int shortScreenWidth = 1242;
+    public final int shortScreenHeight = 2208;
 
     private InputMultiplexer multiplexer;// 触控
-    private AssetManager assets = new AssetManager();// 资源管理
+    private final AssetManager assets = new AssetManager();// 资源管理
     private VStage stage;// 当前stage
     private VStage stageLoad;// loading动画的stage
     private VStage stageTop;// 顶层stage,用于盛放dialog
@@ -95,13 +96,13 @@ public abstract class VGame implements ApplicationListener {
     private boolean isLoading = false;// 是否加载中
     private PixmapPacker packer = null;// 用于将单个字符合成到大纹理的packer
     public int pageWidth = 1024;// 大纹理尺寸
-    public TextureFilter filter = TextureFilter.Linear;// 纹理缩放形式
+    public final TextureFilter filter = TextureFilter.Linear;// 纹理缩放形式
 
-    private HashMap<String, Texture> textures = new HashMap<String, Texture>();// 保存new出来得资源或者网络资源
+    private final HashMap<String, Texture> textures = new HashMap<String, Texture>();// 保存new出来得资源或者网络资源
     private TextureAtlas atlas;
-    private HashMap<String, VStage> pool = new HashMap<String, VStage>();// stage列表
-    private HashMap<String, VDialog> poolDialog = new HashMap<String, VDialog>();// dialog列表
-    private HashMap<String, FreeBitmapFont> fonts = new HashMap<String, FreeBitmapFont>();// 字体列表
+    private final HashMap<String, VStage> pool = new HashMap<String, VStage>();// stage列表
+    private final HashMap<String, VDialog> poolDialog = new HashMap<String, VDialog>();// dialog列表
+    private final HashMap<String, FreeBitmapFont> fonts = new HashMap<String, FreeBitmapFont>();// 字体列表
     // private String prefStageName;// 上一个页面的名字
     @SuppressWarnings("rawtypes")
     private Class prefStage;
@@ -117,7 +118,7 @@ public abstract class VGame implements ApplicationListener {
     private boolean isReProtect = false;// 是否关闭保护图片资源
 
     private Object userData;// 场景切换时用于数据中转
-    private HashMap<String, Object> userDatas = new HashMap<String, Object>();// 用于数据中转
+    private final HashMap<String, Object> userDatas = new HashMap<String, Object>();// 用于数据中转
 
     public VGame(VListener varListener) {
         this.var3dListener = varListener;
@@ -201,6 +202,72 @@ public abstract class VGame implements ApplicationListener {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private Array<String> out = new Array<>();
+
+    public Array<String> getAllFileName(String path) {
+        File file = Gdx.files.internal(path).file();
+        File[] files = file.listFiles();
+        for (File fil : files) {
+            out.add(fil.getPath());
+        }
+        return out;
+    }
+
+
+    /**
+     * 加载文件夹里的图片并合成到大图
+     */
+    public void loadFolderToPack(String... folderNames) {
+        for (String folderName : folderNames) {
+            getAllFileName(folderName);
+            loadToPackAll(out.toArray());
+            out.clear();
+        }
+    }
+
+    /**
+     * 加载文件夹里的资源
+     */
+    public <T> void loadFolder(Class<T> type, String... folderNames) {
+        for (String folderName : folderNames) {
+            getAllFileName(folderName);
+            loadAll(type, out.toArray());
+            out.clear();
+        }
+    }
+
+    /**
+     * 加载文件夹里的资源,并排除指定的资源
+     */
+    private HashSet<String> hashSet = new HashSet<>();
+
+    public <T> void loadFolderExcept(Class<T> type, String folderName, String... excepts) {
+        getAllFileName(folderName);
+        for (String name : excepts) {
+            hashSet.add(name);
+        }
+        for (String name : out) {
+            if (!hashSet.contains(name)) load(type, name);
+        }
+        hashSet.clear();
+        out.clear();
+    }
+
+    /**
+     * 加载文件夹里的图片并合成到大图并排除指定的资源
+     */
+    public void loadFolderToPackExcept(String folderName, String... excepts) {
+        getAllFileName(folderName);
+        for (String name : excepts) {
+            hashSet.add(name);
+        }
+        for (String name : out) {
+            if (!hashSet.contains(name)) loadToPack(name);
+        }
+        hashSet.clear();
+        out.clear();
     }
 
     private String language;

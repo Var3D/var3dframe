@@ -1,11 +1,7 @@
 package var3d.net.demo;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 
 import var3d.net.center.VGame;
@@ -20,6 +16,7 @@ public class StageTest extends VStage {
 
     public StageTest(VGame game) {
         super(game);
+        game.loadFolderToPack("image");
     }
 
     @Override
@@ -31,8 +28,6 @@ public class StageTest extends VStage {
 
         Image button = game.getImage(R.image.badlogic).setPosition(getCutAndWidth(), getCutAndHeight()
                 , Align.topRight).show();
-
-
     }
 
     @Override
