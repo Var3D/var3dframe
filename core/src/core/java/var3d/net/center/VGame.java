@@ -222,7 +222,9 @@ public abstract class VGame implements ApplicationListener {
     public void loadFolderToPack(String... folderNames) {
         for (String folderName : folderNames) {
             getAllFileName(folderName);
-            loadToPackAll(out.toArray());
+            for (String name : out) {
+                loadToPack(name);
+            }
             out.clear();
         }
     }
@@ -233,7 +235,9 @@ public abstract class VGame implements ApplicationListener {
     public <T> void loadFolder(Class<T> type, String... folderNames) {
         for (String folderName : folderNames) {
             getAllFileName(folderName);
-            loadAll(type, out.toArray());
+            for (String name : out) {
+                load(type, name);
+            }
             out.clear();
         }
     }
