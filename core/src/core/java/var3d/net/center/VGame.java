@@ -219,28 +219,28 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 加载文件夹里的图片并合成到大图
      */
-    public void loadFolderToPack(String... folderNames) {
-        for (String folderName : folderNames) {
-            getAllFileName(folderName);
-            for (String name : out) {
-                loadToPack(name);
-            }
-            out.clear();
-        }
-    }
+     public void loadFolderToPack(String... folderNames) {
+         for (String folderName : folderNames) {
+             getAllFileName(folderName);
+             for (String name : out) {
+                 loadToPack(name);
+             }
+             out.clear();
+         }
+     }
 
     /**
      * 加载文件夹里的资源
      */
-    public <T> void loadFolder(Class<T> type, String... folderNames) {
-        for (String folderName : folderNames) {
-            getAllFileName(folderName);
-            for (String name : out) {
-                load(type, name);
-            }
-            out.clear();
-        }
-    }
+     public <T> void loadFolder(Class<T> type, String... folderNames) {
+         for (String folderName : folderNames) {
+             getAllFileName(folderName);
+             for (String name : out) {
+                 load(type, name);
+             }
+             out.clear();
+         }
+     }
 
     /**
      * 加载文件夹里的资源,并排除指定的资源
