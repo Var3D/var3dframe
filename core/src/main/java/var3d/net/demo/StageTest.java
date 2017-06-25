@@ -1,6 +1,8 @@
 package var3d.net.demo;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 
@@ -16,7 +18,7 @@ public class StageTest extends VStage {
 
     public StageTest(VGame game) {
         super(game);
-        game.loadFolderToPack("image");
+        game.loadFolderToPackExcept(R.image.class, R.image.tank_4);
     }
 
     @Override

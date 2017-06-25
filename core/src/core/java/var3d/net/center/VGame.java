@@ -65,6 +65,7 @@ import java.util.HashSet;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
+import var3d.net.demo.R;
 
 /**
  * Var3D核心框架
@@ -186,8 +187,7 @@ public abstract class VGame implements ApplicationListener {
             Class R_clazz = resource;
             @SuppressWarnings("rawtypes")
             Class innerClazz[] = R_clazz.getDeclaredClasses();
-            for (@SuppressWarnings("rawtypes")
-                    Class cls : innerClazz) {
+            for (@SuppressWarnings("rawtypes") Class cls : innerClazz) {
                 String name = cls.getSimpleName();
                 if (name.equals("strings")) {
                     Field[] fields = cls.getDeclaredFields();
@@ -204,74 +204,110 @@ public abstract class VGame implements ApplicationListener {
         }
     }
 
-    private Array<String> out = new Array<>();
 
-    public Array<String> getAllFileName(String path) {
-        File file = Gdx.files.internal(path).file();
-        File[] files = file.listFiles();
-        for (File fil : files) {
-            out.add(fil.getPath());
+    /**
+     * 加载文件夹里的图片并合成到大图,如果文件后缀不是jpg和png将自动忽略
+     *
+     * @param R_Classs R资源文件索引
+     */
+    public void loadFolderToPack(Class<?>... R_Classs) {
+        for (Class<?> rClass : R_Classs) {
+            Class innerClazz[] = rClass.getDeclaredClasses();
+            if (innerClazz.length > 0) loadFolderToPack(innerClazz);
+            Field[] fields = rClass.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getModifiers() == 9) {
+                    try {
+                        String path = (String) field.get(null);
+                        if (path.endsWith(".jpg") || path.endsWith(".png")) {
+                            loadToPack(path);
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-        return out;
     }
 
-
     /**
-     * 加载文件夹里的图片并合成到大图
+     * 预加载文件夹里的文件
+     *
+     * @param type     文件类型
+     * @param R_Classs R资源文件索引
+     * @param <T>
      */
-     public void loadFolderToPack(String... folderNames) {
-         for (String folderName : folderNames) {
-             getAllFileName(folderName);
-             for (String name : out) {
-                 loadToPack(name);
-             }
-             out.clear();
-         }
-     }
-
-    /**
-     * 加载文件夹里的资源
-     */
-     public <T> void loadFolder(Class<T> type, String... folderNames) {
-         for (String folderName : folderNames) {
-             getAllFileName(folderName);
-             for (String name : out) {
-                 load(type, name);
-             }
-             out.clear();
-         }
-     }
+    public <T> void loadFolder(Class<T> type, Class<?>... R_Classs) {
+        for (Class<?> rClass : R_Classs) {
+            Class innerClazz[] = rClass.getDeclaredClasses();
+            if (innerClazz.length > 0) loadFolderToPack(innerClazz);
+            Field[] fields = rClass.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getModifiers() == 9) {
+                    try {
+                        String path = (String) field.get(null);
+                        load(type, path);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * 加载文件夹里的资源,并排除指定的资源
      */
     private HashSet<String> hashSet = new HashSet<>();
 
-    public <T> void loadFolderExcept(Class<T> type, String folderName, String... excepts) {
-        getAllFileName(folderName);
+    public <T> void loadFolderExcept(Class<T> type, Class<?> R_Classs, String... excepts) {
         for (String name : excepts) {
             hashSet.add(name);
         }
-        for (String name : out) {
-            if (!hashSet.contains(name)) load(type, name);
+        Class innerClazz[] = R_Classs.getDeclaredClasses();
+        if (innerClazz.length > 0) loadFolderToPack(innerClazz);
+        Field[] fields = R_Classs.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getModifiers() == 9) {
+                try {
+                    String path = (String) field.get(null);
+                    if (!hashSet.contains(path)) {
+                        load(type, path);
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         hashSet.clear();
-        out.clear();
     }
 
     /**
-     * 加载文件夹里的图片并合成到大图并排除指定的资源
+     * 加载文件夹里的图片并合成到大图,自动排除非jpg和png资源以及排除参数指定的任意资源
      */
-    public void loadFolderToPackExcept(String folderName, String... excepts) {
-        getAllFileName(folderName);
+    public void loadFolderToPackExcept(Class<?> R_Classs, String... excepts) {
         for (String name : excepts) {
             hashSet.add(name);
         }
-        for (String name : out) {
-            if (!hashSet.contains(name)) loadToPack(name);
+        Class innerClazz[] = R_Classs.getDeclaredClasses();
+        if (innerClazz.length > 0) loadFolderToPack(innerClazz);
+        Field[] fields = R_Classs.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getModifiers() == 9) {
+                try {
+                    String path = (String) field.get(null);
+                    if (path.endsWith(".jpg") || path.endsWith(".png")) {
+                        if (!hashSet.contains(path)) {
+                            loadToPack(path);
+                            Gdx.app.log("aaaaa", path);
+                        }
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         hashSet.clear();
-        out.clear();
     }
 
     private String language;
