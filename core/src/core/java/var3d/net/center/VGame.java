@@ -299,7 +299,7 @@ public abstract class VGame implements ApplicationListener {
                     if (path.endsWith(".jpg") || path.endsWith(".png")) {
                         if (!hashSet.contains(path)) {
                             loadToPack(path);
-                            Gdx.app.log("aaaaa", path);
+                            //Gdx.app.log("aaaaa", path);
                         }
                     }
                 } catch (IllegalAccessException e) {
