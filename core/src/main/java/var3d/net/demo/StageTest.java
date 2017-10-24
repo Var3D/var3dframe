@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 
+import var3d.net.center.DialogMessge;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
@@ -30,6 +31,9 @@ public class StageTest extends VStage {
 
         Image button = game.getImage(R.image.badlogic).setPosition(getCutAndWidth(), getCutAndHeight()
                 , Align.topRight).show();
+
+        game.setUserData(DialogMessge.MODEL, new DialogMessge.Model("这是一个简易的Tost"));
+        game.showDialog(DialogMessge.class);
     }
 
     @Override

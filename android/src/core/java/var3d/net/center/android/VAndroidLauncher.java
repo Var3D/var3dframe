@@ -55,7 +55,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     protected void onResume() {
         super.onResume();
-        AndroidGraphics graphics= (AndroidGraphics) getGraphics();
+        AndroidGraphics graphics = (AndroidGraphics) getGraphics();
         graphics.getView().requestFocus();
     }
 
@@ -88,6 +88,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     @Override
     public void getTopList() {
+
+    }
+
+    public void getTopList(String id) {
+        // TODO Auto-generated method stub
 
     }
 

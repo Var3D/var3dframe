@@ -97,6 +97,11 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
+    public void getTopList(String id) {
+        // TODO Auto-generated method stub
+
+    }
+
     @Override
     public void log(String txt) {
         // TODO Auto-generated method stub

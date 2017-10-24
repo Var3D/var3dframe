@@ -1,5 +1,6 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,8 +20,6 @@ public class DialogMessge extends VDialog {
     public VLabel lab_msg;
     public Image img_bg;
 
-    private VLabel lab_close;
-
     public DialogMessge(VGame game) {
         super(game);
     }
@@ -28,8 +27,8 @@ public class DialogMessge extends VDialog {
     @Override
     public void init() {
         setBackground(game.getUI(new Actor()).setSize(game.WIDTH, game.HEIGHT).getActor());
-        img_bg = game.getImage(getWidth() / 2, 1).show(this);
-        lab_msg = game.getLabel("messge").setColor(Color.DARK_GRAY).show(this);
+        img_bg = game.getImage(getWidth() / 2, 1).touchOff().show(this);
+        lab_msg = game.getLabel("messge").setColor(Color.DARK_GRAY).touchOff().show(this);
         lab_msg.setWrap(true);
         lab_msg.setAlignment(Align.center);
         lab_msg.setWidth(getWidth() / 2 - game.getDefaultFontSize());
@@ -64,18 +63,14 @@ public class DialogMessge extends VDialog {
             img_bg.setColor(model.bgColor);
 
             time = model.time;
-            if (time != -1f) {
+
+            if ((int) time != -1) {
                 addAction(Actions.delay(time, Actions.run(new Runnable() {
                     @Override
                     public void run() {
                         game.removeDialog(DialogMessge.this);
                     }
                 })));
-            } else {
-                if (lab_close == null) {
-                    lab_close = game.getLabel("Ⓧ").setColor(Color.RED).touchOff()
-                            .setPosition(img_bg.getWidth(), img_bg.getHeight(), Align.center).show(this);
-                }
             }
         } else {
             addAction(Actions.delay(time, Actions.run(new Runnable() {
@@ -92,11 +87,23 @@ public class DialogMessge extends VDialog {
 
     }
 
-    public class Model {
+    public static class Model {
         public String messge = "";
         public float time = 3;
         public Color bgColor = Color.WHITE;
         public Color labColor = Color.DARK_GRAY;
         public Color labStrokeColor = null;
+
+        public Model() {
+        }
+
+        public Model(String messge) {
+            this.messge = messge;
+        }
+
+        public Model(String messge, float time) {
+            this.messge = messge;
+            this.time = time;
+        }
     }
 }

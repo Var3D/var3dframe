@@ -170,6 +170,11 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     }
 
+    public void getTopList(String id) {
+        // TODO Auto-generated method stub
+
+    }
+
     @Override
     public void log(String txt) {
 
