@@ -1042,14 +1042,15 @@ public abstract class VGame implements ApplicationListener {
         Array<ParticleEmitter> emitters = eff.getEmitters();
         for (int i = 0, n = emitters.size; i < n; i++) {
             ParticleEmitter emitter = emitters.get(i);
-            String imagePath = emitter.getImagePath();
-            if (imagePath == null)
-                continue;
-            String imageName = new File(imagePath.replace('\\', '/')).getName();
-            imageName = name.substring(0, name.lastIndexOf("/") + 1)
-                    + imageName;
-            Sprite sprite = new Sprite(getTextureRegion(imageName));
-            emitter.setSprite(sprite);
+            Array<Sprite> sprites = new Array<Sprite>();
+            for (String imagePath : emitter.getImagePaths()) {
+                if (imagePath == null) continue;
+                String imageName = new File(imagePath.replace('\\', '/')).getName();
+                imageName = name.substring(0, name.lastIndexOf("/") + 1) + imageName;
+                Sprite sprite = new Sprite(getTextureRegion(imageName));
+                sprites.add(sprite);
+            }
+            emitter.setSprites(sprites);
         }
         return eff;
     }
@@ -1157,11 +1158,10 @@ public abstract class VGame implements ApplicationListener {
         return circle;
     }
 
-    public Pixmap getCircleRectPixmap(int width, int height, int radius,
-                                      Color color) {
-        Pixmap.setFilter(Filter.BiLinear);
+    public Pixmap getCircleRectPixmap(int width, int height, int radius, Color color) {
         Pixmap pixmap = new Pixmap(width + radius * 2 + 1, height + radius * 2
                 + 1, Format.RGBA8888);
+        pixmap.setFilter(Filter.BiLinear);
         // 绘制矩形
         pixmap.setColor(color);
         pixmap.fillRectangle(0, radius, pixmap.getWidth(), height);

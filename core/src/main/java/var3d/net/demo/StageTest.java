@@ -1,8 +1,6 @@
 package var3d.net.demo;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 
@@ -24,7 +22,7 @@ public class StageTest extends VStage {
 
     @Override
     public void init() {
-        setBackground(Color.YELLOW);
+        setBackground(R.badlogic);
 //        text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).setStroke(Color.RED)
 //                .setPosition(342, 433).show();
 //        game.getImage(R.image.tank_4).setPosition(347, 59).show();
@@ -32,7 +30,8 @@ public class StageTest extends VStage {
         Image button = game.getImage(R.image.badlogic).setPosition(getCutAndWidth(), getCutAndHeight()
                 , Align.topRight).show();
 
-        game.setUserData(DialogMessge.MODEL, new DialogMessge.Model("这是一个简易的Tost"));
+        game.setUserData(DialogMessge.MODEL, new DialogMessge.Model(
+                "这是一个简易的Tost放进了快睡觉了开放时间啊李开复就爱上李开复就爱上林凤娇卡死打飞机"));
         game.showDialog(DialogMessge.class);
     }
 
