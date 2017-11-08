@@ -1,6 +1,6 @@
 android {
-    buildToolsVersion "23.0.3"
-    compileSdkVersion 23
+    buildToolsVersion "26.0.1"
+    compileSdkVersion 26
 
     productFlavors {
         main
@@ -28,8 +28,8 @@ android {
     }
     defaultConfig {
         applicationId "var3d.net.demo"
-        minSdkVersion 8
-        targetSdkVersion 23
+        minSdkVersion 9
+        targetSdkVersion 26
     }
     //混淆
     buildTypes {

@@ -17,7 +17,7 @@ public class StageTest extends VStage {
 
     public StageTest(VGame game) {
         super(game);
-        game.loadFolderToPackExcept(R.image.class, R.image.tank_4);
+       // game.loadFolderToPackExcept(R.image.class, R.image.tank_4);
     }
 
     @Override
