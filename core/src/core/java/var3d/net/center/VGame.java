@@ -1109,6 +1109,7 @@ public abstract class VGame implements ApplicationListener {
     public void stopMusic() {
         if (music != null)
             music.stop();
+        music = null;
     }
 
     /**
