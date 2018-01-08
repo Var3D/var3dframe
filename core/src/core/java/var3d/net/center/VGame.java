@@ -1873,10 +1873,6 @@ public abstract class VGame implements ApplicationListener {
 
     /**
      * 返回两点的角度
-     *
-     * @param
-     * @param
-     * @return
      */
     public float getAngle(float x1, float y1, float x2, float y2) {
         return (float) (Math.atan2(x1 - x2, y2 - y1) * 180 / Math.PI) + 180;
@@ -1884,11 +1880,6 @@ public abstract class VGame implements ApplicationListener {
 
     /**
      * 返回两点距离
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
      * @return
      */
     public float getDistance(float x1, float y1, float x2, float y2) {
