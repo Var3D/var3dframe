@@ -62,18 +62,18 @@ public abstract class VStage extends Stage {
     public void resize(float width, float height) {
         changing(width, height);
         getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-        float bl = getWidth() / getHeight() * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-        if (bl < 1) {
-            cutWidth = (1 - bl) * getWidth() / 2f;
-            cutHeight = 0;
-            getRoot().setScale(bl, 1);
-            getRoot().setPosition(cutWidth, 0);
-        } else if (bl > 1) {
-            cutWidth = 0;
-            cutHeight = (1 - 1 / bl) * getHeight() / 2f;
-            getRoot().setScale(1, 1 / bl);
-            getRoot().setPosition(0, cutHeight);
-        }
+//        float bl = getWidth() / getHeight() * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+//        if (bl < 1) {
+//            cutWidth = (1 - bl) * getWidth() / 2f;
+//            cutHeight = 0;
+//            getRoot().setScale(bl, 1);
+//            getRoot().setPosition(cutWidth, 0);
+//        } else if (bl > 1) {
+//            cutWidth = 0;
+//            cutHeight = (1 - 1 / bl) * getHeight() / 2f;
+//            getRoot().setScale(1, 1 / bl);
+//            getRoot().setPosition(0, cutHeight);
+//        }
     }
 
     public float getCutWidth() {
