@@ -23,9 +23,9 @@ public class StageTest extends VStage {
     @Override
     public void init() {
         setBackground(R.badlogic);
-//        text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).setStroke(Color.RED)
-//                .setPosition(342, 433).show();
-//        game.getImage(R.image.tank_4).setPosition(347, 59).show();
+        text = game.getLabel(R.strings.logo).setColor(Color.YELLOW).setStroke(Color.RED)
+                .setPosition(342, 433).show();
+        game.getImage(R.image.tank_4).setPosition(347, 59).show();
 
         Image button = game.getImage(R.image.badlogic).setPosition(getCutAndWidth(), getCutAndHeight()
                 , Align.topRight).show();
