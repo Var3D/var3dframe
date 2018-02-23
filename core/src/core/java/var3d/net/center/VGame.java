@@ -73,7 +73,6 @@ import java.util.HashSet;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
-import var3d.net.demo.R;
 
 /**
  * Var3D核心框架
