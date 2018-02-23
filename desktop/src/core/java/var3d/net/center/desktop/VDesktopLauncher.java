@@ -947,6 +947,7 @@ public abstract class VDesktopLauncher implements VListener {
         String[] javaStrLines = javaStr.split("\n");//把代码按行号存放进数组中
         for (final Actor actor : stage.getRoot().getChildren()) {
             Data data = allDatas.get(actor);
+            if(data == null) return;
             if (data.isEdit) {
                 StackTraceElement[] elements = allStacks.get(actor);
                 if (elements == null) continue;
