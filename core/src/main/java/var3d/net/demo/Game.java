@@ -10,10 +10,12 @@ public class Game extends VGame {
     public Game(VListener varListener) {
         super(varListener);
         setSize(800, 480);
+        setLanguage("en");
     }
 
     @Override
     public void init() {
+        openAutoScreenshots(5,StageTest.class);//开启自动截图
         setResources(R.class);
         openProtect("image");//加密image文件夹资源
         //unProtect("image");

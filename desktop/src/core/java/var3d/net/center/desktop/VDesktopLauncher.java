@@ -7,6 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -529,6 +530,48 @@ public abstract class VDesktopLauncher implements VListener {
 
     public static LwjglApplicationConfiguration getConfig(int width, int height) {
         return getConfig(width, height, 1);
+    }
+
+    public enum Size {
+        iphone_y, ipad_y, iphone_x, ipad_x;
+    }
+
+    static int width=0,height=0;
+    public static LwjglApplicationConfiguration getConfig(Size size) {
+        //获取电脑屏幕分辨率
+        int screenWidth= (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*.9f);
+        int screenHeight = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.9f);
+        float bl=1;
+        if(size==Size.iphone_y){
+            width=1242;
+            height=2208;
+            float blw=screenWidth/(float)width;
+            bl=screenHeight/(float)height;
+            if(blw<bl)bl=blw;
+       }else if(size==Size.ipad_y){
+             width=2048;
+             height=2732;
+            float blw=screenWidth/(float)width;
+             bl=screenHeight/(float)height;
+            if(blw<bl)bl=blw;
+       }else if(size==Size.iphone_x){
+            height=1242;
+            width=2208;
+            float blw=screenWidth/(float)width;
+            bl=screenHeight/(float)height;
+            if(blw<bl)bl=blw;
+        }else if(size==Size.ipad_x){
+            height=2048;
+            width=2732;
+            float blw=screenWidth/(float)width;
+            bl=screenHeight/(float)height;
+            if(blw<bl)bl=blw;
+        }
+        return getConfig(width, height, bl);
+    }
+
+    public Vector2 getAppScreenSize(){
+        return new Vector2(width,height);
     }
 
     public void create() {
@@ -1091,4 +1134,5 @@ public abstract class VDesktopLauncher implements VListener {
         StackTraceElement[] elements = new Throwable().getStackTrace();
         allStacks.put(actor, elements);
     }
+
 }
