@@ -923,13 +923,16 @@ public abstract class VGame implements ApplicationListener {
     public <T> void openAutoScreenshots(float interval, final Class<T>... stages){
         getTopStage().addAction(Actions.forever(Actions.delay(interval,Actions.run(new Runnable() {
             public void run() {
-               for(Class<T> stage:stages){
-                   if(getStage().getClass()==stage){
-                       Screenshot();
-                       break;
-                   }
-               }
-
+                if(stages.length==0){
+                    Screenshot();
+                }else {
+                    for (Class<T> stage : stages) {
+                        if (getStage().getClass() == stage) {
+                            Screenshot();
+                            break;
+                        }
+                    }
+                }
             }
         }))));
     }

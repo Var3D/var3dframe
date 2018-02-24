@@ -10,7 +10,7 @@ public class Game extends VGame {
     public Game(VListener varListener) {
         super(varListener);
         setSize(800, 480);
-        setLanguage("en");
+        setLanguage("zh");
     }
 
     @Override
