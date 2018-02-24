@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
@@ -358,5 +359,9 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     public void keyUp(int key) {
+    }
+
+    public Vector2 getAppScreenSize(){
+        return null;
     }
 }

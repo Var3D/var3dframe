@@ -25,6 +25,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidGraphics;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
@@ -394,5 +395,9 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     }
 
     public void keyUp(int key) {
+    }
+
+    public Vector2 getAppScreenSize(){
+        return null;
     }
 }
