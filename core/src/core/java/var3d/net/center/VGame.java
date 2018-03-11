@@ -70,6 +70,7 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Stack;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
@@ -127,6 +128,8 @@ public abstract class VGame implements ApplicationListener {
 
     private Object userData;// 场景切换时用于数据中转
     private final HashMap<String, Object> userDatas = new HashMap<String, Object>();// 用于数据中转
+
+    private Stack<Class> stageStack = new Stack<>();
 
     public VGame(VListener varListener) {
         this.var3dListener = varListener;
@@ -392,7 +395,7 @@ public abstract class VGame implements ApplicationListener {
     }
 
     public void render() {
-        if (isLoading == true) {
+        if (isLoading) {
             if (assets.update()) {
                 isLoading = false;
                 Array<Texture> out = new Array<Texture>();
@@ -554,7 +557,12 @@ public abstract class VGame implements ApplicationListener {
      */
 
     private <T> VStage getStage(Class<T> type) {
-        String name = type.getName();
+        return getStage(type, type.getName());
+    }
+    /**
+     * 允许定义名字来创建多个stage类实例
+     */
+    private <T> VStage getStage(Class<T> type, String name) {
         VStage dStage = pool.get(name);
         if (dStage != null) {
             stage = dStage;
@@ -643,6 +651,7 @@ public abstract class VGame implements ApplicationListener {
         if (prefStage != null)
             setStage(prefStage);
     }
+
 
     /**
      * 列表中获取Dialog
@@ -791,7 +800,12 @@ public abstract class VGame implements ApplicationListener {
     private GestureDetector gesture;
     private InputAdapter input;
 
-    public <T> void setStage(Class<T> type) {
+    public <T> void setStage(Class<T> type){
+        HashMap<String, Object> intent = new HashMap<>();
+        setStage(type, type.getName(), intent);
+    }
+
+    public <T> void setStage(Class<T> type, String name, HashMap<String, Object> intent) {
         isLoading = false;
         if (stage != null) {
             if (input != null)
@@ -804,7 +818,9 @@ public abstract class VGame implements ApplicationListener {
             multiplexer.addProcessor(stageTop);
         }
         stage = null;
-        stage = getStage(type);
+        stage = getStage(type, name);
+        if(stage != null)
+            stage.setIntent(intent);
         do {
             if (stage != null) {
                 multiplexer.addProcessor(input = (InputAdapter) stage);
@@ -817,6 +833,41 @@ public abstract class VGame implements ApplicationListener {
                 }
             }
         } while (stage == null);
+    }
+
+    public <T> void addStage(Class<T> type) {
+        HashMap<String, Object> intent = new HashMap<>();
+        intent.put("from", stage);
+        addStage(type, intent);
+    }
+
+    public void removeStage() {
+        HashMap<String, Object> intent = new HashMap<>();
+        intent.put("from", stage);
+        removeStage(intent);
+    }
+
+    public <T> void addStage(Class<T> type, HashMap<String, Object> intent) {
+        stageStack.push(type);
+        setStage(type, type.getName(), intent);
+//        getStage(type).setIntent(intent);
+    }
+
+    public void removeStage(HashMap<String, Object> intent) {
+        if(stageStack.size() > 0)
+        {
+            stageStack.pop();
+            if(stageStack.size() > 0)
+            {
+                setStage(stageStack.peek(), stageStack.peek().getName(), intent);
+//                getStage(stageStack.peek()).setIntent(intent);
+            }
+        }
+    }
+
+    public Stack<Class> getStageStack()
+    {
+        return stageStack;
     }
 
     public void pause() {
@@ -1460,7 +1511,20 @@ public abstract class VGame implements ApplicationListener {
         tex.setRegion(0, 0, width, height);
         return new TextureRegionDrawable(tex);
     }
-
+    /**
+     * 获取TextureAtlas
+     */
+    public TextureAtlas getTextureAtlas(String name) {
+        TextureAtlas textureAtlas;
+        if (assets.isLoaded(name, TextureAtlas.class)) {
+            textureAtlas = assets.get(name, TextureAtlas.class);
+        } else {
+            assets.load(name, TextureAtlas.class);
+            assets.finishLoading();
+            textureAtlas = assets.get(name, TextureAtlas.class);
+        }
+        return textureAtlas;
+    }
     /**
      * 获取TextureRegion
      */
