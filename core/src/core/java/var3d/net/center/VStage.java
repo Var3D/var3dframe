@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class VStage extends Stage {
     public VGame game;
@@ -25,6 +26,16 @@ public abstract class VStage extends Stage {
     public ArrayList<Actor> bgList;
     private float cutWidth, cutHeight;
 
+    public HashMap<String, Object> getIntent() {
+        return intent;
+    }
+
+    public void setIntent(HashMap<String, Object> intent) {
+        this.intent = intent;
+    }
+
+    protected HashMap<String, Object> intent;
+    
     public VStage(VGame game) {
         super(new ScalingViewport(Scaling.stretch, game.WIDTH, game.HEIGHT));
         set(game);
