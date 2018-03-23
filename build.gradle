@@ -119,7 +119,6 @@ subprojects {
 
     if(project.name == "android"){
         task packJar(type: Jar) {
-            classifier = 'android'
             doFirst {
                 from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
             }
