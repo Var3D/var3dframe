@@ -46,32 +46,6 @@ allprojects {
     }
 }
 
-subprojects {
-    apply plugin: "eclipse"
-    apply plugin: "idea"
-
-    tasks.withType(JavaCompile) {
-        sourceCompatibility = 1.7
-        targetCompatibility = 1.7
-    }
-
-    version = '1.0'
-    ext {
-        appName = "gdx-var3d-1.9.2"
-        gdxVersion = '1.9.8'
-        roboVMVersion = '2.3.3'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
-        aiVersion = '1.8.0'
-    }
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-    }
-}
 
 project(":desktop") {
     apply plugin: "java"
@@ -152,9 +126,17 @@ task packJar(type: Jar) {
         from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
     }
 }
+
+task packAndroidJar(type: Jar) {
+    doFirst {
+        from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
+    }
+}
+
 def preCompile = [":core:coreClasses", ":desktop:coreClasses", ":ios:coreClasses",":ios-moe:coreClasses", ":android:compileCoreReleaseJavaWithJavac"];
 
 packJar.dependsOn preCompile
+packAndroidJar.dependsOn preCompile
 
 task packDoc(dependsOn: ":core:javadoc", type: Jar) {
     classifier = "javadoc"
@@ -178,4 +160,5 @@ artifacts {
     archives packJar
     archives packDoc
     archives packSources
+    archives packAndroidJar
 }
