@@ -15,11 +15,13 @@ public abstract class VDialog extends Group {
 	public VGame game;
 	private Image bg0 = null;
 	private float endAlpha = 0.8f;
+	public enum ActionType {
+		NOEFFECTE, MOVELEFT, MOVERIGHT, MOVEODOWN, MOVEUP, FADEIN, POPUP
+	}
 
 	public VDialog(VGame game) {
 		this.game = game;
-		bg0 = game
-				.getImage(game.WIDTH * 2, game.HEIGHT * 2, Color.BLACK)
+		bg0 = game.getImage(game.WIDTH * 2, game.HEIGHT * 2, Color.BLACK)
 				.setPosition(game.getCenterX(), game.getCenterY(), Align.center)
 				.getActor();
 		init();
@@ -42,6 +44,16 @@ public abstract class VDialog extends Group {
 	 * 弹出dialog仅执行第一次
 	 */
 	public abstract void start();
+
+	/**
+	 * 当该dialog被其他dialog覆盖时调用
+	 */
+	public abstract void pause();
+
+	/**
+	 * 当该dialog重新恢复到顶层时调用
+	 */
+	public abstract void resume();
 
 	private void setThis(Actor actor) {
 		setSize(actor.getWidth(), actor.getHeight());
@@ -116,33 +128,33 @@ public abstract class VDialog extends Group {
 		super.draw(batch, parentAlpha);
 	}
 
-	public void setStartActions(int type) {
+	public void setStartActions(ActionType type) {
 		switch (type) {
-		case 0:// 无效果
+			case NOEFFECTE:// 无效果
 			break;
-		case 15:// 弹出
+			case POPUP:// 弹出
 			addAction(Actions.sequence(Actions.scaleTo(0, 0),
 					Actions.scaleTo(1, 1, 0.2f, Interpolation.bounce)));
 			break;
-		case 11:// 从左到右
+			case MOVERIGHT:// 从左到右
 			addAction(Actions.sequence(Actions.moveTo(-game.getStage()
 					.getCutWidth() - getWidth(), getY()), Actions.moveTo(
 					game.getCenterX() - getWidth() / 2, getY(), 0.2f,
 					Interpolation.bounce)));
 			break;
-		case 10:// 从右到左
+			case MOVELEFT:// 从右到左
 			addAction(Actions.sequence(Actions.moveTo(game.WIDTH
 					+ game.getStage().getCutWidth(), getY()), Actions.moveTo(
 					game.getCenterX() - getWidth() / 2, getY(), 0.2f,
 					Interpolation.bounce)));
 			break;
-		case 12:// 从上到下
+			case MOVEODOWN:// 从上到下
 			addAction(Actions.sequence(Actions.moveTo(getX(), game.HEIGHT
 					+ game.getStage().getCutHeight()), Actions.moveTo(getX(),
 					game.getCenterY() - getHeight() / 2, 0.2f,
 					Interpolation.bounce)));
 			break;
-		case 13:// 从下到上
+			case MOVEUP:// 从下到上
 			addAction(Actions.sequence(Actions.moveTo(getX(), -game.getStage()
 					.getCutHeight() - getHeight()), Actions.moveTo(getX(),
 					game.getCenterY() - getHeight() / 2, 0.2f,

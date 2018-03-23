@@ -82,19 +82,10 @@ import var3d.net.center.freefont.FreePaint;
  * @version 1.6.0
  */
 public abstract class VGame implements ApplicationListener {
-    public final int NOEFFECTE = 0;// 无效果
-    public final int MOVELEFT = 10;// 从右到左
-    public final int MOVERIGHT = 11;// 从左到右
-    public final int MOVEODOWN = 12;// 从上到下
-    public final int MOVEUP = 13;// 从下到上
-    public final int FADEIN = 14;// 渐洳
-    public final int POPUP = 15;// 弹出(目前只支持dialog)
     public int WIDTH = 480;// 宽
     public int HEIGHT = 800;// 高
     private int centerX = 240;// 一半宽
     private int centerY = 400;// 一半高
-    public final int shortScreenWidth = 1242;
-    public final int shortScreenHeight = 2208;
 
     private InputMultiplexer multiplexer;// 触控
     private final AssetManager assets = new AssetManager();// 资源管理
@@ -700,6 +691,7 @@ public abstract class VGame implements ApplicationListener {
     public <T> VDialog showDialog(Class<T> dialog) {
         // 禁止其他dialog响应
         for (VDialog dia : poolDialog.values()) {
+            dia.pause();
             dia.setTouchable(Touchable.disabled);
         }
         // 禁止底层stage响应
@@ -728,6 +720,7 @@ public abstract class VGame implements ApplicationListener {
         }
         if (dialogs.size > 0) {
             dialogs.peek().setTouchable(Touchable.enabled);
+            dialogs.peek().resume();
         } else {
             stage.getRoot().setTouchable(Touchable.enabled);
             stage.resume();
@@ -748,6 +741,7 @@ public abstract class VGame implements ApplicationListener {
         dialogs.pop().remove();
         if (dialogs.size > 0) {
             dialogs.peek().setTouchable(Touchable.enabled);
+            dialogs.peek().resume();
         } else {
             stage.getRoot().setTouchable(Touchable.enabled);
             stage.resume();
@@ -971,12 +965,12 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 开启自动截图（截图间隔,进入哪些界面才截图）
      */
-    public <T> void openAutoScreenshots(float interval, final Class<T>... stages){
-        getTopStage().addAction(Actions.forever(Actions.delay(interval,Actions.run(new Runnable() {
+    public <T> void openAutoScreenshots(float interval, final Class<T>... stages) {
+        getTopStage().addAction(Actions.forever(Actions.delay(interval, Actions.run(new Runnable() {
             public void run() {
-                if(stages.length==0){
+                if (stages.length == 0) {
                     Screenshot();
-                }else {
+                } else {
                     for (Class<T> stage : stages) {
                         if (getStage().getClass() == stage) {
                             Screenshot();
@@ -991,64 +985,64 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 截图并保存
      */
-    public void Screenshot(){
+    public void Screenshot() {
         boolean isMac = System.getProperty("os.name").startsWith("Mac");
         String root = Gdx.files.getLocalStoragePath().replaceAll(
-                isMac?"android/assets/":"android\\\\assets\\\\", "");
+                isMac ? "android/assets/" : "android\\\\assets\\\\", "");
         String path = root + "screenShot";
-        if(language==null){
-            path+="/zh";
-        }else{
-            path+="/"+language;
+        if (language == null) {
+            path += "/zh";
+        } else {
+            path += "/" + language;
         }
-        String path5s=null;
-        Vector2 size=var3dListener.getAppScreenSize();
-        int out_w=(int)size.x;
-        int out_h=(int)size.y;
-        if(out_w==2732||out_h==2732){//ipad
-            path+="/ipad";
+        String path5s = null;
+        Vector2 size = var3dListener.getAppScreenSize();
+        int out_w = (int) size.x;
+        int out_h = (int) size.y;
+        if (out_w == 2732 || out_h == 2732) {//ipad
+            path += "/ipad";
             Gdx.files.absolute(path).mkdirs();
-        }else{
-            path5s=path+"/5s";
-            path+="/iphone";
+        } else {
+            path5s = path + "/5s";
+            path += "/iphone";
             Gdx.files.absolute(path).mkdirs();
             Gdx.files.absolute(path5s).mkdirs();
         }
         String time = "" + new Date().getTime();
         String na = getStage().getName();
-        na=na.substring(na.lastIndexOf(".")+1);
+        na = na.substring(na.lastIndexOf(".") + 1);
         String name = path + "/" + na + time + ".jpg";
 
         Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);
-        Pixmap pixmap = new Pixmap( Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Format.RGB888);
+        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Format.RGB888);
         ByteBuffer pixels = pixmap.getPixels();
-        Gdx.gl.glReadPixels(0, 0,  Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), GL20.GL_RGB
+        Gdx.gl.glReadPixels(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), GL20.GL_RGB
                 , GL20.GL_UNSIGNED_BYTE, pixels);
 
-        Pixmap out=new Pixmap(out_w,out_h, Format.RGB888);
-        out.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,out_w,out_h);
-        writePNG (Gdx.files.absolute(name),out);
+        Pixmap out = new Pixmap(out_w, out_h, Format.RGB888);
+        out.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out_w, out_h);
+        writePNG(Gdx.files.absolute(name), out);
 
-        if(path5s!=null){
-            if(out_w>out_h){
-                out_w=1136;
-                out_h=640;
-            }else{
-                out_w=640;
-                out_h=1136;
+        if (path5s != null) {
+            if (out_w > out_h) {
+                out_w = 1136;
+                out_h = 640;
+            } else {
+                out_w = 640;
+                out_h = 1136;
             }
-            Pixmap out5s=new Pixmap(out_w,out_h, Format.RGB888);
-            out5s.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,out_w,out_h);
+            Pixmap out5s = new Pixmap(out_w, out_h, Format.RGB888);
+            out5s.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out_w, out_h);
             name = path5s + "/" + na + time + ".jpg";
-            writePNG (Gdx.files.absolute(name),out5s);
+            writePNG(Gdx.files.absolute(name), out5s);
         }
 
-        Gdx.app.error("Var3D Studio消息",na+time+"截取成功!");
+        Gdx.app.error("Var3D Studio消息", na + time + "截取成功!");
     }
 
-    public void writePNG (FileHandle file, Pixmap pixmap) {
+    public void writePNG(FileHandle file, Pixmap pixmap) {
         try {
-            PixmapIO.PNG writer = new PixmapIO.PNG((int)(pixmap.getWidth() * pixmap.getHeight() * 1.5f));
+            PixmapIO.PNG writer = new PixmapIO.PNG((int) (pixmap.getWidth() * pixmap.getHeight() * 1.5f));
             try {
                 writer.setFlipY(true);
                 writer.write(file, pixmap);
@@ -1252,9 +1246,9 @@ public abstract class VGame implements ApplicationListener {
      * 停止音乐
      */
     public void stopMusic() {
-        if (music != null){
+        if (music != null) {
             music.stop();
-            music=null;
+            music = null;
         }
     }
 
@@ -1888,12 +1882,12 @@ public abstract class VGame implements ApplicationListener {
     }
 
     public CheckBoxStyle getCheckBoxStyle(String downimgname, String upimgname,
-                                          Color color) {
+                                          Color fontColor) {
         TextureRegionDrawable tex = new TextureRegionDrawable(
                 getTextureRegion(downimgname));
         TextureRegionDrawable texup = new TextureRegionDrawable(
                 getTextureRegion(upimgname));
-        return new CheckBox.CheckBoxStyle(tex, texup, getFont(), color);
+        return new CheckBox.CheckBoxStyle(tex, texup, getFont(), fontColor);
     }
 
     /**
@@ -2038,6 +2032,7 @@ public abstract class VGame implements ApplicationListener {
 
     /**
      * 返回两点距离
+     *
      * @return
      */
     public float getDistance(float x1, float y1, float x2, float y2) {
