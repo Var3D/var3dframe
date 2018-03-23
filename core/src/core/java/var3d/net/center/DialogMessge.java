@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import static var3d.net.center.VDialog.ActionType.MOVEUP;
+
 
 /**
  * Created by fengyu on 2017/10/24.
@@ -48,7 +50,7 @@ public class DialogMessge extends VDialog {
     @Override
     public void show() {
         clearActions();
-        setStartActions(game.MOVEUP);
+        setStartActions(MOVEUP);
         Object obj = game.getUserData(MODEL);
         float time = 3;
         if (obj != null) {
@@ -84,6 +86,16 @@ public class DialogMessge extends VDialog {
 
     @Override
     public void start() {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
 
     }
 
