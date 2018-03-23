@@ -1,5 +1,5 @@
 # var3dframe
-[![Build Status](https://travis-ci.org/htynkn/var3dframe.svg?branch=master)](https://travis-ci.org/htynkn/var3dframe)
+[![Build Status](https://travis-ci.org/whitecostume/var3dframe.svg?branch=master)](https://travis-ci.org/whitecostume/var3dframe)
 
 A game framework base on LibGDX
 

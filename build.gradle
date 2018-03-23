@@ -145,7 +145,7 @@ subprojects {
         classifier = "sources"
         doFirst {
             if(project.name == "android"){
-                from files(":src/core/java")
+                from files("src/core/java")
             }else {
                 from sourceSets.core.allJava
             }
@@ -162,51 +162,3 @@ subprojects {
         archives packSources
     }
 }
-
-
-//task packJar(type: Jar) {
-//    doFirst {
-//        from files(project(":core").sourceSets.core.output.classesDir);
-//        from files(project(":desktop").sourceSets.core.output.classesDir);
-//        from files(project(":ios").sourceSets.core.output.classesDir);
-//        from files(project(":ios-moe").sourceSets.core.output.classesDir);
-//        from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
-//    }
-//}
-//
-//task packAndroidJar(type: Jar) {
-//    classifier = 'android'
-//    doFirst {
-//        from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
-//    }
-//}
-//
-//def preCompile = [":core:coreClasses", ":desktop:coreClasses", ":ios:coreClasses",":ios-moe:coreClasses", ":android:compileCoreReleaseJavaWithJavac"];
-//
-//packJar.dependsOn preCompile
-//packAndroidJar.dependsOn preCompile
-//
-//task packDoc(dependsOn: ":core:javadoc", type: Jar) {
-//    classifier = "javadoc"
-//    from project(":core").tasks["javadoc"].destinationDir
-//}
-//
-//task packSources(type: Jar) {
-//    classifier = "sources"
-//    doFirst {
-//        from files(project(":core").sourceSets.core.allJava)
-//        from files(project(":desktop").sourceSets.core.allJava)
-//        from files(project(":ios").sourceSets.core.allJava)
-//        from files(project(":ios-moe").sourceSets.core.allJava)
-//        from files(":android/src/core/java")
-//    }
-//}
-//
-//task packAll(dependsOn: ['packJar', 'packDoc', 'packSources','packAndroidJar'])
-//
-//artifacts {
-//    archives packJar
-//    archives packDoc
-//    archives packSources
-//    archives packAndroidJar
-//}
