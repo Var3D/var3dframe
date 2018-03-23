@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         //classpath 'org.robovm:robovm-gradle-plugin:1.12.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5' // Add this line
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.3'
         classpath 'org.multi-os-engine:moe-gradle:1.4.3'
     }
@@ -57,6 +58,7 @@ project(":desktop") {
 
 project(":android") {
     apply plugin: "android"
+    apply plugin: 'com.github.dcendents.android-maven'
 
     configurations { natives }
 
