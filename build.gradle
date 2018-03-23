@@ -116,14 +116,13 @@ tasks.eclipse.doLast {
 
 subprojects {
 
-
     task packJar(type: Jar) {
 
         doFirst {
-
-            from sourceSets.core.output.classesDir
             if(project.name == "android"){
                 from fileTree(dir: "build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo")
+            }else{
+                from sourceSets.core.output.classesDir
             }
         }
     }
@@ -145,9 +144,10 @@ subprojects {
     task packSources(type: Jar) {
         classifier = "sources"
         doFirst {
-            from sourceSets.core.allJava
             if(project.name == "android"){
                 from files(":src/core/java")
+            }else {
+                from sourceSets.core.allJava
             }
 
         }
