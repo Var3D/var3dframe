@@ -10,11 +10,13 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Filter;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -31,10 +33,12 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
@@ -52,20 +56,24 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Stack;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
-import var3d.net.demo.R;
 
 /**
  * Var3D核心框架
@@ -120,6 +128,8 @@ public abstract class VGame implements ApplicationListener {
 
     private Object userData;// 场景切换时用于数据中转
     private final HashMap<String, Object> userDatas = new HashMap<String, Object>();// 用于数据中转
+
+    private Stack<Class> stageStack = new Stack<>();
 
     public VGame(VListener varListener) {
         this.var3dListener = varListener;
@@ -385,7 +395,7 @@ public abstract class VGame implements ApplicationListener {
     }
 
     public void render() {
-        if (isLoading == true) {
+        if (isLoading) {
             if (assets.update()) {
                 isLoading = false;
                 Array<Texture> out = new Array<Texture>();
@@ -547,7 +557,12 @@ public abstract class VGame implements ApplicationListener {
      */
 
     private <T> VStage getStage(Class<T> type) {
-        String name = type.getName();
+        return getStage(type, type.getName());
+    }
+    /**
+     * 允许定义名字来创建多个stage类实例
+     */
+    private <T> VStage getStage(Class<T> type, String name) {
         VStage dStage = pool.get(name);
         if (dStage != null) {
             stage = dStage;
@@ -636,6 +651,7 @@ public abstract class VGame implements ApplicationListener {
         if (prefStage != null)
             setStage(prefStage);
     }
+
 
     /**
      * 列表中获取Dialog
@@ -784,7 +800,12 @@ public abstract class VGame implements ApplicationListener {
     private GestureDetector gesture;
     private InputAdapter input;
 
-    public <T> void setStage(Class<T> type) {
+    public <T> void setStage(Class<T> type){
+        HashMap<String, Object> intent = new HashMap<>();
+        setStage(type, type.getName(), intent);
+    }
+
+    public <T> void setStage(Class<T> type, String name, HashMap<String, Object> intent) {
         isLoading = false;
         if (stage != null) {
             if (input != null)
@@ -797,7 +818,9 @@ public abstract class VGame implements ApplicationListener {
             multiplexer.addProcessor(stageTop);
         }
         stage = null;
-        stage = getStage(type);
+        stage = getStage(type, name);
+        if(stage != null)
+            stage.setIntent(intent);
         do {
             if (stage != null) {
                 multiplexer.addProcessor(input = (InputAdapter) stage);
@@ -810,6 +833,41 @@ public abstract class VGame implements ApplicationListener {
                 }
             }
         } while (stage == null);
+    }
+
+    public <T> void addStage(Class<T> type) {
+        HashMap<String, Object> intent = new HashMap<>();
+        intent.put("from", stage);
+        addStage(type, intent);
+    }
+
+    public void removeStage() {
+        HashMap<String, Object> intent = new HashMap<>();
+        intent.put("from", stage);
+        removeStage(intent);
+    }
+
+    public <T> void addStage(Class<T> type, HashMap<String, Object> intent) {
+        stageStack.push(type);
+        setStage(type, type.getName(), intent);
+//        getStage(type).setIntent(intent);
+    }
+
+    public void removeStage(HashMap<String, Object> intent) {
+        if(stageStack.size() > 0)
+        {
+            stageStack.pop();
+            if(stageStack.size() > 0)
+            {
+                setStage(stageStack.peek(), stageStack.peek().getName(), intent);
+//                getStage(stageStack.peek()).setIntent(intent);
+            }
+        }
+    }
+
+    public Stack<Class> getStageStack()
+    {
+        return stageStack;
     }
 
     public void pause() {
@@ -906,13 +964,100 @@ public abstract class VGame implements ApplicationListener {
      * 截图
      */
     public TextureRegionDrawable getFullTextureRegionDrawable() {
-        Pixmap pixmap = ScreenUtils.getFrameBufferPixmap(0, 0,
-                Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Texture texture = new Texture(pixmap);
-        TextureRegion region = new TextureRegion(texture);
-        region.flip(false, true);
-        pixmap.dispose();
-        return new TextureRegionDrawable(region);
+        return new TextureRegionDrawable(getFullTextrueRegion());
+    }
+
+
+    /**
+     * 开启自动截图（截图间隔,进入哪些界面才截图）
+     */
+    public <T> void openAutoScreenshots(float interval, final Class<T>... stages){
+        getTopStage().addAction(Actions.forever(Actions.delay(interval,Actions.run(new Runnable() {
+            public void run() {
+                if(stages.length==0){
+                    Screenshot();
+                }else {
+                    for (Class<T> stage : stages) {
+                        if (getStage().getClass() == stage) {
+                            Screenshot();
+                            break;
+                        }
+                    }
+                }
+            }
+        }))));
+    }
+
+    /**
+     * 截图并保存
+     */
+    public void Screenshot(){
+        boolean isMac = System.getProperty("os.name").startsWith("Mac");
+        String root = Gdx.files.getLocalStoragePath().replaceAll(
+                isMac?"android/assets/":"android\\\\assets\\\\", "");
+        String path = root + "screenShot";
+        if(language==null){
+            path+="/zh";
+        }else{
+            path+="/"+language;
+        }
+        String path5s=null;
+        Vector2 size=var3dListener.getAppScreenSize();
+        int out_w=(int)size.x;
+        int out_h=(int)size.y;
+        if(out_w==2732||out_h==2732){//ipad
+            path+="/ipad";
+            Gdx.files.absolute(path).mkdirs();
+        }else{
+            path5s=path+"/5s";
+            path+="/iphone";
+            Gdx.files.absolute(path).mkdirs();
+            Gdx.files.absolute(path5s).mkdirs();
+        }
+        String time = "" + new Date().getTime();
+        String na = getStage().getName();
+        na=na.substring(na.lastIndexOf(".")+1);
+        String name = path + "/" + na + time + ".jpg";
+
+        Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);
+        Pixmap pixmap = new Pixmap( Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Format.RGB888);
+        ByteBuffer pixels = pixmap.getPixels();
+        Gdx.gl.glReadPixels(0, 0,  Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), GL20.GL_RGB
+                , GL20.GL_UNSIGNED_BYTE, pixels);
+
+        Pixmap out=new Pixmap(out_w,out_h, Format.RGB888);
+        out.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,out_w,out_h);
+        writePNG (Gdx.files.absolute(name),out);
+
+        if(path5s!=null){
+            if(out_w>out_h){
+                out_w=1136;
+                out_h=640;
+            }else{
+                out_w=640;
+                out_h=1136;
+            }
+            Pixmap out5s=new Pixmap(out_w,out_h, Format.RGB888);
+            out5s.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,out_w,out_h);
+            name = path5s + "/" + na + time + ".jpg";
+            writePNG (Gdx.files.absolute(name),out5s);
+        }
+
+        Gdx.app.error("Var3D Studio消息",na+time+"截取成功!");
+    }
+
+    public void writePNG (FileHandle file, Pixmap pixmap) {
+        try {
+            PixmapIO.PNG writer = new PixmapIO.PNG((int)(pixmap.getWidth() * pixmap.getHeight() * 1.5f));
+            try {
+                writer.setFlipY(true);
+                writer.write(file, pixmap);
+            } finally {
+                writer.dispose();
+            }
+        } catch (IOException ex) {
+            throw new GdxRuntimeException("Error writing PNG: " + file, ex);
+        }
     }
 
     Rectangle rect1 = new Rectangle(), rect2 = new Rectangle();
@@ -1107,9 +1252,10 @@ public abstract class VGame implements ApplicationListener {
      * 停止音乐
      */
     public void stopMusic() {
-        if (music != null)
+        if (music != null){
             music.stop();
-        music = null;
+            music=null;
+        }
     }
 
     /**
@@ -1365,7 +1511,20 @@ public abstract class VGame implements ApplicationListener {
         tex.setRegion(0, 0, width, height);
         return new TextureRegionDrawable(tex);
     }
-
+    /**
+     * 获取TextureAtlas
+     */
+    public TextureAtlas getTextureAtlas(String name) {
+        TextureAtlas textureAtlas;
+        if (assets.isLoaded(name, TextureAtlas.class)) {
+            textureAtlas = assets.get(name, TextureAtlas.class);
+        } else {
+            assets.load(name, TextureAtlas.class);
+            assets.finishLoading();
+            textureAtlas = assets.get(name, TextureAtlas.class);
+        }
+        return textureAtlas;
+    }
     /**
      * 获取TextureRegion
      */
@@ -1872,10 +2031,6 @@ public abstract class VGame implements ApplicationListener {
 
     /**
      * 返回两点的角度
-     *
-     * @param
-     * @param
-     * @return
      */
     public float getAngle(float x1, float y1, float x2, float y2) {
         return (float) (Math.atan2(x1 - x2, y2 - y1) * 180 / Math.PI) + 180;
@@ -1883,11 +2038,6 @@ public abstract class VGame implements ApplicationListener {
 
     /**
      * 返回两点距离
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
      * @return
      */
     public float getDistance(float x1, float y1, float x2, float y2) {
