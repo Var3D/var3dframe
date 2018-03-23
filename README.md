@@ -15,11 +15,46 @@ Include var3dframe via Gradle
         }
     }
 ```
-
-*Step 2. Add the dependency*
+*Step 2. Add one Version  to allproject*
+```
+    allprojects {
+        ext {
+            ...
+            var3d = "0.877"
+            ...
+        }
+    }
+    
+```
+*Step 3. Add the dependency*
++ core
 ```
 dependencies {
-	        compile 'com.github.var3d:var3dframe:-SNAPSHOT'
+	   compile "com.github.whitecostume.var3dframe:core:$var3d"
+}
+```
++ desktop
+```
+dependencies {
+	   compile "com.github.whitecostume.var3dframe:desktop:$var3d"
+}
+```
++ android
+```
+dependencies {
+	   compile "com.github.whitecostume.var3dframe:android:$var3d"
+}
+```
++ ios
+```
+dependencies {
+	   compile "com.github.whitecostume.var3dframe:ios:$var3d"
+}
+```
++ ios-moe
+```
+dependencies {
+	   compile "com.github.whitecostume.var3dframe:ios-moe:$var3d"
 }
 ```
 
@@ -27,6 +62,7 @@ dependencies {
 + [Var3D](https://github.com/Var3D)
 + [whitecostume](https://github.com/whitecostume)
 + [HuangBoHong](https://github.com/HuangBoHong)
++ [Huang YunKun](https://github.com/htynkn)
 
 # License
 TBC
