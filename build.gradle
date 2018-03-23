@@ -46,6 +46,52 @@ allprojects {
     }
 }
 
+//subprojects {
+//
+//     packJar(type: Jar) {
+//        doFirst {
+//            from sourceSets.core.output.classesDir
+//            from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
+//        }
+//    }
+//
+//    packAndroidJar(type: Jar) {
+//        doFirst {
+//            from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
+//        }
+//    }
+//
+//    def preCompile = [":coreClasses", ":compileCoreReleaseJavaWithJavac"];
+//
+//    packJar.dependsOn preCompile
+//    packAndroidJar.dependsOn preCompile
+//
+//    task packDoc(dependsOn: ":core:javadoc", type: Jar) {
+//        classifier = "javadoc"
+//        from project(":core").tasks["javadoc"].destinationDir
+//    }
+//
+//    task packSources(type: Jar) {
+//        classifier = "sources"
+//        doFirst {
+//            from files(project(":core").sourceSets.core.allJava)
+//            from files(project(":desktop").sourceSets.core.allJava)
+//            from files(project(":ios").sourceSets.core.allJava)
+//            from files(project(":ios-moe").sourceSets.core.allJava)
+//            from files(":android/src/core/java")
+//        }
+//    }
+//
+//    task packAll(dependsOn: ['packJar', 'packDoc', 'packSources','packAndroidJar'])
+//
+//    artifacts {
+//        archives packJar
+//        archives packDoc
+//        archives packSources
+//        archives packAndroidJar
+//    }
+//}
+
 
 project(":desktop") {
     apply plugin: "java"
@@ -154,7 +200,7 @@ task packSources(type: Jar) {
     }
 }
 
-task packAll(dependsOn: ['packJar', 'packDoc', 'packSources'])
+task packAll(dependsOn: ['packJar', 'packDoc', 'packSources','packAndroidJar'])
 
 artifacts {
     archives packJar
