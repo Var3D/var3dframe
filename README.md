@@ -15,7 +15,7 @@ Include var3dframe via Gradle
         }
     }
 ```
-*Step 2. Add one Version  to allproject*
+*Step 2. Add a version to allprojects*
 ```
     allprojects {
         ext {
