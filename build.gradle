@@ -58,7 +58,6 @@ project(":desktop") {
 
 project(":android") {
     apply plugin: "android"
-    apply plugin: 'com.github.dcendents.android-maven'
 
     configurations { natives }
 
