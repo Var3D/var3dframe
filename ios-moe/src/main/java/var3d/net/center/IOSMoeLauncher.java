@@ -2,6 +2,7 @@ package var3d.net.center;
 
 import com.badlogic.gdx.backends.iosmoe.IOSApplication;
 import com.badlogic.gdx.backends.iosmoe.IOSApplicationConfiguration;
+import com.badlogic.gdx.math.Vector2;
 
 import org.moe.natj.general.Pointer;
 
@@ -29,4 +30,8 @@ public class IOSMoeLauncher extends VIOSMoeLauncher {
         UIKit.UIApplicationMain(0, null, null, IOSMoeLauncher.class.getName());
     }
 
+    @Override
+    public Vector2 getAppScreenSize() {
+        return null;
+    }
 }
