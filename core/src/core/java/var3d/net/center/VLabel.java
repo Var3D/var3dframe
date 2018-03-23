@@ -10,6 +10,14 @@ public class VLabel extends Label {
     private boolean isStroke = false;// 是否描边
     private Color strokeColor;
     private float strokeWidth;
+    private float shadowOffsetX = 0f;//设置阴影位移x
+    private float shadowOffsetY = 0f;//设置阴影位移x
+    private ShadowOption shadowOption = ShadowOption.Disable;//设置阴影选项
+    private Color shadowColor = new Color(Color.GRAY);//阴影颜色
+
+    public enum ShadowOption {
+        Disable, Projection, Smear
+    }
 
     public VLabel(CharSequence text, LabelStyle style) {
         super(append(text, style), style);
@@ -63,11 +71,94 @@ public class VLabel extends Label {
         super.setFontScale(fontScale);
     }
 
+
+    public float getShadowOffsetX() {
+        return shadowOffsetX;
+    }
+
+    public void setShadowOffsetX(float shadowOffsetX) {
+        this.shadowOffsetX = shadowOffsetX;
+    }
+
+    public float getShadowOffsetY() {
+        return shadowOffsetY;
+    }
+
+    public void setShadowOffsetY(float shadowOffsetY) {
+        this.shadowOffsetY = shadowOffsetY;
+    }
+
+    public ShadowOption getShadowOption() {
+        return shadowOption;
+    }
+
+    public void setShadowOption(ShadowOption shadowOption) {
+        this.shadowOption = shadowOption;
+    }
+
+    public Color getShadowColor() {
+        return shadowColor;
+    }
+
+    public void setShadowColor(Color shadowColor) {
+        this.shadowColor = shadowColor;
+    }
+
+
     private float dxs[] = {1, 1, -1, -1, 1, -1, 0, 0};
     private float dys[] = {1, -1, 1, -1, 0, 0, 1, -1};
-
+    private float oldShadowAlpha, oldStrokeAlpha;
     public void draw(Batch batch, float parentAlpha) {
+        switch (shadowOption) {
+            case Disable: //关闭阴影特效
+                drawLabel(batch, parentAlpha);
+                break;
+            case Projection: //投影效果
+                oldShadowAlpha = shadowColor.a;
+                shadowColor.a = getColor().a;
+                getBitmapFontCache().tint(shadowColor);
+                getBitmapFontCache().setPosition(getX() + shadowOffsetX, getY() + shadowOffsetY);
+                getBitmapFontCache().draw(batch);
+                shadowColor.a = oldShadowAlpha;
+                drawLabel(batch, parentAlpha);
+                break;
+            case Smear: //拖影效果
+                float k = shadowOffsetY / shadowOffsetX;
+                float offsetX = shadowOffsetX, offsetY = shadowOffsetY;
+                float off = 0;
+                if (offsetX > 0) off = -Math.abs(k);
+                else off = Math.abs(k);
+
+                oldShadowAlpha = shadowColor.a;
+                shadowColor.a = getColor().a;
+                while (Math.abs(offsetX) > 0 && Math.abs(offsetY) > 0) {
+                    offsetX += off;
+                    offsetY = k * offsetX;
+                    if (isStroke) {
+                        validate();
+                        for (int i = 0; i < dxs.length; i++) {
+                            getBitmapFontCache().tint(shadowColor);
+                            getBitmapFontCache().setPosition(getX() + offsetX + dxs[i] * strokeWidth,
+                                    getY() + offsetY + dys[i] * strokeWidth + strokeWidth);
+                            getBitmapFontCache().draw(batch);
+                        }
+                    } else {
+                        getBitmapFontCache().tint(shadowColor);
+                        getBitmapFontCache().setPosition(getX() + offsetX, getY() + offsetY);
+                        getBitmapFontCache().draw(batch);
+                    }
+                }
+                shadowColor.a = oldShadowAlpha;
+                drawLabel(batch, parentAlpha);
+                break;
+
+        }
+    }
+
+    public void drawLabel(Batch batch, float parentAlpha) {
         if (isStroke) {
+            oldStrokeAlpha = strokeColor.a;
+            strokeColor.a = getColor().a;
             validate();
             for (int i = 0; i < dxs.length; i++) {
                 getBitmapFontCache().tint(strokeColor);
@@ -78,6 +169,7 @@ public class VLabel extends Label {
             getBitmapFontCache().tint(getColor());
             getBitmapFontCache().setPosition(getX(), getY() + strokeWidth);
             getBitmapFontCache().draw(batch);
+            strokeColor.a = oldStrokeAlpha;
         } else {
             super.draw(batch, parentAlpha);
         }

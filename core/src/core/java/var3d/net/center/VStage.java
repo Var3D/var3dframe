@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class VStage extends Stage {
     public VGame game;
@@ -25,6 +26,16 @@ public abstract class VStage extends Stage {
     public ArrayList<Actor> bgList;
     private float cutWidth, cutHeight;
 
+    public HashMap<String, Object> getIntent() {
+        return intent;
+    }
+
+    public void setIntent(HashMap<String, Object> intent) {
+        this.intent = intent;
+    }
+
+    protected HashMap<String, Object> intent;
+    
     public VStage(VGame game) {
         super(new ScalingViewport(Scaling.stretch, game.WIDTH, game.HEIGHT));
         set(game);
@@ -150,13 +161,13 @@ public abstract class VStage extends Stage {
                 back();
             } else if (arg0 == Input.Keys.F) {
                 // 截图
-                game.var3dListener.Screenshot(game);
+                game.Screenshot();
             } else if (arg0 == Input.Keys.E) {
                 // 编辑UI
                 game.var3dListener.edit(this);
             } else if (arg0 == Input.Keys.P) {
                 // 保存UI
-                game.var3dListener.saveUI(this);
+               game.var3dListener.saveUI(this);
             }
         } else if (arg0 == Input.Keys.BACK) {
             if (getRoot().getTouchable() == Touchable.enabled) {

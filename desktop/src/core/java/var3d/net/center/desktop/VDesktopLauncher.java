@@ -7,6 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.utils.StringBuilder;
 import org.lwjgl.opengl.Display;
 
 import java.awt.BasicStroke;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
@@ -32,6 +34,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Robot;
 import java.awt.Shape;
+import java.awt.Toolkit;
 import java.awt.font.GlyphVector;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
@@ -531,6 +534,65 @@ public abstract class VDesktopLauncher implements VListener {
         return getConfig(width, height, 1);
     }
 
+    public enum Size {
+        iphone_y, ipad_y, iphone_x, ipad_x;
+    }
+
+    static int width=0,height=0;
+    public static LwjglApplicationConfiguration getConfig(Size size,float bl) {
+        if(size==Size.iphone_y){
+            width=1242;
+            height=2208;
+       }else if(size==Size.ipad_y){
+             width=2048;
+             height=2732;
+       }else if(size==Size.iphone_x){
+            height=1242;
+            width=2208;
+        }else if(size==Size.ipad_x){
+            height=2048;
+            width=2732;
+        }
+        return getConfig(width, height, bl);
+    }
+
+    public static LwjglApplicationConfiguration getConfig(Size size) {
+        //获取电脑屏幕分辨率(日了狗了mac能通过测试但是windows会报错，只好弃用了)
+        int screenWidth= (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*.9f);
+        int screenHeight = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.9f);
+         float bl=1;
+        if(size==Size.iphone_y){
+            width=1242;
+            height=2208;
+            float blw=screenWidth/(float)width;
+            bl=screenHeight/(float)height;
+            if(blw<bl)bl=blw;
+        }else if(size==Size.ipad_y){
+            width=2048;
+            height=2732;
+            float blw=screenWidth/(float)width;
+             bl=screenHeight/(float)height;
+            if(blw<bl)bl=blw;
+        }else if(size==Size.iphone_x){
+            height=1242;
+            width=2208;
+            float blw=screenWidth/(float)width;
+            bl=screenHeight/(float)height;
+            if(blw<bl)bl=blw;
+        }else if(size==Size.ipad_x){
+            height=2048;
+            width=2732;
+            float blw=screenWidth/(float)width;
+            bl=screenHeight/(float)height;
+            if(blw<bl)bl=blw;
+        }
+        return getConfig(width, height, bl);
+    }
+
+    public Vector2 getAppScreenSize(){
+        return new Vector2(width,height);
+    }
+
     public void create() {
     }
 
@@ -878,7 +940,8 @@ public abstract class VDesktopLauncher implements VListener {
     //用来获取actor的局部变量名，除非为匿名变量
     private String getPartialVariable(VStage stage, Actor actor) {
         FileHandle fileHandle = getStageJavaFile(stage);
-        if (fileHandle == null) return null;
+        if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
+        if(fileHandle == null)return null;
         String javaStr = fileHandle.readString();
         String[] javaStrLines = javaStr.split("\n");//把代码按行号存放进数组中
         Data data = allDatas.get(actor);
@@ -898,10 +961,12 @@ public abstract class VDesktopLauncher implements VListener {
                 //移除注释
                 String noAnnotations = javaStrLine.replaceAll(
                         "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
-                if (noAnnotations.indexOf(";") != -1) {
+                if (noAnnotations.indexOf(";") != -1 || fileType == FileType.Kotlin) {
                     partNumber++;
                     if (partNumber == 2) {
                         int i1 = noAnnotations.lastIndexOf(";");
+                        if(i1 == -1 && fileType == FileType.Kotlin)
+                            i1 = noAnnotations.length() - 1;
                         javaStrArr.add(noAnnotations.substring(i1 + 1));
                         //javaStrLines[i] = noAnnotations.substring(0, i1);
                         break;
@@ -942,11 +1007,13 @@ public abstract class VDesktopLauncher implements VListener {
     public void saveUI(VStage stage) {
         //遍历stage中的actor，并找出该actor在stage初始化时的行号位置
         FileHandle fileHandle = getStageJavaFile(stage);
-        if (fileHandle == null) return;
+        if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
+        if(fileHandle == null) return;
         String javaStr = fileHandle.readString();
         String[] javaStrLines = javaStr.split("\n");//把代码按行号存放进数组中
         for (final Actor actor : stage.getRoot().getChildren()) {
             Data data = allDatas.get(actor);
+            if(data == null) return;
             if (data.isEdit) {
                 StackTraceElement[] elements = allStacks.get(actor);
                 if (elements == null) continue;
@@ -965,10 +1032,12 @@ public abstract class VDesktopLauncher implements VListener {
                         //移除注释
                         String noAnnotations = javaStrLine.replaceAll(
                                 "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
-                        if (noAnnotations.indexOf(";") != -1) {
+                        if (noAnnotations.indexOf(";") != -1 || fileType == FileType.Kotlin) {
                             partNumber++;
                             if (partNumber == 2) {
                                 int i1 = noAnnotations.lastIndexOf(";");
+                                if(i1 == -1 && fileType == FileType.Kotlin)
+                                    i1 = noAnnotations.length() - 1;
                                 javaStrArr.add(noAnnotations.substring(i1 + 1));
                                 break;
                             } else {
@@ -992,12 +1061,15 @@ public abstract class VDesktopLauncher implements VListener {
                         codeStr = codeStr.substring(1);
                     }
                     // Gdx.app.log("aaaaaa", codeStr);
+                    String floatNumberSuffix = "";
+                    if(fileType == FileType.Kotlin)
+                        floatNumberSuffix = "f";
                     int idex;
                     if ((idex = codeStr.lastIndexOf("setPosition(")) != -1) {
                         //说明拥有setPosition方法
                         String s1 = codeStr.substring(idex);
                         s1 = s1.substring(0, s1.indexOf(")") + 1);
-                        codeStr = codeStr.replace(s1, "setPosition(" + (int) actor.getX() + "," + (int) actor.getY() + ")");
+                        codeStr = codeStr.replace(s1, "setPosition(" + (int) actor.getX() + floatNumberSuffix + "," + (int) actor.getY() + floatNumberSuffix + ")");
                     } else {
                         //如果没有setPosition方法,那么去定位show,getActor()
                         idex = codeStr.lastIndexOf(".show(");
@@ -1005,7 +1077,7 @@ public abstract class VDesktopLauncher implements VListener {
                         //接着把字符分为两段
                         String s1 = codeStr.substring(0, idex);
                         String s2 = codeStr.substring(idex);
-                        codeStr = s1 + ".setPosition(" + (int) actor.getX() + "," + (int) actor.getY() + ")" + s2;
+                        codeStr = s1 + ".setPosition(" + (int) actor.getX() + floatNumberSuffix + "," + (int) actor.getY() + floatNumberSuffix + ")" + s2;
                     }
                     List<String> listStr = new ArrayList<String>();
                     String subStr, prefStr = "";
@@ -1066,6 +1138,9 @@ public abstract class VDesktopLauncher implements VListener {
     //读取Stage java文件
     private HashMap<VStage, FileHandle> stageFiles = new HashMap<VStage, FileHandle>();
 
+    private FileType fileType;
+    enum FileType{Java, Kotlin}
+
     private FileHandle getStageJavaFile(VStage stage) {
         if (stageFiles.get(stage) != null) return stageFiles.get(stage);
         String proName = Gdx.files.getLocalStoragePath().replaceAll("\\/android\\/assets\\/", "");
@@ -1080,8 +1155,28 @@ public abstract class VDesktopLauncher implements VListener {
         }
         if (!fileHandle.exists()) return null;
         stageFiles.put(stage, fileHandle);
+        fileType = FileType.Java;
         return fileHandle;
     }
+
+    private FileHandle getStageKotlinFile(VStage stage) {
+        if (stageFiles.get(stage) != null) return stageFiles.get(stage);
+        String proName = Gdx.files.getLocalStoragePath().replaceAll("\\/android\\/assets\\/", "");
+        String pack = stage.getClass().getPackage().toString().replaceAll("package ", "");
+        pack = pack.replaceAll("\\.", "/");
+        String tryPath = proName + "/core/src/" + pack + "/" + stage.getClass().getSimpleName() + ".kt";
+        FileHandle fileHandle = Gdx.files.absolute(tryPath);
+        if (!fileHandle.exists()) {
+            //如果不存在，则找另一个路径
+            tryPath = proName + "/core/src/main/java/" + pack + "/" + stage.getClass().getSimpleName() + ".kt";
+            fileHandle = Gdx.files.absolute(tryPath);
+        }
+        if (!fileHandle.exists()) return null;
+        stageFiles.put(stage, fileHandle);
+        fileType = FileType.Kotlin;
+        return fileHandle;
+    }
+
 
     //获取行号接口实现
     private HashMap<Actor, StackTraceElement[]> allStacks = new HashMap<>();
@@ -1091,4 +1186,5 @@ public abstract class VDesktopLauncher implements VListener {
         StackTraceElement[] elements = new Throwable().getStackTrace();
         allStacks.put(actor, elements);
     }
+
 }
