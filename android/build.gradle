@@ -1,5 +1,7 @@
 apply plugin: 'com.github.dcendents.android-maven'
 
+group='com.github.whitecostume'
+
 android {
     buildToolsVersion "27.0.3"
     compileSdkVersion 27

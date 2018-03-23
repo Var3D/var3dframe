@@ -1,3 +1,5 @@
+apply plugin: 'maven'
+group='com.github.whitecostume'
 sourceSets {
     main {
         java.srcDirs = ["src/main/java", "src/core/java"]
