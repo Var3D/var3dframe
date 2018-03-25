@@ -30,31 +30,31 @@ Include var3dframe via Gradle
 + core
 ```
 dependencies {
-	   compile "com.github.whitecostume.var3dframe:core:$var3d"
+	   compile "com.github.Var3D.var3dframe:core:$var3d"
 }
 ```
 + desktop
 ```
 dependencies {
-	   compile "com.github.whitecostume.var3dframe:desktop:$var3d"
+	   compile "com.github.Var3D.var3dframe:desktop:$var3d"
 }
 ```
 + android
 ```
 dependencies {
-	   compile "com.github.whitecostume.var3dframe:android:$var3d"
+	   compile "com.github.Var3D.var3dframe:android:$var3d"
 }
 ```
 + ios
 ```
 dependencies {
-	   compile "com.github.whitecostume.var3dframe:ios:$var3d"
+	   compile "com.github.Var3D.var3dframe:ios:$var3d"
 }
 ```
 + ios-moe
 ```
 dependencies {
-	   compile "com.github.whitecostume.var3dframe:ios-moe:$var3d"
+	   compile "com.github.Var3D.var3dframe:ios-moe:$var3d"
 }
 ```
 
