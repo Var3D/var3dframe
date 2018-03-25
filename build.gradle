@@ -1,8 +1,3 @@
-apply plugin: "java"
-apply plugin: "maven"
-group = "com.github.whitecostume"
-
-
 buildscript {
     repositories {
         mavenLocal()
@@ -11,9 +6,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         //classpath 'org.robovm:robovm-gradle-plugin:1.12.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5' // Add this line
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.3'
+        classpath 'org.multi-os-engine:moe-gradle:1.4.3'
     }
 }
 
@@ -30,7 +27,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "gdx-var3d-1.9.2"
-        gdxVersion = '1.9.7'
+        gdxVersion = '1.9.8'
         roboVMVersion = '2.3.3'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
@@ -44,6 +41,8 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 }
+
+
 
 project(":desktop") {
     apply plugin: "java"
@@ -88,6 +87,19 @@ project(":ios") {
     }
 }
 
+project(":ios-moe") {
+    apply plugin: "moe"
+
+    configurations { natives }
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-moe:$gdxVersion"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
+
+    }
+}
+
 project(":core") {
     apply plugin: "java"
 
@@ -102,37 +114,51 @@ tasks.eclipse.doLast {
     delete ".project"
 }
 
-task packJar(type: Jar) {
-    doFirst {
-        from files(project(":core").sourceSets.core.output.classesDir);
-        from files(project(":desktop").sourceSets.core.output.classesDir);
-        from files(project(":ios").sourceSets.core.output.classesDir);
-        from fileTree(dir: "android/build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo");
+subprojects {
+
+    task packJar(type: Jar) {
+
+        doFirst {
+            if(project.name == "android"){
+                from fileTree(dir: "build/intermediates/classes/core/release/", includes: ["**/VAndroidLauncher.class"], exclude: "**/demo")
+            }else{
+                from sourceSets.core.output.classesDir
+            }
+        }
     }
-}
-def preCompile = [":core:coreClasses", ":desktop:coreClasses", ":ios:coreClasses", ":android:compileCoreReleaseJavaWithJavac"];
 
-packJar.dependsOn preCompile
 
-task packDoc(dependsOn: ":core:javadoc", type: Jar) {
-    classifier = "javadoc"
-    from project(":core").tasks["javadoc"].destinationDir
-}
 
-task packSources(type: Jar) {
-    classifier = "sources"
-    doFirst {
-        from files(project(":core").sourceSets.core.allJava)
-        from files(project(":desktop").sourceSets.core.allJava)
-        from files(project(":ios").sourceSets.core.allJava)
-        from files(":android/src/core/java")
+    def preCompile = [":core:coreClasses", ":desktop:coreClasses", ":ios:coreClasses",":ios-moe:coreClasses", ":android:compileCoreReleaseJavaWithJavac"];
+
+    packJar.dependsOn preCompile
+
+    task packDoc(dependsOn: ":core:javadoc", type: Jar) {
+        classifier = "javadoc"
+        if (project.name == "core"){
+            from project(":core").tasks["javadoc"].destinationDir
+        }
+
     }
-}
 
-task packAll(dependsOn: ['packJar', 'packDoc', 'packSources'])
+    task packSources(type: Jar) {
+        classifier = "sources"
+        doFirst {
+            if(project.name == "android"){
+                from files("src/core/java")
+            }else {
+                from sourceSets.core.allJava
+            }
 
-artifacts {
-    archives packJar
-    archives packDoc
-    archives packSources
+        }
+    }
+
+
+    task packAll(dependsOn: ['packJar', 'packDoc', 'packSources'])
+
+    artifacts {
+        archives packJar
+        archives packDoc
+        archives packSources
+    }
 }

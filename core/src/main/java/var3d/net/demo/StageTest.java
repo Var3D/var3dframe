@@ -26,6 +26,7 @@ public class StageTest extends VStage {
 
     @Override
     public void init() {
+
         setBackground(R.image.bg);//设置背景
         //设置标题
         txt_logo = game.getLabel(R.strings.logo).setColor(Color.BLACK).setPosition(getWidth() / 2, getHeight() - 20, Align.top).touchOff().show();
