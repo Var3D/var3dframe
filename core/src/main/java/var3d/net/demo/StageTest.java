@@ -20,7 +20,7 @@ public class StageTest extends VStage {
     private Button btn_tost,btn_dialog;
 
     public StageTest(VGame game) {
-        super(game);
+        super(game,true);
         // game.loadFolderToPackExcept(R.image.class, R.image.tank_4);
     }
 
