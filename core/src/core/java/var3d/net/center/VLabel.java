@@ -69,6 +69,7 @@ public class VLabel extends Label {
      */
     public void setFontScale(float fontScale) {
         super.setFontScale(fontScale);
+        setSize(getPrefWidth(),getPrefHeight());
     }
 
 
