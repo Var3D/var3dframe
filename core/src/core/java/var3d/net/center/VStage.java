@@ -219,34 +219,38 @@ public abstract class VStage extends Stage {
         return bgList;
     }
 
-    public void setBackground(String imgName) {
+    public Image setBackground(String imgName) {
         Image bg = game.getImage(imgName).getActor();
         bgList.add(bg);
+        return bg;
     }
 
-    public void setBackground(String imgName, Color color) {
+    public Image setBackground(String imgName, Color color) {
         Image bg = game.getImage(imgName, game.WIDTH, game.HEIGHT)
                 .setColor(color).getActor();
         bgList.add(bg);
+        return bg;
     }
 
     public void setBackground(Actor bg) {
         bgList.add(bg);
     }
 
-    public void setBackground(Color color) {
+    public Image setBackground(Color color) {
         Image bg = game.getImage(game.WIDTH, game.HEIGHT, color).getActor();
         bgList.add(bg);
+        return bg;
     }
 
-    public void setBackground(Color color1, Color color2) {
-        Actor bg = new ActorGradient(game.WIDTH, game.HEIGHT, color1, color2);
+    public ActorGradient setBackground(Color color1, Color color2) {
+        ActorGradient bg = new ActorGradient(game.WIDTH, game.HEIGHT, color1, color2);
         bgList.add(bg);
+        return bg;
     }
 
     public Group createSuperRoot() {
         Group SRoot = new Group();
-        SRoot.setSize(game.WIDTH + getCutWidth() * 2.5f, game.HEIGHT + getCutHeight() * 2.5f);
+        SRoot.setSize(getFullWidth(), getFullHeight());
         SRoot.setPosition(game.getCenterX(), game.getCenterY(), Align.center);
         return SRoot;
     }
