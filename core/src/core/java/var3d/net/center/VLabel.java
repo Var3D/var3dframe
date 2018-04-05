@@ -3,11 +3,9 @@ package var3d.net.center;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import var3d.net.center.freefont.FreeBitmapFont;
-import var3d.net.center.shaderActor.DefaultShaders;
 
 public class VLabel extends Label {
     private boolean isStroke = false;// 是否描边
@@ -17,8 +15,6 @@ public class VLabel extends Label {
     private float shadowOffsetY = 0f;//设置阴影位移x
     private ShadowOption shadowOption = ShadowOption.Disable;//设置阴影选项
     private Color shadowColor = new Color(Color.GRAY);//阴影颜色
-
-    private ShaderProgram shaderProgramOutLine;
 
     public enum ShadowOption {
         Disable, Projection, Smear
@@ -54,7 +50,7 @@ public class VLabel extends Label {
      * 设置描边
      */
     public void setStroke(Color strokeColor) {
-        setStroke(strokeColor, 1.5f);
+        setStroke(strokeColor, 1);
     }
 
     /**
@@ -64,12 +60,6 @@ public class VLabel extends Label {
         this.strokeColor = strokeColor;
         this.strokeWidth = strokeWidth;
         isStroke = true;
-        if (shaderProgramOutLine == null) {
-            shaderProgramOutLine = new ShaderProgram(DefaultShaders.defaultVert, DefaultShaders.outlineFrag);
-            if (shaderProgramOutLine.isCompiled() == false)
-                throw new IllegalArgumentException("Error compiling shader: " + shaderProgramOutLine.getLog());
-
-        }
     }
 
     /**
@@ -169,22 +159,14 @@ public class VLabel extends Label {
     public void drawLabel(Batch batch, float parentAlpha) {
         if (isStroke) {
             validate();
-
             BitmapFontCache cache = getBitmapFontCache();
-            FreeBitmapFont font = (FreeBitmapFont) cache.getFont();
-
-            ShaderProgram shader = batch.getShader();
-            batch.setShader(shaderProgramOutLine);
-
-            shaderProgramOutLine.setUniformf("outlineColor", strokeColor.r, strokeColor.g, strokeColor.b);
-            shaderProgramOutLine.setUniformf("outlineSize", strokeWidth);
-            shaderProgramOutLine.setUniformf("limit", 0.2f);
-            shaderProgramOutLine.setUniformf("textureSize", font.pageWidth, font.pageWidth);
-
-            cache.setPosition(getX(), getY());
-            cache.draw(batch);
-
-            batch.setShader(shader);
+            strokeColor.a = getColor().a;
+            for (int i = 0; i < dxs.length; i++) {
+                cache.tint(strokeColor);
+                cache.setPosition(getX() + dxs[i] * strokeWidth, getY() +  dys[i] * strokeWidth + strokeWidth);
+                cache.draw(batch);
+            }
+            cache.setPosition(getX(), getY()+strokeWidth);
             cache.tint(getColor());
             cache.draw(batch);
         } else {

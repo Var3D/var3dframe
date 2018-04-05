@@ -36,7 +36,7 @@ public class StageTest extends VStage {
         setBackground(R.image.bg);//设置背景
         //设置标题
         txt_logo = game.getLabel(R.strings.logo).setColor(Color.BLUE).setStroke(Color.CYAN)
-                .setPosition(getWidth() / 2, getHeight() - 20, Align.top).touchOff().show();
+                .setPosition(getWidth() / 2, getHeight() - 20, Align.top).setAlpha(0.1f).touchOff().show();
         //Tost
         btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(0, 380).addClicAction().show();
         btn_tost.add(game.getLabel(R.strings.tost).getActor());

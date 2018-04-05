@@ -377,9 +377,9 @@ public class FreeBitmapFont extends BitmapFont {
         Glyph glyph = new Glyph();
         glyph.id = id;
         glyph.page = pIndex;
-        glyph.srcX = (int) rect.x-2;
+        glyph.srcX = (int) rect.x;
         glyph.srcY = (int) rect.y;
-        glyph.width = (int) rect.width+4;
+        glyph.width = (int) rect.width;
         glyph.height = (int) rect.height;
         glyph.xadvance = (int)rect.width;
         data.setGlyph(id, glyph);
