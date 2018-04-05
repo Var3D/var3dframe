@@ -1,10 +1,15 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import var3d.net.center.freefont.FreeBitmapFont;
+import var3d.net.center.shaderActor.DefaultShaders;
 
 public class VLabel extends Label {
     private boolean isStroke = false;// 是否描边
@@ -14,6 +19,8 @@ public class VLabel extends Label {
     private float shadowOffsetY = 0f;//设置阴影位移x
     private ShadowOption shadowOption = ShadowOption.Disable;//设置阴影选项
     private Color shadowColor = new Color(Color.GRAY);//阴影颜色
+
+    private ShaderProgram shaderProgram;
 
     public enum ShadowOption {
         Disable, Projection, Smear
@@ -35,8 +42,7 @@ public class VLabel extends Label {
 
     public void setColor(Color color) {
         super.setColor(color);
-        if (isStroke)
-            strokeColor = color.cpy();
+        if (isStroke) strokeColor = color.cpy();
     }
 
     /**
@@ -50,18 +56,19 @@ public class VLabel extends Label {
      * 设置描边
      */
     public void setStroke(Color strokeColor) {
-        this.strokeColor = strokeColor;
-        this.strokeWidth = 1;
-        isStroke = true;
+        setStroke(strokeColor, 2);
     }
 
     /**
-     * 设置描边(参数0-2为宜)
+     * 设置描边
      */
     public void setStroke(Color strokeColor, float strokeWidth) {
         this.strokeColor = strokeColor;
         this.strokeWidth = strokeWidth;
         isStroke = true;
+        shaderProgram = new ShaderProgram(DefaultShaders.defaultVert, DefaultShaders.outlineFrag);
+        if (shaderProgram.isCompiled() == false)
+            throw new IllegalArgumentException("Error compiling shader: " + shaderProgram.getLog());
     }
 
     /**
@@ -69,7 +76,7 @@ public class VLabel extends Label {
      */
     public void setFontScale(float fontScale) {
         super.setFontScale(fontScale);
-        setSize(getPrefWidth(),getPrefHeight());
+        setSize(getPrefWidth(), getPrefHeight());
     }
 
 
@@ -109,6 +116,7 @@ public class VLabel extends Label {
     private float dxs[] = {1, 1, -1, -1, 1, -1, 0, 0};
     private float dys[] = {1, -1, 1, -1, 0, 0, 1, -1};
     private float oldShadowAlpha, oldStrokeAlpha;
+
     public void draw(Batch batch, float parentAlpha) {
         switch (shadowOption) {
             case Disable: //关闭阴影特效
@@ -158,19 +166,41 @@ public class VLabel extends Label {
 
     public void drawLabel(Batch batch, float parentAlpha) {
         if (isStroke) {
-            oldStrokeAlpha = strokeColor.a;
-            strokeColor.a = getColor().a;
+//            oldStrokeAlpha = strokeColor.a;
+//            strokeColor.a = getColor().a;
+//            validate();
+//            for (int i = 0; i < dxs.length; i++) {
+//                getBitmapFontCache().tint(strokeColor);
+//                getBitmapFontCache().setPosition(getX() + dxs[i] * strokeWidth,
+//                        getY() + dys[i] * strokeWidth + strokeWidth);
+//                getBitmapFontCache().draw(batch, getColor().a);
+//            }
+//            getBitmapFontCache().tint(getColor());
+//            getBitmapFontCache().setPosition(getX(), getY() + strokeWidth);
+//            getBitmapFontCache().draw(batch);
+//            strokeColor.a = oldStrokeAlpha;
+
+
             validate();
-            for (int i = 0; i < dxs.length; i++) {
-                getBitmapFontCache().tint(strokeColor);
-                getBitmapFontCache().setPosition(getX() + dxs[i] * strokeWidth,
-                        getY() + dys[i] * strokeWidth + strokeWidth);
-                getBitmapFontCache().draw(batch, getColor().a);
-            }
-            getBitmapFontCache().tint(getColor());
-            getBitmapFontCache().setPosition(getX(), getY() + strokeWidth);
-            getBitmapFontCache().draw(batch);
-            strokeColor.a = oldStrokeAlpha;
+            BitmapFontCache cache = getBitmapFontCache();
+            float size =cache.getFont().getRegion().getRegionWidth();
+
+            ShaderProgram shader = batch.getShader();
+            batch.setShader(shaderProgram);
+
+            shaderProgram.setUniformf("outlineColor", strokeColor.r, strokeColor.g, strokeColor.b);
+            shaderProgram.setUniformf("outlineSize", strokeWidth);
+            shaderProgram.setUniformf("textureSize", size, size);
+
+            //cache.tint(getColor());
+            cache.setPosition(getX() + strokeWidth, getY() + strokeWidth);
+            cache.draw(batch);
+
+            batch.setShader(shader);
+
+            cache.tint(getColor());
+            //cache.setPosition(getX() + strokeWidth, getY() + strokeWidth);
+            cache.draw(batch);
         } else {
             super.draw(batch, parentAlpha);
         }

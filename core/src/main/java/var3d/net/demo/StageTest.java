@@ -1,6 +1,7 @@
 package var3d.net.demo;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -11,16 +12,18 @@ import var3d.net.center.DialogMessge;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
+import var3d.net.center.shaderActor.LightActor;
+import var3d.net.center.shaderActor.WaterActor;
 
 /**
  * Created by fengyu on 16/4/8.
  */
 public class StageTest extends VStage {
     private VLabel txt_logo;
-    private Button btn_tost,btn_dialog;
+    private Button btn_tost, btn_dialog;
 
     public StageTest(VGame game) {
-        super(game,true);
+        super(game, true);
         // game.loadFolderToPackExcept(R.image.class, R.image.tank_4);
     }
 
@@ -29,7 +32,8 @@ public class StageTest extends VStage {
 
         setBackground(R.image.bg);//设置背景
         //设置标题
-        txt_logo = game.getLabel(R.strings.logo).setColor(Color.BLACK).setPosition(getWidth() / 2, getHeight() - 20, Align.top).touchOff().show();
+        txt_logo = game.getLabel(R.strings.logo).setColor(Color.CYAN).setStroke(Color.YELLOW)
+                .setPosition(getWidth() / 2, getHeight() - 20, Align.top).touchOff().show();
 
         //Tost
         btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(0, 380).addClicAction().show();
@@ -49,6 +53,11 @@ public class StageTest extends VStage {
                 game.showDialog(DialogTest.class);
             }
         });
+
+        //shader测试
+        WaterActor waterActor = game.getUI(new WaterActor(game.getTextureRegion(R.image.badlogic))).show(Align.center);
+        LightActor lightActor = game.getUI(new LightActor(game.getTextureRegion(R.image.badlogic)))
+                .setPosition(getWidth() / 2, waterActor.getY() - 10, Align.top).show();
     }
 
     @Override
