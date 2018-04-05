@@ -186,6 +186,7 @@ public class DefaultShaders {
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform float outlineSize;\n" +
+            "uniform float limit;\n" +
             "uniform vec3 outlineColor;\n" +
             "uniform vec2 textureSize;\n" +
             "\n" +
@@ -199,7 +200,7 @@ public class DefaultShaders {
             "    vec2 unit = 1.0 / textureSize.xy;\n" +
             "    vec2 offset = vec2(outlineSize * cos(rad) * unit.x, outlineSize * sin(rad) * unit.y);\n" +
             "    float a = texture2D(u_texture, v_texCoords + offset).a;\n" +
-            "    if (a >= 0.2)\n" +
+            "    if (a >= limit)\n" +
             "    {\n" +
             "        stroke = 1;\n" +
             "    }\n" +
@@ -209,9 +210,10 @@ public class DefaultShaders {
             "void main()\n" +
             "{\n" +
             "    vec4 myC = texture2D(u_texture, v_texCoords);\n" +
-            "    if (myC.a >= 0.2)\n" +
+            "    if (myC.a >= 0.5)\n" +
             "    {\n" +
-            "        gl_FragColor = vec4(outlineColor.rgb,myC.a*v_color.a);\n" +
+            "        //gl_FragColor = vec4(outlineColor.rgb,myC.a*v_color.a);\n" +
+            "         gl_FragColor = v_color * myC;\n" +
             "        return;\n" +
             "    }\n" +
             "\n" +

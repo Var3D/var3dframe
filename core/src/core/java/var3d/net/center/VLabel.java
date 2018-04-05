@@ -1,15 +1,10 @@
 package var3d.net.center;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Array;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.shaderActor.DefaultShaders;
@@ -23,7 +18,7 @@ public class VLabel extends Label {
     private ShadowOption shadowOption = ShadowOption.Disable;//设置阴影选项
     private Color shadowColor = new Color(Color.GRAY);//阴影颜色
 
-    private ShaderProgram shaderProgram;
+    private ShaderProgram shaderProgramOutLine;
 
     public enum ShadowOption {
         Disable, Projection, Smear
@@ -59,7 +54,7 @@ public class VLabel extends Label {
      * 设置描边
      */
     public void setStroke(Color strokeColor) {
-        setStroke(strokeColor, 2);
+        setStroke(strokeColor, 1.5f);
     }
 
     /**
@@ -69,14 +64,18 @@ public class VLabel extends Label {
         this.strokeColor = strokeColor;
         this.strokeWidth = strokeWidth;
         isStroke = true;
-        shaderProgram = new ShaderProgram(DefaultShaders.defaultVert, DefaultShaders.outlineFrag);
-        if (shaderProgram.isCompiled() == false)
-            throw new IllegalArgumentException("Error compiling shader: " + shaderProgram.getLog());
+        if (shaderProgramOutLine == null) {
+            shaderProgramOutLine = new ShaderProgram(DefaultShaders.defaultVert, DefaultShaders.outlineFrag);
+            if (shaderProgramOutLine.isCompiled() == false)
+                throw new IllegalArgumentException("Error compiling shader: " + shaderProgramOutLine.getLog());
+
+        }
     }
 
     /**
      * 设置字体缩放
      */
+
     public void setFontScale(float fontScale) {
         super.setFontScale(fontScale);
         setSize(getPrefWidth(), getPrefHeight());
@@ -167,66 +166,26 @@ public class VLabel extends Label {
         }
     }
 
-    private void cacheDraw(Batch batch, BitmapFontCache cache) {
-        BitmapFont font = cache.getFont();
-        Array<TextureRegion> regions = font.getRegions();
-        for (int j = 0, n = font.getRegions().size; j < n; j++) {
-            int idx = cache.getVertexCount(j);
-            if (idx > 0) { // ignore if this texture has no glyphs
-                float[] vertices = cache.getVertices(j);
-                batch.draw(regions.get(j).getTexture(), vertices, 0, idx);
-            }
-        }
-    }
-
     public void drawLabel(Batch batch, float parentAlpha) {
         if (isStroke) {
-//            oldStrokeAlpha = strokeColor.a;
-//            strokeColor.a = getColor().a;
-//            validate();
-//            for (int i = 0; i < dxs.length; i++) {
-//                getBitmapFontCache().tint(strokeColor);
-//                getBitmapFontCache().setPosition(getX() + dxs[i] * strokeWidth,
-//                        getY() + dys[i] * strokeWidth + strokeWidth);
-//                getBitmapFontCache().draw(batch, getColor().a);
-//            }
-//            getBitmapFontCache().tint(getColor());
-//            getBitmapFontCache().setPosition(getX(), getY() + strokeWidth);
-//            getBitmapFontCache().draw(batch);
-//            strokeColor.a = oldStrokeAlpha;
-
-
             validate();
+
             BitmapFontCache cache = getBitmapFontCache();
-            BitmapFont font = cache.getFont();
-            float size;
-            if (cache.getFont() instanceof FreeBitmapFont) {
-                FreeBitmapFont freeBitmapFont = (FreeBitmapFont) cache.getFont();
-                size = freeBitmapFont.pageWidth;
-            } else size = cache.getFont().getRegion().getRegionWidth();
+            FreeBitmapFont font = (FreeBitmapFont) cache.getFont();
 
             ShaderProgram shader = batch.getShader();
-            batch.setShader(shaderProgram);
+            batch.setShader(shaderProgramOutLine);
 
-            shaderProgram.setUniformf("outlineColor", strokeColor.r, strokeColor.g, strokeColor.b);
-            shaderProgram.setUniformf("outlineSize", strokeWidth);
+            shaderProgramOutLine.setUniformf("outlineColor", strokeColor.r, strokeColor.g, strokeColor.b);
+            shaderProgramOutLine.setUniformf("outlineSize", strokeWidth);
+            shaderProgramOutLine.setUniformf("limit", 0.2f);
+            shaderProgramOutLine.setUniformf("textureSize", font.pageWidth, font.pageWidth);
 
-
-            cache.setPosition(getX() + strokeWidth, getY() + strokeWidth);
-
-            Array<TextureRegion> regions = font.getRegions();
-            for (int j = 0, n = font.getRegions().size; j < n; j++) {
-                int idx = cache.getVertexCount(j);
-                if (idx > 0) { // ignore if this texture has no glyphs
-                    float[] vertices = cache.getVertices(j);
-                    shaderProgram.setUniformf("textureSize", regions.get(j).getRegionWidth(), regions.get(j).getRegionHeight());
-                    batch.draw(regions.get(j).getTexture(), vertices, 0, idx);
-                }
-            }
+            cache.setPosition(getX(), getY());
+            cache.draw(batch);
 
             batch.setShader(shader);
             cache.tint(getColor());
-            cache.setPosition(getX() + strokeWidth, getY() + strokeWidth);
             cache.draw(batch);
         } else {
             super.draw(batch, parentAlpha);

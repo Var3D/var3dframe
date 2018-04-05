@@ -171,8 +171,7 @@ public class FreeBitmapFont extends BitmapFont {
         if (!charSet.add(txt))
             return this;
         if (packer == null) {
-            packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 20,
-                    false);
+            packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 4, true);
         }
         char c = txt.charAt(0);
         putGlyph(c, pixmap);
@@ -236,7 +235,7 @@ public class FreeBitmapFont extends BitmapFont {
             }
             if (packer == null) {
                 packer = new PixmapPacker(pageWidth, pageWidth,
-                        Format.RGBA8888, 2, false);
+                        Format.RGBA8888, 4, false);
             }
             for (int i = 0; i < cs.size; i++) {
                 String txt = cs.get(i);
@@ -288,7 +287,7 @@ public class FreeBitmapFont extends BitmapFont {
                     * (int) (Math.sqrt(cs.size) + 1);
         }
         if (packer == null) {
-            packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 2,
+            packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 4,
                     false);
         }
         for (int i = 0; i < cs.size; i++) {
@@ -378,11 +377,11 @@ public class FreeBitmapFont extends BitmapFont {
         Glyph glyph = new Glyph();
         glyph.id = id;
         glyph.page = pIndex;
-        glyph.srcX = (int) rect.x;
+        glyph.srcX = (int) rect.x-2;
         glyph.srcY = (int) rect.y;
-        glyph.width = (int) rect.width;
+        glyph.width = (int) rect.width+4;
         glyph.height = (int) rect.height;
-        glyph.xadvance = glyph.width;
+        glyph.xadvance = (int)rect.width;
         data.setGlyph(id, glyph);
     }
 

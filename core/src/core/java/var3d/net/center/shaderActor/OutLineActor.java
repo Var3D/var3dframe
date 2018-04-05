@@ -35,10 +35,12 @@ public class OutLineActor extends Actor {
         float y = getY();
         float width = texture.getRegionWidth();
         float height = texture.getRegionHeight();
-        shaderProgram.setUniformf("outlineColor", 0.0f, 1.0f, 0.0f);
-        shaderProgram.setUniformf("outlineSize", 10f);
+        shaderProgram.setUniformf("outlineColor", 1.0f, 0.5f, 1.0f);
+        shaderProgram.setUniformf("outlineSize", 2f);
         shaderProgram.setUniformf("textureSize", width, height);
+        shaderProgram.setUniformf("limit",0.5f);//适当调整这个参数以便更好的识别图片的边缘
 
+        batch.setColor(getColor());
         batch.draw(texture, x, y, width, height);
 
 

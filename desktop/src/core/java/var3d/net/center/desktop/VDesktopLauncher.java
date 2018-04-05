@@ -527,6 +527,7 @@ public abstract class VDesktopLauncher implements VListener {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = (int) (width * scale);
         config.height = (int) (height * scale);
+        config.samples=4;
         return config;
     }
 

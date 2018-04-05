@@ -1,5 +1,7 @@
 package var3d.net.demo;
 
+import com.badlogic.gdx.graphics.Color;
+
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.freefont.FreeBitmapFont;

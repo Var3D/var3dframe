@@ -2,9 +2,9 @@
 <resources>
 
 <string name="test">这是一个测试</string>
-<string name="app_name">var3dframe for gdx1.9.7</string>
-<string name="logo">var3d框架示例</string>
-<string name="dialogTitle">对话框例子</string>
 <string name="tost">Tost范例</string>
+<string name="app_name">var3dframe for gdx1.9.7</string>
+<string name="logo">Var3d框架示例</string>
+<string name="dialogTitle">对话框例子</string>
 
 </resources>
