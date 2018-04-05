@@ -550,6 +550,7 @@ public abstract class VGame implements ApplicationListener {
     private <T> VStage getStage(Class<T> type) {
         return getStage(type, type.getName());
     }
+
     /**
      * 允许定义名字来创建多个stage类实例
      */
@@ -794,7 +795,7 @@ public abstract class VGame implements ApplicationListener {
     private GestureDetector gesture;
     private InputAdapter input;
 
-    public <T> void setStage(Class<T> type){
+    public <T> void setStage(Class<T> type) {
         HashMap<String, Object> intent = new HashMap<>();
         setStage(type, type.getName(), intent);
     }
@@ -813,7 +814,7 @@ public abstract class VGame implements ApplicationListener {
         }
         stage = null;
         stage = getStage(type, name);
-        if(stage != null)
+        if (stage != null)
             stage.setIntent(intent);
         do {
             if (stage != null) {
@@ -848,19 +849,16 @@ public abstract class VGame implements ApplicationListener {
     }
 
     public void removeStage(HashMap<String, Object> intent) {
-        if(stageStack.size() > 0)
-        {
+        if (stageStack.size() > 0) {
             stageStack.pop();
-            if(stageStack.size() > 0)
-            {
+            if (stageStack.size() > 0) {
                 setStage(stageStack.peek(), stageStack.peek().getName(), intent);
 //                getStage(stageStack.peek()).setIntent(intent);
             }
         }
     }
 
-    public Stack<Class> getStageStack()
-    {
+    public Stack<Class> getStageStack() {
         return stageStack;
     }
 
@@ -869,7 +867,7 @@ public abstract class VGame implements ApplicationListener {
         var3dListener.onIOSPause();
         if (music != null)
             music.pause();
-        if (stage != null)
+        if (stage != null && isLoading)
             stage.pause();
     }
 
@@ -877,7 +875,7 @@ public abstract class VGame implements ApplicationListener {
         var3dListener.onIOSResume();
         if (isMusic != false && music != null)
             music.play();
-        if (stage != null)
+        if (stage != null && isLoading)
             stage.resume();
     }
 
@@ -1505,6 +1503,7 @@ public abstract class VGame implements ApplicationListener {
         tex.setRegion(0, 0, width, height);
         return new TextureRegionDrawable(tex);
     }
+
     /**
      * 获取TextureAtlas
      */
@@ -1519,6 +1518,7 @@ public abstract class VGame implements ApplicationListener {
         }
         return textureAtlas;
     }
+
     /**
      * 获取TextureRegion
      */
