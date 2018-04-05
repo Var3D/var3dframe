@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.Array;
 public class FreeBitmapFont extends BitmapFont {
     private VGame game;
     private FreeListener listener;// 从本地端返回纹理的接口
-    private int pageWidth = 512;// 单张纹理的尺寸(针对动态文本)
+    public int pageWidth = 512;// 单张纹理的尺寸(针对动态文本)
     private FreePaint paint = new FreePaint();// 默认画笔
     private Set<String> charSet = new HashSet<String>();// 已拥有的字符
     private PixmapPacker packer = null;// 用于将单个字符合成到大纹理的packer
@@ -171,7 +171,7 @@ public class FreeBitmapFont extends BitmapFont {
         if (!charSet.add(txt))
             return this;
         if (packer == null) {
-            packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 2,
+            packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 20,
                     false);
         }
         char c = txt.charAt(0);

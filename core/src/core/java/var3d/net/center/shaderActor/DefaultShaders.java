@@ -5,7 +5,7 @@ package var3d.net.center.shaderActor;
  */
 
 public class DefaultShaders {
-    public final static String defaultVert="attribute vec4 a_position;\n" +
+    public final static String defaultVert = "attribute vec4 a_position;\n" +
             "attribute vec4 a_color;\n" +
             "attribute vec2 a_texCoord0;\n" +
             "\n" +
@@ -23,7 +23,7 @@ public class DefaultShaders {
             "\tv_position = a_position;\n" +
             "\tgl_Position =  u_projTrans * a_position;\n" +
             "}";
-    public final static String blurFrag="#ifdef GL_ES\n" +
+    public final static String blurFrag = "#ifdef GL_ES\n" +
             "precision mediump float;\n" +
             "#endif\n" +
             "varying vec2 v_texCoords;\n" +
@@ -49,7 +49,7 @@ public class DefaultShaders {
             "    }\n" +
             "    gl_FragColor = vec4(mix(v.rgb, sumColor / blurPixels, strength), v.a*v_color.a);\n" +
             "}";
-    public final static String embossFrag="#ifdef GL_ES\n" +
+    public final static String embossFrag = "#ifdef GL_ES\n" +
             "precision mediump float;\n" +
             "#endif\n" +
             "varying vec2 v_texCoords;\n" +
@@ -66,7 +66,7 @@ public class DefaultShaders {
             "    float f = (tmpColor.r + tmpColor.g + tmpColor.b) / 3.0;\n" +
             "    gl_FragColor = vec4(f, f, f, v.a * v_color.a);\n" +
             "}";
-    public final static String glassFrag="#ifdef GL_ES\n" +
+    public final static String glassFrag = "#ifdef GL_ES\n" +
             "precision mediump float;\n" +
             "#endif\n" +
             "varying vec2 v_texCoords;\n" +
@@ -96,7 +96,7 @@ public class DefaultShaders {
             "    }\n" +
             "    gl_FragColor = vec4(sumColor / blurPixels, v.a * v_color.a);\n" +
             "}";
-    public final static String grayFrag="#ifdef GL_ES\n" +
+    public final static String grayFrag = "#ifdef GL_ES\n" +
             "precision mediump float;\n" +
             "#endif\n" +
             "varying vec2 v_texCoords;\n" +
@@ -110,7 +110,7 @@ public class DefaultShaders {
             "    float f = v.r * 0.299 + v.g * 0.587 + v.b * 0.114;\n" +
             "    gl_FragColor = vec4(f, f, f, v.a*v_color.a);\n" +
             "}\n";
-    public final static String inkFrag="#ifdef GL_ES\n" +
+    public final static String inkFrag = "#ifdef GL_ES\n" +
             "precision mediump float;\n" +
             "#endif\n" +
             "\n" +
@@ -141,7 +141,7 @@ public class DefaultShaders {
             "    color = clamp(color, 0.0, 1.0);\n" +
             "    gl_FragColor = color * v_color ;//纹理与灯光混合\n" +
             "}";
-    public final static String lightFrag="#ifdef GL_ES\n" +
+    public final static String lightFrag = "#ifdef GL_ES\n" +
             "precision mediump float;\n" +
             "#endif\n" +
             "\n" +
@@ -168,7 +168,16 @@ public class DefaultShaders {
             "    color = clamp(color, 0.0, 1.0);  \n" +
             "    gl_FragColor = v * color * v_color ;//纹理与灯光混合\n" +
             "}  ";
-    public final static String outlineFrag="#ifdef GL_ES\n" +
+
+    private final static String getStrokeCountText() {
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < 360; i++) {
+            buffer.append("    strokeCount += getIsStrokeWithAngel(" + i + ".0);\n");
+        }
+        return buffer.toString();
+    }
+
+    public final static String outlineFrag = "#ifdef GL_ES\n" +
             "precision mediump float;\n" +
             "#endif\n" +
             "\n" +
@@ -207,18 +216,7 @@ public class DefaultShaders {
             "    }\n" +
             "\n" +
             "    int strokeCount = 0;\n" +
-            "    strokeCount += getIsStrokeWithAngel(0.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(30.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(60.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(90.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(120.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(150.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(180.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(210.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(240.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(270.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(300.0);\n" +
-            "    strokeCount += getIsStrokeWithAngel(330.0);\n" +
+            getStrokeCountText() +
             "\n" +
             "    if (strokeCount > 0)\n" +
             "    {\n" +
@@ -228,7 +226,7 @@ public class DefaultShaders {
             "\n" +
             "    gl_FragColor =myC;\n" +
             "}";
-    public final static String shadowFrag="#ifdef GL_ES\n" +
+    public final static String shadowFrag = "#ifdef GL_ES\n" +
             "precision mediump float;\n" +
             "#endif\n" +
             "\n" +
@@ -252,7 +250,7 @@ public class DefaultShaders {
             "    vec4 shadowColor = vec4(0,0,0,shadowMask *shadowOpacity);\n" +
             "    gl_FragColor = composite(textureColor, shadowColor);\n" +
             "}";
-    public final static String waterFrag="#ifdef GL_ES\n" +
+    public final static String waterFrag = "#ifdef GL_ES\n" +
             "#define LOWP lowp\n" +
             "precision mediump float;\n" +
             "#else\n" +

@@ -3,10 +3,13 @@ package var3d.net.center;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Array;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.shaderActor.DefaultShaders;
@@ -164,6 +167,18 @@ public class VLabel extends Label {
         }
     }
 
+    private void cacheDraw(Batch batch, BitmapFontCache cache) {
+        BitmapFont font = cache.getFont();
+        Array<TextureRegion> regions = font.getRegions();
+        for (int j = 0, n = font.getRegions().size; j < n; j++) {
+            int idx = cache.getVertexCount(j);
+            if (idx > 0) { // ignore if this texture has no glyphs
+                float[] vertices = cache.getVertices(j);
+                batch.draw(regions.get(j).getTexture(), vertices, 0, idx);
+            }
+        }
+    }
+
     public void drawLabel(Batch batch, float parentAlpha) {
         if (isStroke) {
 //            oldStrokeAlpha = strokeColor.a;
@@ -183,23 +198,35 @@ public class VLabel extends Label {
 
             validate();
             BitmapFontCache cache = getBitmapFontCache();
-            float size =cache.getFont().getRegion().getRegionWidth();
+            BitmapFont font = cache.getFont();
+            float size;
+            if (cache.getFont() instanceof FreeBitmapFont) {
+                FreeBitmapFont freeBitmapFont = (FreeBitmapFont) cache.getFont();
+                size = freeBitmapFont.pageWidth;
+            } else size = cache.getFont().getRegion().getRegionWidth();
 
             ShaderProgram shader = batch.getShader();
             batch.setShader(shaderProgram);
 
             shaderProgram.setUniformf("outlineColor", strokeColor.r, strokeColor.g, strokeColor.b);
             shaderProgram.setUniformf("outlineSize", strokeWidth);
-            shaderProgram.setUniformf("textureSize", size, size);
 
-            //cache.tint(getColor());
+
             cache.setPosition(getX() + strokeWidth, getY() + strokeWidth);
-            cache.draw(batch);
+
+            Array<TextureRegion> regions = font.getRegions();
+            for (int j = 0, n = font.getRegions().size; j < n; j++) {
+                int idx = cache.getVertexCount(j);
+                if (idx > 0) { // ignore if this texture has no glyphs
+                    float[] vertices = cache.getVertices(j);
+                    shaderProgram.setUniformf("textureSize", regions.get(j).getRegionWidth(), regions.get(j).getRegionHeight());
+                    batch.draw(regions.get(j).getTexture(), vertices, 0, idx);
+                }
+            }
 
             batch.setShader(shader);
-
             cache.tint(getColor());
-            //cache.setPosition(getX() + strokeWidth, getY() + strokeWidth);
+            cache.setPosition(getX() + strokeWidth, getY() + strokeWidth);
             cache.draw(batch);
         } else {
             super.draw(batch, parentAlpha);

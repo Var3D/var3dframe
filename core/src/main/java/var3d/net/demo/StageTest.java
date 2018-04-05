@@ -32,7 +32,7 @@ public class StageTest extends VStage {
 
         setBackground(R.image.bg);//设置背景
         //设置标题
-        txt_logo = game.getLabel(R.strings.logo).setColor(Color.CYAN).setStroke(Color.YELLOW)
+        txt_logo = game.getLabel(R.strings.app_name).setColor(Color.CYAN).setStroke(Color.YELLOW)
                 .setPosition(getWidth() / 2, getHeight() - 20, Align.top).touchOff().show();
 
         //Tost
