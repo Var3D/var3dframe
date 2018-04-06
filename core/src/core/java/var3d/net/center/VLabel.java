@@ -15,6 +15,7 @@ public class VLabel extends Label {
     private float shadowOffsetY = 0f;//设置阴影位移x
     private ShadowOption shadowOption = ShadowOption.Disable;//设置阴影选项
     private Color shadowColor = new Color(Color.GRAY);//阴影颜色
+    private BitmapFontCache fontCache;
 
     public enum ShadowOption {
         Disable, Projection, Smear
@@ -24,6 +25,7 @@ public class VLabel extends Label {
         super(append(text, style), style);
         setSize(getPrefWidth(), getPrefHeight());
         setColor(style.fontColor);
+        fontCache = getBitmapFontCache();
     }
 
     private static CharSequence append(CharSequence text, LabelStyle style) {
@@ -60,6 +62,7 @@ public class VLabel extends Label {
         this.strokeColor = strokeColor;
         this.strokeWidth = strokeWidth;
         isStroke = true;
+       // refushCache();
     }
 
     /**
@@ -117,9 +120,9 @@ public class VLabel extends Label {
             case Projection: //投影效果
                 oldShadowAlpha = shadowColor.a;
                 shadowColor.a = getColor().a;
-                getBitmapFontCache().tint(shadowColor);
-                getBitmapFontCache().setPosition(getX() + shadowOffsetX, getY() + shadowOffsetY);
-                getBitmapFontCache().draw(batch);
+                fontCache.tint(shadowColor);
+                fontCache.setPosition(getX() + shadowOffsetX, getY() + shadowOffsetY);
+                fontCache.draw(batch);
                 shadowColor.a = oldShadowAlpha;
                 drawLabel(batch, parentAlpha);
                 break;
@@ -138,15 +141,15 @@ public class VLabel extends Label {
                     if (isStroke) {
                         validate();
                         for (int i = 0; i < dxs.length; i++) {
-                            getBitmapFontCache().tint(shadowColor);
-                            getBitmapFontCache().setPosition(getX() + offsetX + dxs[i] * strokeWidth,
+                            fontCache.tint(shadowColor);
+                            fontCache.setPosition(getX() + offsetX + dxs[i] * strokeWidth,
                                     getY() + offsetY + dys[i] * strokeWidth + strokeWidth);
-                            getBitmapFontCache().draw(batch);
+                            fontCache.draw(batch);
                         }
                     } else {
-                        getBitmapFontCache().tint(shadowColor);
-                        getBitmapFontCache().setPosition(getX() + offsetX, getY() + offsetY);
-                        getBitmapFontCache().draw(batch);
+                        fontCache.tint(shadowColor);
+                        fontCache.setPosition(getX() + offsetX, getY() + offsetY);
+                        fontCache.draw(batch);
                     }
                 }
                 shadowColor.a = oldShadowAlpha;
@@ -156,19 +159,46 @@ public class VLabel extends Label {
         }
     }
 
+//    private SpriteCache spriteCache = new SpriteCache();
+//    private int cacheId;
+//
+//    private void refushCache() {
+//        spriteCache.clear();
+//        spriteCache.beginCache();
+//        Array<TextureRegion> regions = fontCache.getFont().getRegions();
+//        for (int j = 0, n = regions.size; j < n; j++) {
+//            int idx = fontCache.getVertexCount(j);
+//            if (idx > 0) {
+//                float[] vertices = fontCache.getVertices(j);
+//                spriteCache.add(regions.get(j).getTexture(), vertices, 0, idx);
+//            }
+//        }
+//        cacheId = spriteCache.endCache();
+//    }
+
     public void drawLabel(Batch batch, float parentAlpha) {
         if (isStroke) {
             validate();
-            BitmapFontCache cache = getBitmapFontCache();
             strokeColor.a = getColor().a;
             for (int i = 0; i < dxs.length; i++) {
-                cache.tint(strokeColor);
-                cache.setPosition(getX() + dxs[i] * strokeWidth, getY() +  dys[i] * strokeWidth + strokeWidth);
-                cache.draw(batch);
+                fontCache.tint(strokeColor);
+                fontCache.setPosition(getX() + dxs[i] * strokeWidth, getY() + dys[i] * strokeWidth + strokeWidth);
+                fontCache.draw(batch);
             }
-            cache.setPosition(getX(), getY()+strokeWidth);
-            cache.tint(getColor());
-            cache.draw(batch);
+            fontCache.setPosition(getX(), getY() + strokeWidth);
+            fontCache.tint(getColor());
+            fontCache.draw(batch);
+
+
+//            batch.end();
+//            spriteCache.setProjectionMatrix(batch.getProjectionMatrix());
+//            Matrix4 matrix4=spriteCache.getTransformMatrix();
+//            matrix4.setToTranslation(getX(),getY(),matrix4.getTranslation(new Vector3()).z);
+//            spriteCache.setTransformMatrix(matrix4);
+//            spriteCache.begin();
+//            spriteCache.draw(cacheId);
+//            spriteCache.end();
+//            batch.begin();
         } else {
             super.draw(batch, parentAlpha);
         }
