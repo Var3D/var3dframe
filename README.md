@@ -20,7 +20,7 @@ Include var3dframe via Gradle
     allprojects {
         ext {
             ...
-            var3d = "0.90"
+            var3d = "0.92"
             ...
         }
     }
