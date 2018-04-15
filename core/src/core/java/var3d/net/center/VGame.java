@@ -983,62 +983,81 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 截图并保存
      */
+    private int out_w, out_h, out5s_w, out5s_h;
+    private String name, path5s;
+
     public void Screenshot() {
-        boolean isMac = System.getProperty("os.name").startsWith("Mac");
-        String root = Gdx.files.getLocalStoragePath().replaceAll(
-                isMac ? "android/assets/" : "android\\\\assets\\\\", "");
-        String path = root + "screenShot";
-        if (language == null) {
-            path += "/zh";
-        } else {
-            path += "/" + language;
-        }
-        String path5s = null;
-        Vector2 size = var3dListener.getAppScreenSize();
-        int out_w = (int) size.x;
-        int out_h = (int) size.y;
-        if (out_w == 2732 || out_h == 2732) {//ipad
-            path += "/ipad";
-            Gdx.files.absolute(path).mkdirs();
-        } else {
-            path5s = path + "/5s";
-            path += "/iphone";
-            Gdx.files.absolute(path).mkdirs();
-            Gdx.files.absolute(path5s).mkdirs();
-        }
-        String time = "" + new Date().getTime();
-        String na = getStage().getName();
-        na = na.substring(na.lastIndexOf(".") + 1);
-        String name = path + "/" + na + time + ".jpg";
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                boolean isMac = System.getProperty("os.name").startsWith("Mac");
+                String root = Gdx.files.getLocalStoragePath().replaceAll(
+                        isMac ? "android/assets/" : "android\\\\assets\\\\", "");
+                String path = root + "screenShot";
+                if (language == null) {
+                    path += "/zh";
+                } else {
+                    path += "/" + language;
+                }
+                Vector2 size = var3dListener.getAppScreenSize();
+                out_w = (int) size.x;
+                out_h = (int) size.y;
+                if (out_w == 2732 || out_h == 2732) {//ipad
+                    path += "/ipad";
+                    Gdx.files.absolute(path).mkdirs();
+                } else {
+                    path5s = path + "/5s";
+                    path += "/iphone";
+                    Gdx.files.absolute(path).mkdirs();
+                    Gdx.files.absolute(path5s).mkdirs();
+                }
+                final String time = "" + new Date().getTime();
+                String na = getStage().getName();
+                na = na.substring(na.lastIndexOf(".") + 1);
+                name = path + "/" + na + time + ".jpg";
 
-        Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);
-        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Format.RGB888);
-        ByteBuffer pixels = pixmap.getPixels();
-        Gdx.gl.glReadPixels(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), GL20.GL_RGB
-                , GL20.GL_UNSIGNED_BYTE, pixels);
-
-        Pixmap out = new Pixmap(out_w, out_h, Format.RGB888);
-        out.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out_w, out_h);
-        writePNG(Gdx.files.absolute(name), out);
-
-        if (path5s != null) {
-            if (out_w > out_h) {
-                out_w = 1136;
-                out_h = 640;
-            } else {
-                out_w = 640;
-                out_h = 1136;
+                final String finalNa = na;
+                Gdx.app.postRunnable(new Runnable() {
+                    public void run() {
+                        Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);
+                        final Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Format.RGB888);
+                        ByteBuffer pixels = pixmap.getPixels();
+                        final Pixmap outPixmap = new Pixmap(out_w, out_h, Format.RGB888);
+                        Gdx.gl.glReadPixels(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), GL20.GL_RGB
+                                , GL20.GL_UNSIGNED_BYTE, pixels);
+                        Thread t = new Thread(new Runnable() {
+                            public void run() {
+                                outPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out_w, out_h);
+                                writePNG(Gdx.files.absolute(name), outPixmap);
+                            }
+                        });
+                        t.start();
+                        if (path5s != null) {
+                            if (out_w > out_h) {
+                                out5s_w = 1136;
+                                out5s_h = 640;
+                            } else {
+                                out5s_w = 640;
+                                out5s_h = 1136;
+                            }
+                            final Pixmap out5sPixmap = new Pixmap(out5s_w, out5s_h, Format.RGB888);
+                            Thread t2 = new Thread(new Runnable() {
+                                public void run() {
+                                    out5sPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out5s_w, out5s_h);
+                                    String name = path5s + "/" + finalNa + time + ".jpg";
+                                    writePNG(Gdx.files.absolute(name), out5sPixmap);
+                                    Gdx.app.error("Var3D Studio消息", finalNa + time + "截取成功!");
+                                }
+                            });
+                            t2.start();
+                        }
+                    }
+                });
             }
-            Pixmap out5s = new Pixmap(out_w, out_h, Format.RGB888);
-            out5s.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out_w, out_h);
-            name = path5s + "/" + na + time + ".jpg";
-            writePNG(Gdx.files.absolute(name), out5s);
-        }
-
-        Gdx.app.error("Var3D Studio消息", na + time + "截取成功!");
+        });
+        t.start();
     }
 
-    public void writePNG(FileHandle file, Pixmap pixmap) {
+    public void writePNG(final FileHandle file, final Pixmap pixmap) {
         try {
             PixmapIO.PNG writer = new PixmapIO.PNG((int) (pixmap.getWidth() * pixmap.getHeight() * 1.5f));
             try {

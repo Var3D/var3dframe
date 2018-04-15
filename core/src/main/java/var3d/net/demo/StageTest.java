@@ -1,11 +1,8 @@
 package var3d.net.demo;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -13,9 +10,7 @@ import var3d.net.center.DialogMessge;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
-import var3d.net.center.shaderActor.LightActor;
 import var3d.net.center.shaderActor.OutLineActor;
-import var3d.net.center.shaderActor.ShadowActor;
 import var3d.net.center.shaderActor.WaterActor;
 
 /**
