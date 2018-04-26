@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -24,8 +23,8 @@ public abstract class VStage extends Stage {
     public VGame game;
     private String name = "";
     public ArrayList<Actor> bgList;
-    private float cutWidth, cutHeight;
-    private boolean isStretching=false;//是否拉伸比例适配
+    private float cutWidth, cutHeight, cutAndWidth, cutAndHeight, fullWidth, fullHeight;
+    private boolean isStretching = false;//是否拉伸比例适配
 
     public HashMap<String, Object> getIntent() {
         return intent;
@@ -36,15 +35,15 @@ public abstract class VStage extends Stage {
     }
 
     protected HashMap<String, Object> intent;
-    
+
     public VStage(VGame game) {
         super(new ScalingViewport(Scaling.stretch, game.WIDTH, game.HEIGHT));
         set(game);
     }
 
-    public VStage(VGame game,boolean isStretching) {
+    public VStage(VGame game, boolean isStretching) {
         super(new ScalingViewport(Scaling.stretch, game.WIDTH, game.HEIGHT));
-        this.isStretching=isStretching;
+        this.isStretching = isStretching;
         set(game);
     }
 
@@ -80,43 +79,49 @@ public abstract class VStage extends Stage {
     public void resize(float width, float height) {
         changing(width, height);
         getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-        if(isStretching)return;
+        if (isStretching) return;
         float bl = getWidth() / getHeight() * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
         if (bl < 1) {
             cutWidth = (1 - bl) * getWidth() / 2f;
             cutHeight = 0;
             getRoot().setScale(bl, 1);
             getRoot().setPosition(cutWidth, 0);
+            cutWidth = cutWidth / getRoot().getScaleX();
         } else if (bl > 1) {
             cutWidth = 0;
             cutHeight = (1 - 1 / bl) * getHeight() / 2f;
             getRoot().setScale(1, 1 / bl);
             getRoot().setPosition(0, cutHeight);
+            cutHeight = cutHeight / getRoot().getScaleY();
         }
+        cutAndWidth = getWidth() + cutWidth;
+        cutAndHeight = getHeight() + cutHeight;
+        fullWidth = cutAndWidth + cutWidth;
+        fullHeight = cutAndHeight + cutHeight;
     }
 
     public float getCutWidth() {
-        return cutWidth / getRoot().getScaleX();
+        return cutWidth;
     }
 
     public float getCutHeight() {
-        return cutHeight / getRoot().getScaleY();
+        return cutHeight;
     }
 
     public float getCutAndWidth() {
-        return getWidth() + cutWidth / getRoot().getScaleX();
+        return cutAndWidth;
     }
 
     public float getCutAndHeight() {
-        return getHeight() + cutHeight / getRoot().getScaleY();
+        return cutAndHeight;
     }
 
     public float getFullWidth() {
-        return getWidth() + cutWidth / getRoot().getScaleX() * 2;
+        return fullWidth;
     }
 
     public float getFullHeight() {
-        return getHeight() + cutHeight / getRoot().getScaleY() * 2;
+        return fullHeight;
     }
 
     public String getName() {
@@ -175,7 +180,7 @@ public abstract class VStage extends Stage {
                 game.var3dListener.edit(this);
             } else if (arg0 == Input.Keys.P) {
                 // 保存UI
-               game.var3dListener.saveUI(this);
+                game.var3dListener.saveUI(this);
             }
         } else if (arg0 == Input.Keys.BACK) {
             if (getRoot().getTouchable() == Touchable.enabled) {

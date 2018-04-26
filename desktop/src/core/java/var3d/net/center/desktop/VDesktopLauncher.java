@@ -6,6 +6,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -1199,9 +1201,13 @@ public abstract class VDesktopLauncher implements VListener {
     private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
-        if(Gdx.graphics.getWidth()<Gdx.graphics.getHeight()){
-            rectangle.set(0,102,0,132);
-        }else{rectangle.set(132,63,132,0);}
+        if ((width == 1125 && height == 2436) || (width == 2436 && height == 1125)) {
+            if (Gdx.graphics.getWidth() < Gdx.graphics.getHeight()) {
+                rectangle.set(0, 102, 0, 132);
+            } else {
+                rectangle.set(132, 63, 132, 0);
+            }
+        }
         return rectangle;
     }
 }

@@ -474,6 +474,7 @@ public abstract class VGame implements ApplicationListener {
             Batch batch = stageTop.getBatch();
             if (iphoneX != null) {
                 batch.begin();
+                batch.setColor(Color.WHITE);
                 batch.draw(iphoneX, 0, 0, WIDTH, HEIGHT);
                 batch.end();
             }

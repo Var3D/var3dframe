@@ -1,10 +1,6 @@
 package var3d.net.demo;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -14,8 +10,6 @@ import var3d.net.center.DialogMessge;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
-import var3d.net.center.shaderActor.OutLineActor;
-import var3d.net.center.shaderActor.WaterActor;
 
 /**
  * Created by fengyu on 16/4/8.
@@ -37,7 +31,7 @@ public class StageTest extends VStage {
         txt_logo = game.getLabel(R.strings.logo).setColor(Color.BLUE).setStroke(Color.CYAN)
                 .setPosition(getWidth() / 2, getHeight() - 100, Align.top).setAlpha(0.9f).touchOff().show();
         //Tost
-        btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(0, 380).addClicAction().show();
+        btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(-getCutWidth(), 380).addClicAction().show();
         btn_tost.add(game.getLabel(R.strings.tost).getActor());
         btn_tost.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -47,7 +41,7 @@ public class StageTest extends VStage {
         });
 
         //自定义对话框
-        btn_dialog = game.getButton(R.image.pause_btn_bg).setPosition(0, 320).addClicAction().show();
+        btn_dialog = game.getButton(R.image.pause_btn_bg).setPosition(-getCutWidth(), 320).addClicAction().show();
         btn_dialog.add(game.getLabel(R.strings.dialogTitle).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
