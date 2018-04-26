@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosmoe.IOSApplication;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -23,13 +24,17 @@ import apple.foundation.NSLocale;
 import apple.foundation.NSMutableAttributedString;
 import apple.foundation.NSNumber;
 import apple.foundation.NSString;
+import apple.foundation.c.Foundation;
 import apple.foundation.struct.NSRange;
+import apple.uikit.UIApplication;
 import apple.uikit.UIColor;
 import apple.uikit.UIFont;
 import apple.uikit.UIImage;
 import apple.uikit.UILabel;
+import apple.uikit.UIView;
 import apple.uikit.c.UIKit;
 import apple.uikit.enums.NSUnderlineStyle;
+import apple.uikit.struct.UIEdgeInsets;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
@@ -90,8 +95,8 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
         try {
             NSString string = NSString.stringWithString(strings);
             CGSize dim = string.sizeWithFont(font);
-            UILabel label =  UILabel.alloc()
-                    .initWithFrame(new CGRect(new CGPoint(0,0),new CGSize(dim.width(),dim.height())));
+            UILabel label = UILabel.alloc()
+                    .initWithFrame(new CGRect(new CGPoint(0, 0), new CGSize(dim.width(), dim.height())));
             UILabel label2 = null;// 描边层
             label.setText(strings);
             label.setBackgroundColor(UIColor.colorWithRedGreenBlueAlpha(1, 1, 1, 0));
@@ -100,20 +105,20 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
             label.setOpaque(false);
             label.setAlpha(1);
             NSRange range = new NSRange(0, strings.length());
-            NSMutableAttributedString mutableString =  NSMutableAttributedString.alloc().initWithString(
+            NSMutableAttributedString mutableString = NSMutableAttributedString.alloc().initWithString(
                     strings);
 
             mutableString.addAttributeValueRange("ForegroundColor", getColor(vpaint.getColor()), range);
             if (vpaint.getStrokeColor() != null) {
                 label2 = UILabel.alloc()
-                        .initWithFrame(new CGRect(new CGPoint(0,0),new CGSize(dim.width(),dim.height())));
+                        .initWithFrame(new CGRect(new CGPoint(0, 0), new CGSize(dim.width(), dim.height())));
                 label2.setText(strings);
                 label2.setBackgroundColor(UIColor.colorWithRedGreenBlueAlpha(1, 1, 1, 0));
                 label2.setTextColor(getColor(vpaint.getColor()));
                 label2.setFont(font);
                 label2.setOpaque(false);
                 label2.setAlpha(1);
-                NSMutableAttributedString mutableString2 =  NSMutableAttributedString.alloc().initWithString(
+                NSMutableAttributedString mutableString2 = NSMutableAttributedString.alloc().initWithString(
                         strings);
                 mutableString2.addAttributeValueRange("StrokeColor", getColor(vpaint.getStrokeColor()), range);
                 mutableString2.addAttributeValueRange("StrokeWidth", NSNumber.numberWithInt(vpaint.getStrokeWidth()), range);
@@ -122,8 +127,8 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                 mutableString.addAttributeValueRange("UnderlineStyle", NSNumber.numberWithLong(NSUnderlineStyle.StyleSingle), range);
             } else if (vpaint.getStrikeThruText() == true) {
                 mutableString.
-                addAttributeValueRange("StrikethroughStyle",
-                        NSNumber.numberWithLong(NSUnderlineStyle.StyleSingle | NSUnderlineStyle.PatternSolid), range);
+                        addAttributeValueRange("StrikethroughStyle",
+                                NSNumber.numberWithLong(NSUnderlineStyle.StyleSingle | NSUnderlineStyle.PatternSolid), range);
 
             }
             label.setAttributedText(mutableString);
@@ -320,7 +325,7 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
     }
 
     public String getString(String key) {
-        return NSBundle.mainBundle().localizedStringForKeyValueTable(key, "", (String)null);
+        return NSBundle.mainBundle().localizedStringForKeyValueTable(key, "", (String) null);
     }
 
     public Array<Object> intelligentMethod(Object... obj) {
@@ -357,7 +362,28 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
     public void keyUp(int key) {
     }
 
-    public Vector2 getAppScreenSize(){
+    public Vector2 getAppScreenSize() {
         return null;
+    }
+
+    //返回安全区域
+    private Rectangle rectangle = null;
+
+    public Rectangle getSafeAreaInsets() {
+        if (rectangle != null) {
+            return rectangle;
+        } else if (Foundation.NSFoundationVersionNumber() < 11) {
+            rectangle = new Rectangle();
+            return rectangle;
+        } else {
+            UIView view = UIApplication.sharedApplication().keyWindow().rootViewController().view();
+            UIEdgeInsets edgeInsets = view.safeAreaInsets();
+            double top = edgeInsets.top() * view.contentScaleFactor();
+            double bottom = edgeInsets.bottom() * view.contentScaleFactor();
+            double left = edgeInsets.left() * view.contentScaleFactor();
+            double right = edgeInsets.right() * view.contentScaleFactor();
+            rectangle = new Rectangle((float) left, (float) bottom, (float) right, (float) top);
+            return rectangle;
+        }
     }
 }

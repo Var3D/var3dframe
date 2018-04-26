@@ -509,24 +509,37 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     public enum Size {
-        iphone_y, ipad_y, iphone_x, ipad_x;
+        iphone_h, ipad_h, iphone_w, ipad_w, iphoneX_w, iphoneX_h;
     }
 
     static int width = 0, height = 0;
 
     public static LwjglApplicationConfiguration getConfig(Size size, float bl) {
-        if (size == Size.iphone_y) {
-            width = 1242;
-            height = 2208;
-        } else if (size == Size.ipad_y) {
-            width = 2048;
-            height = 2732;
-        } else if (size == Size.iphone_x) {
-            height = 1242;
-            width = 2208;
-        } else if (size == Size.ipad_x) {
-            height = 2048;
-            width = 2732;
+        switch (size) {
+            case iphone_h:
+                width = 1242;
+                height = 2208;
+                break;
+            case ipad_h:
+                width = 2048;
+                height = 2732;
+                break;
+            case iphoneX_w:
+                height = 1125;
+                width = 2436;
+                break;
+            case iphone_w:
+                height = 1242;
+                width = 2208;
+                break;
+            case ipad_w:
+                height = 2048;
+                width = 2732;
+                break;
+            case iphoneX_h:
+                height = 2436;
+                width = 1125;
+                break;
         }
         return getConfig(width, height, bl);
     }
@@ -536,30 +549,49 @@ public abstract class VDesktopLauncher implements VListener {
         int screenWidth = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width * .9f);
         int screenHeight = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height * 0.9f);
         float bl = 1;
-        if (size == Size.iphone_y) {
-            width = 1242;
-            height = 2208;
-            float blw = screenWidth / (float) width;
-            bl = screenHeight / (float) height;
-            if (blw < bl) bl = blw;
-        } else if (size == Size.ipad_y) {
-            width = 2048;
-            height = 2732;
-            float blw = screenWidth / (float) width;
-            bl = screenHeight / (float) height;
-            if (blw < bl) bl = blw;
-        } else if (size == Size.iphone_x) {
-            height = 1242;
-            width = 2208;
-            float blw = screenWidth / (float) width;
-            bl = screenHeight / (float) height;
-            if (blw < bl) bl = blw;
-        } else if (size == Size.ipad_x) {
-            height = 2048;
-            width = 2732;
-            float blw = screenWidth / (float) width;
-            bl = screenHeight / (float) height;
-            if (blw < bl) bl = blw;
+        switch (size) {
+            case iphone_h:
+                width = 1242;
+                height = 2208;
+                float blw = screenWidth / (float) width;
+                bl = screenHeight / (float) height;
+                if (blw < bl) bl = blw;
+                break;
+            case ipad_h:
+                width = 2048;
+                height = 2732;
+                blw = screenWidth / (float) width;
+                bl = screenHeight / (float) height;
+                if (blw < bl) bl = blw;
+                break;
+            case iphoneX_w:
+                height = 1125;
+                width = 2436;
+                blw = screenWidth / (float) width;
+                bl = screenHeight / (float) height;
+                if (blw < bl) bl = blw;
+                break;
+            case iphone_w:
+                height = 1242;
+                width = 2208;
+                blw = screenWidth / (float) width;
+                bl = screenHeight / (float) height;
+                if (blw < bl) bl = blw;
+                break;
+            case ipad_w:
+                height = 2048;
+                width = 2732;
+                blw = screenWidth / (float) width;
+                bl = screenHeight / (float) height;
+                if (blw < bl) bl = blw;
+                break;
+            case iphoneX_h:
+                height = 2436;
+                width = 1125;
+                blw = screenWidth / (float) width;
+                bl = screenHeight / (float) height;
+                if (blw < bl) bl = blw;
+                break;
         }
         return getConfig(width, height, bl);
     }
