@@ -1,5 +1,6 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
@@ -122,6 +124,10 @@ public abstract class VGame implements ApplicationListener {
 
     private Stack<Class> stageStack = new Stack<>();
 
+    private TextureRegion iphoneX;//iphoneX的壳子,当用Desktop测试时选择iphoneX的尺寸时才会叠加到所有画面之上
+    public boolean isLand = true;//是否为横屏
+    public Rectangle safeAreaInsets;//安全区域
+
     public VGame(VListener varListener) {
         this.var3dListener = varListener;
         if (this.var3dListener != null) {
@@ -159,6 +165,7 @@ public abstract class VGame implements ApplicationListener {
     }
 
     public void create() {
+        if (Gdx.graphics.getHeight() > Gdx.graphics.getWidth()) isLand = false;
         save = Gdx.app.getPreferences(getProjectName());// 数据存储实例化
         Gdx.input.setCatchBackKey(true);// 劫持系统返回键
         multiplexer = new InputMultiplexer();// 触控实例化
@@ -177,6 +184,15 @@ public abstract class VGame implements ApplicationListener {
         setStageLoad(StageLoad.class);
         init();
         var3dListener.create();
+        if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
+            Vector2 size = var3dListener.getAppScreenSize();
+            int width = (int) size.x;
+            int height = (int) size.y;
+            if ((width == 1125 && height == 2436) || (width == 2436 && height == 1125)) {
+                iphoneX = new TextureRegion(new Texture(Gdx.files.internal(isLand ? "var3d/iphonex_w.png" : "var3d/iphonex.png")));
+            }
+        }
+        safeAreaInsets = var3dListener.getSafeAreaInsets();
     }
 
     //设置R文件
@@ -450,20 +466,24 @@ public abstract class VGame implements ApplicationListener {
         } else {
             if (stage != null) {
                 clean(Color.BLACK);
-                // stagePref.draw();
                 stage.act();
                 stage.draw();
-                if (isShowFps) {
-                    // int call = ((SpriteBatch) stage.getBatch()).renderCalls;
-                    stage.getBatch().begin();
-                    getFont().setColor(Color.WHITE);
-                    getFont().draw(stage.getBatch(), getHeap(), 0,
-                            getFont().getCapHeight());
-                    stage.getBatch().end();
-                }
             }
             stageTop.act();
             stageTop.draw();
+            Batch batch = stageTop.getBatch();
+            if (iphoneX != null) {
+                batch.begin();
+                batch.draw(iphoneX, 0, 0, WIDTH, HEIGHT);
+                batch.end();
+            }
+            if (isShowFps) {
+                batch.begin();
+                FreeBitmapFont font = getFont();
+                font.setColor(Color.WHITE);
+                font.draw(stage.getBatch(), getHeap(), 0, font.getCapHeight());
+                batch.end();
+            }
         }
     }
 
@@ -1002,7 +1022,7 @@ public abstract class VGame implements ApplicationListener {
                 out_w = (int) size.x;
                 out_h = (int) size.y;
                 if (out_w == 1125 || out_h == 1125) {
-                    path+="/iphoneX";
+                    path += "/iphoneX";
                     Gdx.files.absolute(path).mkdirs();
                 } else if (out_w == 2732 || out_h == 2732) {//ipad
                     path += "/ipad";
