@@ -1001,7 +1001,10 @@ public abstract class VGame implements ApplicationListener {
                 Vector2 size = var3dListener.getAppScreenSize();
                 out_w = (int) size.x;
                 out_h = (int) size.y;
-                if (out_w == 2732 || out_h == 2732) {//ipad
+                if (out_w == 1125 || out_h == 1125) {
+                    path+="/iphoneX";
+                    Gdx.files.absolute(path).mkdirs();
+                } else if (out_w == 2732 || out_h == 2732) {//ipad
                     path += "/ipad";
                     Gdx.files.absolute(path).mkdirs();
                 } else {
@@ -1028,6 +1031,7 @@ public abstract class VGame implements ApplicationListener {
                             public void run() {
                                 outPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out_w, out_h);
                                 writePNG(Gdx.files.absolute(name), outPixmap);
+                                Gdx.app.error("Var3D Studio消息", finalNa + time + "截取成功!");
                             }
                         });
                         t.start();
