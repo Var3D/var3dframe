@@ -371,13 +371,10 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     //返回安全区域
-    private Rectangle rectangle = null;
+    private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
-        if (rectangle != null) {
-            return rectangle;
-        } else if (Foundation.getMajorSystemVersion() < 11) {
-            rectangle = new Rectangle();
+       if (Foundation.getMajorSystemVersion() < 11) {
             return rectangle;
         } else {
             UIView view = UIApplication.getSharedApplication().getKeyWindow().getRootViewController().getView();
@@ -386,7 +383,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
             double bottom = edgeInsets.getBottom() * view.getContentScaleFactor();
             double left = edgeInsets.getLeft() * view.getContentScaleFactor();
             double right = edgeInsets.getRight() * view.getContentScaleFactor();
-            rectangle = new Rectangle((float) left, (float) bottom, (float) right, (float) top);
+            rectangle.set((float) left, (float) bottom, (float) right, (float) top);
             return rectangle;
         }
     }

@@ -1195,10 +1195,13 @@ public abstract class VDesktopLauncher implements VListener {
         allStacks.put(actor, elements);
     }
 
-    //返回安全区域
+    //返回安全区域(landLeft[132.0,63.0,132.0,0.0]/port[0.0,102.0,0.0,132.0])
     private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
+        if(Gdx.graphics.getWidth()<Gdx.graphics.getHeight()){
+            rectangle.set(0,102,0,132);
+        }else{rectangle.set(132,63,132,0);}
         return rectangle;
     }
 }

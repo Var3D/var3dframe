@@ -192,7 +192,7 @@ public abstract class VGame implements ApplicationListener {
                 iphoneX = new TextureRegion(new Texture(Gdx.files.internal(isLand ? "var3d/iphonex_w.png" : "var3d/iphonex.png")));
             }
         }
-        safeAreaInsets = var3dListener.getSafeAreaInsets();
+        safeAreaInsets=var3dListener.getSafeAreaInsets();
     }
 
     //设置R文件

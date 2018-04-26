@@ -367,13 +367,10 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
     }
 
     //返回安全区域
-    private Rectangle rectangle = null;
+    private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
-        if (rectangle != null) {
-            return rectangle;
-        } else if (Foundation.NSFoundationVersionNumber() < 11) {
-            rectangle = new Rectangle();
+        if (Foundation.NSFoundationVersionNumber() < 11) {
             return rectangle;
         } else {
             UIView view = UIApplication.sharedApplication().keyWindow().rootViewController().view();
@@ -382,7 +379,7 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
             double bottom = edgeInsets.bottom() * view.contentScaleFactor();
             double left = edgeInsets.left() * view.contentScaleFactor();
             double right = edgeInsets.right() * view.contentScaleFactor();
-            rectangle = new Rectangle((float) left, (float) bottom, (float) right, (float) top);
+            rectangle.set((float) left, (float) bottom, (float) right, (float) top);
             return rectangle;
         }
     }

@@ -56,9 +56,9 @@ public class StageTest extends VStage {
         });
 
         //shader测试
-        WaterActor waterActor = game.getUI(new WaterActor(game.getTextureRegion(R.image.badlogic))).show(Align.center);
-        OutLineActor outLineActor = game.getUI(new OutLineActor(game.getTextureRegion(R.image.tank_4)))
-                .setPosition(getWidth() / 2, waterActor.getY() - 10, Align.top).show();
+//        WaterActor waterActor = game.getUI(new WaterActor(game.getTextureRegion(R.image.badlogic))).show(Align.center);
+//        OutLineActor outLineActor = game.getUI(new OutLineActor(game.getTextureRegion(R.image.tank_4)))
+//                .setPosition(getWidth() / 2, waterActor.getY() - 10, Align.top).show();
 
     }
 
@@ -84,6 +84,5 @@ public class StageTest extends VStage {
 
     @Override
     public void changing(float width, float height) {
-
     }
 }
