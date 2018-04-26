@@ -7,6 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -25,16 +26,12 @@ import com.badlogic.gdx.utils.StringBuilder;
 import org.lwjgl.opengl.Display;
 
 import java.awt.BasicStroke;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Robot;
 import java.awt.Shape;
-import java.awt.Toolkit;
 import java.awt.font.GlyphVector;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
@@ -48,7 +45,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.AttributedString;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -366,27 +362,6 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     public void Screenshot(VGame game) {
-        BufferedImage image;
-        try {// 获取全屏图像数据，返回给image
-            Robot robot = new Robot();
-            boolean isMac = System.getProperty("os.name").startsWith("Mac");
-            int tilteHeight = isMac ? 23 : 30;
-            image = robot.createScreenCapture(new Rectangle(Display.getX(),
-                    Display.getY() + tilteHeight, Display.getWidth(), Display
-                    .getHeight()));
-            String root = Gdx.files.getLocalStoragePath().replaceAll(
-                    "android/assets/", "");
-            String path = root + "screenShot";
-            Gdx.files.absolute(path).mkdirs();
-            String time = "" + new Date().getTime();
-            String na = game.getStage().getName();
-            String language = game.save.getString("language");
-            String name = path + "/" + na + time + "_" + language + ".jpg";
-            ImageIO.write(image, "jpg", Gdx.files.absolute(name).file());
-            Display.setTitle(name + "截取成功!");
-        } catch (Exception e) {
-            Display.setTitle("截取失败!");
-        }
     }
 
     @Override
@@ -412,11 +387,9 @@ public abstract class VDesktopLauncher implements VListener {
             try {
                 // String language = game.save.getString("language", null);
                 String language = game.getLanguage();
-                FileHandle baseFileHandle = Gdx.files
-                        .internal("values/strings");
+                FileHandle baseFileHandle = Gdx.files.internal("values/strings");
                 if (language == null || language.equals("auto")) {
-                    bundle = I18NBundle.createBundle(baseFileHandle,
-                            Locale.getDefault());
+                    bundle = I18NBundle.createBundle(baseFileHandle, Locale.getDefault());
                 } else {
                     bundle = I18NBundle.createBundle(baseFileHandle,
                             new Locale(language));
@@ -479,7 +452,7 @@ public abstract class VDesktopLauncher implements VListener {
             // 如果是图片,就跳过
             return;
         }
-        File defFile=new File(load.getPath()+"_var3d_def");
+        File defFile = new File(load.getPath() + "_var3d_def");
         FileOutputStream fos = new FileOutputStream(defFile);
         int XOR_CONST = defByte[0] & 0xFF;
         fos.write(defByte[1] ^ XOR_CONST);
@@ -505,7 +478,7 @@ public abstract class VDesktopLauncher implements VListener {
             // 如果不是图片,就跳过
             return;
         }
-        File defFile=new File(load.getPath()+"_var3d_def");
+        File defFile = new File(load.getPath() + "_var3d_def");
         FileOutputStream fos = new FileOutputStream(defFile);
         fos.write(XOR_CONST);
         for (byte b : defByte) {
@@ -527,7 +500,7 @@ public abstract class VDesktopLauncher implements VListener {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = (int) (width * scale);
         config.height = (int) (height * scale);
-        config.samples=4;
+        config.samples = 4;
         return config;
     }
 
@@ -539,59 +512,60 @@ public abstract class VDesktopLauncher implements VListener {
         iphone_y, ipad_y, iphone_x, ipad_x;
     }
 
-    static int width=0,height=0;
-    public static LwjglApplicationConfiguration getConfig(Size size,float bl) {
-        if(size==Size.iphone_y){
-            width=1242;
-            height=2208;
-       }else if(size==Size.ipad_y){
-             width=2048;
-             height=2732;
-       }else if(size==Size.iphone_x){
-            height=1242;
-            width=2208;
-        }else if(size==Size.ipad_x){
-            height=2048;
-            width=2732;
+    static int width = 0, height = 0;
+
+    public static LwjglApplicationConfiguration getConfig(Size size, float bl) {
+        if (size == Size.iphone_y) {
+            width = 1242;
+            height = 2208;
+        } else if (size == Size.ipad_y) {
+            width = 2048;
+            height = 2732;
+        } else if (size == Size.iphone_x) {
+            height = 1242;
+            width = 2208;
+        } else if (size == Size.ipad_x) {
+            height = 2048;
+            width = 2732;
         }
         return getConfig(width, height, bl);
     }
 
     public static LwjglApplicationConfiguration getConfig(Size size) {
         //获取电脑屏幕分辨率(日了狗了mac能通过测试但是windows会报错，只好弃用了)
-        int screenWidth= (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*.9f);
-        int screenHeight = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.9f);
-         float bl=1;
-        if(size==Size.iphone_y){
-            width=1242;
-            height=2208;
-            float blw=screenWidth/(float)width;
-            bl=screenHeight/(float)height;
-            if(blw<bl)bl=blw;
-        }else if(size==Size.ipad_y){
-            width=2048;
-            height=2732;
-            float blw=screenWidth/(float)width;
-             bl=screenHeight/(float)height;
-            if(blw<bl)bl=blw;
-        }else if(size==Size.iphone_x){
-            height=1242;
-            width=2208;
-            float blw=screenWidth/(float)width;
-            bl=screenHeight/(float)height;
-            if(blw<bl)bl=blw;
-        }else if(size==Size.ipad_x){
-            height=2048;
-            width=2732;
-            float blw=screenWidth/(float)width;
-            bl=screenHeight/(float)height;
-            if(blw<bl)bl=blw;
+        int screenWidth = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width * .9f);
+        int screenHeight = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height * 0.9f);
+        float bl = 1;
+        if (size == Size.iphone_y) {
+            width = 1242;
+            height = 2208;
+            float blw = screenWidth / (float) width;
+            bl = screenHeight / (float) height;
+            if (blw < bl) bl = blw;
+        } else if (size == Size.ipad_y) {
+            width = 2048;
+            height = 2732;
+            float blw = screenWidth / (float) width;
+            bl = screenHeight / (float) height;
+            if (blw < bl) bl = blw;
+        } else if (size == Size.iphone_x) {
+            height = 1242;
+            width = 2208;
+            float blw = screenWidth / (float) width;
+            bl = screenHeight / (float) height;
+            if (blw < bl) bl = blw;
+        } else if (size == Size.ipad_x) {
+            height = 2048;
+            width = 2732;
+            float blw = screenWidth / (float) width;
+            bl = screenHeight / (float) height;
+            if (blw < bl) bl = blw;
         }
         return getConfig(width, height, bl);
     }
 
-    public Vector2 getAppScreenSize(){
-        return new Vector2(width,height);
+    public Vector2 getAppScreenSize() {
+        return new Vector2(width, height);
     }
 
     public void create() {
@@ -942,7 +916,7 @@ public abstract class VDesktopLauncher implements VListener {
     private String getPartialVariable(VStage stage, Actor actor) {
         FileHandle fileHandle = getStageJavaFile(stage);
         if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
-        if(fileHandle == null)return null;
+        if (fileHandle == null) return null;
         String javaStr = fileHandle.readString();
         String[] javaStrLines = javaStr.split("\n");//把代码按行号存放进数组中
         Data data = allDatas.get(actor);
@@ -966,7 +940,7 @@ public abstract class VDesktopLauncher implements VListener {
                     partNumber++;
                     if (partNumber == 2) {
                         int i1 = noAnnotations.lastIndexOf(";");
-                        if(i1 == -1 && fileType == FileType.Kotlin)
+                        if (i1 == -1 && fileType == FileType.Kotlin)
                             i1 = noAnnotations.length() - 1;
                         javaStrArr.add(noAnnotations.substring(i1 + 1));
                         //javaStrLines[i] = noAnnotations.substring(0, i1);
@@ -1009,12 +983,12 @@ public abstract class VDesktopLauncher implements VListener {
         //遍历stage中的actor，并找出该actor在stage初始化时的行号位置
         FileHandle fileHandle = getStageJavaFile(stage);
         if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
-        if(fileHandle == null) return;
+        if (fileHandle == null) return;
         String javaStr = fileHandle.readString();
         String[] javaStrLines = javaStr.split("\n");//把代码按行号存放进数组中
         for (final Actor actor : stage.getRoot().getChildren()) {
             Data data = allDatas.get(actor);
-            if(data == null) return;
+            if (data == null) return;
             if (data.isEdit) {
                 StackTraceElement[] elements = allStacks.get(actor);
                 if (elements == null) continue;
@@ -1037,7 +1011,7 @@ public abstract class VDesktopLauncher implements VListener {
                             partNumber++;
                             if (partNumber == 2) {
                                 int i1 = noAnnotations.lastIndexOf(";");
-                                if(i1 == -1 && fileType == FileType.Kotlin)
+                                if (i1 == -1 && fileType == FileType.Kotlin)
                                     i1 = noAnnotations.length() - 1;
                                 javaStrArr.add(noAnnotations.substring(i1 + 1));
                                 break;
@@ -1063,7 +1037,7 @@ public abstract class VDesktopLauncher implements VListener {
                     }
                     // Gdx.app.log("aaaaaa", codeStr);
                     String floatNumberSuffix = "";
-                    if(fileType == FileType.Kotlin)
+                    if (fileType == FileType.Kotlin)
                         floatNumberSuffix = "f";
                     int idex;
                     if ((idex = codeStr.lastIndexOf("setPosition(")) != -1) {
@@ -1140,7 +1114,8 @@ public abstract class VDesktopLauncher implements VListener {
     private HashMap<VStage, FileHandle> stageFiles = new HashMap<VStage, FileHandle>();
 
     private FileType fileType;
-    enum FileType{Java, Kotlin}
+
+    enum FileType {Java, Kotlin}
 
     private FileHandle getStageJavaFile(VStage stage) {
         if (stageFiles.get(stage) != null) return stageFiles.get(stage);
@@ -1188,4 +1163,10 @@ public abstract class VDesktopLauncher implements VListener {
         allStacks.put(actor, elements);
     }
 
+    //返回安全区域
+    private Rectangle rectangle = new Rectangle();
+
+    public Rectangle getSafeAreaInsets() {
+        return rectangle;
+    }
 }

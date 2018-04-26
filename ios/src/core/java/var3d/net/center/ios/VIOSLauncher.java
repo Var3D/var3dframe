@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
 import org.robovm.apple.coregraphics.CGRect;
 import org.robovm.apple.coregraphics.CGSize;
+import org.robovm.apple.foundation.Foundation;
 import org.robovm.apple.foundation.NSBundle;
 import org.robovm.apple.foundation.NSData;
 import org.robovm.apple.foundation.NSLocale;
@@ -19,11 +21,14 @@ import org.robovm.apple.foundation.NSRange;
 import org.robovm.apple.foundation.NSString;
 import org.robovm.apple.uikit.NSAttributedStringAttribute;
 import org.robovm.apple.uikit.NSUnderlineStyle;
+import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIColor;
+import org.robovm.apple.uikit.UIEdgeInsets;
 import org.robovm.apple.uikit.UIFont;
 import org.robovm.apple.uikit.UIGraphics;
 import org.robovm.apple.uikit.UIImage;
 import org.robovm.apple.uikit.UILabel;
+import org.robovm.apple.uikit.UIView;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -363,5 +368,26 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     public Vector2 getAppScreenSize(){
         return null;
+    }
+
+    //返回安全区域
+    private Rectangle rectangle = null;
+
+    public Rectangle getSafeAreaInsets() {
+        if (rectangle != null) {
+            return rectangle;
+        } else if (Foundation.getMajorSystemVersion() < 11) {
+            rectangle = new Rectangle();
+            return rectangle;
+        } else {
+            UIView view = UIApplication.getSharedApplication().getKeyWindow().getRootViewController().getView();
+            UIEdgeInsets edgeInsets = view.getSafeAreaInsets();
+            double top = edgeInsets.getTop() * view.getContentScaleFactor();
+            double bottom = edgeInsets.getBottom() * view.getContentScaleFactor();
+            double left = edgeInsets.getLeft() * view.getContentScaleFactor();
+            double right = edgeInsets.getRight() * view.getContentScaleFactor();
+            rectangle = new Rectangle((float) left, (float) bottom, (float) right, (float) top);
+            return rectangle;
+        }
     }
 }

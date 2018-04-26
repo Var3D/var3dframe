@@ -56,6 +56,7 @@ public class StageTest extends VStage {
         OutLineActor outLineActor = game.getUI(new OutLineActor(game.getTextureRegion(R.image.tank_4)))
                 .setPosition(getWidth() / 2, waterActor.getY() - 10, Align.top).show();
 
+
     }
 
     @Override
