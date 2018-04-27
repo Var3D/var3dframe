@@ -194,9 +194,11 @@ public abstract class VGame implements ApplicationListener {
             int width = (int) size.x;
             int height = (int) size.y;
             if ((width == 1125 && height == 2436) || (width == 2436 && height == 1125)) {
-                iphoneX = new TextureRegion(new Texture(Gdx.files.internal(isLand ? "var3d/iphonex_w.png" : "var3d/iphonex.png")));
+               // iphoneX = new TextureRegion(new Texture(Gdx.files.internal(isLand ? "var3d/iphonex_w.png" : "var3d/iphonex.png")));
+                iphoneX = new TextureRegion(new Texture(var3dListener.getIphoneXPixmap("")));
             }
         }
+
     }
 
     //设置R文件

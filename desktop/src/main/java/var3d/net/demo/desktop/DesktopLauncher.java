@@ -8,6 +8,6 @@ import var3d.net.demo.Game;
 public class DesktopLauncher extends VDesktopLauncher {
 
     public static void main(String[] arg) {
-        new LwjglApplication(new Game(new DesktopLauncher()), getConfig(Size.ipad_h));
+        new LwjglApplication(new Game(new DesktopLauncher()), getConfig(Size.iphoneX_h));
     }
 }

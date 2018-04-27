@@ -6,8 +6,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -50,6 +48,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -1209,5 +1210,269 @@ public abstract class VDesktopLauncher implements VListener {
             }
         }
         return rectangle;
+    }
+
+    public Pixmap getIphoneXPixmap(String name) {
+        String[] str_angles = Defeat.getStr_angles();
+        Pixmap outPixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        int angleSize = (int) Math.sqrt(str_angles.length);
+        drawAngle(outPixmap, str_angles, angleSize, 0, 0, false, false);
+        drawAngle(outPixmap, str_angles, angleSize, width - angleSize, 0, true, false);
+        drawAngle(outPixmap, str_angles, angleSize, 0, height - angleSize, false, true);
+        drawAngle(outPixmap, str_angles, angleSize, width - angleSize, height - angleSize, true, true);
+        String[] str_titles = Defeat.getStr_titles();
+        if (width > height) {
+            drawTitle(outPixmap, str_titles, 83, 642, 0, height / 2 - 321, false, false, false);
+            String[] str_homes = Defeat.getStr_homews();
+            drawHome(outPixmap, str_homes, 628, 39, width / 2 - 314, height - 39, false, false);
+        } else {
+            drawTitle(outPixmap, str_titles, 83, 642, width / 2 - 321, 0, false, true, true);
+            String[] str_homes = Defeat.getStr_homehs();
+            drawHome(outPixmap, str_homes, 398, 45, width / 2 - 199, height - 45, false, false);
+        }
+        return outPixmap;
+    }
+
+    private void drawHome(Pixmap outPixmap, String[] str_homes, int homeWidth, int homeHeight, int px, int py, boolean isFlipX, boolean isFlipY) {
+        for (int x = 0; x < homeWidth; x++) {
+            int xx = isFlipX ? homeWidth - 1 - x : x;
+            for (int y = 0; y < homeHeight; y++) {
+                int yy = isFlipY ? homeHeight - 1 - y : y;
+                int color = Integer.parseInt(str_homes[xx * homeHeight + yy]);
+                outPixmap.drawPixel(x + px, y + py, color);
+            }
+        }
+    }
+
+    private void drawAngle(Pixmap outPixmap, String[] str_angles, int angleSize, int px, int py, boolean isFlipX, boolean isFlipY) {
+        for (int x = 0; x < angleSize; x++) {
+            int xx = isFlipX ? angleSize - 1 - x : x;
+            for (int y = 0; y < angleSize; y++) {
+                int yy = isFlipY ? angleSize - 1 - y : y;
+                int color = Integer.parseInt(str_angles[yy * angleSize + xx]);
+                outPixmap.drawPixel(x + px, y + py, color);
+            }
+        }
+    }
+
+    private void drawTitle(Pixmap outPixmap, String[] str_titles, int titleWidth, int titleHeight
+            , int px, int py, boolean isFlipX, boolean isFlipY, boolean isRote90) {
+        for (int x = 0; x < titleWidth; x++) {
+            int xx = isFlipX ? titleWidth - 1 - x : x;
+            for (int y = 0; y < titleHeight; y++) {
+                int yy = isFlipY ? titleHeight - 1 - y : y;
+                int color = Integer.parseInt(str_titles[xx * titleHeight + yy]);
+                if (isRote90) {
+                    outPixmap.drawPixel(y + px, x + py, color);
+                } else {
+                    outPixmap.drawPixel(x + px, y + py, color);
+                }
+            }
+        }
+    }
+
+    private static class Defeat {
+        public final static String str_homeh = "UEsDBBQACAgIAAyqm0wAAAAAAAAAAAAAAAABAAAAMO3TQU6DUBRA0Q1hQoEW3f/GhKozG4IObpuc\n" +
+                "wX8hhcE9eb/jMA7rbbh8jMO0TPezP6/r9vs4vE3X2wuNcbjMm+F6/fXs716OtC3ikefnrO9P0Hlq\n" +
+                "3G/bgWr/pi89NaZlPmRNy/IEpedYR6Tv05diYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdi\n" +
+                "YeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqF\n" +
+                "lZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZW\n" +
+                "XoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5\n" +
+                "KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWl\n" +
+                "WFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdi\n" +
+                "YeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqF\n" +
+                "lZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZW\n" +
+                "XoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWlWFh5KRZWXoqFlZdiYeWl51jL\n" +
+                "fMxalicoPTUuH+Mha/+mLz011uN7uK5P0PmHhc3T40Vt7/rCf+1t/bqRy3T/w+3PL7qn+/gEUEsH\n" +
+                "CBOKrUKKAgAANE4BAA==";
+
+        public static String[] getStr_homehs() {
+            String unzip = unzip(str_homeh);
+            return unzip.split(",");
+        }
+        public final static String str_homew = "UEsDBBQACAgIAC+xm0wAAAAAAAAAAAAAAAABAAAAMO3U0WrDIBQG4BdyYDzJmrz/i01tu+1io21u\n" +
+                "zmAfchSjkg/5sZbaWytHLcsepcVW2rbNccyPsVZne2vbe0Y3/h1raTWust+qr3d0rnQ444HzXnHz\n" +
+                "Zmlbv7L1OernFff9ad79eA17q34sS7xc9lPkcS4tFfFiJu7V8u75lHdWXprPmzdmZmZmZmZmZmZm\n" +
+                "ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm\n" +
+                "ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm\n" +
+                "ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm\n" +
+                "ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm\n" +
+                "ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm\n" +
+                "ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm\n" +
+                "ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm\n" +
+                "ZmZmZmZmZmZmZmZmZmZmZuZ/bG555ljPmaOmmZfLfso8zmWZ9+MU+ci75VZafTEbY3+ad3YjzRFP\n" +
+                "JjhK5D0WP8DrA3j9S+DvQekpXfaYb0JbjzmOef+cHIev7gNQSwcITT3+encCAABkuQEA";
+
+        public static String[] getStr_homews() {
+            String unzip = unzip(str_homew);
+            return unzip.split(",");
+        }
+
+
+        public final static String str_angle = "UEsDBBQACAgIAO+Lm0wAAAAAAAAAAAAAAAABAAAAMO2ca67jIAyFN+SRMAQC+9/Y2NXVaB63nSQF\n" +
+                "bNKjyEfqj0o5X6mDwSTmTBHRJzgT7xJpJw6BSqYU6UfM5bCYW1g1EhPXKOgz1UbbRkzh14WfYAjy\n" +
+                "JsgFdAq07xTLb8CBvn9wJc6Vmoxu/hY1kHfBLLk7R6pVPr7EDNjXIknKKBs1wVEPAAbmU8FNIkbK\n" +
+                "R8mC8JHYkgzaQi0QbyfBAu6ziJJqt53KfoEouH7DMzxKj3xlhILpXyy1lijn0yh4/hlJEqdUY/nI\n" +
+                "XAosn4Q+fAKV1oXhR3LkKg/v12UTGD4Lfa7E9KzCB8HXI69EKqkzufvTC404yNxwALgbo+PClK9P\n" +
+                "pz+Pm07zuMhQG8bsZtR0kX1/r8D4IGK8FUpjcti9eEVhxYn6ztBuCItbpTr677c8KZYMlY8vLn8k\n" +
+                "J5aqckJqWpiSrv/wuMnU2ox0hz3OSdjrAdKBw3EymjXwaJ9G6LMYeC84UQteizHjG81jvFhh8QpG\n" +
+                "84vRn8grFn0emaRcx1D0AW0JxBmSx3wOQL5g6KbS3MmtWx5aLk4thdzS0OWFiYWzXxYxz1tmcU1C\n" +
+                "V+WsAZiD0GVc6yeHMQZd93eRI+0oxAk7H84Z6F6ZtWlDBLq9OnSr0DeB0EZuLrv3r/0I1maN7D+a\n" +
+                "WMytWpiPYUz3zgLe7ZcPTKxrq2D3VrcFnKfeDZJL+NbGWr/XGNsp9ewlXsS1dqFbG5trWk+BWW4S\n" +
+                "GHhmVyXqeMsyO+lwQmUhx3q+ydrQPMPx7cNcS/nVw4DWZmbZ3dI75x4Xc6tHZ62NTDPbrF1M8vo4\n" +
+                "ae4/O/XxGm1bC2ZZTZv/+UQXp/oGCmsDU4y2NTLvez55P/MuEevrsk99L431zU+wWdf5Ka+65INv\n" +
+                "F/JyXXLJTjpJhppsnhfSenhM/33fmLfrtEd20+ozzmKyvuXhFvcVyunrDhP73ZXq4lA7jE59AbKm\n" +
+                "6Dta7e8CMlxqc3ATkOGybQ5uAjJc2ME9QCAQCAQCgUAgEAgEAoFAIBAIBAKBQCD/yE9QSwcIryFV\n" +
+                "i/gCAAD1eAAA";
+
+        public static String[] getStr_angles() {
+            String unzip = unzip(str_angle);
+            return unzip.split(",");
+        }
+
+        public static String str_title = "UEsDBBQACAgIAI6Lm0wAAAAAAAAAAAAAAAABAAAAMO3djXLjqBKG4RviVNE00HD/N3bAsxGejO3Y\n" +
+                "iRyQ/Zb2yfk2ezKjyFTRkvhR78TEhZQAAADwBnrtp971oxQXdP4ZAQAA4ElarddKPr8dIbjgbf55\n" +
+                "AQAAYF+9xgtndd+p9uvfo/YDAAB4Gb22s081Xz9i+34s888PAAAAP9Nqunip3uuHZJ1/ggAAAPiR\n" +
+                "XtNdrva8S3H66QEAAOBnWkl3rdrzLkQKPgAAgMOKtyq9VusJg/cAAAAOS8rNWk/qAucIAACAb+m1\n" +
+                "3M1ajy05cABSUjDVqC4G8ZZi+14OKlVSEmdVcpCs4qqvKYRczNWqpmbBnPgYQ87W/o9ncfz38TPj\n" +
+                "zxl/9vj7xjnMvhoAADxbrxBvVpAxTz9H4JJRsSVrZV9IvdoLWXPK7b7ocl24QqxRgy/mz8+b6hMA\n" +
+                "8Np6RXmz4gzMO8Fa1KtY1Fpd8SXmmLUuUUk+K47fcvzmsz8DAAD21OvNW/VoZT8TLMIHkay9QAtJ\n" +
+                "veV47fX3+8VxRcZVmv55AQCwg3ptLe4/h80/Q7w31VxyMHGp1ORT0v4ePlgMalGXqBNXjtuFGldv\n" +
+                "u6CzP1kAAH7Cbs9YSmH6GeJ9SZJUTIO5EoMkn9PKA0mPFs+u6XadZ3/iAAB8Vytab66uSS+HSaTU\n" +
+                "VDVVV7P3SUzWqARfOVbLpUaTenb1p7cDAAC+4/bIgwVOEG9nzE0SLz4Vb8rT2llx+wCYMQYAOK7b\n" +
+                "oxT89PPDm9FWXgXNRq27atw+lpBrLEULa3kBAI7ldu1L9YvfM4aKjhfraxR8xHsGQTDUFwBwPFTC\n" +
+                "WMG2DgDz0o4exyfI4g4AgEOhKsYKzlcZm1/YEfeK43Od3cIAALgHlTGm2zZAWKGWIz43st0FAOA4\n" +
+                "qJMx23vs5Uv8E882iFug7QEAcMuXdXJkwww8z/kaa/NrOOKMyIpuAIAjiF9XzVoWOE+8Kp4sE0cb\n" +
+                "mN0aAQC47o6qmTWc8CRSUjDVqEvUbsSF4tYyZrdRAAAuu70P9KmG9jx5xnOwGgbxclx/PQ3JJWrI\n" +
+                "6tR8ijmqOPMWfU5VXPU1hZALm98QiUTiO8da1dQsmCs1ZKvtn7O+YvQfW5cyu28D8KB4e8f5fkhh\n" +
+                "bAWeo/UsmlOu3GcQP5UfW8uY3UYvOS0p76PQgolEIpG4exxdi6Z2v60xcJMNHIqWr2+weXiGJxhb\n" +
+                "wq7QmxGXj8ttIby9W0gpFamJPamJRCKROCMmayGkXlHx1hs4kPD1qHFRVvnD/mIQbykm3hES74mj\n" +
+                "vcxuuR+4/yYSiUTicjH7rLEkli4ADkFq/vJmvDKDG/sbncUKXRdx9bhWcTHGna9wbYhEIpFIvBpH\n" +
+                "lzW78wRwm+Sv7su9y7wlx/4sWdWUubch3hXNolnJC0yK2wYDjpVyVrhARCKRSCRejWddFkPagfWJ\n" +
+                "fH2PLnn6aeL1nC8RPb/vIq4eR3Uxu+WOJXRWuC5EIpFIJD4Yx8rrs7tUANfp1zPO+26/3KljX2Pr\n" +
+                "jhU6LOLqsVouNZrMv0vPrd0Gn4wxIEQikUg8ZBw7pc3uUgFcc88tundi3KRjXyv0UsRDxWAxqC0w\n" +
+                "FZ1hIEQikUg8dBwd2ewuFcAVKvfdprPIBHa2Qi9FPFRc5jb97FTWuDJEIpFIJD4Yl+lUAVwm9vVu\n" +
+                "5/1IrO2OfTHmnfhIXGfM+wpXg0gkEonEXeLsThXAZeL1rrv07ALP27Ajxg0TH4nrLB/H4yUikUgk\n" +
+                "HjzyJh1YWnRy38T0PjV99snilbALG/GRuM4ubMVS0XZSa1wXIpFIJBIfjExKB5am992cn27QvZ9/\n" +
+                "vngZ2WeNJTGnl3hXHO1lestlcXcikUgkHjmyuDuwMsn3rRh32oGtV8Zh+injNcQg3lJM3OUQ74mj\n" +
+                "vcxuuWyRTiQSicRDR7ZIB1YW4923595JmT//E69BkqRiyjxe4n1xay/TW24uUUPWs0nxS1wgIpFI\n" +
+                "JBKvxbMu66MXm92dAvhE71u+fQxt5wkb9tN6Cc0pV16dE/+Oo2XMbqMfVHPJPrJOApFIJBJXj6PL\n" +
+                "mt15AviX5HuXffvvBrz9WIzTTxuvIZWafErKPQ3x7zhaxuw2+ld7TalITcKbcCKRSCQuE9dZdwXA\n" +
+                "FfWhG+5+y81gdOxDSgqmylJuxM9xaxmz2+hf7fVj8B433kQikUicGJO1EFKfzMewcmBh8uiNtncp\n" +
+                "zz9tvIziS8wxKzct7xtHG5jdGq8Zg/SYDUEkEonEnePoWsaan7M7PgDX9X3EHj+kzl+5CK9BvYpF\n" +
+                "rdxAv28cbWB2a7xlex0wVoIde7aM7VXFB2uljzEAg0gkEt8xbn3A6BhGZzE6kNOD2WCseAQsLT42\n" +
+                "ifrjKOwBhv3wuvmdYglJveXI0zYAwDrkwYV9P45WEYuffvZ4ET6IZF2kYiM+N45Pe3q7AwCgi+Ye\n" +
+                "2X+Sh8R4ElbcfM245nqZAID39t3HwacJBS54VpzHPrZBdSUGST4nCuGjxvEJMlISALCW2Hy78vUu\n" +
+                "U/hiP5IkFdNgrlouNRrr6R4gnn1W2+c3uyUBAPBB5Cel7ulRb6Znw440FR8094U3xLdsjHtYLG4f\n" +
+                "S8g1lqKFdeEAAAsJ+Ye1re87//WVIqb/KngZ5wskUuCuUsoeY8lCAMC7ia79z0+rWd96vLLAL4OX\n" +
+                "IqWmqqkyQmHC+IJx9ae3AwAAzojJDpVrX2dMKpu9Yl9jfCazy/aPZ9eUcbAAgDXF8O0Vvz4fqu2P\n" +
+                "Y24z9rVNmj9fEozt6e6M24UaV49VCAAAi4ou605VaT8qo1nxJNti/mxr9s+D0LH1F1seAACWJumn\n" +
+                "iwN8PmSB3wqva8zieY8KdPyWzF8CAByA/Hxq/ufj9GRl/m+GlyYlBVPtL5GtFWEh9YVZQ9accl15\n" +
+                "4Og4x3He43eZfVUBALgpRid7zIP/fITiQuDZCX7HmAwTg3hLsX0v+6yxpFaNmUWzkoO66msKIZdW\n" +
+                "Y1Y1NetV28UhjTV7n8REzn7GquR2p6Xi2p8lVVL7kfH3MSEHAHA0waU9x0SeH7FVgjwRAQAA+IHo\n" +
+                "yvc3kr/jta+0eo0ndwAAAN8h4VkP1T6O0gfoMUgPAADgEaLPfJr2cVTvKNQAAADuI/E3CrTT0zTl\n" +
+                "1ScAAMAXROsvFWf9MGUuAQAAwEXRSXjGsh63jtj+YhY/AAAAOBP6cP3frcn60ZdiYyFfAACA09K3\n" +
+                "T1v07KvDnKQ8/xIAAADMIq0eipNKsT9HDa0gZAdxAADwTvo+UDK1BPtzqDqpPBoDAABvIAaXZ72N\n" +
+                "/HwEJ76cTmn6ZQEAANhddGLi5r58/Kf+qu2k/AIXBwAAYCfBXPrt1SnuO7K44OP8KwQAAPBdMZ1e\n" +
+                "5c0uq64fctrCUhh5DwAADiTaaQvJGSt7PXYEZ5Wx9QAAYG0xtNIqLjY46/aRspNUTouLTb98AAAA\n" +
+                "nRQnfnaR9L1D+rvMVhGWvkM3UxMBAMAv01ZGZe0T9Z5Z8fwvpPx2X0I8VahiiRVZAQDAk8RWzrV6\n" +
+                "I4uLK9Q/fJnyJbnUanrJrfBsDSLMbpQAAOCYpNURfSWvxmuzQJXDl6W/iLkc/rzl1vZvuSl993Y7\n" +
+                "taQQfaMLtGwAAPB88T99k8rsgvZ6IDqp/S10rxeq07hA+bLwl/8DUEsHCNI0CX9/CgAAw8MDAA==";
+
+        public static String[] getStr_titles() {
+            String unzip = unzip(str_title);
+            return unzip.split(",");
+        }
+    }
+
+    /**
+     * 使用zip进行解压缩
+     *
+     * @return 解压后的字符串
+     */
+    public static final String unzip(String compressedStr) {
+        if (compressedStr == null) {
+            return null;
+        }
+
+        ByteArrayOutputStream out = null;
+        ByteArrayInputStream in = null;
+        ZipInputStream zin = null;
+        String decompressed = null;
+        try {
+            byte[] compressed = new sun.misc.BASE64Decoder().decodeBuffer(compressedStr);
+            out = new ByteArrayOutputStream();
+            in = new ByteArrayInputStream(compressed);
+            zin = new ZipInputStream(in);
+            zin.getNextEntry();
+            byte[] buffer = new byte[1024];
+            int offset = -1;
+            while ((offset = zin.read(buffer)) != -1) {
+                out.write(buffer, 0, offset);
+            }
+            decompressed = out.toString();
+        } catch (IOException e) {
+            decompressed = null;
+        } finally {
+            if (zin != null) {
+                try {
+                    zin.close();
+                } catch (IOException e) {
+                }
+            }
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return decompressed;
+    }
+
+    /**
+     * 使用zip进行压缩
+     *
+     * @param str 压缩前的文本
+     * @return 返回压缩后的文本
+     */
+    public static final String zip(String str) {
+        if (str == null)
+            return null;
+        byte[] compressed;
+        ByteArrayOutputStream out = null;
+        ZipOutputStream zout = null;
+        String compressedStr = null;
+        try {
+            out = new ByteArrayOutputStream();
+            zout = new ZipOutputStream(out);
+            zout.putNextEntry(new ZipEntry("0"));
+            zout.write(str.getBytes());
+            zout.closeEntry();
+            compressed = out.toByteArray();
+            compressedStr = new sun.misc.BASE64Encoder().encodeBuffer(compressed);
+        } catch (IOException e) {
+            compressed = null;
+        } finally {
+            if (zout != null) {
+                try {
+                    zout.close();
+                } catch (IOException e) {
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return compressedStr;
     }
 }

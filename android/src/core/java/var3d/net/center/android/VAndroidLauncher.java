@@ -408,4 +408,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     public Rectangle getSafeAreaInsets() {
         return rectangle;
     }
+
+    public Pixmap getIphoneXPixmap(String name) {
+        return null;
+    }
 }

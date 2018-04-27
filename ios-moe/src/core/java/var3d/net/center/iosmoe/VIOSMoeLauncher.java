@@ -383,4 +383,8 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
             return rectangle;
         }
     }
+
+    public Pixmap getIphoneXPixmap(String name) {
+        return null;
+    }
 }
