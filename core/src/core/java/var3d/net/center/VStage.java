@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,7 +25,9 @@ public abstract class VStage extends Stage {
     private String name = "";
     public ArrayList<Actor> bgList;
     private float cutWidth, cutHeight, cutAndWidth, cutAndHeight, fullWidth, fullHeight;
+    private float safeLeft, safeRight, safeTop, safeBottom;
     private boolean isStretching = false;//是否拉伸比例适配
+    public Rectangle safeAreaInsets;//安全区域边距
 
     public HashMap<String, Object> getIntent() {
         return intent;
@@ -58,6 +61,7 @@ public abstract class VStage extends Stage {
     }
 
     private void set(VGame game) {
+        safeAreaInsets = game.var3dListener.getSafeAreaInsets();
         bgList = new ArrayList<Actor>();
         this.game = game;
         name = getClass().getName();
@@ -87,17 +91,28 @@ public abstract class VStage extends Stage {
             getRoot().setScale(bl, 1);
             getRoot().setPosition(cutWidth, 0);
             cutWidth = cutWidth / getRoot().getScaleX();
+
+            //safeLeft = safeAreaInsets.getX() * bl;
         } else if (bl > 1) {
             cutWidth = 0;
             cutHeight = (1 - 1 / bl) * getHeight() / 2f;
             getRoot().setScale(1, 1 / bl);
             getRoot().setPosition(0, cutHeight);
             cutHeight = cutHeight / getRoot().getScaleY();
+
+            // safeLeft = safeAreaInsets.getX() * bl;
         }
+        safeLeft = safeAreaInsets.getX() * bl;
         cutAndWidth = getWidth() + cutWidth;
         cutAndHeight = getHeight() + cutHeight;
         fullWidth = cutAndWidth + cutWidth;
         fullHeight = cutAndHeight + cutHeight;
+        Gdx.app.log("bbbbbb", "left=" + safeLeft);
+    }
+
+    public float getSafeLeft() {
+        Gdx.app.log("aaaaaa", "left=" + safeLeft);
+        return safeLeft;
     }
 
     public float getCutWidth() {

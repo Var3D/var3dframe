@@ -126,7 +126,6 @@ public abstract class VGame implements ApplicationListener {
 
     private TextureRegion iphoneX;//iphoneX的壳子,当用Desktop测试时选择iphoneX的尺寸时才会叠加到所有画面之上
     public boolean isLand = true;//是否为横屏
-    public Rectangle safeAreaInsets;//安全区域
 
     public VGame(VListener varListener) {
         this.var3dListener = varListener;
@@ -192,7 +191,6 @@ public abstract class VGame implements ApplicationListener {
                 iphoneX = new TextureRegion(new Texture(Gdx.files.internal(isLand ? "var3d/iphonex_w.png" : "var3d/iphonex.png")));
             }
         }
-        safeAreaInsets=var3dListener.getSafeAreaInsets();
     }
 
     //设置R文件

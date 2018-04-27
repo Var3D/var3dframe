@@ -1,8 +1,10 @@
 package var3d.net.demo;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -31,7 +33,7 @@ public class StageTest extends VStage {
         txt_logo = game.getLabel(R.strings.logo).setColor(Color.BLUE).setStroke(Color.CYAN)
                 .setPosition(getWidth() / 2, getHeight() - 100, Align.top).setAlpha(0.9f).touchOff().show();
         //Tost
-        btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(-getCutWidth(), 380).addClicAction().show();
+        btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(-getCutWidth() + getSafeLeft(), 380).addClicAction().show();
         btn_tost.add(game.getLabel(R.strings.tost).getActor());
         btn_tost.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -53,7 +55,6 @@ public class StageTest extends VStage {
 //        WaterActor waterActor = game.getUI(new WaterActor(game.getTextureRegion(R.image.badlogic))).show(Align.center);
 //        OutLineActor outLineActor = game.getUI(new OutLineActor(game.getTextureRegion(R.image.tank_4)))
 //                .setPosition(getWidth() / 2, waterActor.getY() - 10, Align.top).show();
-
     }
 
     @Override
