@@ -268,8 +268,7 @@ public abstract class VStage extends Stage {
             for (Actor bg : bgList) {
                 float prefx = bg.getX();
                 float prefy = bg.getY();
-                bg.setPosition(bg.getX() + getRoot().getX() - cutWidth,
-                        bg.getY() + getRoot().getY() - cutHeight);
+                bg.setPosition(getWidth() / 2, getHeight() / 2, Align.center);
                 bg.draw(batch, getRoot().getColor().a);
                 bg.setPosition(prefx, prefy);
             }
@@ -286,14 +285,13 @@ public abstract class VStage extends Stage {
     }
 
     public Image setBackground(String imgName) {
-        Image bg = game.getImage(imgName).getActor();
+        Image bg = game.getImage(imgName, game.WIDTH, game.HEIGHT).getActor();
         bgList.add(bg);
         return bg;
     }
 
     public Image setBackground(String imgName, Color color) {
-        Image bg = game.getImage(imgName, fullWidth, fullHeight)
-                .setColor(color).getActor();
+        Image bg = game.getImage(imgName, game.WIDTH, game.HEIGHT).setColor(color).getActor();
         bgList.add(bg);
         return bg;
     }
@@ -303,13 +301,13 @@ public abstract class VStage extends Stage {
     }
 
     public Image setBackground(Color color) {
-        Image bg = game.getImage(fullWidth, fullHeight, color).getActor();
+        Image bg = game.getImage(game.WIDTH, game.HEIGHT, color).getActor();
         bgList.add(bg);
         return bg;
     }
 
     public ActorGradient setBackground(Color color1, Color color2) {
-        ActorGradient bg = new ActorGradient(fullWidth, fullHeight, color1, color2);
+        ActorGradient bg = new ActorGradient(game.WIDTH, game.HEIGHT, color1, color2);
         bgList.add(bg);
         return bg;
     }
