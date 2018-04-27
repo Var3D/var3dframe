@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -83,7 +84,11 @@ public abstract class VStage extends Stage {
     public void resize(float width, float height) {
         changing(width, height);
         getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-        if (isStretching) return;
+        if (isStretching) {//拉伸适配的时候,计算一下iphoneX的安全边距
+            calculationCuts();
+            calculationAafeArea(1, 1);
+            return;
+        }
         float bl = getWidth() / getHeight() * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
         if (bl < 1) {
             cutWidth = (1 - bl) * getWidth() / 2f;
@@ -91,28 +96,69 @@ public abstract class VStage extends Stage {
             getRoot().setScale(bl, 1);
             getRoot().setPosition(cutWidth, 0);
             cutWidth = cutWidth / getRoot().getScaleX();
-
-            //safeLeft = safeAreaInsets.getX() * bl;
+            calculationAafeArea(bl, 1);
         } else if (bl > 1) {
             cutWidth = 0;
             cutHeight = (1 - 1 / bl) * getHeight() / 2f;
             getRoot().setScale(1, 1 / bl);
             getRoot().setPosition(0, cutHeight);
             cutHeight = cutHeight / getRoot().getScaleY();
-
-            // safeLeft = safeAreaInsets.getX() * bl;
+            calculationAafeArea(1, bl);
+        } else {
+            calculationAafeArea(1, 1);
         }
-        safeLeft = safeAreaInsets.getX() * bl;
+        calculationCuts();
+    }
+
+    private void calculationAafeArea(float blx, float bly) {
+        if (game.isIphoneX || game.iphoneX != null) {//说明是desktop iphoneX测试的时候
+            Vector2 vector2 = game.var3dListener.getAppScreenSize();//获取iphoneX的真机分辨率
+            safeLeft = safeAreaInsets.x / vector2.x * getWidth() / blx;
+            safeRight = safeAreaInsets.width / vector2.x * getWidth() / blx;
+            safeBottom = safeAreaInsets.y / vector2.y * getHeight() * bly;
+            safeTop = safeAreaInsets.height / vector2.y * getHeight() * bly;
+        }
+    }
+
+    private void calculationCuts() {
         cutAndWidth = getWidth() + cutWidth;
         cutAndHeight = getHeight() + cutHeight;
         fullWidth = cutAndWidth + cutWidth;
         fullHeight = cutAndHeight + cutHeight;
-        Gdx.app.log("bbbbbb", "left=" + safeLeft);
+    }
+
+    //以下这4个方法直接合并处理等比例情况下的黑边以及iphoneX的适配问题,获取的4个点一定在最合理的边缘
+    // (在非iphoneX的屏幕上就是绝对边缘,以及在拉伸适配方案中也是绝对的边缘,在iphoneX上会在安全区域的绝对边缘)
+    public float getLeft() {
+        return safeLeft - cutWidth;
+    }
+
+    public float getRight() {
+        return cutAndWidth - safeRight;
+    }
+
+    public float getTop() {
+        return cutAndHeight - safeTop;
+    }
+
+    public float getBottom() {
+        return safeBottom - cutHeight;
     }
 
     public float getSafeLeft() {
-        Gdx.app.log("aaaaaa", "left=" + safeLeft);
         return safeLeft;
+    }
+
+    public float getSafeRight() {
+        return safeRight;
+    }
+
+    public float getSafeTop() {
+        return safeTop;
+    }
+
+    public float getSafeBottom() {
+        return safeBottom;
     }
 
     public float getCutWidth() {
@@ -246,7 +292,7 @@ public abstract class VStage extends Stage {
     }
 
     public Image setBackground(String imgName, Color color) {
-        Image bg = game.getImage(imgName, game.WIDTH, game.HEIGHT)
+        Image bg = game.getImage(imgName, fullWidth, fullHeight)
                 .setColor(color).getActor();
         bgList.add(bg);
         return bg;
@@ -257,13 +303,13 @@ public abstract class VStage extends Stage {
     }
 
     public Image setBackground(Color color) {
-        Image bg = game.getImage(game.WIDTH, game.HEIGHT, color).getActor();
+        Image bg = game.getImage(fullWidth, fullHeight, color).getActor();
         bgList.add(bg);
         return bg;
     }
 
     public ActorGradient setBackground(Color color1, Color color2) {
-        ActorGradient bg = new ActorGradient(game.WIDTH, game.HEIGHT, color1, color2);
+        ActorGradient bg = new ActorGradient(fullWidth, fullHeight, color1, color2);
         bgList.add(bg);
         return bg;
     }

@@ -1,6 +1,5 @@
 package var3d.net.demo;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -21,7 +20,7 @@ public class StageTest extends VStage {
     private Button btn_tost, btn_dialog;
 
     public StageTest(VGame game) {
-        super(game, true);
+        super(game);
         game.loadFolderToPack(R.image.class);
     }
 
@@ -31,9 +30,10 @@ public class StageTest extends VStage {
         setBackground(Color.DARK_GRAY);//设置背景
         //设置标题
         txt_logo = game.getLabel(R.strings.logo).setColor(Color.BLUE).setStroke(Color.CYAN)
-                .setPosition(getWidth() / 2, getHeight() - 100, Align.top).setAlpha(0.9f).touchOff().show();
+                .setPosition(getWidth() / 2, getHeight() / 2f, Align.center).setAlpha(0.9f).touchOff().show();
         //Tost
-        btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(-getCutWidth() + getSafeLeft(), 380).addClicAction().show();
+        // Gdx.app.log("aaaaaa", "cutWidth=" + getCutWidth() + "*" + getCutHeight());
+        btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(getWidth() / 2, getTop(), Align.top).addClicAction().show();
         btn_tost.add(game.getLabel(R.strings.tost).getActor());
         btn_tost.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -43,13 +43,20 @@ public class StageTest extends VStage {
         });
 
         //自定义对话框
-        btn_dialog = game.getButton(R.image.pause_btn_bg).setPosition(-getCutWidth(), 320).addClicAction().show();
+        btn_dialog = game.getButton(R.image.pause_btn_bg).setPosition(getWidth() / 2
+                , getBottom(), Align.bottom).addClicAction().show();
         btn_dialog.add(game.getLabel(R.strings.dialogTitle).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.showDialog(DialogTest.class);
             }
         });
+
+        Image left = game.getImage(50, 50).setPosition(getLeft(), getHeight() / 2, Align.left).show();
+        Image right = game.getImage(50, 50).setPosition(getRight(), getHeight() / 2, Align.right).show();
+
+        Image testTopRight = game.getImage(50, 50, Color.RED)
+                .setPosition(getRight(), getTop(), Align.topRight).show();
 
         //shader测试
 //        WaterActor waterActor = game.getUI(new WaterActor(game.getTextureRegion(R.image.badlogic))).show(Align.center);

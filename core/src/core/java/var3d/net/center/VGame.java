@@ -124,8 +124,9 @@ public abstract class VGame implements ApplicationListener {
 
     private Stack<Class> stageStack = new Stack<>();
 
-    private TextureRegion iphoneX;//iphoneX的壳子,当用Desktop测试时选择iphoneX的尺寸时才会叠加到所有画面之上
+    public TextureRegion iphoneX;//iphoneX的壳子,当用Desktop测试时选择iphoneX的尺寸时才会叠加到所有画面之上
     public boolean isLand = true;//是否为横屏
+    public boolean isIphoneX = false;
 
     public VGame(VListener varListener) {
         this.var3dListener = varListener;
@@ -164,7 +165,12 @@ public abstract class VGame implements ApplicationListener {
     }
 
     public void create() {
-        if (Gdx.graphics.getHeight() > Gdx.graphics.getWidth()) isLand = false;
+        int wi = Gdx.graphics.getWidth();
+        int hi = Gdx.graphics.getHeight();
+        if (hi > wi) isLand = false;
+        if ((wi == 1125 && hi == 2436) || (wi == 2436 && hi == 1125)) {
+            isIphoneX = true;
+        }
         save = Gdx.app.getPreferences(getProjectName());// 数据存储实例化
         Gdx.input.setCatchBackKey(true);// 劫持系统返回键
         multiplexer = new InputMultiplexer();// 触控实例化
