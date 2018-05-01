@@ -66,6 +66,7 @@ public abstract class VStage extends Stage {
         this.game = game;
         name = getClass().getName();
         resize(0, 0);
+        safeAreaInsets = game.var3dListener.getSafeAreaInsets();
     }
 
     public abstract void init();
@@ -110,14 +111,11 @@ public abstract class VStage extends Stage {
     }
 
     private void calculationAafeArea(float blx, float bly) {
-        if (game.isIphoneX || game.iphoneX !=null) {//说明是desktop iphoneX测试的时候
-            safeAreaInsets = game.var3dListener.getSafeAreaInsets();
-            Vector2 vector2 = game.var3dListener.getAppScreenSize();//获取iphoneX的真机分辨率
-            safeLeft = safeAreaInsets.x / vector2.x * getWidth() / blx;
-            safeRight = safeAreaInsets.width / vector2.x * getWidth() / blx;
-            safeBottom = safeAreaInsets.y / vector2.y * getHeight() * bly;
-            safeTop = safeAreaInsets.height / vector2.y * getHeight() * bly;
-        }
+        Vector2 vector2 = game.var3dListener.getAppScreenSize();//获取iphoneX的真机分辨率
+        safeLeft = safeAreaInsets.x / vector2.x * getWidth() / blx;
+        safeRight = safeAreaInsets.width / vector2.x * getWidth() / blx;
+        safeBottom = safeAreaInsets.y / vector2.y * getHeight() * bly;
+        safeTop = safeAreaInsets.height / vector2.y * getHeight() * bly;
     }
 
     private void calculationCuts() {
