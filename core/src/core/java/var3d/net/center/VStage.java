@@ -62,11 +62,11 @@ public abstract class VStage extends Stage {
     }
 
     private void set(VGame game) {
+        safeAreaInsets = game.var3dListener.getSafeAreaInsets();
         bgList = new ArrayList<Actor>();
         this.game = game;
         name = getClass().getName();
         resize(0, 0);
-        safeAreaInsets = game.var3dListener.getSafeAreaInsets();
     }
 
     public abstract void init();

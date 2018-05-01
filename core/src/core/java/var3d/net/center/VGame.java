@@ -125,7 +125,6 @@ public abstract class VGame implements ApplicationListener {
     private Stack<Class> stageStack = new Stack<>();
 
     public TextureRegion iphoneX;//iphoneX的壳子,当用Desktop测试时选择iphoneX的尺寸时才会叠加到所有画面之上
-    public boolean isLand = true;//是否为横屏
 
     public VGame(VListener varListener) {
         this.var3dListener = varListener;
