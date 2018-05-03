@@ -21,9 +21,8 @@ public abstract class VDialog extends Group {
 
 	public VDialog(VGame game) {
 		this.game = game;
-		bg0 = game.getImage(game.WIDTH * 2, game.HEIGHT * 2, Color.BLACK)
-				.setPosition(game.getCenterX(), game.getCenterY(), Align.center)
-				.getActor();
+		bg0 = game.getImage(game.getStage().getFullWidth(), game.getStage().getFullHeight(), Color.BLACK)
+				.setPosition(game.getCenterX(), game.getCenterY(), Align.center).getActor();
 		init();
 		addBackgroundAcition();
 	}
