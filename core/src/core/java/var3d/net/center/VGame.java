@@ -197,11 +197,11 @@ public abstract class VGame implements ApplicationListener {
     private Class resource;
 
     public <T> void setResources(Class<T> resource) {
-        if(resource==null)return;
         this.resource = resource;
         if (bundle == null) {
             bundle = new VBundle(var3dListener);
         }
+        if(resource==null)return;
         // 将多语言本地文本赋值到R文件，如果有的话
         try {
             @SuppressWarnings("rawtypes")

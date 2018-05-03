@@ -16,7 +16,7 @@ public class Game extends VGame {
     @Override
     public void init() {
         // openAutoScreenshots(5,StageTest.class);//开启自动截图
-       // setResources(R.class);//不设置这一句无法使用R.strings.xxxxx的形式使用多语言,但可以使用其他在assets里的资源
+        setResources(R.class);//不设置这一句无法使用R.strings.xxxxx的形式使用多语言,但可以使用其他在assets里的资源
         // openProtect("image");//加密image文件夹资源
         // unProtect("image");
         //showFps();//显示fps

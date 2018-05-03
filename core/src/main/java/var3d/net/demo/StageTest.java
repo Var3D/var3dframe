@@ -30,7 +30,7 @@ public class StageTest extends VStage {
         //setBackground(R.image.bg);//设置背景
         setBackground(Color.DARK_GRAY);//设置背景
         //设置标题
-        txt_logo = game.getLabel(R.strings.logo).setColor(Color.BLUE).setStroke(Color.CYAN)
+        txt_logo = game.getLabel(game.bundle.get("logo")).setColor(Color.BLUE).setStroke(Color.CYAN)
                 .setPosition(getWidth() / 2, getHeight() / 2f, Align.center).setAlpha(0.9f).touchOff().show();
         //Tost
         // Gdx.app.log("aaaaaa", "cutWidth=" + getCutWidth() + "*" + getCutHeight());
