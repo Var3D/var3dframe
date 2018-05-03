@@ -367,7 +367,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     public Vector2 getAppScreenSize(){
-        return null;
+        return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
     }
 
     //返回安全区域

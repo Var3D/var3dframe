@@ -28,7 +28,7 @@ public abstract class VStage extends Stage {
     private float cutWidth, cutHeight, cutAndWidth, cutAndHeight, fullWidth, fullHeight;
     private float safeLeft, safeRight, safeTop, safeBottom;
     private boolean isStretching = false;//是否拉伸比例适配
-    public Rectangle safeAreaInsets;//安全区域边距
+    public Rectangle safeAreaInsets=new Rectangle();//安全区域边距
 
     public HashMap<String, Object> getIntent() {
         return intent;
@@ -111,13 +111,11 @@ public abstract class VStage extends Stage {
     }
 
     private void calculationAafeArea(float blx, float bly) {
-        if (game.isIphoneX || game.iphoneX != null) {//说明是desktop iphoneX测试的时候
-            Vector2 vector2 = game.var3dListener.getAppScreenSize();//获取iphoneX的真机分辨率
-            safeLeft = safeAreaInsets.x / vector2.x * getWidth() / blx;
-            safeRight = safeAreaInsets.width / vector2.x * getWidth() / blx;
-            safeBottom = safeAreaInsets.y / vector2.y * getHeight() * bly;
-            safeTop = safeAreaInsets.height / vector2.y * getHeight() * bly;
-        }
+        Vector2 vector2 = game.var3dListener.getAppScreenSize();//获取iphoneX的真机分辨率
+        safeLeft = safeAreaInsets.x / vector2.x * getWidth() / blx;
+        safeRight = safeAreaInsets.width / vector2.x * getWidth() / blx;
+        safeBottom = safeAreaInsets.y / vector2.y * getHeight() * bly;
+        safeTop = safeAreaInsets.height / vector2.y * getHeight() * bly;
     }
 
     private void calculationCuts() {

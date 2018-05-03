@@ -398,8 +398,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     public void keyUp(int key) {
     }
 
-    public Vector2 getAppScreenSize() {
-        return null;
+    public Vector2 getAppScreenSize(){
+        return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
     }
 
     //返回安全区域
