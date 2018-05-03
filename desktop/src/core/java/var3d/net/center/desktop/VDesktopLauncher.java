@@ -383,19 +383,19 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     private I18NBundle bundle = null;
+    private String prefLanguage="auto";
 
     public String getString(String key) {
+        String language = game.getLanguage();
+        if(language==null)language="auto";
         String out = null;
-        if (bundle == null) {
+        if (bundle == null || !language.equals(prefLanguage)) {
             try {
-                // String language = game.save.getString("language", null);
-                String language = game.getLanguage();
                 FileHandle baseFileHandle = Gdx.files.internal("values/strings");
-                if (language == null || language.equals("auto")) {
+                if (language.equals("auto")) {
                     bundle = I18NBundle.createBundle(baseFileHandle, Locale.getDefault());
                 } else {
-                    bundle = I18NBundle.createBundle(baseFileHandle,
-                            new Locale(language));
+                    bundle = I18NBundle.createBundle(baseFileHandle, new Locale(language));
                 }
                 out = bundle.get(key);
             } catch (NullPointerException e) {
@@ -406,6 +406,7 @@ public abstract class VDesktopLauncher implements VListener {
             } catch (NullPointerException e) {
             }
         }
+        prefLanguage = language;
         return out == null ? key : out;
     }
 
@@ -1290,6 +1291,7 @@ public abstract class VDesktopLauncher implements VListener {
             String unzip = unzip(str_homeh);
             return unzip.split(",");
         }
+
         public final static String str_homew = "UEsDBBQACAgIAC+xm0wAAAAAAAAAAAAAAAABAAAAMO3U0WrDIBQG4BdyYDzJmrz/i01tu+1io21u\n" +
                 "zmAfchSjkg/5sZbaWytHLcsepcVW2rbNccyPsVZne2vbe0Y3/h1raTWust+qr3d0rnQ444HzXnHz\n" +
                 "Zmlbv7L1OernFff9ad79eA17q34sS7xc9lPkcS4tFfFiJu7V8u75lHdWXprPmzdmZmZmZmZmZmZm\n" +

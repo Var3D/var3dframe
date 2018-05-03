@@ -186,7 +186,7 @@ public abstract class VGame implements ApplicationListener {
             int width = (int) size.x;
             int height = (int) size.y;
             if ((width == 1125 && height == 2436) || (width == 2436 && height == 1125)) {
-               // iphoneX = new TextureRegion(new Texture(Gdx.files.internal(isLand ? "var3d/iphonex_w.png" : "var3d/iphonex.png")));
+                // iphoneX = new TextureRegion(new Texture(Gdx.files.internal(isLand ? "var3d/iphonex_w.png" : "var3d/iphonex.png")));
                 iphoneX = new TextureRegion(new Texture(var3dListener.getIphoneXPixmap("")));
             }
         }
@@ -194,8 +194,13 @@ public abstract class VGame implements ApplicationListener {
     }
 
     //设置R文件
+    private Class resource;
+
     public <T> void setResources(Class<T> resource) {
-        if (bundle == null) bundle = new VBundle(var3dListener);
+        this.resource = resource;
+        if (bundle == null) {
+            bundle = new VBundle(var3dListener);
+        }
         // 将多语言本地文本赋值到R文件，如果有的话
         try {
             @SuppressWarnings("rawtypes")
@@ -205,8 +210,8 @@ public abstract class VGame implements ApplicationListener {
             for (@SuppressWarnings("rawtypes") Class cls : innerClazz) {
                 String name = cls.getSimpleName();
                 if (name.equals("strings")) {
-                    Field[] fields = cls.getDeclaredFields();
-                    for (Field field : fields) {
+                    Field[] R_fields = cls.getDeclaredFields();
+                    for (Field field : R_fields) {
                         if (field.getModifiers() == 9)// public
                             // static就等于9，不服就去吃屎
                             field.set(null, bundle.get(field.getName()));
@@ -454,8 +459,10 @@ public abstract class VGame implements ApplicationListener {
                     packer = null;
                     inpacks.clear();
                 }
-                if (stage != null)
+                if (stage != null) {
                     stage.init();
+                    stageStartTime = System.currentTimeMillis();
+                }
             }
             if (stageLoad != null) {
                 stageLoad.act(assets.getProgress());
@@ -480,7 +487,7 @@ public abstract class VGame implements ApplicationListener {
                 batch.begin();
                 FreeBitmapFont font = getFont();
                 font.setColor(Color.WHITE);
-                font.draw(stage.getBatch(), getHeap(), 0, font.getCapHeight());
+                font.draw(batch, getHeap(), 0, font.getCapHeight());
                 batch.end();
             }
         }
@@ -581,8 +588,7 @@ public abstract class VGame implements ApplicationListener {
             return dStage;
         }
         try {
-            dStage = (VStage) type.getConstructor(VGame.class)
-                    .newInstance(this);
+            dStage = (VStage) type.getConstructor(VGame.class).newInstance(this);
             isLoading = true;
             pool.put(name, dStage);
             return dStage;
@@ -798,8 +804,11 @@ public abstract class VGame implements ApplicationListener {
      * @return
      */
     public boolean isHaveDialog() {
-        if (stageTop.getActors().size > 0)
-            return true;
+        for (Actor actor : stageTop.getActors()) {
+            if (actor instanceof VDialog) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -986,11 +995,11 @@ public abstract class VGame implements ApplicationListener {
         getTopStage().addAction(Actions.forever(Actions.delay(interval, Actions.run(new Runnable() {
             public void run() {
                 if (stages.length == 0) {
-                    Screenshot();
+                    Screenshot(language, null, null);
                 } else {
                     for (Class<T> stage : stages) {
                         if (getStage().getClass() == stage) {
-                            Screenshot();
+                            Screenshot(language, null, null);
                             break;
                         }
                     }
@@ -1005,7 +1014,7 @@ public abstract class VGame implements ApplicationListener {
     private int out_w, out_h, out5s_w, out5s_h;
     private String name, path5s;
 
-    public void Screenshot() {
+    public void Screenshot(final String language, final String stageName, final Pixmap input) {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 boolean isMac = System.getProperty("os.name").startsWith("Mac");
@@ -1033,28 +1042,25 @@ public abstract class VGame implements ApplicationListener {
                     Gdx.files.absolute(path5s).mkdirs();
                 }
                 final String time = "" + new Date().getTime();
-                String na = getStage().getName();
+                String na = stageName == null ? getStage().getName() : stageName;
                 na = na.substring(na.lastIndexOf(".") + 1);
                 name = path + "/" + na + time + ".jpg";
-
+                final String f_path5s = path5s;
+                final String f_name = name;
                 final String finalNa = na;
                 Gdx.app.postRunnable(new Runnable() {
                     public void run() {
-                        Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);
-                        final Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Format.RGB888);
-                        ByteBuffer pixels = pixmap.getPixels();
+                        final Pixmap pixmap = input == null ? shootOriginalImage() : input;
                         final Pixmap outPixmap = new Pixmap(out_w, out_h, Format.RGB888);
-                        Gdx.gl.glReadPixels(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), GL20.GL_RGB
-                                , GL20.GL_UNSIGNED_BYTE, pixels);
                         Thread t = new Thread(new Runnable() {
                             public void run() {
                                 outPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out_w, out_h);
-                                writePNG(Gdx.files.absolute(name), outPixmap);
+                                writePNG(Gdx.files.absolute(f_name), outPixmap);
                                 Gdx.app.error("Var3D Studio消息", finalNa + time + "截取成功!");
                             }
                         });
                         t.start();
-                        if (path5s != null) {
+                        if (f_path5s != null) {
                             if (out_w > out_h) {
                                 out5s_w = 1136;
                                 out5s_h = 640;
@@ -1066,7 +1072,7 @@ public abstract class VGame implements ApplicationListener {
                             Thread t2 = new Thread(new Runnable() {
                                 public void run() {
                                     out5sPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out5s_w, out5s_h);
-                                    String name = path5s + "/" + finalNa + time + ".jpg";
+                                    String name = f_path5s + "/" + finalNa + time + ".jpg";
                                     writePNG(Gdx.files.absolute(name), out5sPixmap);
                                     Gdx.app.error("Var3D Studio消息", finalNa + time + "截取成功!");
                                 }
@@ -1078,6 +1084,116 @@ public abstract class VGame implements ApplicationListener {
             }
         });
         t.start();
+    }
+
+    private Array<String> languageNames;
+
+    private void createLanguagesName() {
+        // 分析有多少种语言
+        if (languageNames == null) {
+            languageNames = new Array<>();
+            FileHandle[] files = new FileHandle(Gdx.files.internal("values").toString()).list("properties");
+            for (FileHandle fileHandle : files) {
+                String name = fileHandle.nameWithoutExtension();
+                if (name.equals("strings")) continue;
+                name = name.replaceAll("strings_", "");
+                languageNames.add(name);
+            }
+        }
+    }
+
+    private long stageStartTime = 0;//记录当前stage开始显示的时间戳(执行init的时间戳)
+
+    public void ScreenshotMultiLanguage() {//多语言截图,将会一次性生成同一个界面的所有语言版本的截图
+        createLanguagesName();
+        //截图前本来的语言
+        String prefLanguage = language;
+        //遍历多语言生成相应的界面
+        final Class<VStage> nowStage = (Class<VStage>) stage.getClass();
+        //判断是否正在显示dialog
+        long nowTime = System.currentTimeMillis();
+        long delayTime = nowTime - stageStartTime;
+        int refushFpsNumber = (int) (delayTime / 1000f * 60);
+        for (String language : languageNames) {
+            runtime(nowStage, language, true, refushFpsNumber);
+        }
+        //将界面恢复到之前的语言
+        runtime(nowStage, prefLanguage, false, refushFpsNumber);
+        stageStartTime = System.currentTimeMillis();
+    }
+
+    private void runtime(final Class<VStage> nowStage, final String in_language, final boolean isShoot, final int refushFpsNumber) {
+        Gdx.app.postRunnable(new Runnable() {
+            public void run() {
+                language = in_language;
+                bundle = null;
+                setResources(resource);
+                clearAllUI(null);//销毁原界面
+                setStage(nowStage);
+                isLoading = false;
+                stage.init();
+                //处理dialog
+                Array<VDialog> dialogs = new Array<VDialog>();
+                for (Actor actor : stageTop.getActors()) {
+                    if (actor instanceof VDialog) {
+                        dialogs.add((VDialog) actor);
+                    }
+                }
+                if (dialogs.size > 0) {//说明有dialog,移除掉,并重新show
+                    removeAllDialog();
+                }
+                for (VDialog dialog : dialogs) {
+                    showDialog(dialog.getClass());
+                }
+                //刷新帧,根据截图界面运行得时长得到应该刷新多少帧(针对非随机界面这样已经足够了,对于随机界面无解,包括游戏正文界面)
+                for (int i = 0; i < refushFpsNumber; i++) {
+                    stage.act();
+                    stageTop.act();
+                }
+                stage.draw();
+                stageTop.draw();
+                render();
+                if (isShoot) Screenshot(language, stage.getName(), shootOriginalImage());
+            }
+        });
+    }
+
+    //获取当前屏幕截图
+    private Pixmap shootOriginalImage() {
+        Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);
+        final Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Format.RGB888);
+        ByteBuffer pixels = pixmap.getPixels();
+        Gdx.gl.glReadPixels(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), GL20.GL_RGB
+                , GL20.GL_UNSIGNED_BYTE, pixels);
+        return pixmap;
+    }
+
+    //切换语言
+    private int languageIndex = 0;
+
+    public void switchLanguage(boolean isInverse) {
+        // 分析有多少种语言
+        createLanguagesName();
+        Class<VStage> nowStage = (Class<VStage>) stage.getClass();
+        if (isInverse) {//如果反方向轮训
+            if (languageIndex == 0) {
+                languageIndex = languageNames.size - 1;
+            } else {
+                languageIndex--;
+            }
+        } else {
+            if (languageIndex == languageNames.size - 1) {
+                languageIndex = 0;
+            } else {
+                languageIndex++;
+            }
+        }
+        language = languageNames.get(languageIndex);
+        bundle = null;
+        setResources(resource);
+        clearAllUI(null);//销毁原界面
+        setStage(nowStage);
+        Gdx.app.error("Var3D Studio消息", "切换语言为:" + language);
     }
 
     public void writePNG(final FileHandle file, final Pixmap pixmap) {

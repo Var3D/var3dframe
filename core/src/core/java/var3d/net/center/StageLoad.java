@@ -28,7 +28,7 @@ public class StageLoad extends VStage {
         color5 = Color.valueOf("89fc00");
         color6 = Color.valueOf("ff2f00");
         label = game.getLabel("Loading...").getActor();
-        label.setPosition(game.getCenterX() - label.getPrefWidth() / 2, height * 0.33f);
+        label.setPosition(game.getCenterX() - label.getPrefWidth() / 2,   height * 0.33f);
         addActor(label);
     }
 

@@ -2,6 +2,7 @@ package var3d.net.demo;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -33,7 +34,8 @@ public class StageTest extends VStage {
                 .setPosition(getWidth() / 2, getHeight() / 2f, Align.center).setAlpha(0.9f).touchOff().show();
         //Tost
         // Gdx.app.log("aaaaaa", "cutWidth=" + getCutWidth() + "*" + getCutHeight());
-        btn_tost = game.getButton(R.image.pause_btn_bg).setPosition(getWidth() / 2, getTop(), Align.top).addClicAction().show();
+        btn_tost = game.getButton(R.image.pause_btn_bg).setSize(300, 50)
+                .setPosition(getWidth() / 2, getTop(), Align.top).addClicAction().show();
         btn_tost.add(game.getLabel(R.strings.tost).getActor());
         btn_tost.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -43,8 +45,8 @@ public class StageTest extends VStage {
         });
 
         //自定义对话框
-        btn_dialog = game.getButton(R.image.pause_btn_bg).setPosition(getWidth() / 2
-                , getBottom(), Align.bottom).addClicAction().show();
+        btn_dialog = game.getButton(R.image.pause_btn_bg).setSize(300, 50)
+                .setPosition(getWidth() / 2, getBottom(), Align.bottom).addClicAction().show();
         btn_dialog.add(game.getLabel(R.strings.dialogTitle).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -57,6 +59,10 @@ public class StageTest extends VStage {
 
         Image testTopRight = game.getImage(50, 50, Color.RED)
                 .setPosition(getRight(), getTop(), Align.topRight).show();
+
+        Image test = game.getImage(50, 50, Color.YELLOW).setOrigin(Align.center)
+                .setPosition(getWidth() / 2, 350, Align.center).show();
+        test.addAction(Actions.forever(Actions.rotateBy(3)));
 
         //shader测试
 //        WaterActor waterActor = game.getUI(new WaterActor(game.getTextureRegion(R.image.badlogic))).show(Align.center);

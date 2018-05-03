@@ -2,6 +2,7 @@ package var3d.net.demo;
 
 public class R {
 
+
     public static class font {
         public static String DroidSans = "font/DroidSans.ttf";
         public static String mainfont = "font/mainfont.ttf";

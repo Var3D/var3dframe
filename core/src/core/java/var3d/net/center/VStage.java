@@ -28,7 +28,7 @@ public abstract class VStage extends Stage {
     private float cutWidth, cutHeight, cutAndWidth, cutAndHeight, fullWidth, fullHeight;
     private float safeLeft, safeRight, safeTop, safeBottom;
     private boolean isStretching = false;//是否拉伸比例适配
-    public Rectangle safeAreaInsets=new Rectangle();//安全区域边距
+    public Rectangle safeAreaInsets = new Rectangle();//安全区域边距
 
     public HashMap<String, Object> getIntent() {
         return intent;
@@ -225,15 +225,23 @@ public abstract class VStage extends Stage {
     }
 
     public boolean keyDown(int arg0) {
-        if (isOff == true)
-            return false;
+        if (isOff == true) return false;
         if (Gdx.app.getType() == ApplicationType.Desktop) {
             game.var3dListener.keyDown(arg0);
             if (arg0 == Input.Keys.DEL) {
                 back();
             } else if (arg0 == Input.Keys.F) {
                 // 截图
-                game.Screenshot();
+                game.Screenshot(game.getLanguage(), null, null);
+            } else if (arg0 == Input.Keys.G) {
+                // 多语言截图
+                game.ScreenshotMultiLanguage();
+            } else if (arg0 == Input.Keys.valueOf("-")) {
+                // 多语言截图
+                game.switchLanguage(false);
+            } else if (arg0 == Input.Keys.valueOf("=")) {
+                // 多语言截图
+                game.switchLanguage(true);
             } else if (arg0 == Input.Keys.E) {
                 // 编辑UI
                 game.var3dListener.edit(this);
@@ -250,8 +258,7 @@ public abstract class VStage extends Stage {
     }
 
     public boolean keyUp(int arg0) {
-        if (isOff == true)
-            return false;
+        if (isOff == true) return false;
         if (Gdx.app.getType() == ApplicationType.Desktop) {
             game.var3dListener.keyUp(arg0);
         }
