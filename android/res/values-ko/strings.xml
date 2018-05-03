@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<string name="app_name">var3dframe gdx1.9.7 위해</string>
+<string name="dialogTitle">대화 상자</string>
+<string name="logo">var3d 框架示例</string>
+<string name="test">이거 테스트예요.</string>
+<string name="tost">토스트 범례.</string>
+
+</resources>

@@ -197,6 +197,7 @@ public abstract class VGame implements ApplicationListener {
     private Class resource;
 
     public <T> void setResources(Class<T> resource) {
+        if(resource==null)return;
         this.resource = resource;
         if (bundle == null) {
             bundle = new VBundle(var3dListener);
