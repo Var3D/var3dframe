@@ -54,7 +54,12 @@ public class StageTest extends VStage {
             }
         });
 
-        Image left = game.getImage(50, 50).setPosition(getLeft(), getHeight() / 2, Align.left).show();
+        final Image left = game.getImage(50, 50).setPosition(getLeft(), getHeight() / 2, Align.left).show();
+        left.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                left.moveBy(10, 0);
+            }
+        });
         Image right = game.getImage(50, 50).setPosition(getRight(), getHeight() / 2, Align.right).show();
 
         Image testTopRight = game.getImage(50, 50, Color.RED)

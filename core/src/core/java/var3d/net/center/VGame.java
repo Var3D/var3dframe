@@ -126,6 +126,30 @@ public abstract class VGame implements ApplicationListener {
 
     public TextureRegion iphoneX;//iphoneX的壳子,当用Desktop测试时选择iphoneX的尺寸时才会叠加到所有画面之上
 
+    //语言代号,常用语言(以后做游戏就做这8种语言了)
+    public enum Languages {
+        //德文,英文,法文,日文,韩文,俄文,中文,中文繁体
+        de, en, fr, ja, ko, ru, zh, zh_rtw;
+
+        public static boolean isHave(String str) {
+            try {
+                Languages input = valueOf(str);
+                Languages[] languages = values();
+                for (Languages languages1 : languages) {
+                    if (languages1 == input) return true;
+                }
+                return false;
+            }catch (Exception ex){
+                return false;
+            }
+        }
+    }
+
+    //20种语言
+    public enum LanguagesMax {
+        cs, da, de, el, en, es, fi, fr, hu, it, ja, ko, nl, pl, pt, ro, ru, sv, zh, zh_rtw
+    }
+
     public VGame(VListener varListener) {
         this.var3dListener = varListener;
         if (this.var3dListener != null) {
@@ -186,7 +210,6 @@ public abstract class VGame implements ApplicationListener {
             int width = (int) size.x;
             int height = (int) size.y;
             if ((width == 1125 && height == 2436) || (width == 2436 && height == 1125)) {
-                // iphoneX = new TextureRegion(new Texture(Gdx.files.internal(isLand ? "var3d/iphonex_w.png" : "var3d/iphonex.png")));
                 iphoneX = new TextureRegion(new Texture(var3dListener.getIphoneXPixmap("")));
             }
         }
@@ -201,7 +224,7 @@ public abstract class VGame implements ApplicationListener {
         if (bundle == null) {
             bundle = new VBundle(var3dListener);
         }
-        if(resource==null)return;
+        if (resource == null) return;
         // 将多语言本地文本赋值到R文件，如果有的话
         try {
             @SuppressWarnings("rawtypes")
@@ -335,6 +358,10 @@ public abstract class VGame implements ApplicationListener {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public void setLanguage(Languages language) {
+        this.language = language.name();
     }
 
     public String getLanguage() {
@@ -1116,7 +1143,9 @@ public abstract class VGame implements ApplicationListener {
         long delayTime = nowTime - stageStartTime;
         int refushFpsNumber = (int) (delayTime / 1000f * 60);
         for (String language : languageNames) {
-            runtime(nowStage, language, true, refushFpsNumber);
+            if (Languages.isHave(language)) {
+                runtime(nowStage, language, true, refushFpsNumber);
+            }
         }
         //将界面恢复到之前的语言
         runtime(nowStage, prefLanguage, false, refushFpsNumber);
