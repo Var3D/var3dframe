@@ -28,6 +28,7 @@ import apple.foundation.c.Foundation;
 import apple.foundation.struct.NSRange;
 import apple.uikit.UIApplication;
 import apple.uikit.UIColor;
+import apple.uikit.UIDevice;
 import apple.uikit.UIFont;
 import apple.uikit.UIImage;
 import apple.uikit.UILabel;
@@ -362,15 +363,15 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
     public void keyUp(int key) {
     }
 
-    public Vector2 getAppScreenSize(){
-        return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+    public Vector2 getAppScreenSize() {
+        return new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     //返回安全区域
     private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
-        if (Foundation.NSFoundationVersionNumber() < 11) {
+        if (getMajorSystemVersion() < 11) {
             return rectangle;
         } else {
             UIView view = UIApplication.sharedApplication().keyWindow().rootViewController().view();
@@ -382,6 +383,21 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
             rectangle.set((float) left, (float) bottom, (float) right, (float) top);
             return rectangle;
         }
+    }
+
+    /**
+     * Retrieve and store the device system version.
+     */
+    public int getMajorSystemVersion() {
+        String version = UIDevice.currentDevice().systemVersion();
+        int majorSystemVersion = 0;
+        if (version != null) {
+            String[] parts = version.split("\\.");
+            if (parts.length > 0) majorSystemVersion = Integer.valueOf(parts[0]);
+        } else {
+            majorSystemVersion = 6;
+        }
+        return majorSystemVersion;
     }
 
     public Pixmap getIphoneXPixmap(String name) {
