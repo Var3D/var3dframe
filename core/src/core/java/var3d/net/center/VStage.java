@@ -275,7 +275,8 @@ public abstract class VStage extends Stage {
         return false;
     }
 
-    public void draw() {
+    //单独绘制背景
+    public void drawBackground() {
         if (bgList.size() != 0) {
             Batch batch = getBatch();
             batch.begin();
@@ -289,7 +290,16 @@ public abstract class VStage extends Stage {
             }
             batch.end();
         }
+    }
+
+    //单独绘制前景
+    public void drawForeground() {
         super.draw();
+    }
+
+    public void draw() {
+        drawBackground();
+        drawForeground();
     }
 
     /**
