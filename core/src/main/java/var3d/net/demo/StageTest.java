@@ -21,7 +21,7 @@ public class StageTest extends VStage {
     private Button btn_tost, btn_dialog;
 
     public StageTest(VGame game) {
-        super(game);
+        super(game,true);
         game.loadFolderToPack(R.image.class);
     }
 

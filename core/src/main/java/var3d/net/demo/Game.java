@@ -9,7 +9,7 @@ public class Game extends VGame {
 
     public Game(VListener varListener) {
         super(varListener);
-        setSize(800, 480);//设置全局分辨率
+        setSize(480, 800);//设置全局分辨率
         setLanguage(Languages.ko);//设置语言(仅对Desktop版有效,本地版根据系统设置语言)
     }
 

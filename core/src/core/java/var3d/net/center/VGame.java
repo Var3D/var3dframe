@@ -169,7 +169,7 @@ public abstract class VGame implements ApplicationListener {
         return stage;
     }
 
-    public Stage getTopStage() {
+    public VStage getTopStage() {
         return stageTop;
     }
 
