@@ -29,6 +29,12 @@ public abstract class VStage extends Stage {
     private float safeLeft, safeRight, safeTop, safeBottom;
     private boolean isStretching = false;//是否拉伸比例适配
     public Rectangle safeAreaInsets = new Rectangle();//安全区域边距
+    private Actor preActor;
+
+    //获取上一个刚添加的actor
+    public Actor getPreActor(){
+        return  getRoot().getChildren().peek();
+    }
 
     public HashMap<String, Object> getIntent() {
         return intent;

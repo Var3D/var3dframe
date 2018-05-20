@@ -28,7 +28,7 @@ public class StageMain extends VStage {
 
         //对话框
         Button btn_dialog = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(),lab_title.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(),getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_dialog.add(game.getLabel("对话框例子").setFontScale(0.6f).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -39,7 +39,7 @@ public class StageMain extends VStage {
 
         //舞台
         Button btn_stage = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(),btn_dialog.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(),getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_stage.add(game.getLabel("舞台例子").setFontScale(0.6f).getActor());
         btn_stage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -50,13 +50,15 @@ public class StageMain extends VStage {
 
         //等待添加
         Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(120, 40)
-                .setPosition(getLeft(), btn_stage.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_more.add(game.getLabel("等待添加...").setFontScale(0.6f).getActor());
         btn_more.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.showMessege("更多效果尽请期待...");
             }
         });
+
+
     }
 
     @Override

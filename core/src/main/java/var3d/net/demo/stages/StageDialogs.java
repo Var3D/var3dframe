@@ -31,7 +31,7 @@ public class StageDialogs extends VStage {
 
         //返回
         Button btn_back = game.getButton().setColor(Color.valueOf("ff2266")).setSize(120, 40)
-                .setPosition(getLeft(), lab_title.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_back.add(game.getLabel("返回").setFontScale(0.6f).getActor());
         btn_back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -42,7 +42,7 @@ public class StageDialogs extends VStage {
 
         //等比例对话框
         Button btn_dialog = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(), btn_back.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_dialog.add(game.getLabel("等比例对话框").setFontScale(0.6f).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -52,7 +52,7 @@ public class StageDialogs extends VStage {
 
         //非等比例对话框
         Button btn_unRatio = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(), btn_dialog.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_unRatio.add(game.getLabel("非等比例对话框").setFontScale(0.6f).getActor());
         btn_unRatio.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -62,7 +62,7 @@ public class StageDialogs extends VStage {
 
         //全屏对话框
         Button btn_full = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(), btn_unRatio.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_full.add(game.getLabel("全屏对话框").setFontScale(0.6f).getActor());
         btn_full.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -72,7 +72,7 @@ public class StageDialogs extends VStage {
 
         //吐司
         Button btn_tost = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(), btn_full.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_tost.add(game.getLabel("Tost测试").setFontScale(0.6f).getActor());
         btn_tost.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -82,7 +82,7 @@ public class StageDialogs extends VStage {
 
         //等待添加
         Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(120, 40)
-                .setPosition(getLeft(), btn_tost.getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
         btn_more.add(game.getLabel("等待添加...").setFontScale(0.6f).getActor());
         btn_more.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {

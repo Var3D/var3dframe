@@ -78,7 +78,7 @@ public class StageTest extends VStage {
         Image testTopRight = game.getImage(50, 50, Color.RED)
                 .setPosition(getRight(), getTop(), Align.topRight).show();
 
-        Image test = game.getImage(50, 50, Color.YELLOW).setOrigin(Align.center)
+        Image test = game.getImage(50, 50, Color.YELLOW).setFillet(30).setOrigin(Align.center)
                 .setPosition(getWidth() / 2, 350, Align.center).show();
         test.addAction(Actions.forever(Actions.rotateBy(3)));
 

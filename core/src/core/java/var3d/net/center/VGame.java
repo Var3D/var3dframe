@@ -780,6 +780,24 @@ public abstract class VGame implements ApplicationListener {
         showDialog(DialogMessge.class);
     }
 
+    //移除调用这句代码之处的dialog
+    public void removeDialog() {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        String className = new Exception().getStackTrace()[1].getClassName();
+        try {
+            int idex = className.indexOf("$");
+            if (idex > -1) className = className.substring(0, idex);
+            Class<?> clazz = loader.loadClass(className);
+            if (VDialog.class.isAssignableFrom(clazz)) {
+                HashMap<String, VDialog> pools = getDialogs();
+                VDialog dialog = pools.get(clazz.getName());
+                removeDialog(dialog);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 移除dialog并恢复下层响应
      */

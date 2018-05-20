@@ -30,9 +30,8 @@ public class DialogRatio extends VDialog {
                 .setSize(100, 40).addClicAction().setPosition(getWidth() / 2, 50, Align.bottom).show();
         btn_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.removeDialog(DialogRatio.this);
-                //or game.removeTopDialog();
-                //or game.removeAllDialog();
+                //game.removeDialog(DialogRatio.this);
+                game.removeDialog();//新的移除当前dialog方法,可以不带this参数
             }
         });
     }

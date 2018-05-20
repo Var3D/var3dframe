@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 
 public class UI<T extends Actor> {
@@ -309,6 +310,12 @@ public class UI<T extends Actor> {
     public UI<T> setAlpha(float alpha) {
         Color color = t.getColor();
         t.setColor(color.r, color.g, color.b, alpha);
+        return this;
+    }
+
+    //设置圆角遮罩
+    public UI<T> setFillet(float radius) {
+        //当然还没成功
         return this;
     }
 
