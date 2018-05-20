@@ -1,6 +1,5 @@
 package var3d.net.center;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,7 +27,7 @@ public class DialogMessge extends VDialog {
 
     @Override
     public void init() {
-        setBackground(game.getUI(new Actor()).setSize(game.WIDTH, game.HEIGHT).getActor());
+        setBackground(game.getUI(new Actor()).setSize(getFullWidth(), getFullHeight()).getActor());
         img_bg = game.getImage(getWidth() / 2, 1).touchOff().show(this);
         lab_msg = game.getLabel("messge").setColor(Color.DARK_GRAY).touchOff().show(this);
         lab_msg.setWrap(true);

@@ -145,12 +145,12 @@ public abstract class VStage extends Stage {
 
     //返回水平百分比坐标(自适应刘海屏)
     public float getRateX(float rate) {
-        return getLeft() + fullWidth * rate;
+        return getLeft() + (fullWidth-safeLeft-safeRight) * rate;
     }
 
     //返回垂直百分比坐标(自适应刘海屏)
     public float getRateY(float rate) {
-        return getBottom() + fullHeight * rate;
+        return getBottom() + (fullHeight-safeTop-safeBottom) * rate;
     }
 
     public float getSafeLeft() {

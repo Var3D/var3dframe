@@ -4,13 +4,14 @@ import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
+import var3d.net.demo.stages.StageMain;
 
 public class Game extends VGame {
 
     public Game(VListener varListener) {
         super(varListener);
-        setSize(480, 800);//设置全局分辨率
-        setLanguage(Languages.ko);//设置语言(仅对Desktop版有效,本地版根据系统设置语言)
+        setSize(800, 480);//设置全局分辨率
+        setLanguage(Languages.zh);//设置语言(仅对Desktop版有效,本地版根据系统设置语言)
     }
 
     @Override
@@ -21,6 +22,6 @@ public class Game extends VGame {
         // unProtect("image");
         //showFps();//显示fps
         setFont("test", new FreeBitmapFont(this, new FreePaint(R.font.DroidSans)));
-        setStage(StageTest.class);//设置入口界面
+        setStage(StageMain.class);//设置入口界面
     }
 }

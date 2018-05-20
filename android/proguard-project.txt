@@ -132,6 +132,6 @@
 #Var3D-Start
 -dontwarn var3d.net.center.**
 #-keep class var3d.net.center.VGame{*;}
-#-keep class var3d.net.demo.StageTest{*;}
+#-keep class var3d.net.demo.stages.StageTest{*;}
 #-keep class net.var3d.tankwar.DialogAD{*;}
 #Var3D-end

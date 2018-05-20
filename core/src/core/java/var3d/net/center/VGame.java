@@ -57,6 +57,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -139,7 +140,7 @@ public abstract class VGame implements ApplicationListener {
                     if (languages1 == input) return true;
                 }
                 return false;
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 return false;
             }
         }
@@ -167,6 +168,11 @@ public abstract class VGame implements ApplicationListener {
 
     public VStage getStage() {
         return stage;
+    }
+
+    //返回所有stage,自己处理
+    public HashMap<String, VStage> getStages() {
+        return pool;
     }
 
     public VStage getTopStage() {
@@ -697,6 +703,9 @@ public abstract class VGame implements ApplicationListener {
             setStage(prefStage);
     }
 
+    public HashMap<String, VDialog> getDialogs() {
+        return poolDialog;
+    }
 
     /**
      * 列表中获取Dialog
@@ -712,8 +721,9 @@ public abstract class VGame implements ApplicationListener {
         try {
             dDialog = (VDialog) type.getConstructor(VGame.class).newInstance(
                     this);
-            dDialog.start();
             poolDialog.put(name, dDialog);
+            dDialog.init();
+            dDialog.start();
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -757,7 +767,17 @@ public abstract class VGame implements ApplicationListener {
         dia.setTouchable(Touchable.enabled);
         stageTop.addActor(dia);
         dia.show();
+        // dia.setPosition(stageTop.getWidth() * 0.5f, stageTop.getHeight() * 0.5f, Align.center);
         return dia;
+    }
+
+    public void showMessege(String msg) {
+        showMessege(msg, 3);
+    }
+
+    public void showMessege(String msg, float time) {
+        setUserData(DialogMessge.MODEL, new DialogMessge.Model(msg, time));
+        showDialog(DialogMessge.class);
     }
 
     /**
@@ -1972,6 +1992,16 @@ public abstract class VGame implements ApplicationListener {
      */
     public UI<Group> getGroup(float width, float height) {
         return getGroup().setSize(width, height);
+    }
+
+    /**
+     * 创建Button
+     */
+    public UI<Button> getButton() {
+        UI<Button> ui = new UI<Button>(this);
+        Button button = new Button(getPointDrawable());
+        ui.setActor(button);
+        return ui;
     }
 
     /**

@@ -1,4 +1,4 @@
-package var3d.net.demo;
+package var3d.net.demo.stages;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,16 +12,19 @@ import var3d.net.center.DialogMessge;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
+import var3d.net.demo.dialogs.DialogRatio;
+import var3d.net.demo.dialogs.DialogTestFull;
+import var3d.net.demo.R;
 
 /**
  * Created by fengyu on 16/4/8.
  */
 public class StageTest extends VStage {
     private VLabel txt_logo;
-    private Button btn_tost, btn_dialog;
+    private Button btn_tost, btn_dialog, btn_dialogfull;
 
     public StageTest(VGame game) {
-        super(game,true);
+        super(game, true);
         game.loadFolderToPack(R.image.class);
     }
 
@@ -47,10 +50,20 @@ public class StageTest extends VStage {
         //自定义对话框
         btn_dialog = game.getButton(R.image.pause_btn_bg).setSize(300, 50)
                 .setPosition(getWidth() / 2, getBottom(), Align.bottom).addClicAction().show();
-        btn_dialog.add(game.getLabel(R.strings.dialogTitle).getActor());
+        btn_dialog.add(game.getLabel("等比例对话框").getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogTest.class);
+                game.showDialog(DialogRatio.class);
+            }
+        });
+
+        //全屏对话框
+        btn_dialogfull = game.getButton(R.image.pause_btn_bg).setSize(300, 50)
+                .setPosition(getWidth() / 2, btn_dialog.getTop()+10, Align.bottom).addClicAction().show();
+        btn_dialogfull.add(game.getLabel("拉伸全屏对话框").getActor());
+        btn_dialogfull.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.showDialog(DialogTestFull.class);
             }
         });
 
@@ -69,10 +82,14 @@ public class StageTest extends VStage {
                 .setPosition(getWidth() / 2, 350, Align.center).show();
         test.addAction(Actions.forever(Actions.rotateBy(3)));
 
+        //测试百分比坐标
+        Image rate = game.getImage(50, 50).setColor(Color.BLUE).setPosition(getRateX(0.5f), getRateY(0.5f), Align.center).show();
+
         //shader测试
 //        WaterActor waterActor = game.getUI(new WaterActor(game.getTextureRegion(R.image.badlogic))).show(Align.center);
 //        OutLineActor outLineActor = game.getUI(new OutLineActor(game.getTextureRegion(R.image.tank_4)))
 //                .setPosition(getWidth() / 2, waterActor.getY() - 10, Align.top).show();
+
     }
 
     @Override

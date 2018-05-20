@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 
+import java.util.HashMap;
+
 public class UI<T extends Actor> {
     private T t;
     private VGame game;
@@ -32,7 +34,21 @@ public class UI<T extends Actor> {
 
     public T show() {
         game.var3dListener.getLineNumber(t);
-        show(game.getStage());
+
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        String className = new Exception().getStackTrace()[1].getClassName();
+        try {
+            Class<?> clazz = loader.loadClass(className);
+            if (VStage.class.isAssignableFrom(clazz)) {
+                show(game.getStage());
+            } else {
+                HashMap<String, VDialog> pools = game.getDialogs();
+                VDialog dialog = pools.get(clazz.getName());
+                show(dialog);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return t;
     }
 
@@ -323,6 +339,14 @@ public class UI<T extends Actor> {
             ((VLabel) t).setStroke(strokeColor, strokeWidth);
         } else
             Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor, float strokeWidth)方法仅在类型VLabel上有效");
+        return this;
+    }
+
+    public UI<T> setFontScale(float scale) {
+        if (t instanceof VLabel) {
+            ((VLabel) t).setFontScale(scale);
+        } else
+            Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel上有效");
         return this;
     }
 }

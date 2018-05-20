@@ -16,84 +16,92 @@ public abstract class VDialog extends Group {
     private Image bg0 = null;
     private float endAlpha = 0.8f;
     private VStage stageTop;
+    private boolean isStretching = false;//是否拉伸比例适配
 
     public enum ActionType {
         NOEFFECTE, MOVELEFT, MOVERIGHT, MOVEODOWN, MOVEUP, FADEIN, POPUP
     }
 
     public VDialog(VGame game) {
+        this(game, false);
+    }
+
+    public VDialog(VGame game, boolean isStretching) {
+        this.isStretching = isStretching;
         this.game = game;
         stageTop = game.getTopStage();
-        bg0 = game.getImage(game.getTopStage().getFullWidth(), game.getTopStage().getFullHeight(), Color.BLACK)
+        bg0 = game.getImage(stageTop.getFullWidth(), stageTop.getFullHeight(), Color.BLACK)
                 .setPosition(game.getCenterX(), game.getCenterY(), Align.center).getActor();
-        init();
+        if (isStretching) {
+            setScale(1f / stageTop.getRoot().getScaleX(), 1f / stageTop.getRoot().getScaleY());
+        }
         addBackgroundAcition();
     }
 
-    public float getCutWidth() {
-        return stageTop.getCutWidth();
+    private float getCutWidth() {
+        return isStretching ? 0 : stageTop.getCutWidth();
     }
 
-    public float getCutHeight() {
-        return stageTop.getCutHeight();
+    private float getCutHeight() {
+        return isStretching ? 0 : stageTop.getCutHeight();
     }
 
-    public float getCutAndWidth() {
-        return stageTop.getCutAndWidth();
+    private float getCutAndWidth() {
+        return game.WIDTH + getCutWidth();
     }
 
-    public float getCutAndHeight() {
-        return stageTop.getCutAndHeight();
+    private float getCutAndHeight() {
+        return game.HEIGHT + getCutHeight();
     }
 
     public float getFullWidth() {
-        return stageTop.getFullWidth();
+        return getCutAndWidth() + getCutWidth();
     }
 
     public float getFullHeight() {
-        return stageTop.getFullHeight();
+        return getCutAndHeight() + getCutHeight();
     }
 
     public float getSafeLeft() {
-        return stageTop.getSafeLeft();
+        return stageTop.getSafeLeft() / getScaleX();
     }
 
     public float getSafeRight() {
-        return stageTop.getSafeRight();
+        return stageTop.getSafeRight() / getScaleX();
     }
 
     public float getSafeTop() {
-        return stageTop.getSafeTop();
+        return stageTop.getSafeTop() / getScaleY();
     }
 
     public float getSafeBottom() {
-        return stageTop.getSafeBottom();
+        return stageTop.getSafeBottom() / getScaleY();
     }
 
     //返回水平百分比坐标(自适应刘海屏)
     public float getRateX(float rate) {
-        return stageTop.getRateX(rate);
+        return getLeft() + (getFullWidth()-getSafeLeft()-getSafeRight()) * rate;
     }
 
     //返回垂直百分比坐标(自适应刘海屏)
     public float getRateY(float rate) {
-        return stageTop.getRateY(rate);
+        return getBottom() + (getFullHeight()-getSafeTop()-getSafeBottom()) * rate;
     }
 
     public float getLeft() {
-        return stageTop.getLeft();
+        return getSafeLeft();
     }
 
     public float getRight() {
-        return stageTop.getRight();
+        return getFullWidth() - getSafeRight();
     }
 
     public float getTop() {
-        return stageTop.getTop();
+        return getFullHeight() - getSafeTop();
     }
 
     public float getBottom() {
-        return stageTop.getBottom();
+        return getSafeBottom();
     }
 
     public abstract void init();
@@ -201,8 +209,14 @@ public abstract class VDialog extends Group {
             case NOEFFECTE:// 无效果
                 break;
             case POPUP:// 弹出
-                addAction(Actions.sequence(Actions.scaleTo(0, 0),
-                        Actions.scaleTo(1, 1, 0.2f, Interpolation.bounce)));
+                if (isStretching) {
+                    addAction(Actions.sequence(Actions.scaleTo(0, 0), Actions.scaleTo(
+                            1f / stageTop.getRoot().getScaleX(), 1f / stageTop.getRoot().getScaleY()
+                            , 0.2f, Interpolation.bounce)));
+                } else {
+                    addAction(Actions.sequence(Actions.scaleTo(0, 0),
+                            Actions.scaleTo(1, 1, 0.2f, Interpolation.bounce)));
+                }
                 break;
             case MOVERIGHT:// 从左到右
                 addAction(Actions.sequence(Actions.moveTo(-game.getStage()
