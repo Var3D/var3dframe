@@ -204,8 +204,7 @@ public abstract class VGame implements ApplicationListener {
         // 全球化字体方案
         if (bundle == null) bundle = new VBundle(var3dListener);
         // 创建一个默认动态文本
-        FreeBitmapFont font = new FreeBitmapFont(this, new FreePaint(
-                getDefaultFontSize()));
+        FreeBitmapFont font = new FreeBitmapFont(this, new FreePaint(getDefaultFontSize()));
         font.appendText("01234567890LoadingC" + getHeap());
         fonts.put("font", font);
         setStageLoad(StageLoad.class);

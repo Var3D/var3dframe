@@ -36,7 +36,7 @@ public class DialogTestFull extends VDialog {
                 .setSize(100, 40).addClicAction().setPosition(getWidth() / 2, getBottom() + 10, Align.bottom).show();
         btn_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.removeDialog(DialogTestFull.this);
+                game.removeDialog();
             }
         });
     }

@@ -39,7 +39,7 @@ public class DialogUnRatio extends VDialog {
                 .setSize(100, 40).addClicAction().setPosition(getWidth() / 2, 50, Align.bottom).show();
         btn_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.removeDialog(DialogUnRatio.this);
+                game.removeDialog();
             }
         });
     }
