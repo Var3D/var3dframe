@@ -38,7 +38,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -57,7 +56,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -1612,19 +1610,30 @@ public abstract class VGame implements ApplicationListener {
      * 创建UI
      */
     public <T extends Actor> UI<T> getUI(Class<T> type, Object... objects) {
-        T actor = null;
         try {
             Class<?> types[] = new Class[objects.length];
             for (int i = 0; i < objects.length; i++) {
-                types[i] = objects[i].getClass();
-                Gdx.app.log("aaaaaaa", types[i].getTypeName());
+                if (objects[i] instanceof VGame) {
+                    types[i] = VGame.class;
+                }else types[i] = objects[i].getClass();
             }
-            actor = type.getConstructor(types).newInstance(objects);
+            T actor = type.getConstructor(types).newInstance(objects);
             UI<T> ui = new UI<T>(this);
             ui.setActor(actor);
             return ui;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            try {
+                Class<?> types[] = new Class[objects.length];
+                for (int i = 0; i < objects.length; i++) {
+                    types[i] = objects[i].getClass();
+                }
+                T actor = type.getConstructor(types).newInstance(objects);
+                UI<T> ui = new UI<T>(this);
+                ui.setActor(actor);
+                return ui;
+            } catch (Exception ex2) {
+                ex.printStackTrace();
+            }
         }
         return null;
     }

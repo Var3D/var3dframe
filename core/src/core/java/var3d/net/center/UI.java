@@ -353,13 +353,13 @@ public class UI<T extends Actor> {
                 for (Method method : methods) {
                     if (hashMethod.get(method.getName() + "#" + method.getParameterTypes().length) != null)
                         throw new UnsupportedOperationException("method方法不支持调用<方法名相同且方法参数个数相等>的方法");
-                    hashMethod.put(method.getName() + "#" +method.getParameterTypes().length, method);
+                    hashMethod.put(method.getName() + "#" + method.getParameterTypes().length, method);
                 }
             }
             Method method = hashMethod.get(methodName + "#" + parameters.length);
             method.invoke(t, parameters);
         } catch (Exception e) {
-            throw new UnsupportedOperationException(clazz+"未找到" + methodName + "方法,或给定的参数错误");
+            throw new UnsupportedOperationException(clazz + "未找到" + methodName + "方法,或给定的参数错误");
         }
         return this;
     }
@@ -415,6 +415,14 @@ public class UI<T extends Actor> {
     public UI<T> setFontScale(float scale) {
         if (t instanceof VLabel) {
             ((VLabel) t).setFontScale(scale);
+        } else
+            Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel上有效");
+        return this;
+    }
+
+    public UI<T> setAlignment(int alignment) {
+        if (t instanceof VLabel) {
+            ((VLabel) t).setAlignment(alignment);
         } else
             Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel上有效");
         return this;
