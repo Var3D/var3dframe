@@ -11,8 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class UI<T extends Actor> {
@@ -40,7 +44,7 @@ public class UI<T extends Actor> {
         String className = new Exception().getStackTrace()[1].getClassName();
         try {
             Class<?> clazz = loader.loadClass(className);
-            if (VStage.class.isAssignableFrom(clazz)) {
+            if (VStage.class.isAssignableFrom(clazz)) {//判断clazz是否为VStage的实例或子类实例
                 show(game.getStage());
             } else {
                 HashMap<String, VDialog> pools = game.getDialogs();
@@ -317,6 +321,65 @@ public class UI<T extends Actor> {
     public UI<T> setFillet(float radius) {
         //当然还没成功
         return this;
+    }
+
+    //执行方法
+
+//    public UI<T> method(String methodName, Object... parameters) {
+//        //当然还没成功
+//        Method m;
+//        try {
+//            Class types[] = new Class[parameters.length];
+//            for (int i = 0; i < parameters.length; i++) {
+//                types[i] = parameters[i].getClass();
+//                //types[i] = float.class;
+//            }
+//            m = t.getClass().getMethod(methodName, types);
+//            m.invoke(t, parameters);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return this;
+//    }
+
+    private HashMap<String, Method> hashMethod;
+
+    public UI<T> method(String methodName, Object... parameters) {
+        Class clazz = t.getClass();
+        try {
+            if (hashMethod == null) {
+                hashMethod = new HashMap<>();
+                Method[] methods = clazz.getMethods();
+                for (Method method : methods) {
+                    if (hashMethod.get(method.getName() + "#" + method.getParameterTypes().length) != null)
+                        throw new UnsupportedOperationException("method方法不支持调用<方法名相同且方法参数个数相等>的方法");
+                    hashMethod.put(method.getName() + "#" +method.getParameterTypes().length, method);
+                }
+            }
+            Method method = hashMethod.get(methodName + "#" + parameters.length);
+            method.invoke(t, parameters);
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(clazz+"未找到" + methodName + "方法,或给定的参数错误");
+        }
+        return this;
+    }
+
+    private Method getMethod(Class clazz, String methodName, final Class[] classes) throws Exception {
+        Method method = null;
+        try {
+            method = clazz.getDeclaredMethod(methodName, classes);
+        } catch (NoSuchMethodException e) {
+            try {
+                method = clazz.getMethod(methodName, classes);
+            } catch (NoSuchMethodException ex) {
+                if (clazz.getSuperclass() == null) {
+                    return method;
+                } else {
+                    method = getMethod(clazz.getSuperclass(), methodName, classes);
+                }
+            }
+        }
+        return method;
     }
 
     public UI<T> addListener(EventListener listener) {
