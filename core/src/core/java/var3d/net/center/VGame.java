@@ -1610,29 +1610,46 @@ public abstract class VGame implements ApplicationListener {
      * 创建UI
      */
     public <T extends Actor> UI<T> getUI(Class<T> type, Object... objects) {
-        try {
-            Class<?> types[] = new Class[objects.length];
-            for (int i = 0; i < objects.length; i++) {
-                if (objects[i] instanceof VGame) {
-                    types[i] = VGame.class;
-                }else types[i] = objects[i].getClass();
+        if (objects.length == 0) {
+            try {
+                T actor = type.getConstructor().newInstance();
+                UI<T> ui = new UI<T>(this);
+                ui.setActor(actor);
+                return ui;
+            } catch (Exception ex3) {
+                try {
+                    T actor = type.getConstructor(VGame.class).newInstance(this);
+                    UI<T> ui = new UI<T>(this);
+                    ui.setActor(actor);
+                    return ui;
+                } catch (Exception ex4) {
+                }
             }
-            T actor = type.getConstructor(types).newInstance(objects);
-            UI<T> ui = new UI<T>(this);
-            ui.setActor(actor);
-            return ui;
-        } catch (Exception ex) {
+        } else {
             try {
                 Class<?> types[] = new Class[objects.length];
                 for (int i = 0; i < objects.length; i++) {
-                    types[i] = objects[i].getClass();
+                    if (objects[i] instanceof VGame) {
+                        types[i] = VGame.class;
+                    } else types[i] = objects[i].getClass();
                 }
                 T actor = type.getConstructor(types).newInstance(objects);
                 UI<T> ui = new UI<T>(this);
                 ui.setActor(actor);
                 return ui;
-            } catch (Exception ex2) {
-                ex.printStackTrace();
+            } catch (Exception ex) {
+                try {
+                    Class<?> types[] = new Class[objects.length];
+                    for (int i = 0; i < objects.length; i++) {
+                        types[i] = objects[i].getClass();
+                    }
+                    T actor = type.getConstructor(types).newInstance(objects);
+                    UI<T> ui = new UI<T>(this);
+                    ui.setActor(actor);
+                    return ui;
+                } catch (Exception ex2) {
+                    ex2.printStackTrace();
+                }
             }
         }
         return null;
