@@ -3,6 +3,7 @@ package var3d.net.demo.stages;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -30,10 +31,7 @@ public class StageMain extends VStage {
         VLabel lab_title = game.getLabel("Var3D框架").setPosition(getWidth() / 2, getTop() - 10, Align.top).touchOff().show();
 
         //对话框
-        Button btn_dialog = game.getButton().setColor(Color.valueOf("0075ed"))
-                .setSize(120, 40)
-                //.method("setSize", 120f, 40f)
-                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
+        Button btn_dialog = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40).setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_dialog.add(game.getLabel("对话框例子").setFontScale(0.6f).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -43,8 +41,8 @@ public class StageMain extends VStage {
         });
 
         //舞台
-        Button btn_stage = game.getButton().setColor(Color.valueOf("0075ed")).setSize(getPreActor())
-                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
+        Button btn_stage = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_stage.add(game.getLabel("舞台例子").setFontScale(0.6f).getActor());
         btn_stage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -54,8 +52,8 @@ public class StageMain extends VStage {
         });
 
         //等待添加
-        Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(getPreActor())
-                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
+        Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(pref())
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_more.add(game.getLabel("等待添加...").setFontScale(0.6f).getActor());
         btn_more.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -65,8 +63,9 @@ public class StageMain extends VStage {
 
 
         //测试自定义方法
-//        ImageTest test = game.getUI(new ImageTest(game.getDrawable(R.image.tank_4)))
-//                .method("setSize", 100).setColor(Color.YELLOW).show();
+        ImageTest test = game.getUI(new ImageTest(game.getDrawable(R.image.tank_4))).method("setSize", 100)
+                .setWidth(self().getWidth()*1.5f).setPosition(pref()).setColor(Color.YELLOW).show();
+
     }
 
     @Override

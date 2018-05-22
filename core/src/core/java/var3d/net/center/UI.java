@@ -11,12 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class UI<T extends Actor> {
@@ -362,24 +358,6 @@ public class UI<T extends Actor> {
             throw new UnsupportedOperationException(clazz + "未找到" + methodName + "方法,或给定的参数错误");
         }
         return this;
-    }
-
-    private Method getMethod(Class clazz, String methodName, final Class[] classes) throws Exception {
-        Method method = null;
-        try {
-            method = clazz.getDeclaredMethod(methodName, classes);
-        } catch (NoSuchMethodException e) {
-            try {
-                method = clazz.getMethod(methodName, classes);
-            } catch (NoSuchMethodException ex) {
-                if (clazz.getSuperclass() == null) {
-                    return method;
-                } else {
-                    method = getMethod(clazz.getSuperclass(), methodName, classes);
-                }
-            }
-        }
-        return method;
     }
 
     public UI<T> addListener(EventListener listener) {

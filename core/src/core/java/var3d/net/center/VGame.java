@@ -659,8 +659,7 @@ public abstract class VGame implements ApplicationListener {
             return dStage;
         }
         try {
-            dStage = (VStage) type.getConstructor(VGame.class)
-                    .newInstance(this);
+            dStage = (VStage) type.getConstructor(VGame.class).newInstance(this);
             isLoading = true;
             pool.put(name, dStage);
             return dStage;
@@ -1597,10 +1596,14 @@ public abstract class VGame implements ApplicationListener {
         }
     }
 
+    //临时存放用getUI创建actor;
+    public Actor self;
+
     /**
      * 创建UI
      */
     public <T extends Actor> UI<T> getUI(final T actor) {
+        self = actor;
         UI<T> ui = new UI<T>(this);
         ui.setActor(actor);
         return ui;
@@ -1613,15 +1616,11 @@ public abstract class VGame implements ApplicationListener {
         if (objects.length == 0) {
             try {
                 T actor = type.getConstructor().newInstance();
-                UI<T> ui = new UI<T>(this);
-                ui.setActor(actor);
-                return ui;
+                return getUI(actor);
             } catch (Exception ex3) {
                 try {
                     T actor = type.getConstructor(VGame.class).newInstance(this);
-                    UI<T> ui = new UI<T>(this);
-                    ui.setActor(actor);
-                    return ui;
+                    return getUI(actor);
                 } catch (Exception ex4) {
                 }
             }
@@ -1634,9 +1633,7 @@ public abstract class VGame implements ApplicationListener {
                     } else types[i] = objects[i].getClass();
                 }
                 T actor = type.getConstructor(types).newInstance(objects);
-                UI<T> ui = new UI<T>(this);
-                ui.setActor(actor);
-                return ui;
+                return getUI(actor);
             } catch (Exception ex) {
                 try {
                     Class<?> types[] = new Class[objects.length];
@@ -1644,9 +1641,7 @@ public abstract class VGame implements ApplicationListener {
                         types[i] = objects[i].getClass();
                     }
                     T actor = type.getConstructor(types).newInstance(objects);
-                    UI<T> ui = new UI<T>(this);
-                    ui.setActor(actor);
-                    return ui;
+                    return getUI(actor);
                 } catch (Exception ex2) {
                     ex2.printStackTrace();
                 }
@@ -1655,17 +1650,40 @@ public abstract class VGame implements ApplicationListener {
         return null;
     }
 
+//    private HashMap<String, Constructor> hashConstructor;
+//
+//    public <T extends Actor> UI<T> getUI(Class<T> clazz, Object... objects) {
+//        try {
+//            Constructor[] constructors = clazz.getConstructors();
+//            if (hashConstructor == null) {
+//                hashConstructor = new HashMap<>();
+//                for (Constructor constructor : constructors) {
+//                    if (hashConstructor.get("" + constructor.getParameterTypes().length) != null)
+//                        throw new UnsupportedOperationException("getUI方法不支持调用<构造方法相同且方法参数个数相等>的类");
+//                    hashConstructor.put("" + constructor.getTypeParameters().length, constructor);
+//                    Gdx.app.log("aaaaaaa", constructor.toString());
+//                    Gdx.app.log("aaaaaaa", "constr=" + constructor.getParameterTypes().length);
+//                }
+//            }
+//            Gdx.app.log("aaaaaaa", "objects=" + objects.length);
+//            Constructor constructor = hashConstructor.get("" + objects.length);
+//            Gdx.app.log("aaaaaaa", "c=" + (constructor == null));
+//            constructor.newInstance(objects);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new UnsupportedOperationException(clazz + "构造方法参数错误");
+//        }
+//        return null;
+//    }
+
 
     /**
      * 创建Image
      */
     public UI<Image> getImage(String imageName) {
-        UI<Image> ui = new UI<Image>(this);
-        TextureRegionDrawable tex = new TextureRegionDrawable(
-                getTextureRegion(imageName));
+        TextureRegionDrawable tex = new TextureRegionDrawable(getTextureRegion(imageName));
         Image img = new Image(tex);
-        ui.setActor(img);
-        return ui;
+        return getUI(img);
     }
 
     /**
@@ -1686,11 +1704,9 @@ public abstract class VGame implements ApplicationListener {
      * Image
      */
     public UI<Image> getImage(float width, float height) {
-        UI<Image> ui = new UI<Image>(this);
         Image image = new Image(getPointTexture());
         image.setSize(width, height);
-        ui.setActor(image);
-        return ui;
+        return getUI(image);
     }
 
     /**
@@ -1700,22 +1716,16 @@ public abstract class VGame implements ApplicationListener {
         return getImage(width, height).setColor(color);
     }
 
-    public UI<Image> getImage(String name, float width, float height, int left,
-                              int right, int top, int bottom) {
-        UI<Image> ui = new UI<Image>(this);
+    public UI<Image> getImage(String name, float width, float height, int left, int right, int top, int bottom) {
         Image image = new Image(getNinePatch(name, left, right, top, bottom));
         image.setSize(width, height);
-        ui.setActor(image);
-        return ui;
+        return getUI(image);
     }
 
-    public UI<Image> getImage(String name, float width, float height,
-                              int edgeDistance) {
-        UI<Image> ui = new UI<Image>(this);
+    public UI<Image> getImage(String name, float width, float height, int edgeDistance) {
         Image image = new Image(getNinePatch(name, edgeDistance));
         image.setSize(width, height);
-        ui.setActor(image);
-        return ui;
+        return getUI(image);
     }
 
     /**
@@ -1922,9 +1932,7 @@ public abstract class VGame implements ApplicationListener {
      * 创建Label
      */
     public UI<VLabel> getLabel(String text, LabelStyle style) {
-        UI<VLabel> ui = new UI<VLabel>(this);
-        ui.setActor(new VLabel(text, style));
-        return ui;
+        return getUI(new VLabel(text, style));
     }
 
     /**
@@ -1951,16 +1959,12 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 创建输入框
      */
-    public UI<VTextField> getTextFieldWithFont(String text, String fontName,
-                                               String bg) {
-        UI<VTextField> ui = new UI<VTextField>(this);
+    public UI<VTextField> getTextFieldWithFont(String text, String fontName, String bg) {
         TextFieldStyle style = new TextFieldStyle(getFont(fontName),
                 Color.BLACK, getRectColorDrawable(2, 1, Color.BLUE),
                 getRectColorDrawable(1, 1, new Color(0, 0, 1, 0.3f)),
-                bg.equals("") ? getRectLineDrawable(Color.WHITE, Color.BLACK,
-                        40, 40) : getDrawable(bg));
-        ui.setActor(new VTextField(text, style));
-        return ui;
+                bg.equals("") ? getRectLineDrawable(Color.WHITE, Color.BLACK, 40, 40) : getDrawable(bg));
+        return getUI(new VTextField(text, style));
     }
 
     // 创建钜形线条Drawable
@@ -1973,8 +1977,7 @@ public abstract class VGame implements ApplicationListener {
         Texture colorPoint = new Texture(pixmap);
         colorPoint.setFilter(filter, filter);
         pixmap.dispose();
-        NinePatchDrawable nine = new NinePatchDrawable(new NinePatch(
-                colorPoint, 2, 2, 2, 2));
+        NinePatchDrawable nine = new NinePatchDrawable(new NinePatch(colorPoint, 2, 2, 2, 2));
         return nine;
     }
 
@@ -1982,9 +1985,7 @@ public abstract class VGame implements ApplicationListener {
      * 创建输入框
      */
     public UI<VTextField> getTextField(String text, TextFieldStyle style) {
-        UI<VTextField> ui = new UI<VTextField>(this);
-        ui.setActor(new VTextField(text, style));
-        return ui;
+        return getUI(new VTextField(text, style));
     }
 
     /**
@@ -2001,19 +2002,14 @@ public abstract class VGame implements ApplicationListener {
      * 获取文本Image
      */
     public UI<Image> getImageText(String txt, FreePaint paint) {
-        UI<Image> ui = new UI<Image>(this);
-        Image img = new Image(getTextureText(txt, paint));
-        ui.setActor(img);
-        return ui;
+        return getUI(new Image(getTextureText(txt, paint)));
     }
 
     /**
      * 创建group
      */
     public UI<Group> getGroup() {
-        UI<Group> ui = new UI<Group>(this);
-        ui.setActor(new Group());
-        return ui;
+        return getUI(new Group());
     }
 
     /**
@@ -2027,41 +2023,28 @@ public abstract class VGame implements ApplicationListener {
      * 创建Button
      */
     public UI<Button> getButton() {
-        UI<Button> ui = new UI<Button>(this);
-        Button button = new Button(getPointDrawable());
-        ui.setActor(button);
-        return ui;
+        return getUI(new Button(getPointDrawable()));
     }
 
     /**
      * 创建Button
      */
     public UI<Button> getButton(String up) {
-        UI<Button> ui = new UI<Button>(this);
-        Button button = new Button(getDrawable(up));
-        ui.setActor(button);
-        return ui;
+        return getUI(new Button(getDrawable(up)));
     }
 
     /**
      * 创建Button
      */
     public UI<Button> getButton(String up, String down) {
-        UI<Button> ui = new UI<Button>(this);
-        Button button = new Button(getDrawable(up), getDrawable(down));
-        ui.setActor(button);
-        return ui;
+        return getUI(new Button(getDrawable(up), getDrawable(down)));
     }
 
     /**
      * 创建Button
      */
     public UI<Button> getButton(String up, String down, String checked) {
-        UI<Button> ui = new UI<Button>(this);
-        Button button = new Button(getDrawable(up), getDrawable(down),
-                getDrawable(checked));
-        ui.setActor(button);
-        return ui;
+        return getUI(new Button(getDrawable(up), getDrawable(down), getDrawable(checked)));
     }
 
     /**
@@ -2101,35 +2084,26 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 创建TextButton
      */
-    public UI<VTextButton> getTextButton(String text, FreeBitmapFont font,
-                                         Color up, Color down, Color checked) {
-        TextButtonStyle style = new TextButtonStyle(getRectColorDrawable(1, 1,
-                up), getRectColorDrawable(1, 1, down), getRectColorDrawable(1,
-                1, checked), font);
+    public UI<VTextButton> getTextButton(String text, FreeBitmapFont font, Color up, Color down, Color checked) {
+        TextButtonStyle style = new TextButtonStyle(getRectColorDrawable(1, 1, up), getRectColorDrawable(1, 1, down), getRectColorDrawable(1, 1, checked), font);
         return getTextButton(text, style);
     }
 
     /**
      * 创建TextButton
      */
-    public UI<VTextButton> getTextButton(String text, FreeBitmapFont font,
-                                         String up, String down, String checked) {
-        return getTextButton(text, new TextButtonStyle(getDrawable(up),
-                getDrawable(down), getDrawable(checked), font));
+    public UI<VTextButton> getTextButton(String text, FreeBitmapFont font, String up, String down, String checked) {
+        return getTextButton(text, new TextButtonStyle(getDrawable(up), getDrawable(down), getDrawable(checked), font));
     }
 
     /**
      * 创建TextButton
      */
     public UI<VTextButton> getTextButton(String text, TextButtonStyle style) {
-        UI<VTextButton> ui = new UI<VTextButton>(this);
-        VTextButton button = new VTextButton(text, style);
-        ui.setActor(button);
-        return ui;
+        return getUI(new VTextButton(text, style));
     }
 
-    public CheckBoxStyle getCheckBoxStyle(String downimgname, String upimgname,
-                                          Color fontColor) {
+    public CheckBoxStyle getCheckBoxStyle(String downimgname, String upimgname, Color fontColor) {
         TextureRegionDrawable tex = new TextureRegionDrawable(
                 getTextureRegion(downimgname));
         TextureRegionDrawable texup = new TextureRegionDrawable(
@@ -2141,27 +2115,19 @@ public abstract class VGame implements ApplicationListener {
      * 创建CheckBox
      */
     public UI<CheckBox> getCheckBox(String downimgname, String upimgname) {
-        UI<CheckBox> ui = new UI<CheckBox>(this);
-        CheckBox button = new CheckBox("", getCheckBoxStyle(downimgname,
-                upimgname, Color.WHITE));
-        ui.setActor(button);
-        return ui;
+        return getUI(new CheckBox("", getCheckBoxStyle(downimgname, upimgname, Color.WHITE)));
     }
 
     @SuppressWarnings("rawtypes")
     public <T> UI<VSelectBox> getSelectBox(String titlebg) {
-        UI<VSelectBox> ui = new UI<VSelectBox>(this);
         SelectBoxStyle style = new SelectBoxStyle();
         style.fontColor = Color.BLACK;
         style.background = getDrawable(titlebg);
         style.font = getFont();
-        style.scrollStyle = new ScrollPaneStyle(getRectColorDrawable(1, 1,
-                new Color(0.4f, 0.4f, 0.4f, 0.6f)), null, null, null, null);
-        style.listStyle = new ListStyle(getFont(), Color.BROWN, Color.WHITE,
-                getRectColorDrawable(1, 1, new Color(1, 1, 0, 0.3f)));
+        style.scrollStyle = new ScrollPaneStyle(getRectColorDrawable(1, 1, new Color(0.4f, 0.4f, 0.4f, 0.6f)), null, null, null, null);
+        style.listStyle = new ListStyle(getFont(), Color.BROWN, Color.WHITE, getRectColorDrawable(1, 1, new Color(1, 1, 0, 0.3f)));
         VSelectBox select = new VSelectBox(style);
-        ui.setActor(select);
-        return ui;
+        return getUI(select);
     }
 
     /**
@@ -2186,32 +2152,23 @@ public abstract class VGame implements ApplicationListener {
      * 创建ScrollPane
      */
     public UI<ScrollPane> getScrollPane(Actor actor, ScrollPaneStyle style) {
-        UI<ScrollPane> ui = new UI<ScrollPane>(this);
-        ScrollPane scroll = new ScrollPane(actor, style);
-        ui.setActor(scroll);
-        return ui;
+        return getUI( new ScrollPane(actor, style));
     }
 
     /**
      * 创建TouchPad
      */
     public UI<Touchpad> getTouchpad(float deadzoneRadius, String bg, String kn) {
-        UI<Touchpad> ui = new UI<Touchpad>(this);
         TextureRegionDrawable d1 = getDrawable(bg);
         TextureRegionDrawable d2 = getDrawable(kn);
-        Touchpad pad = new Touchpad(deadzoneRadius, new TouchpadStyle(d1, d2));
-        ui.setActor(pad);
-        return ui;
+        return getUI(new Touchpad(deadzoneRadius, new TouchpadStyle(d1, d2)));
     }
 
     /**
      * 创建TouchPad
      */
     public UI<Touchpad> getTouchpad(float deadzoneRadius, TouchpadStyle style) {
-        UI<Touchpad> ui = new UI<Touchpad>(this);
-        Touchpad pad = new Touchpad(deadzoneRadius, style);
-        ui.setActor(pad);
-        return ui;
+        return getUI(new Touchpad(deadzoneRadius, style));
     }
 
     /**

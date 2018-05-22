@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class VStage extends Stage {
+public abstract class VStage<T extends Actor> extends Stage {
     public VGame game;
     private String name = "";
     public ArrayList<Actor> bgList;
@@ -29,11 +29,15 @@ public abstract class VStage extends Stage {
     private float safeLeft, safeRight, safeTop, safeBottom;
     private boolean isStretching = false;//是否拉伸比例适配
     public Rectangle safeAreaInsets = new Rectangle();//安全区域边距
-    private Actor preActor;
 
     //获取上一个刚添加的actor
-    public Actor getPreActor(){
-        return  getRoot().getChildren().peek();
+    public Actor pref() {
+        return getRoot().getChildren().peek();
+    }
+
+    //当前正在用UI链控制的Actor
+    public Actor self() {
+        return game.self;
     }
 
     public HashMap<String, Object> getIntent() {
@@ -151,12 +155,12 @@ public abstract class VStage extends Stage {
 
     //返回水平百分比坐标(自适应刘海屏)
     public float getRateX(float rate) {
-        return getLeft() + (fullWidth-safeLeft-safeRight) * rate;
+        return getLeft() + (fullWidth - safeLeft - safeRight) * rate;
     }
 
     //返回垂直百分比坐标(自适应刘海屏)
     public float getRateY(float rate) {
-        return getBottom() + (fullHeight-safeTop-safeBottom) * rate;
+        return getBottom() + (fullHeight - safeTop - safeBottom) * rate;
     }
 
     public float getSafeLeft() {

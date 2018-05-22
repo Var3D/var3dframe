@@ -27,7 +27,7 @@ public class DialogTestFull extends VDialog {
         //设置标题
         game.getLabel("全屏对话框").touchOff().setFontScale(1.3f).setPosition(getWidth() / 2, getHeight() - 30, Align.top).show();
         //左右区域测试
-        Image left = game.getImage(50, 50).setColor(Color.RED).setPosition(getLeft(), getHeight() / 2, Align.left).show();
+        Image left = game.getImage(50, 50).setWidth(self().getWidth() * 2f).setColor(Color.RED).setPosition(getLeft(), getHeight() / 2, Align.left).show();
         Image right = game.getImage(50, 50).setColor(Color.RED).setPosition(getRight(), getHeight() / 2, Align.right).show();
         //测试百分比坐标
         Image rate = game.getImage(50, 50).setColor(Color.BLUE).setPosition(getRateX(0.5f), getRateY(0.5f), Align.center).show();

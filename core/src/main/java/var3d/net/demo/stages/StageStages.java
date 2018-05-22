@@ -28,7 +28,7 @@ public class StageStages extends VStage {
 
         //返回
         Button btn_back = game.getButton().setColor(Color.valueOf("ff2266")).setSize(120, 40)
-                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_back.add(game.getLabel("返回").setFontScale(0.6f).getActor());
         btn_back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -39,7 +39,7 @@ public class StageStages extends VStage {
 
         //等比例舞台
         Button btn_dialog = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_dialog.add(game.getLabel("等比例舞台").setFontScale(0.6f).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -49,7 +49,7 @@ public class StageStages extends VStage {
 
         //非等比例对话框
         Button btn_unRatio = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_unRatio.add(game.getLabel("非等比例舞台").setFontScale(0.6f).getActor());
         btn_unRatio.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -59,7 +59,7 @@ public class StageStages extends VStage {
 
         //等待添加
         Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(120, 40)
-                .setPosition(getLeft(), getPreActor().getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_more.add(game.getLabel("等待添加...").setFontScale(0.6f).getActor());
         btn_more.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {

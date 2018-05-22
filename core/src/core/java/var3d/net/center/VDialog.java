@@ -18,6 +18,16 @@ public abstract class VDialog extends Group {
     private VStage stageTop;
     private boolean isStretching = false;//是否拉伸比例适配
 
+    //获取上一个刚添加的actor
+    public Actor pref() {
+        return getChildren().peek();
+    }
+
+    //当前正在用UI链控制的Actor
+    public Actor self() {
+        return game.self;
+    }
+
     public enum ActionType {
         NOEFFECTE, MOVELEFT, MOVERIGHT, MOVEODOWN, MOVEUP, FADEIN, POPUP
     }
@@ -80,12 +90,12 @@ public abstract class VDialog extends Group {
 
     //返回水平百分比坐标(自适应刘海屏)
     public float getRateX(float rate) {
-        return getLeft() + (getFullWidth()-getSafeLeft()-getSafeRight()) * rate;
+        return getLeft() + (getFullWidth() - getSafeLeft() - getSafeRight()) * rate;
     }
 
     //返回垂直百分比坐标(自适应刘海屏)
     public float getRateY(float rate) {
-        return getBottom() + (getFullHeight()-getSafeTop()-getSafeBottom()) * rate;
+        return getBottom() + (getFullHeight() - getSafeTop() - getSafeBottom()) * rate;
     }
 
     public float getLeft() {
