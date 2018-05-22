@@ -3,9 +3,7 @@ package var3d.net.demo.stages;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 import var3d.net.center.VGame;
@@ -64,7 +62,7 @@ public class StageMain extends VStage {
 
         //测试自定义方法
         ImageTest test = game.getUI(new ImageTest(game.getDrawable(R.image.tank_4))).method("setSize", 100)
-                .setWidth(self().getWidth()*1.5f).setPosition(pref()).setColor(Color.YELLOW).show();
+                .setWidth(self().getWidth() * 1.5f).setPosition(pref().getX(), 0).setColor(Color.YELLOW).show();
 
     }
 

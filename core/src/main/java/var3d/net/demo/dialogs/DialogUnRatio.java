@@ -22,7 +22,7 @@ public class DialogUnRatio extends VDialog {
     @Override
     public void init() {
         //设置背景
-        setBackground(game.getImage(400, 300).setColor(Color.valueOf("0075ed")).getActor());
+        setBackground(400, 300, Color.valueOf("0075ed"));
         //设置标题
         game.getLabel("非等比例对话框").touchOff().setFontScale(1.3f).setPosition(getWidth() / 2, getHeight() - 30, Align.top).show();
         //对话框堆叠测试
@@ -31,7 +31,7 @@ public class DialogUnRatio extends VDialog {
         btn_dialog.add(game.getLabel("对话框堆叠测试").setFontScale(0.5f).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-               game.showDialog(DialogRatio.class);
+                game.showDialog(DialogRatio.class);
             }
         });
         //关闭按钮

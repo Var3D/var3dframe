@@ -22,7 +22,7 @@ public class DialogRatio extends VDialog {
     @Override
     public void init() {
         //设置背景
-        setBackground(game.getImage(400, 300).setColor(Color.valueOf("0075ed")).getActor());
+        setBackground(400, 300, Color.valueOf("0075ed"));
         //设置标题
         game.getLabel("等比例对话框").touchOff().setFontScale(1.3f).setPosition(getWidth() / 2, getHeight() - 30, Align.top).show();
         //关闭按钮

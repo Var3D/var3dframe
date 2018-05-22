@@ -23,7 +23,7 @@ public class DialogTestFull extends VDialog {
     @Override
     public void init() {
         //设置背景
-        setBackground(game.getImage(getFullWidth(), getFullHeight()).setColor(Color.valueOf("0075ed")).getActor());
+        setBackground(Color.valueOf("0075ed"));
         //设置标题
         game.getLabel("全屏对话框").touchOff().setFontScale(1.3f).setPosition(getWidth() / 2, getHeight() - 30, Align.top).show();
         //左右区域测试

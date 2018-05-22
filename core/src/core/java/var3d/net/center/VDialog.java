@@ -160,8 +160,7 @@ public abstract class VDialog extends Group {
      * 普通图片背景带颜色
      */
     public void setBackground(String imgName, Color color) {
-        Image bg = game.getImage(imgName, game.WIDTH, game.HEIGHT)
-                .setColor(color).getActor();
+        Image bg = game.getImage(imgName, game.WIDTH, game.HEIGHT).setColor(color).getActor();
         setThis(bg);
     }
 
@@ -175,11 +174,37 @@ public abstract class VDialog extends Group {
         setThis(bg);
     }
 
+    //设置一层看不见的背景
+    public void setBackground(float width, float height) {
+        setBackground(game.getUI(Actor.class).setSize(width, height).getActor());
+    }
+
+    //设置全屏背景
+    public void setBackground(Color color) {
+        setBackground(game.getImage(getFullWidth(), getFullHeight(), color).getActor());
+    }
+
+    //设置背景
+    public void setBackground(float width, float height, Color color) {
+        setBackground(game.getImage(width, height, color).getActor());
+    }
+
+    //设置全屏背景
+    public ActorGradient setBackground(Color color1, Color color2) {
+        return setBackground(getFullWidth(), getFullHeight(), color1, color2);
+    }
+
+    //设置背景
+    public ActorGradient setBackground(float width, float height, Color color1, Color color2) {
+        ActorGradient bg = new ActorGradient(width, height, color1, color2);
+        setBackground(bg);
+        return bg;
+    }
+
     /*
      * 设置9妹图做背景(宽，高，圆角半径)
      */
-    public void setBackground(String imgName, float width, float height,
-                              int left, int right, int top, int bottom) {
+    public void setBackground(String imgName, float width, float height, int left, int right, int top, int bottom) {
         NinePatch path = game.getNinePatch(imgName, left, right, top, bottom);
         Image bg = new Image(path);
         bg.setSize(width, height);
