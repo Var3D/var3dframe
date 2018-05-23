@@ -122,10 +122,14 @@ public abstract class VStage<T extends Actor> extends Stage {
 
     private void calculationAafeArea(float blx, float bly) {
         Vector2 vector2 = game.var3dListener.getAppScreenSize();//获取iphoneX的真机分辨率
-        safeLeft = safeAreaInsets.x / vector2.x * getWidth() / blx;
-        safeRight = safeAreaInsets.width / vector2.x * getWidth() / blx;
-        safeBottom = safeAreaInsets.y / vector2.y * getHeight() * bly;
-        safeTop = safeAreaInsets.height / vector2.y * getHeight() * bly;
+        if (vector2.x != 0) {
+            safeLeft = safeAreaInsets.x / vector2.x * getWidth() / blx;
+            safeRight = safeAreaInsets.width / vector2.x * getWidth() / blx;
+        }
+        if (vector2.y != 0) {
+            safeBottom = safeAreaInsets.y / vector2.y * getHeight() * bly;
+            safeTop = safeAreaInsets.height / vector2.y * getHeight() * bly;
+        }
     }
 
     private void calculationCuts() {
