@@ -107,15 +107,13 @@ public abstract class VStage<T extends Actor> extends Stage {
             getRoot().setPosition(cutWidth, 0);
             cutWidth = cutWidth / getRoot().getScaleX();
             calculationAafeArea(bl, 1);
-        } else if (bl > 1) {
+        } else if (bl >= 1) {
             cutWidth = 0;
             cutHeight = (1 - 1 / bl) * getHeight() / 2f;
             getRoot().setScale(1, 1 / bl);
             getRoot().setPosition(0, cutHeight);
             cutHeight = cutHeight / getRoot().getScaleY();
             calculationAafeArea(1, bl);
-        } else {
-            calculationAafeArea(1, 1);
         }
         calculationCuts();
     }
