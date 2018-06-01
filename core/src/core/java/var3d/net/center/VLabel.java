@@ -3,6 +3,7 @@ package var3d.net.center;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import var3d.net.center.freefont.FreeBitmapFont;
@@ -38,7 +39,12 @@ public class VLabel extends Label {
 
     public void setColor(Color color) {
         super.setColor(color);
-        if (isStroke) strokeColor = color.cpy();
+        if (isStroke) strokeColor.set(color.r, color.g, color.b, color.a);
+    }
+
+    public void setColor(float r, float g, float b, float a) {
+        super.setColor(r, g, b, a);
+        if (isStroke) strokeColor.set(r, g, b, a);
     }
 
     /**
@@ -62,7 +68,7 @@ public class VLabel extends Label {
         this.strokeColor = strokeColor;
         this.strokeWidth = strokeWidth;
         isStroke = true;
-       // refushCache();
+        // refushCache();
     }
 
     /**
@@ -70,10 +76,13 @@ public class VLabel extends Label {
      */
 
     public void setFontScale(float fontScale) {
-        super.setFontScale(fontScale);
-        setSize(getPrefWidth(), getPrefHeight());
+        this.setFontScale(fontScale, fontScale);
     }
 
+    public void setFontScale(float fontScaleX, float fontScaleY) {
+        super.setFontScale(fontScaleX, fontScaleY);
+        setSize(getPrefWidth(), getPrefHeight());
+    }
 
     public float getShadowOffsetX() {
         return shadowOffsetX;
@@ -159,23 +168,6 @@ public class VLabel extends Label {
         }
     }
 
-//    private SpriteCache spriteCache = new SpriteCache();
-//    private int cacheId;
-//
-//    private void refushCache() {
-//        spriteCache.clear();
-//        spriteCache.beginCache();
-//        Array<TextureRegion> regions = fontCache.getFont().getRegions();
-//        for (int j = 0, n = regions.size; j < n; j++) {
-//            int idx = fontCache.getVertexCount(j);
-//            if (idx > 0) {
-//                float[] vertices = fontCache.getVertices(j);
-//                spriteCache.add(regions.get(j).getTexture(), vertices, 0, idx);
-//            }
-//        }
-//        cacheId = spriteCache.endCache();
-//    }
-
     public void drawLabel(Batch batch, float parentAlpha) {
         if (isStroke) {
             validate();
@@ -188,17 +180,6 @@ public class VLabel extends Label {
             fontCache.setPosition(getX(), getY() + strokeWidth);
             fontCache.tint(getColor());
             fontCache.draw(batch);
-
-
-//            batch.end();
-//            spriteCache.setProjectionMatrix(batch.getProjectionMatrix());
-//            Matrix4 matrix4=spriteCache.getTransformMatrix();
-//            matrix4.setToTranslation(getX(),getY(),matrix4.getTranslation(new Vector3()).z);
-//            spriteCache.setTransformMatrix(matrix4);
-//            spriteCache.begin();
-//            spriteCache.draw(cacheId);
-//            spriteCache.end();
-//            batch.begin();
         } else {
             super.draw(batch, parentAlpha);
         }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 
 import java.lang.reflect.Method;
@@ -319,27 +320,9 @@ public class UI<T extends Actor> {
         return this;
     }
 
-    //执行方法
-
-//    public UI<T> method(String methodName, Object... parameters) {
-//        //当然还没成功
-//        Method m;
-//        try {
-//            Class types[] = new Class[parameters.length];
-//            for (int i = 0; i < parameters.length; i++) {
-//                types[i] = parameters[i].getClass();
-//                //types[i] = float.class;
-//            }
-//            m = t.getClass().getMethod(methodName, types);
-//            m.invoke(t, parameters);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return this;
-//    }
-
     private HashMap<String, Method> hashMethod;
 
+    //执行自定义控件的自定义方法(如果报错,请改用一个特殊的没有使用过的方法名)
     public UI<T> method(String methodName, Object... parameters) {
         Class clazz = t.getClass();
         try {
@@ -378,31 +361,46 @@ public class UI<T extends Actor> {
     public UI<T> setStroke(Color strokeColor) {
         if (t instanceof VLabel) {
             ((VLabel) t).setStroke(strokeColor);
-        } else Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor)方法仅在类型VLabel上有效");
+        } else if (t instanceof SLabel) {
+            ((SLabel) t).setStroke(strokeColor);
+        } else Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor)方法仅在类型VLabel/SLabel上有效");
         return this;
     }
 
     public UI<T> setStroke(Color strokeColor, float strokeWidth) {
         if (t instanceof VLabel) {
             ((VLabel) t).setStroke(strokeColor, strokeWidth);
+        } else if (t instanceof SLabel) {
+            ((SLabel) t).setStroke(strokeColor, strokeWidth);
         } else
-            Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor, float strokeWidth)方法仅在类型VLabel上有效");
+            Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor, float strokeWidth)方法仅在类型VLabel/SLabel上有效");
         return this;
     }
 
     public UI<T> setFontScale(float scale) {
+        setFontScale(scale, scale);
+        return this;
+    }
+
+    public UI<T> setFontScale(float scaleX, float scaleY) {
         if (t instanceof VLabel) {
-            ((VLabel) t).setFontScale(scale);
-        } else
-            Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel上有效");
+            ((VLabel) t).setFontScale(scaleX, scaleY);
+        } else if (t instanceof SLabel) {
+            ((SLabel) t).setFontScale(scaleX, scaleY);
+        } else if (t instanceof Label) {
+            ((Label) t).setFontScale(scaleX, scaleY);
+        } else Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel/SLabel/Label上有效");
         return this;
     }
 
     public UI<T> setAlignment(int alignment) {
         if (t instanceof VLabel) {
             ((VLabel) t).setAlignment(alignment);
-        } else
-            Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel上有效");
+        } else if (t instanceof SLabel) {
+            ((SLabel) t).setAlignment(alignment);
+        } else if (t instanceof Label) {
+            ((Label) t).setAlignment(alignment);
+        } else Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel/SLabel/Label上有效");
         return this;
     }
 }

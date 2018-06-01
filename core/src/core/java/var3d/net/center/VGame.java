@@ -1934,6 +1934,40 @@ public abstract class VGame implements ApplicationListener {
     public UI<VLabel> getLabel(String text, LabelStyle style) {
         return getUI(new VLabel(text, style));
     }
+    /**
+     * 创建Label
+     */
+    public UI<SLabel> getSLabel() {
+        return getSLabel("");
+    }
+
+    /**
+     * 创建Label
+     */
+    public UI<SLabel> getSLabel(String text) {
+        return getSLabel(text, "font");
+    }
+
+    /**
+     * 创建Label
+     */
+    public UI<SLabel> getSLabel(String text, String fontName) {
+        return getSLabel(text, getLabelStyle(getFont(fontName)));
+    }
+
+    /**
+     * 创建Label
+     */
+    public UI<SLabel> getSLabel(String text, FreeBitmapFont font) {
+        return getSLabel(text, getLabelStyle(font));
+    }
+
+    /**
+     * 创建Label
+     */
+    public UI<SLabel> getSLabel(String text, LabelStyle style) {
+        return getUI(new SLabel(text, style));
+    }
 
     /**
      * 创建输入框
