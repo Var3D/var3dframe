@@ -1,13 +1,22 @@
 package var3d.net.demo.stages;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import var3d.net.center.SLabel;
+import var3d.net.center.VCard;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
@@ -29,7 +38,6 @@ public class StageMain extends VStage {
         setBackground(Color.DARK_GRAY);
         //创建标题
         VLabel lab_title = game.getLabel("Var3D框架").setPosition(getWidth() / 2, getTop() - 10, Align.top).touchOff().show();
-
         //对话框
         Button btn_dialog = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40).setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_dialog.add(game.getLabel("对话框例子").setFontScale(0.6f).getActor());
@@ -51,6 +59,17 @@ public class StageMain extends VStage {
             }
         });
 
+        //舞台
+        Button btn_card = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_card.add(game.getLabel("VCard示例").setFontScale(0.6f).getActor());
+        btn_card.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                //stage跳转
+                game.setStage(StageCards.class);
+            }
+        });
+
         //等待添加
         Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(pref())
                 .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
@@ -60,7 +79,6 @@ public class StageMain extends VStage {
                 game.showMessege("更多效果尽请期待...");
             }
         });
-
 
         //测试自定义方法
         ImageTest test = game.getUI(new ImageTest(game.getDrawable(R.image.tank_4))).method("setSize", 100)

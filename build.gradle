@@ -107,6 +107,7 @@ project(":core") {
     targetCompatibility = 1.7
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile fileTree(dir: 'libs', include: '*.jar')
     }
 }
 
