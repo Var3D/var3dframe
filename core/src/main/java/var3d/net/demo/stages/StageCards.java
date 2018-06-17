@@ -1,18 +1,13 @@
 package var3d.net.demo.stages;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 
-import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Timeline;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenManager;
 import var3d.net.center.VCard;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
@@ -34,7 +29,6 @@ public class StageCards extends VStage
     @Override
     public void init()
     {
-        Tween.registerAccessor(VCard.class, new VCard.VCardAccessor());
 
         //设置背景
         setBackground(Color.DARK_GRAY);
@@ -55,14 +49,13 @@ public class StageCards extends VStage
         final VCard vCard = new VCard(labels[0], new NinePatchDrawable(game.getNinePatch("image/card_background.png", 8)).tint(Color.GRAY));
         game.getUI(vCard).setPosition(200,200).show();
 
-        Tween.call(new TweenCallback()
-        {
+        addAction(Actions.forever(Actions.delay(1f,Actions.run(new Runnable() {
             @Override
-            public void onEvent(int i, BaseTween<?> baseTween)
-            {
+            public void run() {
                 vCard.changeActor(labels[labelsIndex = (labelsIndex + 1) % labels.length]);
             }
-        }).repeat(Tween.INFINITY, 1f).start(vCard.tweenManager);
+        }))));
+
     }
 
     @Override
