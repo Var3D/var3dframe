@@ -158,6 +158,10 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
+    public void openAd(String str, Object... objects){
+
+    }
+
     public void openAd(int aglin) {
     }
 

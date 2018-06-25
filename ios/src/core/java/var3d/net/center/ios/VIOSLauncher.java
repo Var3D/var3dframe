@@ -226,6 +226,10 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     }
 
+    public void openAd(String str, Object... objects){
+
+    }
+
     public void openAd(int aglin) {
     }
 
