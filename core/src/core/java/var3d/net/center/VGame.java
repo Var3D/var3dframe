@@ -193,7 +193,7 @@ public abstract class VGame implements ApplicationListener {
     }
 
 
-
+    //设置默认的 font 字体
     public void setDefaultFont(FreePaint paint){
         this.paint=paint;
     }
