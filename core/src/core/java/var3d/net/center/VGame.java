@@ -108,6 +108,7 @@ public abstract class VGame implements ApplicationListener {
     @SuppressWarnings("rawtypes")
     private Class prefStage;
     public int fontSize = 30;
+    private FreePaint paint;
     public VBundle bundle;// 文本国际化
     public Preferences save;// 数据保存
 
@@ -186,8 +187,15 @@ public abstract class VGame implements ApplicationListener {
         this.fontSize = fontSize;
     }
 
+
     public int getDefaultFontSize() {
         return fontSize;
+    }
+
+
+
+    public void setDefaultFont(FreePaint paint){
+        this.paint=paint;
     }
 
     public void create() {
@@ -202,7 +210,7 @@ public abstract class VGame implements ApplicationListener {
         // 全球化字体方案
         if (bundle == null) bundle = new VBundle(var3dListener);
         // 创建一个默认动态文本
-        FreeBitmapFont font = new FreeBitmapFont(this, new FreePaint(getDefaultFontSize()));
+        FreeBitmapFont font = new FreeBitmapFont(this, paint==null?new FreePaint(getDefaultFontSize()):paint);
         font.appendText("01234567890LoadingC" + getHeap());
         fonts.put("font", font);
         setStageLoad(StageLoad.class);
