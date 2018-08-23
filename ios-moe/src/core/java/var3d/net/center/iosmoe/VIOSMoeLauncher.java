@@ -36,6 +36,7 @@ import apple.uikit.UIView;
 import apple.uikit.c.UIKit;
 import apple.uikit.enums.NSUnderlineStyle;
 import apple.uikit.struct.UIEdgeInsets;
+import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
@@ -406,5 +407,8 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
 
     public Pixmap getIphoneXPixmap(String name) {
         return null;
+    }
+
+    public void linkNativeTextField(NativeTextField nativeTextField,NativeTextField.Method method){
     }
 }

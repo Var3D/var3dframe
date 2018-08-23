@@ -2,38 +2,78 @@ package var3d.net.center.ios;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
+import com.badlogic.gdx.backends.iosrobovm.IOSInput;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 import org.robovm.apple.coregraphics.CGRect;
 import org.robovm.apple.coregraphics.CGSize;
+import org.robovm.apple.coremedia.CMTime;
 import org.robovm.apple.foundation.Foundation;
+import org.robovm.apple.foundation.NSAttributedString;
 import org.robovm.apple.foundation.NSBundle;
+import org.robovm.apple.foundation.NSCoder;
 import org.robovm.apple.foundation.NSData;
+import org.robovm.apple.foundation.NSDictionary;
+import org.robovm.apple.foundation.NSInputStream;
+import org.robovm.apple.foundation.NSKeyValueChangeInfo;
 import org.robovm.apple.foundation.NSLocale;
 import org.robovm.apple.foundation.NSMutableAttributedString;
+import org.robovm.apple.foundation.NSNotification;
+import org.robovm.apple.foundation.NSNotificationCenter;
 import org.robovm.apple.foundation.NSNumber;
+import org.robovm.apple.foundation.NSObject;
+import org.robovm.apple.foundation.NSOperationQueue;
+import org.robovm.apple.foundation.NSPredicateKeyPath;
+import org.robovm.apple.foundation.NSProgressUserInfoKey;
 import org.robovm.apple.foundation.NSRange;
 import org.robovm.apple.foundation.NSString;
+import org.robovm.apple.foundation.NSValue;
 import org.robovm.apple.uikit.NSAttributedStringAttribute;
+import org.robovm.apple.uikit.NSTextAlignment;
 import org.robovm.apple.uikit.NSUnderlineStyle;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIColor;
+import org.robovm.apple.uikit.UIControl;
 import org.robovm.apple.uikit.UIEdgeInsets;
 import org.robovm.apple.uikit.UIFont;
 import org.robovm.apple.uikit.UIGraphics;
 import org.robovm.apple.uikit.UIImage;
+import org.robovm.apple.uikit.UIKeyboardAppearance;
+import org.robovm.apple.uikit.UIKeyboardType;
 import org.robovm.apple.uikit.UILabel;
+import org.robovm.apple.uikit.UIReturnKeyType;
+import org.robovm.apple.uikit.UIScreen;
+import org.robovm.apple.uikit.UITextAutocapitalizationType;
+import org.robovm.apple.uikit.UITextAutocorrectionType;
+import org.robovm.apple.uikit.UITextBorderStyle;
+import org.robovm.apple.uikit.UITextField;
+import org.robovm.apple.uikit.UITextFieldDelegate;
+import org.robovm.apple.uikit.UITextFieldDidEndEditingReason;
+import org.robovm.apple.uikit.UITextInput;
+import org.robovm.apple.uikit.UITextInputDelegate;
+import org.robovm.apple.uikit.UITextSpellCheckingType;
 import org.robovm.apple.uikit.UIView;
+import org.robovm.objc.Selector;
+import org.robovm.objc.annotation.Property;
+import org.robovm.objc.block.VoidBlock1;
+import org.robovm.rt.bro.annotation.ByVal;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 
+import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
@@ -41,6 +81,9 @@ import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
 import var3d.net.center.freefont.FreePaint;
 import var3d.net.center.freefont.TTFParser;
+
+import static com.android.org.bouncycastle.asn1.x509.X509ObjectIdentifiers.id;
+import static org.robovm.apple.uikit.UIControl.*;
 
 public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         VListener {
@@ -395,4 +438,475 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     public Pixmap getIphoneXPixmap(String name) {
         return null;
     }
+
+
+    //原生输入框
+    private HashMap<NativeTextField,VUITextField> textFieldHashMap;
+    private CGRect cgRect=new CGRect();
+    private CGSize screenSize;
+
+    public class VUITextField extends UITextField{
+        private NativeTextField nativeTextField;
+
+        public VUITextField(CGRect frame){
+            super(frame);
+        }
+
+        public void setLibgdxTextField(NativeTextField nativeTextField){
+            this.nativeTextField=nativeTextField;
+        }
+
+
+        @Property(
+                selector = "changeTextFieldFrame"
+        )
+        public void changeTextFieldFrame(final NSNotification aNotification){
+            final NSDictionary userInfo = aNotification.getUserInfo();
+            NSValue fValue = (NSValue) userInfo.get("UIKeyboardAnimationDurationUserInfoKey");
+            NSValue aValue = (NSValue) userInfo.get("UIKeyboardFrameEndUserInfoKey");
+            CGRect keyboardRect =aValue.rectValue();
+            CGRect frame = getFrame();
+            double keyboardHeight=screenSize.getHeight()-keyboardRect.getHeight();
+            final Stage stage = nativeTextField.getStage();
+            //键盘高度转换为 libgdx 坐标系
+            final float libgdxKeyboardHeight;
+            if(stage!=null) {
+                float fullHeight = stage instanceof VStage ? ((VStage) stage).getFullHeight() : stage.getHeight();
+                libgdxKeyboardHeight = (float) (keyboardRect.getHeight() / screenSize.getHeight() * fullHeight);
+            }else libgdxKeyboardHeight= (float) keyboardRect.getHeight();
+
+            if(frame.getY()> keyboardHeight-frame.getHeight()) {
+                switch (nativeTextField.getAdaptKeyboardType()){
+                    case Overall:
+                        if(stage!=null){
+                            final Group root=stage.getRoot();
+                            //final float beginY=root.getY();
+                            final float endY=libgdxKeyboardHeight-nativeTextField.getStageY();
+                            //final CMTime animateWithDuration=fValue.timeValue();
+                            //float time= (float) animateWithDuration.getSeconds();
+                            root.setY(endY);
+                            synchronizeAllForStage(root);
+                        }
+                        break;
+                    case Self:
+                        frame.setY(keyboardHeight-frame.getHeight());
+                        setFrame(frame);
+                        break;
+                }
+            }
+            if(nativeTextField.getTextFieldListener()!=null) {
+                nativeTextField.getTextFieldListener().keyboardWillShow(nativeTextField, libgdxKeyboardHeight);
+            }
+        }
+
+//        @Property(
+//                selector = "keyboardWillShow"
+//        )
+//        public void keyboardWillShow(NSNotification aNotification) {
+//            NSDictionary userInfo = aNotification.getUserInfo();
+//            NSValue aValue = (NSValue) userInfo.get("UIKeyboardBoundsUserInfoKey");
+//            CGRect keyboardRect =aValue.rectValue();
+//            CGRect frame = getFrame();
+//            double keyboardHeight=screenSize.getHeight()-keyboardRect.getHeight();
+//            Stage stage = nativeTextField.getStage();
+//            //键盘高度转换为 libgdx 坐标系
+//            float libgdxKeyboardHeight;
+//            if(stage!=null) {
+//                float fullHeight = stage instanceof VStage ? ((VStage) stage).getFullHeight() : stage.getHeight();
+//                libgdxKeyboardHeight = (float) (keyboardRect.getHeight() / screenSize.getHeight() * fullHeight);
+//            }else libgdxKeyboardHeight= (float) keyboardRect.getHeight();
+//
+//            if(frame.getY()> keyboardHeight-frame.getHeight()) {
+//                switch (nativeTextField.getAdaptKeyboardType()){
+//                    case Overall:
+//                        if(stage!=null){
+//                            Group root=stage.getRoot();
+//                            float ny=getYForStage();
+//                            System.out.println("ny+"+ny);
+//                            root.setY(libgdxKeyboardHeight-ny);
+//                            synchronizeAllForStage(root);
+//                        }
+//                        break;
+//                    case Self:
+//                        frame.setY(keyboardHeight-frame.getHeight());
+//                        setFrame(frame);
+//                        break;
+//                }
+//            }
+//            if(nativeTextField.getTextFieldListener()!=null) {
+//                nativeTextField.getTextFieldListener().keyboardWillShow(nativeTextField, libgdxKeyboardHeight);
+//            }
+//        }
+
+
+        private void synchronizeAllForStage(Group root){
+            SnapshotArray<Actor> children= root.getChildren();
+            for(Actor actor:children){
+                if(actor instanceof NativeTextField){
+                    NativeTextField son=(NativeTextField)actor;
+                    linkNativeTextField(son, NativeTextField.Method.positionChanged);
+                }
+                if(actor instanceof Group)synchronizeAllForStage((Group)actor);
+            }
+        }
+
+        @Property(
+                selector = "keyboardWillHide"
+        )
+        public void keyboardWillHide(NSNotification aNotification) {
+            switch (nativeTextField.getAdaptKeyboardType()){
+                case Overall:
+                    Stage stage = nativeTextField.getStage();
+                    if(stage!=null){
+                        Group root=stage.getRoot();
+                        float endY = 0;
+                        if(stage instanceof VStage){
+                            endY=-((VStage)stage).getCutHeight()*root.getScaleY();
+                        }
+                        root.setY(endY);
+                        synchronizeAllForStage(root);
+                    }
+                    break;
+                case Self:
+                    synchronousPosition();
+                    break;
+                case None:
+                    break;
+            }
+        }
+
+
+        //注册通知，以便获取键盘高度
+        public void registered(){
+
+            NSNotificationCenter defaultCenter=NSNotificationCenter.getDefaultCenter();
+//            defaultCenter.addObserver(this, Selector.register("keyboardWillShow")
+//                    , "UIKeyboardWillShowNotification", null);
+
+            defaultCenter.addObserver(this, Selector.register("changeTextFieldFrame")
+                    , "UIKeyboardWillChangeFrameNotification", null);
+
+            //注册当关闭键盘时执行
+            defaultCenter.addObserver(this, Selector.register("keyboardWillHide")
+                    , "UIKeyboardWillHideNotification", null);
+        }
+
+        //移出注册
+        public void removeRegistered(){
+            NSNotificationCenter defaultCenter=NSNotificationCenter.getDefaultCenter();
+            defaultCenter.removeObserver(this);
+        }
+
+
+        //本地输入框同步为 libgdx 端坐标
+        public void synchronousPosition(){
+            if(nativeTextField.getStage()!=null) {
+                Stage stage = nativeTextField.getStage();
+                float w,h,x,y,blx,bly;
+                float fullWidth,fullHeight,cutWidth=0,cutHeight=0,cutAndHeight;
+                if(stage instanceof VStage){
+                    VStage vStage= (VStage) stage;
+                    fullWidth=vStage.getFullWidth();
+                    fullHeight=vStage.getFullHeight();
+                    cutWidth=vStage.getCutWidth();
+                    cutAndHeight=vStage.getCutAndHeight();
+                    cutHeight=vStage.getCutHeight();
+                }else {
+                    fullWidth=stage.getWidth();
+                    fullHeight=stage.getHeight();
+                    cutAndHeight=fullHeight;
+                }
+                blx= (float) (1f/fullWidth*screenSize.getWidth());
+                bly= (float) (1f/fullHeight*screenSize.getHeight());
+                w=(float) getFrame().getWidth();
+                h= (float) getFrame().getHeight();
+                float fx=nativeTextField.getX();
+                float fy=nativeTextField.getY();
+                Group father=nativeTextField.getParent();
+                Group root=stage.getRoot();
+                float dx=root.getX()-cutWidth;
+                float dy=root.getY()-cutHeight;
+                fx+=dx;
+                fy+=dy;
+                while(father!=root){
+                    fx+=father.getX();
+                    fy+=father.getY();
+                    father=father.getParent();
+                    if(father==null){
+                        setHidden(true);
+                        return;
+                    }
+                }
+                x=(cutWidth+fx)*blx;
+                y= (cutAndHeight-fy)*bly-h;
+                cgRect.setWidth(w);
+                cgRect.setHeight(h);
+                cgRect.setX(x);
+                cgRect.setY(y);
+                setFrame(cgRect);
+            }else setHidden(true);
+        }
+    }
+
+    private Pool<VUITextField> pool_textFields=new Pool<VUITextField>() {
+        @Override
+        protected VUITextField newObject() {
+            cgRect.setX(0);
+            cgRect.setY(0);
+            cgRect.setWidth(100);
+            cgRect.setHeight(100);
+            VUITextField textfield = new VUITextField(cgRect);
+            textfield.setKeyboardType(UIKeyboardType.Default);
+            textfield.setReturnKeyType(UIReturnKeyType.Done);
+            textfield.setAutocapitalizationType(UITextAutocapitalizationType.None);
+            textfield.setAutocorrectionType(UITextAutocorrectionType.No);
+            textfield.setSpellCheckingType(UITextSpellCheckingType.No);
+            return textfield;
+        }
+    };
+
+
+    public void linkNativeTextField(final NativeTextField nativeTextField, NativeTextField.Method method){
+        switch (method){
+            case newObject:
+                if(textFieldHashMap==null){
+                    textFieldHashMap=new HashMap<>();
+                    screenSize=UIScreen.getMainScreen().getBounds().getSize();
+                }
+                VUITextField textfield = pool_textFields.obtain();
+                textfield.setLibgdxTextField(nativeTextField);
+                textFieldHashMap.put(nativeTextField,textfield);
+                textfield.setText("");
+                textfield.setSecureTextEntry(false);
+                ((IOSApplication)Gdx.app).getUIViewController().getView().addSubview(textfield);
+                break;
+            case setTextFieldListener:
+                textfield = textFieldHashMap.get(nativeTextField);
+                final VUITextField finalTextfield = textfield;
+                OnEditingDidBeginListener onEditingDidBeginListener;
+                textfield.addOnEditingDidBegin(onEditingDidBeginListener=new OnEditingDidBeginListener() {
+                    @Override
+                    public void onEditingDidBegin(UIControl uiControl) {
+                        //System.out.println("onEditingDidBegin");
+                        finalTextfield.setText(nativeTextField.getText());
+                        nativeTextField.getTextFieldListener().didBeginEditing(nativeTextField);
+
+                        finalTextfield.registered();
+                    }
+                });
+                nativeTextField.addNativeListener(onEditingDidBeginListener);
+                OnEditingDidEndListener onEditingDidEndListener;
+                textfield.addOnEditingDidEndListener(onEditingDidEndListener=new OnEditingDidEndListener() {
+                    @Override
+                    public void onEditingDidEnd(UIControl uiControl) {
+                        //System.out.println("onEditingDidEnd");
+                        nativeTextField.setText(finalTextfield.getText());
+                        nativeTextField.getTextFieldListener().didEndEditing(nativeTextField);
+
+                        finalTextfield.synchronousPosition();
+
+                        finalTextfield.removeRegistered();
+                    }
+                });
+                nativeTextField.addNativeListener(onEditingDidEndListener);
+                OnPrimaryActionTriggeredListener onPrimaryActionTriggeredListener;
+                textfield.addOnPrimaryActionTriggeredListener(onPrimaryActionTriggeredListener=new OnPrimaryActionTriggeredListener() {
+                    @Override
+                    public void onPrimaryActionTriggered(UIControl uiControl) {
+                        //System.out.println("onPrimaryActionTriggered");
+                        boolean isResignFirstResponder=nativeTextField.getTextFieldListener()
+                                .shouldReturn(nativeTextField);
+                        if(isResignFirstResponder){
+                            finalTextfield.resignFirstResponder();
+                            finalTextfield.synchronousPosition();
+                            finalTextfield.removeRegistered();
+                        }
+                    }
+                });
+                nativeTextField.addNativeListener(onPrimaryActionTriggeredListener);
+                OnEditingChangedListener onEditingChangedListener;
+                textfield.addOnEditingChangedListener(onEditingChangedListener=new OnEditingChangedListener() {
+                    @Override
+                    public void onEditingChanged(UIControl uiControl) {
+                        //System.out.println("onEditingChanged");
+                        nativeTextField.setText(finalTextfield.getText());
+                        String text=nativeTextField.getTextFieldListener().onEditingChanged(nativeTextField);
+                        if(text!=null) {
+                            finalTextfield.setText(text);
+                            nativeTextField.setText(text);
+                        }
+                    }
+                });
+                nativeTextField.addNativeListener(onEditingChangedListener);
+                break;
+            case becomeFirstResponder:
+                textfield = textFieldHashMap.get(nativeTextField);
+                //textfield.resignFirstResponder();
+                textfield.registered();
+                textfield.becomeFirstResponder();
+                break;
+            case resignFirstResponder:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.resignFirstResponder();
+                break;
+            case setText:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setText(nativeTextField.getText());
+                break;
+            case setVisible:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setHidden(!nativeTextField.isVisible());
+                break;
+            case setHidden:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setHidden(nativeTextField.isHidden());
+                break;
+            case setBorderStyle:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setBorderStyle(UITextBorderStyle.valueOf(nativeTextField.getBorderStyle().value()));
+                break;
+            case setBackgroundColor:
+                textfield = textFieldHashMap.get(nativeTextField);
+                Color color=nativeTextField.getColor();
+                textfield.setBackgroundColor(new UIColor(color.r,color.g,color.b,color.a));
+                break;
+            case setReturnKeyType:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setReturnKeyType(UIReturnKeyType.valueOf(nativeTextField.getReturnKeyType().value()));
+                break;
+            case setPasswordMode:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setSecureTextEntry(nativeTextField.isPasswordMode());
+                break;
+            case setMessageText:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setPlaceholder(nativeTextField.getMessageText());
+                break;
+            case setTintColor:
+                textfield = textFieldHashMap.get(nativeTextField);
+                 color=nativeTextField.getTintColor();
+                textfield.setTintColor(new UIColor(color.r,color.g,color.b,color.a));
+                break;
+            case setMessageColor:
+                textfield = textFieldHashMap.get(nativeTextField);
+                color=nativeTextField.getMessageColor();
+                NSDictionary<NSString, ?> arr=new NSDictionary<>(NSAttributedStringAttribute.ForegroundColor.value()
+                        ,new UIColor(color.r,color.g,color.b,color.a),NSAttributedStringAttribute.Font.value()
+                        ,textfield.getFont());
+                NSAttributedString attrString =new NSAttributedString(nativeTextField.getMessageText(),arr);
+                textfield.setAttributedPlaceholder(attrString);
+                break;
+            case setFontColor:
+                textfield = textFieldHashMap.get(nativeTextField);
+                color=nativeTextField.getFontColor();
+                textfield.setTextColor(new UIColor(color.r,color.g,color.b,color.a));
+                break;
+            case setKeyboardType:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setKeyboardType(UIKeyboardType.valueOf(nativeTextField.getKeyboardType().value()));
+                break;
+            case setAlignment:
+                textfield = textFieldHashMap.get(nativeTextField);
+                switch (nativeTextField.getAlignment()){
+                    case Align.left:
+                        textfield.setTextAlignment(NSTextAlignment.Left);
+                        break;
+                    case Align.bottomLeft:
+                        textfield.setTextAlignment(NSTextAlignment.Left);
+                        break;
+                    case Align.topLeft:
+                        textfield.setTextAlignment(NSTextAlignment.Left);
+                        break;
+                    case Align.right:
+                        textfield.setTextAlignment(NSTextAlignment.Right);
+                        break;
+                    case Align.bottomRight:
+                        textfield.setTextAlignment(NSTextAlignment.Right);
+                        break;
+                    case Align.topRight:
+                        textfield.setTextAlignment(NSTextAlignment.Right);
+                        break;
+                    case Align.top:
+                        textfield.setTextAlignment(NSTextAlignment.Center);
+                        break;
+                    case Align.center:
+                        textfield.setTextAlignment(NSTextAlignment.Center);
+                        break;
+                    case Align.bottom:
+                        textfield.setTextAlignment(NSTextAlignment.Center);
+                        break;
+                }
+                break;
+            case setFontSize:
+                textfield = textFieldHashMap.get(nativeTextField);
+                float fontSize=nativeTextField.getFontSize();
+                if(fontSize==0)return;
+                if(nativeTextField.getStage()!=null) {
+                    Stage stage = nativeTextField.getStage();
+                    float blx;
+                    float fullWidth;
+                    if (stage instanceof VStage) {
+                        VStage vStage = (VStage) stage;
+                        fullWidth = vStage.getFullWidth();
+                    } else {
+                        fullWidth = stage.getWidth();
+                    }
+                    blx = (float) (1f / fullWidth * screenSize.getWidth());
+                    textfield.setFont(UIFont.getSystemFont(nativeTextField.getFontSize()*blx));
+                }
+                break;
+            case positionChanged:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.synchronousPosition();
+                break;
+            case sizeChanged:
+                textfield = textFieldHashMap.get(nativeTextField);
+                if(nativeTextField.getStage()!=null) {
+                    Stage stage = nativeTextField.getStage();
+                    float w,h,x,y,blx,bly;
+                    float fullWidth,fullHeight;
+                    if(stage instanceof VStage){
+                        VStage vStage= (VStage) stage;
+                        fullWidth=vStage.getFullWidth();
+                        fullHeight=vStage.getFullHeight();
+                    }else {
+                        fullWidth=stage.getWidth();
+                        fullHeight=stage.getHeight();
+                    }
+                    blx= (float) (1f/fullWidth*screenSize.getWidth());
+                    bly= (float) (1f/fullHeight*screenSize.getHeight());
+                    w=nativeTextField.getWidth()*blx;
+                    h=nativeTextField.getHeight()*bly;
+                    x= (float) textfield.getFrame().getX();
+                    y= (float) textfield.getFrame().getY();
+                    cgRect.setWidth(w);
+                    cgRect.setHeight(h);
+                    cgRect.setX(x);
+                    cgRect.setY(y);
+                    textfield.setFrame(cgRect);
+                }else {
+                    textfield.setHidden(true);
+                }
+                break;
+            case remove:
+                textfield = textFieldHashMap.get(nativeTextField);
+                Array<Object> nativeAllListener=nativeTextField.getAllNativeListener();
+                for(Object object:nativeAllListener){
+                    if(object instanceof OnEditingDidBeginListener)
+                        textfield.removeListener((OnEditingDidBeginListener) object);
+                    else if(object instanceof OnEditingDidEndListener)
+                        textfield.removeListener((OnEditingDidEndListener) object);
+                    else if(object instanceof OnPrimaryActionTriggeredListener)
+                        textfield.removeListener((OnPrimaryActionTriggeredListener) object);
+                    else if(object instanceof OnEditingChangedListener)
+                        textfield.removeListener((OnEditingChangedListener) object);
+                }
+                nativeAllListener.clear();
+                textfield.removeFromSuperview();
+                pool_textFields.free(textfield);
+                textFieldHashMap.remove(textfield);
+                break;
+        }
+    }
+
 }

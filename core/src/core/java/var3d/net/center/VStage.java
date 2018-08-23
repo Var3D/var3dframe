@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class VStage<T extends Actor> extends Stage {
+public abstract class VStage extends Stage {
     public VGame game;
     private String name = "";
     public ArrayList<Actor> bgList;

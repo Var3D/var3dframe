@@ -55,6 +55,7 @@ import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
@@ -1480,5 +1481,8 @@ public abstract class VDesktopLauncher implements VListener {
             }
         }
         return compressedStr;
+    }
+
+    public void linkNativeTextField(NativeTextField nativeTextField,NativeTextField.Method method){
     }
 }

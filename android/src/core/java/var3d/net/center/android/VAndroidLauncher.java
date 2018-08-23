@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Locale;
 
+import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
@@ -415,5 +416,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     public Pixmap getIphoneXPixmap(String name) {
         return null;
+    }
+
+    public void linkNativeTextField(NativeTextField nativeTextField,NativeTextField.Method method){
     }
 }
