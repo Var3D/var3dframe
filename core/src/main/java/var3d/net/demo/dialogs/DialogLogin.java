@@ -54,10 +54,9 @@ public class DialogLogin extends VDialog {
 
         //原生输入框(目前仅在 ios 端有效)
         ntf_user=game.getUI(NativeTextField.class).setSize(200,40).setPosition(
-                getWidth()/2,lab_title.getY()-10,Align.top).show();
+                getWidth()/2,lab_title.getY()-20,Align.top).show();
         game.getLabel("帐号:").setPosition(0,pref().getHeight()/2f,Align.right).show(ntf_user);
         ntf_user.setMessageText("请输入帐号");
-        ntf_user.setBorderStyle(NativeTextField.BorderStyle.RoundedRect);
         ntf_user.setKeyboardType(NativeTextField.KeyboardType.Alphabet);
         ntf_user.setReturnKeyType(NativeTextField.ReturnKeyType.Next);
         ntf_user.becomeFirstResponder();
@@ -90,7 +89,6 @@ public class DialogLogin extends VDialog {
 
             @Override
             public void keyboardWillShow(NativeTextField nativeTextField, float keyboardHeight) {
-                Gdx.app.log("aaaaaaa","keyboardHeight="+keyboardHeight);
             }
         });
         ntf_password=game.getUI(NativeTextField.class).setSize(200,40).setPosition(getWidth()/2
@@ -98,7 +96,6 @@ public class DialogLogin extends VDialog {
         game.getLabel("密码:").setPosition(0,pref().getHeight()/2f,Align.right).show(ntf_password);
         ntf_password.setMessageText("请输入密码");
         ntf_password.setPasswordMode(true);
-        ntf_password.setBorderStyle(NativeTextField.BorderStyle.RoundedRect);
         ntf_password.setReturnKeyType(NativeTextField.ReturnKeyType.Go);
         ntf_password.setTextFieldListener(new NativeTextField.TextFieldListener() {
             @Override
@@ -108,8 +105,6 @@ public class DialogLogin extends VDialog {
 
             @Override
             public void didEndEditing(NativeTextField nativeTextField) {
-                  Gdx.app.log("aaaaaaa","password.end");
-
             }
 
             @Override
@@ -132,6 +127,7 @@ public class DialogLogin extends VDialog {
 
             }
         });
+
     }
 
     @Override

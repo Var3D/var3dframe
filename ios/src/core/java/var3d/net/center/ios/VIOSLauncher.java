@@ -445,7 +445,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     private CGRect cgRect=new CGRect();
     private CGSize screenSize;
 
-    public class VUITextField extends UITextField{
+    public class VUITextField extends UITextField implements Pool.Poolable{
         private NativeTextField nativeTextField;
 
         public VUITextField(CGRect frame){
@@ -462,81 +462,34 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         )
         public void changeTextFieldFrame(final NSNotification aNotification){
             final NSDictionary userInfo = aNotification.getUserInfo();
-            NSValue fValue = (NSValue) userInfo.get("UIKeyboardAnimationDurationUserInfoKey");
+            //NSValue fValue = (NSValue) userInfo.get("UIKeyboardAnimationDurationUserInfoKey");
             NSValue aValue = (NSValue) userInfo.get("UIKeyboardFrameEndUserInfoKey");
             CGRect keyboardRect =aValue.rectValue();
             CGRect frame = getFrame();
             double keyboardHeight=screenSize.getHeight()-keyboardRect.getHeight();
             final Stage stage = nativeTextField.getStage();
             //键盘高度转换为 libgdx 坐标系
-            final float libgdxKeyboardHeight;
+            final float libgdxKeyboardHeight,bly;
             if(stage!=null) {
                 float fullHeight = stage instanceof VStage ? ((VStage) stage).getFullHeight() : stage.getHeight();
-                libgdxKeyboardHeight = (float) (keyboardRect.getHeight() / screenSize.getHeight() * fullHeight);
-            }else libgdxKeyboardHeight= (float) keyboardRect.getHeight();
+                bly= (float) (1f/screenSize.getHeight() * fullHeight);
+                libgdxKeyboardHeight = (float) (keyboardRect.getHeight() *bly);
+            }else{
+                return;
+            }
 
-            if(frame.getY()> keyboardHeight-frame.getHeight()) {
-                switch (nativeTextField.getAdaptKeyboardType()){
-                    case Overall:
-                        if(stage!=null){
-                            final Group root=stage.getRoot();
-                            //final float beginY=root.getY();
-                            final float endY=libgdxKeyboardHeight-nativeTextField.getStageY();
-                            //final CMTime animateWithDuration=fValue.timeValue();
-                            //float time= (float) animateWithDuration.getSeconds();
-                            root.setY(endY);
-                            synchronizeAllForStage(root);
-                        }
-                        break;
+            if(frame.getY()+frame.getHeight()> keyboardHeight) {
+             switch (nativeTextField.getAdaptKeyboardType()){
                     case Self:
                         frame.setY(keyboardHeight-frame.getHeight());
                         setFrame(frame);
                         break;
-                }
+             }
             }
             if(nativeTextField.getTextFieldListener()!=null) {
                 nativeTextField.getTextFieldListener().keyboardWillShow(nativeTextField, libgdxKeyboardHeight);
             }
         }
-
-//        @Property(
-//                selector = "keyboardWillShow"
-//        )
-//        public void keyboardWillShow(NSNotification aNotification) {
-//            NSDictionary userInfo = aNotification.getUserInfo();
-//            NSValue aValue = (NSValue) userInfo.get("UIKeyboardBoundsUserInfoKey");
-//            CGRect keyboardRect =aValue.rectValue();
-//            CGRect frame = getFrame();
-//            double keyboardHeight=screenSize.getHeight()-keyboardRect.getHeight();
-//            Stage stage = nativeTextField.getStage();
-//            //键盘高度转换为 libgdx 坐标系
-//            float libgdxKeyboardHeight;
-//            if(stage!=null) {
-//                float fullHeight = stage instanceof VStage ? ((VStage) stage).getFullHeight() : stage.getHeight();
-//                libgdxKeyboardHeight = (float) (keyboardRect.getHeight() / screenSize.getHeight() * fullHeight);
-//            }else libgdxKeyboardHeight= (float) keyboardRect.getHeight();
-//
-//            if(frame.getY()> keyboardHeight-frame.getHeight()) {
-//                switch (nativeTextField.getAdaptKeyboardType()){
-//                    case Overall:
-//                        if(stage!=null){
-//                            Group root=stage.getRoot();
-//                            float ny=getYForStage();
-//                            System.out.println("ny+"+ny);
-//                            root.setY(libgdxKeyboardHeight-ny);
-//                            synchronizeAllForStage(root);
-//                        }
-//                        break;
-//                    case Self:
-//                        frame.setY(keyboardHeight-frame.getHeight());
-//                        setFrame(frame);
-//                        break;
-//                }
-//            }
-//            if(nativeTextField.getTextFieldListener()!=null) {
-//                nativeTextField.getTextFieldListener().keyboardWillShow(nativeTextField, libgdxKeyboardHeight);
-//            }
-//        }
 
 
         private void synchronizeAllForStage(Group root){
@@ -555,33 +508,19 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         )
         public void keyboardWillHide(NSNotification aNotification) {
             switch (nativeTextField.getAdaptKeyboardType()){
-                case Overall:
-                    Stage stage = nativeTextField.getStage();
-                    if(stage!=null){
-                        Group root=stage.getRoot();
-                        float endY = 0;
-                        if(stage instanceof VStage){
-                            endY=-((VStage)stage).getCutHeight()*root.getScaleY();
-                        }
-                        root.setY(endY);
-                        synchronizeAllForStage(root);
-                    }
-                    break;
                 case Self:
                     synchronousPosition();
-                    break;
-                case None:
                     break;
             }
         }
 
 
         //注册通知，以便获取键盘高度
+        private boolean isRegistered=false;
         public void registered(){
-
+            if(isRegistered)return;
+            isRegistered=true;
             NSNotificationCenter defaultCenter=NSNotificationCenter.getDefaultCenter();
-//            defaultCenter.addObserver(this, Selector.register("keyboardWillShow")
-//                    , "UIKeyboardWillShowNotification", null);
 
             defaultCenter.addObserver(this, Selector.register("changeTextFieldFrame")
                     , "UIKeyboardWillChangeFrameNotification", null);
@@ -593,6 +532,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
         //移出注册
         public void removeRegistered(){
+            isRegistered=false;
             NSNotificationCenter defaultCenter=NSNotificationCenter.getDefaultCenter();
             defaultCenter.removeObserver(this);
         }
@@ -603,18 +543,16 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
             if(nativeTextField.getStage()!=null) {
                 Stage stage = nativeTextField.getStage();
                 float w,h,x,y,blx,bly;
-                float fullWidth,fullHeight,cutWidth=0,cutHeight=0,cutAndHeight;
+                float fullWidth,fullHeight,cutWidth=0,cutHeight=0;
                 if(stage instanceof VStage){
                     VStage vStage= (VStage) stage;
                     fullWidth=vStage.getFullWidth();
                     fullHeight=vStage.getFullHeight();
                     cutWidth=vStage.getCutWidth();
-                    cutAndHeight=vStage.getCutAndHeight();
                     cutHeight=vStage.getCutHeight();
                 }else {
                     fullWidth=stage.getWidth();
                     fullHeight=stage.getHeight();
-                    cutAndHeight=fullHeight;
                 }
                 blx= (float) (1f/fullWidth*screenSize.getWidth());
                 bly= (float) (1f/fullHeight*screenSize.getHeight());
@@ -625,26 +563,37 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                 Group father=nativeTextField.getParent();
                 Group root=stage.getRoot();
                 float dx=root.getX()-cutWidth;
-                float dy=root.getY()-cutHeight;
+                float dy=root.getY()/root.getScaleY()-cutHeight;
+                //float dy=root.getY()-cutHeight;
                 fx+=dx;
                 fy+=dy;
                 while(father!=root){
+                    Group nextFather=father.getParent();
                     fx+=father.getX();
                     fy+=father.getY();
-                    father=father.getParent();
+                    father=nextFather;
                     if(father==null){
                         setHidden(true);
                         return;
                     }
                 }
                 x=(cutWidth+fx)*blx;
-                y= (cutAndHeight-fy)*bly-h;
+                //y= (cutAndHeight-fy)*bly-h;
+                float my=(cutHeight+fy)*bly;
+                y= (float) (screenSize.getHeight()-h)-my;
                 cgRect.setWidth(w);
                 cgRect.setHeight(h);
                 cgRect.setX(x);
                 cgRect.setY(y);
                 setFrame(cgRect);
             }else setHidden(true);
+        }
+
+        @Override
+        public void reset() {
+            if(isRegistered) {
+                removeRegistered();
+            }
         }
     }
 
@@ -661,6 +610,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
             textfield.setAutocapitalizationType(UITextAutocapitalizationType.None);
             textfield.setAutocorrectionType(UITextAutocorrectionType.No);
             textfield.setSpellCheckingType(UITextSpellCheckingType.No);
+            textfield.setBorderStyle(UITextBorderStyle.RoundedRect);
             return textfield;
         }
     };
@@ -741,12 +691,12 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                 break;
             case becomeFirstResponder:
                 textfield = textFieldHashMap.get(nativeTextField);
-                //textfield.resignFirstResponder();
                 textfield.registered();
                 textfield.becomeFirstResponder();
                 break;
             case resignFirstResponder:
                 textfield = textFieldHashMap.get(nativeTextField);
+                textfield.removeRegistered();
                 textfield.resignFirstResponder();
                 break;
             case setText:

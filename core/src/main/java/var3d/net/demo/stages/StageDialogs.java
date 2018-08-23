@@ -29,6 +29,12 @@ public class StageDialogs extends VStage {
         setBackground(Color.DARK_GRAY);
         //创建标题
         VLabel lab_title = game.getLabel("对话框例子").setPosition(getWidth() / 2, getTop() - 10, Align.top).touchOff().show();
+        //线条，标识出黑边区域
+        game.getImage(1,getFullHeight()).setPosition(0,getHeight()/2,Align.center).touchOff().show();
+        game.getImage(1,getFullHeight()).setPosition(getWidth(),getHeight()/2,Align.center).touchOff().show();
+        game.getImage(getFullWidth(),1).setPosition(getWidth()/2,0,Align.center).touchOff().show();
+        game.getImage(getFullWidth(),1).setPosition(getWidth()/2,getHeight(),Align.center).touchOff().show();
+
 
         //返回
         Button btn_back = game.getButton().setColor(Color.valueOf("ff2266")).setSize(120, 40)

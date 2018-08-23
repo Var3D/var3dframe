@@ -1,6 +1,5 @@
 package var3d.net.center;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -22,10 +21,10 @@ public class NativeTextField extends Group {
     private float fontSize;
     private int align = Align.left;
     private KeyboardType keyboardType=KeyboardType.Default;
-    private BorderStyle borderStyle=BorderStyle.None;
+    private BorderStyle borderStyle=BorderStyle.RoundedRect;
     private ReturnKeyType returnKeyType=ReturnKeyType.Default;
     private TextFieldListener textFieldListener;
-    private AdaptKeyboardType adaptKeyboardType=AdaptKeyboardType.Overall;
+    private AdaptKeyboardType adaptKeyboardType=AdaptKeyboardType.Self;
 
     public AdaptKeyboardType getAdaptKeyboardType() {
         return adaptKeyboardType;
@@ -63,7 +62,6 @@ public class NativeTextField extends Group {
 
     //键盘高度的适应类型
     public enum AdaptKeyboardType{
-        Overall,//整个界面适配
         Self,//只适配自身
         None//不适配
     }
@@ -208,7 +206,6 @@ public class NativeTextField extends Group {
 
     protected void positionChanged () {
         super.positionChanged();
-        stageXYChange();
         game.var3dListener.linkNativeTextField(this,Method.positionChanged);
     }
 
@@ -338,45 +335,6 @@ public class NativeTextField extends Group {
         game.var3dListener.linkNativeTextField(this,Method.positionChanged);
         game.var3dListener.linkNativeTextField(this,Method.setFontSize);
         if(isVisible())game.var3dListener.linkNativeTextField(this,Method.setHidden);
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-                stageXYChange();
-            }
-        });
-    }
-
-    private float stageY,stageX;
-    private void stageXYChange(){
-        stageY=getY();
-        stageX=getX();
-        Group father=getParent();
-        Stage stage=getStage();
-        if(stage==null)return;
-        Group root=stage.getRoot();
-        float cutHeight,cutWidth;
-        cutHeight=stage instanceof VStage?((VStage) stage).getCutHeight():0;
-        cutWidth=stage instanceof VStage?((VStage) stage).getCutWidth():0;
-        float dy=root.getY()-cutHeight;
-        float dx=root.getX()-cutWidth;
-        stageY+=dy;
-        stageX+=dx;
-        while(father!=root){
-            stageY+=father.getY();
-            stageX+=father.getX();
-            father=father.getParent();
-            if(father==null){
-                break;
-            }
-        }
-    }
-
-    public float getStageY(){
-        return stageY;
-    }
-
-    public float getStageX(){
-        return stageX;
     }
 
     public void draw(Batch batch,float a){

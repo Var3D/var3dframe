@@ -14,7 +14,7 @@ public class Game extends VGame {
 
     public Game(VListener varListener) {
         super(varListener);
-        setSize(800, 480);//设置全局参照分辨率
+        setSize(1136, 480);//设置全局参照分辨率
         setDefaultFont(new FreePaint(28).setIsEmoji());//设置默认字号28，并开启支持 emoji
         // (是否完全支持emoji 视运行平台而定，目前测试的结果是 windows10，ios，android 都支持的)
         setLanguage(Languages.zh);//设置语言(仅对Desktop版有效,本地版根据系统自动设置语言)
