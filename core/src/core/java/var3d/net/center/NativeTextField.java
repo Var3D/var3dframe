@@ -1,5 +1,6 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -207,6 +208,14 @@ public class NativeTextField extends Group {
     protected void positionChanged () {
         super.positionChanged();
         game.var3dListener.linkNativeTextField(this,Method.positionChanged);
+    }
+
+    public void synchronousPosition(){
+        Gdx.app.postRunnable(new Runnable() {
+            public void run() {
+                game.var3dListener.linkNativeTextField(NativeTextField.this,Method.positionChanged);
+            }
+        });
     }
 
     protected void sizeChanged () {

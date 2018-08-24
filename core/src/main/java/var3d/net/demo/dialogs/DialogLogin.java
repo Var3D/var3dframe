@@ -3,6 +3,7 @@ package var3d.net.demo.dialogs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -29,7 +30,7 @@ public class DialogLogin extends VDialog {
         //设置背景
         setBackground(400, 300, Color.valueOf("0075ed"));
         //设置标题
-        VLabel lab_title= game.getLabel("登录对话框").touchOff().setFontScale(1.3f).setPosition
+        final VLabel lab_title= game.getLabel("登录对话框").touchOff().setFontScale(1.3f).setPosition
                (getWidth() / 2, getHeight() - 30, Align.top).show();
         //关闭按钮
         Button btn_close = game.getTextButton("关闭", Color.WHITE, Color.valueOf("ff2266"))
@@ -59,17 +60,17 @@ public class DialogLogin extends VDialog {
         ntf_user.setMessageText("请输入帐号");
         ntf_user.setKeyboardType(NativeTextField.KeyboardType.Alphabet);
         ntf_user.setReturnKeyType(NativeTextField.ReturnKeyType.Next);
-        ntf_user.becomeFirstResponder();
+        ntf_user.setAdaptKeyboardType(NativeTextField.AdaptKeyboardType.None);
         ntf_user.setTextFieldListener(new NativeTextField.TextFieldListener() {
             @Override
             public void didBeginEditing(NativeTextField nativeTextField) {
-                ntf_password.resignFirstResponder();
-                ntf_user.becomeFirstResponder();
             }
 
             @Override
             public void didEndEditing(NativeTextField nativeTextField) {
-
+                setY(game.getCenterY(),Align.center);
+                ntf_user.synchronousPosition();
+                ntf_password.synchronousPosition();
             }
 
             @Override
@@ -89,6 +90,12 @@ public class DialogLogin extends VDialog {
 
             @Override
             public void keyboardWillShow(NativeTextField nativeTextField, float keyboardHeight) {
+                float h=keyboardHeight-ntf_user.getY()-getCutHeight();
+                if(getY()<h){
+                    setY(h);
+                    ntf_user.synchronousPosition();
+                    ntf_password.synchronousPosition();
+                }
             }
         });
         ntf_password=game.getUI(NativeTextField.class).setSize(200,40).setPosition(getWidth()/2
@@ -97,6 +104,7 @@ public class DialogLogin extends VDialog {
         ntf_password.setMessageText("请输入密码");
         ntf_password.setPasswordMode(true);
         ntf_password.setReturnKeyType(NativeTextField.ReturnKeyType.Go);
+        ntf_password.setAdaptKeyboardType(NativeTextField.AdaptKeyboardType.None);
         ntf_password.setTextFieldListener(new NativeTextField.TextFieldListener() {
             @Override
             public void didBeginEditing(NativeTextField nativeTextField) {
@@ -105,6 +113,9 @@ public class DialogLogin extends VDialog {
 
             @Override
             public void didEndEditing(NativeTextField nativeTextField) {
+                setY(game.getCenterY(),Align.center);
+                ntf_user.synchronousPosition();
+                ntf_password.synchronousPosition();
             }
 
             @Override
@@ -124,7 +135,12 @@ public class DialogLogin extends VDialog {
 
             @Override
             public void keyboardWillShow(NativeTextField nativeTextField, float keyboardHeight) {
-
+                float h=keyboardHeight-ntf_password.getY()-getCutHeight();
+                if(getY()<h){
+                    setY(h);
+                    ntf_user.synchronousPosition();
+                    ntf_password.synchronousPosition();
+                }
             }
         });
 
@@ -132,14 +148,12 @@ public class DialogLogin extends VDialog {
 
     @Override
     public void reStart() {
-        //除第一次外每次弹出对话框时调用
-        ntf_user.becomeFirstResponder();
     }
 
     @Override
     public void show() {
-        //每次弹出对话框时调用
-        setStartActions(ActionType.POPUP);
+        ntf_password.resignFirstResponder();
+        ntf_user.becomeFirstResponder();
     }
 
     @Override

@@ -49,19 +49,19 @@ public abstract class VDialog extends Group {
         addBackgroundAcition();
     }
 
-    private float getCutWidth() {
+    public float getCutWidth() {
         return isStretching ? 0 : stageTop.getCutWidth();
     }
 
-    private float getCutHeight() {
+    public float getCutHeight() {
         return isStretching ? 0 : stageTop.getCutHeight();
     }
 
-    private float getCutAndWidth() {
+    public float getCutAndWidth() {
         return game.WIDTH + getCutWidth();
     }
 
-    private float getCutAndHeight() {
+    public float getCutAndHeight() {
         return game.HEIGHT + getCutHeight();
     }
 
