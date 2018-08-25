@@ -544,9 +544,9 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                 float fy=nativeTextField.getY();
                 Group father=nativeTextField.getParent();
                 Group root=stage.getRoot();
-                float dx=root.getX()-cutWidth;
+                //float dx=root.getX()-cutWidth;
+                float dx=root.getX()/root.getScaleX()-cutWidth;//此处存有疑问，待测
                 float dy=root.getY()/root.getScaleY()-cutHeight;
-                //float dy=root.getY()-cutHeight;
                 fx+=dx;
                 fy+=dy;
                 while(father!=root){
@@ -560,7 +560,6 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                     }
                 }
                 x=(cutWidth+fx)*blx;
-                //y= (cutAndHeight-fy)*bly-h;
                 float my=(cutHeight+fy)*bly;
                 y= (float) (screenSize.getHeight()-h)-my;
                 cgRect.setWidth(w);

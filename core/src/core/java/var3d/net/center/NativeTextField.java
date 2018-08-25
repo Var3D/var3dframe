@@ -144,6 +144,7 @@ public class NativeTextField extends Group {
         //bg=game.getImage(100,50).show(this);
         setSize(100,50);
         setTransform(false);
+        //setDebug(true);
     }
 
     public void setFontColor(Color color){

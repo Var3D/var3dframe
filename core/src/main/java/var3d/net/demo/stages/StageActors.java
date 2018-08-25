@@ -65,17 +65,19 @@ public class StageActors extends VStage {
             @Override
             public void didBeginEditing(NativeTextField nativeTextField) {
                 //当输入框获得焦点时，执行该方法
+                Gdx.app.log("aaaaaaa","获取焦点");
             }
 
             @Override
             public void didEndEditing(NativeTextField nativeTextField) {
                 //当结束编辑时执行该方法
                 //game.showMessege("你输入了这些字："+nativeTextField.getText());
+                Gdx.app.log("aaaaaaa","失去焦点");
             }
 
             @Override
             public boolean shouldReturn(NativeTextField nativeTextField) {
-                // 当点击键盘的返回键（右下角）时，执行该方法。
+                // 当点击键盘的返回键（右下角）时，执行该方法,desktop版本为回车键。
                 game.showMessege("你输入了这些字："+nativeTextField.getText());
                 return true;
             }

@@ -71,7 +71,7 @@ public class StageDialogs extends VStage {
                 game.showDialog(DialogTestFull.class);
             }
         });
-        //等比例对话框
+        //登录对话框
         Button btn_login = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
                 .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_login.add(game.getLabel("登录对话框").setFontScale(0.6f).getActor());

@@ -1,7 +1,9 @@
 package var3d.net.center.desktop;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -19,22 +21,47 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.StringBuilder;
+import com.sun.awt.AWTUtilities;
 
 import org.lwjgl.opengl.Display;
 
+import java.awt.AWTException;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Canvas;
+import java.awt.Component;
+import java.awt.Composite;
+import java.awt.CompositeContext;
+import java.awt.Event;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.RenderingHints;
+import java.awt.Robot;
 import java.awt.Shape;
+import java.awt.Stroke;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.font.GlyphVector;
 import java.awt.font.TextAttribute;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,15 +72,31 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.AttributedString;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRootPane;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
@@ -61,10 +104,26 @@ import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
+import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreePaint;
+
+import static com.badlogic.gdx.Input.Keys.B;
+import static com.badlogic.gdx.Input.Keys.R;
 
 public abstract class VDesktopLauncher implements VListener {
     private VGame game;
+    public static final JFrame appFrame=new JFrame();
+
+    public static void initialize(ApplicationListener listener, LwjglApplicationConfiguration config) {
+        appFrame.setSize(config.width, config.height);
+        appFrame.setLocationRelativeTo(null);
+        appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Canvas canvas=new Canvas();
+        canvas.setSize(config.width, config.height);
+        appFrame.add(canvas);
+        appFrame.setVisible(true);
+        LwjglApplication app=new LwjglApplication(listener,canvas);
+    }
 
     public void setGame(VGame game) {
         this.game = game;
@@ -273,8 +332,7 @@ public abstract class VDesktopLauncher implements VListener {
         BufferedImage bi = new BufferedImage(strWidth, strHeight,
                 BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = bi.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setFont(font);
         if (vpaint.getStrokeColor() != null) {
             // 描边
@@ -350,8 +408,7 @@ public abstract class VDesktopLauncher implements VListener {
 
             }
             fonts.put(vpaint.getName(), font);
-            BufferedImage bi = new BufferedImage(1, 1,
-                    BufferedImage.TYPE_4BYTE_ABGR);
+            BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D g = bi.createGraphics();
             g.setFont(font);
             FontMetrics fm = g.getFontMetrics();
@@ -361,8 +418,7 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     private java.awt.Color getColor(Color libColor) {
-        return new java.awt.Color(libColor.r, libColor.g, libColor.b,
-                libColor.a);
+        return new java.awt.Color(libColor.r, libColor.g, libColor.b, libColor.a);
     }
 
     public void runOnUiThread(Runnable run) {
@@ -556,7 +612,7 @@ public abstract class VDesktopLauncher implements VListener {
     public static LwjglApplicationConfiguration getConfig(Size size) {
         //获取电脑屏幕分辨率(日了狗了mac能通过测试但是windows会报错，只好弃用了)
         int screenWidth = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width * .9f);
-        int screenHeight = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height * 0.9f);
+        int screenHeight = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height * .9f);
         float bl = 1;
         switch (size) {
             case iphone_h:
@@ -1483,6 +1539,543 @@ public abstract class VDesktopLauncher implements VListener {
         return compressedStr;
     }
 
+    //原生输入框
+    private HashMap<NativeTextField,VTextField> textFieldHashMap;
+
+    private Pool<VTextField> pool_textFields=new Pool<VTextField>() {
+        @Override
+        protected VTextField newObject() {
+            VTextField textfield = new VTextField();
+            return textfield;
+        }
+    };
+
+    private JDialog pref;
+
+    public class VTextField extends JDialog implements Pool.Poolable{
+        private NativeTextField nativeTextField;
+        private JTextField textField;
+        private JTextField textMessage;
+        private JPanel panel;
+        private DocumentListener documentListener;
+        private MouseListener mouseListener;
+        private KeyListener keyListener;
+        private FocusListener focusListener;
+
+        public VTextField(){
+            super(pref==null?appFrame:pref);
+           // super(pref);
+            setLayout(null);
+            setUndecorated(true);//禁用或启用窗口装饰，如果为true,则为没有启动窗口装饰，只有在窗口不可见时才能调用，否则会抛出异常
+            getRootPane().setWindowDecorationStyle(JRootPane.NONE);//设置不使用窗口装饰
+            AWTUtilities.setWindowOpaque(this,false);
+            pref=this;
+            setName ("root");
+
+            panel = new JPanel(){
+                public void paintComponent(Graphics g){
+                    Graphics2D g2d = (Graphics2D) g;
+                    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                   // g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_DEFAULT);
+                    g2d.setComposite(AlphaComposite.DstAtop);
+                    g2d.setColor(textField.getBackground());
+                    Shape shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 18, 18);
+                    g2d.fill(shape);
+                }
+            };
+            textMessage=new JTextField();
+
+            textField = new JTextField();
+            textField.setLocation(0,9);
+            setBorderStyle(NativeTextField.BorderStyle.RoundedRect);
+            textField.setFont(VDesktopLauncher.this.getFont(game.getDefaultPaint()));
+            add(textField);
+            textField.setVisible(false);
+
+            textMessage.setLocation(0,9);
+            textMessage.setForeground(java.awt.Color.gray);
+            textMessage.setFont(textField.getFont());
+            add(textMessage);
+
+            appFrame.addComponentListener(new ComponentAdapter() {
+                public void componentMoved(ComponentEvent componentEvent) {
+                    if(isVisible()) setLocation(appFrame.getX()+1+sysX,appFrame.getY()+sysY);
+                }
+            });
+
+            textField.addFocusListener(focusListener=new FocusListener() {
+                public void focusLost(FocusEvent e) {//失去焦点时
+                    if(textField.getText()==null||textField.getText().equals("")){
+                        if(textField.isVisible()) {
+                            textField.setVisible(false);
+                            textMessage.setVisible(true);
+                        }
+                    }
+                    Gdx.app.postRunnable(new Runnable() {
+                        public void run() {
+                            NativeTextField.TextFieldListener textFieldListener =nativeTextField.getTextFieldListener();
+                            if(textFieldListener!=null){
+                                textFieldListener.didEndEditing(nativeTextField);
+                            }
+                        }
+                    });
+                }
+                public void focusGained(FocusEvent e) {//获得焦点时
+                    Gdx.app.postRunnable(new Runnable() {
+                        public void run() {
+                            NativeTextField.TextFieldListener textFieldListener =nativeTextField.getTextFieldListener();
+                            if(textFieldListener!=null){
+                                textFieldListener.didBeginEditing(nativeTextField);
+                            }
+                        }
+                    });
+                }
+            });
+
+            textField.addKeyListener(keyListener=new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent event) {
+                    //System.out.println("删除键");
+                }
+
+                @Override
+                public void keyPressed(KeyEvent event) {
+                }
+
+                @Override
+                public void keyReleased(KeyEvent event) {
+                    nativeTextField.setText(textField.getText());
+
+                    Gdx.app.postRunnable(new Runnable() {
+                        public void run() {
+                            NativeTextField.TextFieldListener textFieldListener =nativeTextField.getTextFieldListener();
+                            if(textFieldListener!=null){
+                                String text=textFieldListener.onEditingChanged(nativeTextField);
+                                if(text!=null) {
+                                    textField.setText(text);
+                                    textField.requestFocus();
+                                    textField.setSelectionStart(text.length());
+                                    textField.setSelectionEnd(text.length());
+                                    nativeTextField.setText(text);
+                                }
+                            }
+                        }
+                    });
+
+
+                    switch (event.getKeyCode()){
+                        case KeyEvent.VK_BACK_SPACE:
+                            if(textField.getText()==null||textField.getText().equals("")){
+                                if(textField.isVisible()) {
+                                    textField.setVisible(false);
+                                    textMessage.setVisible(true);
+                                }
+                            }
+                            break;
+                        case KeyEvent.VK_ENTER:
+                            Gdx.app.postRunnable(new Runnable() {
+                                public void run() {
+                                    NativeTextField.TextFieldListener textFieldListener
+                                            =nativeTextField.getTextFieldListener();
+                                    if(textFieldListener!=null){
+                                        textFieldListener.shouldReturn(nativeTextField);
+                                    }
+                                }
+                            });
+                            break;
+                    }
+                }
+            });
+
+            textMessage.addMouseListener(new MouseListener(){
+                @Override
+                public void mouseClicked(MouseEvent mouseEvent) {
+                    textField.setVisible(true);
+                    textMessage.setVisible(false);
+                    textField.requestFocus();
+                    textField.setFocusable(true);
+                }
+
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent mouseEvent) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent mouseEvent) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent mouseEvent) {
+
+                }
+            });
+
+            setFocusable(true);
+        }
+
+        //获得焦点
+        public void becomeFirstResponder(){
+            textField.setVisible(true);
+            textMessage.setVisible(false);
+            textField.requestFocus();
+            textField.setFocusable(true);
+        }
+
+        public void setSecureTextEntry(boolean isPasswordMode){
+            JTextField newTextField=isPasswordMode?new JPasswordField():new JTextField();
+            newTextField.setText(textField.getText());
+            newTextField.setBounds(textField.getBounds());
+            newTextField.setVisible(textField.isVisible());
+            newTextField.setBackground(textField.getBackground());
+            newTextField.setForeground(textField.getForeground());
+            newTextField.setFont(textField.getFont());
+            newTextField.setBorder(textField.getBorder());
+            newTextField.setOpaque(textField.isOpaque());
+            newTextField.addMouseListener(mouseListener);
+            newTextField.addKeyListener(keyListener);
+            newTextField.addFocusListener(focusListener);
+            remove(textField);
+            add(newTextField);
+            textField=newTextField;
+        }
+
+        public void setText(String text){
+            if(text.equals("")){
+                if(textField.isVisible()){
+                textField.setVisible(false);
+                textMessage.setVisible(true);
+                }
+             }else{
+                if(!textField.isVisible()) {
+                    textField.setVisible(true);
+                    textMessage.setVisible(false);
+                }
+            }
+        }
+
+
+        public void setFontColor(Color color){
+            //fontColor=getColor(color);
+            textField.setForeground(getColor(color));
+        }
+
+        public void setMessageColor(Color color){
+            //this.messageColor=getColor(color);
+            textMessage.setForeground(getColor(color));
+        }
+
+        public void setMessageText(){
+            if(!nativeTextField.getMessageText().equals("")){
+                textField.setVisible(false);
+                textMessage.setVisible(true);
+                textMessage.setText(nativeTextField.getMessageText());
+            }else{
+                textField.setVisible(true);
+                textMessage.setVisible(false);
+            }
+        }
+
+        public void setBackgroundColor(Color color){
+            textField.setBackground(getColor(color));
+            textMessage.setBackground(textField.getBackground());
+        }
+
+        public void setTintColor(Color color){
+            textField.setCaretColor(getColor(color));
+            textMessage.setCaretColor(textField.getCaretColor());
+        }
+
+        public void setSize(int w,int h){
+            super.setSize(w,h);
+            panel.setSize(w,h);
+            if(nativeTextField==null||nativeTextField.getBorderStyle()!= NativeTextField.BorderStyle.RoundedRect){
+                textField.setSize(getWidth(),getHeight());
+                textField.setLocation(0,0);
+                textMessage.setSize(getWidth(),getHeight());
+                textMessage.setLocation(0,0);
+            }else {
+                textField.setSize(getWidth(),getHeight()-18);
+                textField.setLocation(0,9);
+                textMessage.setSize(getWidth(),getHeight()-18);
+                textMessage.setLocation(0,9);
+            }
+
+        }
+
+        public void setFontSize(int fontSize){
+            textField.setFont(new Font(null,0,fontSize));
+            textMessage.setFont(textField.getFont());
+        }
+
+        public void setLibgdxTextField(NativeTextField nativeTextField){
+            this.nativeTextField=nativeTextField;
+        }
+
+        public void setBorderStyle(NativeTextField.BorderStyle borderStyle){
+            switch (borderStyle){
+                case None:
+                    textField.setOpaque(false);
+                    textField.setBorder(BorderFactory.createEmptyBorder());
+                    textMessage.setOpaque(false);
+                    textMessage.setBorder(textField.getBorder());
+                    remove(panel);
+                    break;
+                case Line:
+                    textField.setOpaque(true);
+                    textField.setBorder(BorderFactory.createLineBorder(getColor(Color.BLACK)));
+                    textMessage.setOpaque(true);
+                    textMessage.setBorder(textField.getBorder());
+                    remove(panel);
+                    break;
+                case Bezel:
+                    textField.setOpaque(true);
+                    textField.setBorder(BorderFactory.createEmptyBorder());
+                    textMessage.setOpaque(true);
+                    textMessage.setBorder(textField.getBorder());
+                    remove(panel);
+                    break;
+                case RoundedRect:
+                    textField.setOpaque(true);
+                    textField.setBorder(BorderFactory.createEmptyBorder());
+                    textMessage.setOpaque(true);
+                    textMessage.setBorder(textField.getBorder());
+                    add(panel,0);
+                    break;
+            }
+            setSize(getWidth(),getHeight());
+        }
+
+
+        public void  setTextAlignment(int alignment){
+           switch (alignment){
+               case Align.left:
+                   textField.setHorizontalAlignment(JTextField.LEFT);
+                   textMessage.setHorizontalAlignment(JTextField.LEFT);
+                   break;
+               case Align.bottomLeft:
+                   textField.setHorizontalAlignment(JTextField.LEFT);
+                   textMessage.setHorizontalAlignment(JTextField.LEFT);
+                   break;
+               case Align.topLeft:
+                   textField.setHorizontalAlignment(JTextField.LEFT);
+                   textMessage.setHorizontalAlignment(JTextField.LEFT);
+                   break;
+               case Align.right:
+                   textField.setHorizontalAlignment(JTextField.RIGHT);
+                   textMessage.setHorizontalAlignment(JTextField.RIGHT);
+                   break;
+               case Align.bottomRight:
+                   textField.setHorizontalAlignment(JTextField.RIGHT);
+                   textMessage.setHorizontalAlignment(JTextField.RIGHT);
+                   break;
+               case Align.topRight:
+                   textField.setHorizontalAlignment(JTextField.RIGHT);
+                   textMessage.setHorizontalAlignment(JTextField.RIGHT);
+                   break;
+               case Align.top:
+                   textField.setHorizontalAlignment(JTextField.CENTER);
+                   textMessage.setHorizontalAlignment(JTextField.CENTER);
+                   break;
+               case Align.center:
+                   textField.setHorizontalAlignment(JTextField.CENTER);
+                   textMessage.setHorizontalAlignment(JTextField.CENTER);
+                   break;
+               case Align.bottom:
+                   textField.setHorizontalAlignment(JTextField.CENTER);
+                   textMessage.setHorizontalAlignment(JTextField.CENTER);
+                   break;
+           }
+        }
+
+
+       // private String prefText;
+        public void setVisible(boolean isVisible){
+            if(isVisible){
+                setLocation(appFrame.getX()+1+sysX,appFrame.getY()+sysY);
+                //setText(textField.getText());
+            }
+            super.setVisible(isVisible);
+        }
+
+
+        //本地输入框同步为 libgdx 端坐标
+        private int sysX,sysY;
+        public void synchronousPosition(){
+            if(nativeTextField.getStage()!=null) {
+                Stage stage = nativeTextField.getStage();
+                float blx,bly;
+                float fullWidth,fullHeight,cutWidth=0,cutHeight=0;
+                if(stage instanceof VStage){
+                    VStage vStage= (VStage) stage;
+                    fullWidth=vStage.getFullWidth();
+                    fullHeight=vStage.getFullHeight();
+                    cutWidth=vStage.getCutWidth();
+                    cutHeight=vStage.getCutHeight();
+                }else {
+                    fullWidth=stage.getWidth();
+                    fullHeight=stage.getHeight();
+                }
+                blx= (1f/fullWidth*Gdx.graphics.getWidth());
+                bly= (1f/fullHeight*Gdx.graphics.getHeight());
+                float fx=nativeTextField.getX();
+                float fy=nativeTextField.getY();
+                Group father=nativeTextField.getParent();
+                Group root=stage.getRoot();
+                float dx=root.getX()/root.getScaleX()-cutWidth;
+                float dy=root.getY()/root.getScaleY()-cutHeight;
+                fx+=dx;
+                fy+=dy;
+                while(father!=root){
+                    Group nextFather=father.getParent();
+                    fx+=father.getX();
+                    fy+=father.getY();
+                    father=nextFather;
+                    if(father==null){
+                        setVisible(false);
+                        return;
+                    }
+                }
+                sysX= (int) ((cutWidth+fx)*blx);
+                float my=(cutHeight+fy)*bly;
+                sysY= (int) ((appFrame.getHeight()-getHeight())-my);
+                setLocation(appFrame.getX()+sysX+1,appFrame.getY()+sysY);
+            }else setVisible(false);
+        }
+
+        public void synchronousSize(){
+            if(nativeTextField.getStage()!=null) {
+                Stage stage = nativeTextField.getStage();
+                float blx,bly;
+                int w,h;
+                float fullWidth,fullHeight;
+                if(stage instanceof VStage){
+                    VStage vStage= (VStage) stage;
+                    fullWidth=vStage.getFullWidth();
+                    fullHeight=vStage.getFullHeight();
+                }else {
+                    fullWidth=stage.getWidth();
+                    fullHeight=stage.getHeight();
+                }
+                blx= (1f/fullWidth*Gdx.graphics.getWidth());
+                bly= (1f/fullHeight*Gdx.graphics.getHeight());
+                w= (int) (nativeTextField.getWidth()*blx);
+                h= (int) (nativeTextField.getHeight()*bly);
+                setSize(w,h);
+                synchronousPosition();
+            }else {
+                setVisible(false);
+            }
+        }
+
+        @Override
+        public void reset() {
+
+        }
+    }
+
     public void linkNativeTextField(NativeTextField nativeTextField,NativeTextField.Method method){
+        switch (method){
+            case newObject:
+                if(textFieldHashMap==null){
+                    textFieldHashMap=new HashMap<>();
+                }
+                VTextField textfield = pool_textFields.obtain();
+                textfield.setLibgdxTextField(nativeTextField);
+                textFieldHashMap.put(nativeTextField,textfield);
+                break;
+            case positionChanged:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.synchronousPosition();
+                break;
+            case sizeChanged:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.synchronousSize();
+                break;
+            case setVisible:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setVisible(nativeTextField.isVisible());
+                break;
+            case setHidden:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setVisible(!nativeTextField.isHidden());
+                break;
+            case becomeFirstResponder:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.becomeFirstResponder();
+                break;
+            case resignFirstResponder:
+//                textfield = textFieldHashMap.get(nativeTextField);
+//                textfield.resignFirstResponder();
+                break;
+            case setText:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setText(nativeTextField.getText());
+                break;
+            case setFontColor:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setFontColor(nativeTextField.getFontColor());
+                break;
+            case setBackgroundColor:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setBackgroundColor(nativeTextField.getColor());
+                break;
+            case setBorderStyle:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setBorderStyle(nativeTextField.getBorderStyle());
+                break;
+            case setFontSize:
+                textfield = textFieldHashMap.get(nativeTextField);
+                float fontSize=nativeTextField.getFontSize();
+                if(fontSize==0)return;
+                if(nativeTextField.getStage()!=null) {
+                    Stage stage = nativeTextField.getStage();
+                    float blx;
+                    float fullWidth;
+                    if (stage instanceof VStage) {
+                        VStage vStage = (VStage) stage;
+                        fullWidth = vStage.getFullWidth();
+                    } else {
+                        fullWidth = stage.getWidth();
+                    }
+                    blx = 1f / fullWidth * Gdx.graphics.getWidth();
+                    textfield.setFontSize((int) (nativeTextField.getFontSize()*blx));
+                }
+                break;
+            case setPasswordMode:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setSecureTextEntry(nativeTextField.isPasswordMode());
+                break;
+            case setTintColor:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setTintColor(nativeTextField.getTintColor());
+                break;
+            case setMessageColor:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setMessageColor(nativeTextField.getMessageColor());
+                break;
+            case setMessageText:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setMessageText();
+                break;
+            case setAlignment:
+                textfield = textFieldHashMap.get(nativeTextField);
+                textfield.setTextAlignment(nativeTextField.getAlignment());
+                break;
+            case remove:
+                textfield = textFieldHashMap.get(nativeTextField);
+                nativeTextField.setHidden(true);
+                nativeTextField.setVisible(false);
+                textfield.setVisible(false);
+                //pool_textFields.free(textfield);
+                textFieldHashMap.remove(textfield);
+                break;
+        }
     }
 }

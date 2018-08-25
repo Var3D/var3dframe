@@ -197,6 +197,11 @@ public abstract class VGame implements ApplicationListener {
     //设置默认的 font 字体
     public void setDefaultFont(FreePaint paint){
         this.paint=paint;
+        setDefaultFontSize(paint.getTextSize());
+    }
+
+    public FreePaint getDefaultPaint(){
+        return paint;
     }
 
     public void create() {
@@ -809,8 +814,8 @@ public abstract class VGame implements ApplicationListener {
      * 移除dialog并恢复下层响应
      */
     public void removeDialog(VDialog dialog) {
-        dialog.remove();
         setNativeTextFieldsHidden(dialog,true);
+        dialog.remove();
         // 遍历获取顶层所有对话框对象
         Array<VDialog> dialogs = new Array<VDialog>();
         for (Actor actor : stageTop.getActors()) {
