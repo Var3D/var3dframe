@@ -8,6 +8,7 @@ public class R {
         public static String mainfont = "font/mainfont.ttf";
         public static String test = "font/test.ttf";
     }
+    public static String hs_err_pid1615 = "hs_err_pid1615.log";
 
     public static class image {
         public static String badlogic = "image/badlogic.jpg";

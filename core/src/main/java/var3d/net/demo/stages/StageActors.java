@@ -49,13 +49,14 @@ public class StageActors extends VStage {
 
         NativeTextField field=game.getUI(NativeTextField.class).setSize(400,50).setPosition(getWidth()/2
                 ,getBottom(),Align.bottom).show();
-        field.setMessageText("原生输入框NativeTextField");//设置消息文本
+
         field.setColor(Color.ORANGE);//设置输入框背景色
         field.setFontColor(Color.WHITE);//设置输入文本颜色
-        //field.setFontSize(30);//设置字号
+        field.setFontSize(20);//设置字号
+        field.setMessageText("原生输入框NativeTextField");//设置消息文本
         field.setBorderStyle(NativeTextField.BorderStyle.Line);//设置边框类型
         field.setAlignment(Align.center);//设置文本对齐方式
-        field.setTintColor(Color.YELLOW);//设置光标颜色
+        field.setTintColor(Color.BLACK);//设置光标颜色
         field.setMessageColor(Color.RED);//设置消息文本颜色
         //field.setKeyboardType(NativeTextField.KeyboardType.NumberPad);//设置键盘类型
         //field.setPasswordMode(true);//设置为密码模式

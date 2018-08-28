@@ -53,7 +53,7 @@ public class DialogLogin extends VDialog {
             }
         });
 
-        //原生输入框(目前仅在 ios 端有效)
+        //原生输入框
         ntf_user=game.getUI(NativeTextField.class).setSize(200,40).setPosition(
                 getWidth()/2,lab_title.getY()-20,Align.top).show();
         game.getLabel("帐号:").setPosition(0,pref().getHeight()/2f,Align.right).show(ntf_user);

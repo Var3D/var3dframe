@@ -36,6 +36,7 @@ public class NativeTextField extends Group {
         this.adaptKeyboardType = adaptKeyboardType;
     }
 
+
     public interface TextFieldListener{
 
         // 当输入框获得焦点时，执行该方法 （光标出现时）。
@@ -200,6 +201,10 @@ public class NativeTextField extends Group {
         game.var3dListener.linkNativeTextField(this,Method.setText);
     }
 
+    public void setOnlyText(String text){
+        this.text=text;
+    }
+
     public void setVisible (boolean visible) {
         super.setVisible(visible);
         if(isHidden)return;
@@ -345,9 +350,5 @@ public class NativeTextField extends Group {
         game.var3dListener.linkNativeTextField(this,Method.positionChanged);
         game.var3dListener.linkNativeTextField(this,Method.setFontSize);
         if(isVisible())game.var3dListener.linkNativeTextField(this,Method.setHidden);
-    }
-
-    public void draw(Batch batch,float a){
-        super.draw(batch,a);
     }
 }
