@@ -1,5 +1,6 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
@@ -66,7 +67,6 @@ public class VLabel extends Label {
                     }
                     buffer.append(str);
                 }
-                System.out.println(buffer.toString());
                 super.setText(buffer.toString());
             }
         }
