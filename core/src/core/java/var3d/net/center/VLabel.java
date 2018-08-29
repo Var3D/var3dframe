@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
+import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import var3d.net.center.freefont.FreeBitmapFont;
 
 public class VLabel extends Label {
@@ -18,12 +22,15 @@ public class VLabel extends Label {
     private Color shadowColor = new Color(Color.GRAY);//阴影颜色
     private BitmapFontCache fontCache;
 
+    private Color labColor=new Color(1,1,1,1);//当使用带 emoji 的 FreeFontBitmap 时，调用 setColor 将会设置给这个参数
+
     public enum ShadowOption {
         Disable, Projection, Smear
     }
 
     public VLabel(CharSequence text, LabelStyle style) {
         super(append(text, style), style);
+        changeEmojiColor(getText().toString());
         setSize(getPrefWidth(), getPrefHeight());
         setColor(style.fontColor);
         fontCache = getBitmapFontCache();
@@ -35,15 +42,53 @@ public class VLabel extends Label {
 
     public void setText(CharSequence newText) {
         super.setText(append(newText, getStyle()));
+        changeEmojiColor(getText().toString());
     }
 
+    private void changeEmojiColor(String text){
+        FreeBitmapFont font=(FreeBitmapFont) getStyle().font;
+        if(font.isEmoji()){//如果 font 支持系统 emoji，则识别 emoji 并将 emoji 的颜色设置为白色
+            if(!match("\\[#[0-9a-fA-F]{6,8}\\]",text)){
+                //if(getColor().equals(Color.WHITE))return;
+                StringBuffer buffer=new StringBuffer();
+                String strLabelColor="[#"+labColor.toString()+"]";
+                buffer.append(strLabelColor);
+                boolean isPrefEmoji=false;
+                char[] chars = text.toCharArray();
+                for (char c : chars) {
+                    String str=""+c;
+                    if(font.isCreatedEmoji2WithKey(str)||font.isCreatedEmoji4WithKey(str)){
+                        if(!isPrefEmoji)buffer.append("[#ffffff]");
+                        isPrefEmoji=true;
+                    }else{
+                        if(isPrefEmoji)buffer.append(strLabelColor);
+                        isPrefEmoji=false;
+                    }
+                    buffer.append(str);
+                }
+                System.out.println(buffer.toString());
+                super.setText(buffer.toString());
+            }
+        }
+    }
+
+    private boolean match(String regex, String str) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(str);
+        return matcher.matches();
+    }
+
+
     public void setColor(Color color) {
-        super.setColor(color);
-        if (isStroke) strokeColor.set(color.r, color.g, color.b, color.a);
+        setColor(color.r, color.g, color.b, color.a);
     }
 
     public void setColor(float r, float g, float b, float a) {
-        super.setColor(r, g, b, a);
+        if(((FreeBitmapFont)getStyle().font).isEmoji()){
+            labColor.set(r,g,b,a);
+        }else {
+            super.setColor(r, g, b, a);
+        }
         if (isStroke) strokeColor.set(r, g, b, a);
     }
 

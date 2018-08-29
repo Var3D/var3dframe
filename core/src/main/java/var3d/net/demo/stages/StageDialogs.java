@@ -103,10 +103,10 @@ public class StageDialogs extends VStage {
 
 
         //线条，标识出黑边区域
-        game.getImage(1,getFullHeight()).setPosition(0,getHeight()/2,Align.center).touchOff().show();
-        game.getImage(1,getFullHeight()).setPosition(getWidth(),getHeight()/2,Align.center).touchOff().show();
-        game.getImage(getFullWidth(),1).setPosition(getWidth()/2,0,Align.center).touchOff().show();
-        game.getImage(getFullWidth(),1).setPosition(getWidth()/2,getHeight(),Align.center).touchOff().show();
+//        game.getImage(1,getFullHeight()).setPosition(0,getHeight()/2,Align.center).touchOff().show();
+//        game.getImage(1,getFullHeight()).setPosition(getWidth(),getHeight()/2,Align.center).touchOff().show();
+//        game.getImage(getFullWidth(),1).setPosition(getWidth()/2,0,Align.center).touchOff().show();
+//        game.getImage(getFullWidth(),1).setPosition(getWidth()/2,getHeight(),Align.center).touchOff().show();
     }
 
     @Override

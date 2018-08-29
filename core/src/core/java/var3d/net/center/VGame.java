@@ -847,8 +847,8 @@ public abstract class VGame implements ApplicationListener {
             }
         }
         VDialog dialog=dialogs.pop();
-        dialog.remove();
         setNativeTextFieldsHidden(dialog,true);
+        dialog.remove();
 
         if (dialogs.size > 0) {
             VDialog nowDialog=dialogs.peek();
@@ -870,12 +870,12 @@ public abstract class VGame implements ApplicationListener {
         Array<VDialog> dialogs = new Array<VDialog>();
         for (Actor actor : stageTop.getActors()) {
             if (actor instanceof VDialog) {
+                setNativeTextFieldsHidden((VDialog)actor,true);
                 dialogs.add((VDialog) actor);
             }
         }
         for(VDialog dialog:dialogs){
             dialog.remove();
-            setNativeTextFieldsHidden(dialog,true);
         }
         stage.getRoot().setTouchable(Touchable.enabled);
         stage.resume();
