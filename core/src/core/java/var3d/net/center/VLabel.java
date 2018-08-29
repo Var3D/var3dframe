@@ -1,13 +1,10 @@
 package var3d.net.center;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
