@@ -49,7 +49,7 @@ public class VLabel extends Label {
         FreeBitmapFont font=(FreeBitmapFont) getStyle().font;
         if(font.isEmoji()){//如果 font 支持系统 emoji，则识别 emoji 并将 emoji 的颜色设置为白色
             if(!match("\\[#[0-9a-fA-F]{6,8}\\]",text)){
-                if(getColor().toString().equals(Color.WHITE.toString()))return;
+                if(labColor.toString().equals(Color.WHITE.toString()))return;
                 StringBuffer buffer=new StringBuffer();
                 String strLabelColor="[#"+labColor.toString()+"]";
                 buffer.append(strLabelColor);

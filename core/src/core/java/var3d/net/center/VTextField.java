@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import java.lang.reflect.Method;
+
 import var3d.net.center.freefont.FreeBitmapFont;
 
 public class VTextField extends TextField {
@@ -19,8 +21,7 @@ public class VTextField extends TextField {
 		field = this;
 		ClickListener appendListener = new ClickListener() {
 			public boolean keyTyped(InputEvent event, char character) {
-				if (isDisabled())
-					return false;
+				if (isDisabled()) return false;
 				switch (character) {
 				case BACKSPACE:
 				case TAB:
@@ -28,28 +29,29 @@ public class VTextField extends TextField {
 				case ENTER_DESKTOP:
 					break;
 				default:
-					if (character < 32)
-						return false;
+					if (character < 32) return false;
 				}
 
 				Stage stage = getStage();
-				if (stage == null
-						|| stage.getKeyboardFocus() != VTextField.this)
+				if (stage == null || stage.getKeyboardFocus() != VTextField.this)
 					return false;
 				if (character == TAB || character == ENTER_ANDROID) {
 				} else {
-					boolean enter = character == ENTER_DESKTOP
-							|| character == ENTER_ANDROID;
+					boolean enter = character == ENTER_DESKTOP || character == ENTER_ANDROID;
 					boolean add = enter ? writeEnters : true;
 					if (add) {
 						append(getText(), getStyle());
-						setPasswordMode(field.isPasswordMode());
+						updateDisplay();
 					}
 				}
 				return true;
 			}
 		};
 		addListener(appendListener);
+	}
+
+	public void updateDisplay(){
+		setPasswordMode(field.isPasswordMode());
 	}
 
 	public void setPasswordCharacter(String passwordCharacter) {
@@ -63,9 +65,9 @@ public class VTextField extends TextField {
 	}
 
 	private static String append(String text, TextFieldStyle style) {
-		if (text.equals(""))
-			return "";
-		return ((FreeBitmapFont) style.font).appendTextPro(text);
+		if (text.equals("")) return "";
+		String newText=((FreeBitmapFont) style.font).appendTextPro(text);
+		return newText;
 	}
 
 	public void appendText(String str) {
