@@ -69,6 +69,7 @@ public class FreeBitmapFont extends BitmapFont {
 
     public FreeBitmapFont(VGame game, FreePaint paint) {
         super(new BitmapFontData(), new TextureRegion(), false);
+        pageWidth=paint.getPageWidth();
         updataSize(paint.getTextSize());
         this.game = game;
         this.listener = game.var3dListener;

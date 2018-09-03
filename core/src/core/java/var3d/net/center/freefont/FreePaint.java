@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 
 public class FreePaint {
     private int textSize = 30;// 字号
+    private int pageWidth=512;//单张纹理的尺寸，当需要使用的文字较多时，提高纹理大小能提高绘制效率
     private Color color = Color.WHITE;// 颜色
     private boolean isFakeBoldText = false;// 是否粗体
     private boolean isUnderlineText = false;// 是否下划线
@@ -147,5 +148,14 @@ public class FreePaint {
 
     public String getTTFName() {
         return ttfName;
+    }
+
+    public int getPageWidth() {
+        return pageWidth;
+    }
+
+    public FreePaint setPageWidth(int pageWidth) {
+        this.pageWidth = pageWidth;
+        return this;
     }
 }
