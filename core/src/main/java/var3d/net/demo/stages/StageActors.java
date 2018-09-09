@@ -29,7 +29,8 @@ public class StageActors extends VStage {
         //设置背景
         setBackground(Color.DARK_GRAY);
         //创建标题
-        VLabel lab_title = game.getLabel("常用控件").setPosition(getWidth() / 2, getTop() - 10, Align.top).touchOff().show();
+        VLabel lab_title = game.getLabel("常用控件").setPosition(getWidth() / 2
+                , getTop() - 10, Align.top).touchOff().show();
         //返回
         Button btn_back = game.getButton().setColor(Color.valueOf("ff2266")).setSize(120, 40)
                 .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
@@ -40,6 +41,15 @@ public class StageActors extends VStage {
                 game.setStage(StageMain.class);
             }
         });
+
+        VLabel lab_title2 = game.getLabel("描边测试").setColor(Color.YELLOW).setPosition(getWidth() / 2
+                , getTop() - 40, Align.top).touchOff().setStroke(Color.RED).show();
+        VLabel lab_title3 = game.getLabel("emoji测试◐◐").setColor(Color.YELLOW).setPosition(getWidth() / 2
+                , getTop() - 70, Align.top).touchOff().show();
+        VLabel lab_title4 = game.getLabel("emoji带描边测试◐◐").setColor(Color.CYAN).setPosition(getWidth() / 2
+                , getTop() - 100, Align.top).touchOff().setStroke(Color.BLUE).show();
+//        VLabel lab_title = game.getLabel("常用控件").setColor(Color.YELLOW).setPosition(getWidth() / 2
+//                , getTop() - 10, Align.top).touchOff().show();
 
         //测试SLabel可缩放字体
         VLabel lab_test1 = game.getLabel("测试不可缩放字体控件").setOrigin(Align.center).setColor(Color.YELLOW)

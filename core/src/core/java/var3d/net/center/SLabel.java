@@ -64,6 +64,7 @@ public class SLabel extends Group {
         super.act(delat);
         if (getActions().size > 0) {
             label.setColor(getColor());
+
         }
     }
 }
