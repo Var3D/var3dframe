@@ -17,21 +17,27 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import org.robovm.apple.coregraphics.CGRect;
 import org.robovm.apple.coregraphics.CGSize;
 import org.robovm.apple.foundation.Foundation;
+import org.robovm.apple.foundation.NSArray;
 import org.robovm.apple.foundation.NSAttributedString;
 import org.robovm.apple.foundation.NSBundle;
 import org.robovm.apple.foundation.NSData;
 import org.robovm.apple.foundation.NSDictionary;
+import org.robovm.apple.foundation.NSError;
 import org.robovm.apple.foundation.NSLocale;
 import org.robovm.apple.foundation.NSMutableAttributedString;
 import org.robovm.apple.foundation.NSNotification;
 import org.robovm.apple.foundation.NSNotificationCenter;
 import org.robovm.apple.foundation.NSNumber;
+import org.robovm.apple.foundation.NSObject;
 import org.robovm.apple.foundation.NSRange;
 import org.robovm.apple.foundation.NSString;
+import org.robovm.apple.foundation.NSURL;
 import org.robovm.apple.foundation.NSValue;
 import org.robovm.apple.uikit.NSAttributedStringAttribute;
 import org.robovm.apple.uikit.NSTextAlignment;
 import org.robovm.apple.uikit.NSUnderlineStyle;
+import org.robovm.apple.uikit.UIActivityType;
+import org.robovm.apple.uikit.UIActivityViewController;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIColor;
 import org.robovm.apple.uikit.UIControl;
@@ -51,9 +57,12 @@ import org.robovm.apple.uikit.UITextSpellCheckingType;
 import org.robovm.apple.uikit.UIView;
 import org.robovm.objc.Selector;
 import org.robovm.objc.annotation.Property;
+import org.robovm.objc.block.VoidBlock4;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import var3d.net.center.NativeTextField;
@@ -184,11 +193,6 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     @Override
     public void getDiaolog(String msg) {
 
-    }
-
-    @Override
-    public void goToShare(String title, String context, String url,
-                          byte[] imgByte, final Runnable success, final Runnable failure) {
     }
 
     @Override
@@ -838,6 +842,39 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                 textFieldHashMap.remove(textfield);
                 break;
         }
+    }
+
+    public void goToShare(String title, String context, String url, byte[] imgByte,
+                          final Runnable success, final Runnable failure) {
+        List activityItems=new ArrayList();
+        activityItems.add(title);
+        activityItems.add(context);
+        NSURL nsurl=new NSURL(url);
+        activityItems.add(nsurl);
+        UIActivityViewController activityShare = new UIActivityViewController(activityItems,null);
+        List<String> exs=new ArrayList();
+        exs.add(UIActivityType.AirDrop());
+        exs.add(UIActivityType.Mail());
+        exs.add(UIActivityType.OpenInIBooks());
+        exs.add(UIActivityType.AssignToContact());
+        exs.add(UIActivityType.CopyToPasteboard());
+        exs.add(UIActivityType.Print());
+        exs.add(UIActivityType.SaveToCameraRoll());
+        exs.add(UIActivityType.AddToReadingList());
+        exs.add(UIActivityType.PostToFlickr());
+        exs.add(UIActivityType.PostToVimeo());
+        activityShare.setExcludedActivityTypes(exs);
+        activityShare.setCompletionWithItemsHandler(new VoidBlock4<String, Boolean, NSArray<NSObject>, NSError>() {
+            @Override
+            public void invoke(String s, Boolean completed, NSArray<NSObject> nsObjects, NSError nsError) {
+                if(completed){
+                    success.run();
+                }else{
+                    failure.run();
+                }
+            }
+        });
+        ((IOSApplication)Gdx.app).getUIViewController().presentViewController(activityShare, true, null);
     }
 
 }
