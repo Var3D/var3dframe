@@ -44,12 +44,18 @@ public class StageActors extends VStage {
 
         VLabel lab_title2 = game.getLabel("描边测试").setColor(Color.YELLOW).setPosition(getWidth() / 2
                 , getTop() - 40, Align.top).touchOff().setStroke(Color.RED).show();
+        lab_title2.addAction(Actions.forever(Actions.sequence(Actions.alpha(0,1),Actions.alpha(1,1))));
         VLabel lab_title3 = game.getLabel("emoji测试◐◐").setColor(Color.YELLOW).setPosition(getWidth() / 2
                 , getTop() - 70, Align.top).touchOff().show();
+        lab_title3.addAction(Actions.forever(Actions.sequence(Actions.alpha(0,1),Actions.alpha(1,1))));
         VLabel lab_title4 = game.getLabel("emoji带描边测试◐◐").setColor(Color.CYAN).setPosition(getWidth() / 2
                 , getTop() - 100, Align.top).touchOff().setStroke(Color.BLUE).show();
-//        VLabel lab_title = game.getLabel("常用控件").setColor(Color.YELLOW).setPosition(getWidth() / 2
-//                , getTop() - 10, Align.top).touchOff().show();
+        lab_title4.addAction(Actions.forever(Actions.sequence(Actions.alpha(0,1),Actions.alpha(1,1))));
+
+        VLabel lab_title5 = game.getLabel("带背景的label").setColor(Color.CYAN).setPosition(getWidth() / 2
+                , getTop() - 150, Align.top).touchOff().show();
+        lab_title5.setBackground(game.getRectColorDrawable(1,1,Color.ORANGE));
+//
 
         //测试SLabel可缩放字体
         VLabel lab_test1 = game.getLabel("测试不可缩放字体控件").setOrigin(Align.center).setColor(Color.YELLOW)

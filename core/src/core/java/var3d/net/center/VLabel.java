@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 
@@ -29,26 +30,8 @@ public class VLabel extends Label {
         setSize(getPrefWidth(), getPrefHeight());
         setColor(style.fontColor);
         fontCache = getBitmapFontCache();
-        isHasEmoji();
-        changeEmojiColor(getText().toString());
     }
 
-    private boolean isHasEmoji(){
-        FreeBitmapFont font=(FreeBitmapFont) getStyle().font;
-        String text=getText().toString().replaceAll("\\[#[0-9a-fA-F]{6,8}\\]","");
-        if(font.isEmoji()){//如果 font 支持系统 emoji，则识别 emoji 并将 emoji 的颜色设置为白色
-                char[] chars = text.toCharArray();
-                for (char c : chars) {
-                    String str=""+c;
-                    if(font.isCreatedEmoji2WithKey(str)||font.isCreatedEmoji4WithKey(str)){
-                        isHasEmoji=true;
-                        return true;
-                    }
-                }
-        }
-        isHasEmoji=false;
-        return false;
-    }
 
     private static CharSequence append(CharSequence text, LabelStyle style) {
         return ((FreeBitmapFont) style.font).appendTextPro(text.toString());
@@ -56,34 +39,6 @@ public class VLabel extends Label {
 
     public void setText(CharSequence newText) {
         super.setText(append(newText, getStyle()));
-        isHasEmoji();
-        changeEmojiColor(newText.toString());
-    }
-
-    private void changeEmojiColor(String text){
-        FreeBitmapFont font=(FreeBitmapFont) getStyle().font;
-        if(isHasEmoji){//如果 font 支持系统 emoji，则识别 emoji 并将 emoji 的颜色设置为白色
-            if(text.replaceAll("\\[#[0-9a-fA-F]{6,8}\\]","").length()==text.length()){
-                if(getColor().toString().equals(Color.WHITE.toString()))return;
-                StringBuffer buffer=new StringBuffer();
-                String strLabelColor="[#"+getColor().toString()+"]";
-                buffer.append(strLabelColor);
-                boolean isPrefEmoji=false;
-                char[] chars = text.toCharArray();
-                for (char c : chars) {
-                    String str=""+c;
-                    if(font.isCreatedEmoji2WithKey(str)||font.isCreatedEmoji4WithKey(str)){
-                        if(!isPrefEmoji)buffer.append("[#ffffff]");
-                        isPrefEmoji=true;
-                    }else{
-                        if(isPrefEmoji)buffer.append(strLabelColor);
-                        isPrefEmoji=false;
-                    }
-                    buffer.append(str);
-                }
-               super.setText(buffer.toString());
-            }
-        }
     }
 
 
@@ -93,7 +48,6 @@ public class VLabel extends Label {
 
     public void setColor(float r, float g, float b, float a) {
         super.setColor(r, g, b, a);
-        changeEmojiColor(getText().toString());
         if (isStroke) strokeColor.set(r, g, b, a);
     }
 
@@ -225,28 +179,31 @@ public class VLabel extends Label {
         }
     }
 
+    public void setBackground(Drawable drawable){
+        getStyle().background=drawable;
+    }
+
 
     public void drawLabel(Batch batch, float parentAlpha) {
         validate();
         if (getStyle().background != null) {
-            batch.setColor(Color.WHITE);
-            getStyle().background.draw(batch, getX(), getY(), getWidth(), getHeight());
+            batch.setColor(1,1,1,getColor().a);
+            float padding=getHeight()*0.15f;
+            getStyle().background.draw(batch, getX()-padding*0.5f, getY(), getWidth()+padding, getHeight()+padding);
         }
         if (isStroke) {
             strokeColor.a = getColor().a;
-
             fontCache.tint(strokeColor);
             for (int i = 0; i < dxs.length; i++) {
-                fontCache.setPosition(getX() + dxs[i] * strokeWidth, getY() + dys[i] * strokeWidth);
+                fontCache.setPosition(getX() + dxs[i] * strokeWidth, getY() + dys[i] * strokeWidth + strokeWidth);
                 fontCache.draw(batch);
             }
-
-            fontCache.setPosition(getX(), getY());
+            fontCache.setPosition(getX(), getY() + strokeWidth);
             fontCache.tint(getColor());
             fontCache.draw(batch);
-        }else{
-            if (!isHasEmoji) fontCache.tint(getColor());
-            fontCache.setPosition(getX(), getY()+strokeWidth);
+        } else {
+            fontCache.setPosition(getX(), getY() + strokeWidth);
+            fontCache.tint(getColor());
             fontCache.draw(batch);
         }
     }
