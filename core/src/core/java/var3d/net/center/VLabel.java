@@ -189,7 +189,8 @@ public class VLabel extends Label {
         if (getStyle().background != null) {
             batch.setColor(1,1,1,getColor().a);
             float padding=getHeight()*0.15f;
-            getStyle().background.draw(batch, getX()-padding*0.5f, getY(), getWidth()+padding, getHeight()+padding);
+            float paddingX=getStyle().font.getSpaceWidth()*0.5f;
+            getStyle().background.draw(batch, getX()-paddingX, getY(), getWidth()+paddingX*2, getHeight()+padding);
         }
         if (isStroke) {
             strokeColor.a = getColor().a;

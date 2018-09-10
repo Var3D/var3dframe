@@ -47,6 +47,7 @@ public class R {
     public static String hs_err_pid11468 = "hs_err_pid11468.log";
     public static String hs_err_pid11487 = "hs_err_pid11487.log";
     public static String hs_err_pid14617 = "hs_err_pid14617.log";
+    public static String hs_err_pid15297 = "hs_err_pid15297.log";
     public static String hs_err_pid1615 = "hs_err_pid1615.log";
     public static String hs_err_pid7146 = "hs_err_pid7146.log";
     public static String hs_err_pid7182 = "hs_err_pid7182.log";
