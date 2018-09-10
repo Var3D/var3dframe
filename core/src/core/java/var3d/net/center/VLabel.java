@@ -10,7 +10,7 @@ import var3d.net.center.freefont.FreeBitmapFont;
 
 public class VLabel extends Label {
     private boolean isStroke = false;// 是否描边
-    private Color strokeColor;
+    private Color strokeColor=new Color();
     private float strokeWidth;
     private float shadowOffsetX = 0f;//设置阴影位移x
     private float shadowOffsetY = 0f;//设置阴影位移x
