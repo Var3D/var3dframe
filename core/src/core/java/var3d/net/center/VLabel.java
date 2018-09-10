@@ -69,7 +69,7 @@ public class VLabel extends Label {
      * 设置描边
      */
     public void setStroke(Color strokeColor, float strokeWidth) {
-        this.strokeColor = strokeColor;
+        this.strokeColor.set(strokeColor);
         this.strokeWidth = strokeWidth;
         isStroke = true;
         // refushCache();
