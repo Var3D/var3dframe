@@ -590,8 +590,10 @@ public abstract class VDesktopLauncher implements VListener {
                 height = 2732;
                 break;
             case iphoneX_w:
-                height = 1125;
-                width = 2436;
+//                height = 1125;
+//                width = 2436;
+                height = 1242;
+                width = 2688;
                 break;
             case iphone_w:
                 height = 1242;
@@ -602,8 +604,10 @@ public abstract class VDesktopLauncher implements VListener {
                 width = 2732;
                 break;
             case iphoneX_h:
-                height = 2436;
-                width = 1125;
+//                height = 2436;
+//                width = 1125;
+                height = 2688;
+                width = 1242;
                 break;
         }
         return getConfig(width, height, bl);
@@ -630,8 +634,10 @@ public abstract class VDesktopLauncher implements VListener {
                 if (blw < bl) bl = blw;
                 break;
             case iphoneX_w:
-                height = 1125;
-                width = 2436;
+//                height = 1125;
+//                width = 2436;
+                height = 1242;
+                width = 2688;
                 blw = screenWidth / (float) width;
                 bl = screenHeight / (float) height;
                 if (blw < bl) bl = blw;
@@ -651,8 +657,10 @@ public abstract class VDesktopLauncher implements VListener {
                 if (blw < bl) bl = blw;
                 break;
             case iphoneX_h:
-                height = 2436;
-                width = 1125;
+//                height = 2436;
+//                width = 1125;
+                height = 2688;
+                width = 1242;
                 blw = screenWidth / (float) width;
                 bl = screenHeight / (float) height;
                 if (blw < bl) bl = blw;
@@ -1264,7 +1272,7 @@ public abstract class VDesktopLauncher implements VListener {
     private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
-        if ((width == 1125 && height == 2436) || (width == 2436 && height == 1125)) {
+        if ((width == 1242 && height == 2688) || (width == 2688 && height == 1242)) {
             if (Gdx.graphics.getWidth() < Gdx.graphics.getHeight()) {
                 rectangle.set(0, 102, 0, 132);
             } else {
@@ -1372,7 +1380,8 @@ public abstract class VDesktopLauncher implements VListener {
         }
 
 
-        public final static String str_angle = "UEsDBBQACAgIAO+Lm0wAAAAAAAAAAAAAAAABAAAAMO2ca67jIAyFN+SRMAQC+9/Y2NXVaB63nSQF\n" +
+        public final static String str_angle =
+                "UEsDBBQACAgIAO+Lm0wAAAAAAAAAAAAAAAABAAAAMO2ca67jIAyFN+SRMAQC+9/Y2NXVaB63nSQF\n" +
                 "bNKjyEfqj0o5X6mDwSTmTBHRJzgT7xJpJw6BSqYU6UfM5bCYW1g1EhPXKOgz1UbbRkzh14WfYAjy\n" +
                 "JsgFdAq07xTLb8CBvn9wJc6Vmoxu/hY1kHfBLLk7R6pVPr7EDNjXIknKKBs1wVEPAAbmU8FNIkbK\n" +
                 "R8mC8JHYkgzaQi0QbyfBAu6ziJJqt53KfoEouH7DMzxKj3xlhILpXyy1lijn0yh4/hlJEqdUY/nI\n" +
@@ -1393,7 +1402,8 @@ public abstract class VDesktopLauncher implements VListener {
             return unzip.split(",");
         }
 
-        public static String str_title = "UEsDBBQACAgIAI6Lm0wAAAAAAAAAAAAAAAABAAAAMO3djXLjqBKG4RviVNE00HD/N3bAsxGejO3Y\n" +
+        public static String str_title =
+                "UEsDBBQACAgIAI6Lm0wAAAAAAAAAAAAAAAABAAAAMO3djXLjqBKG4RviVNE00HD/N3bAsxGejO3Y\n" +
                 "iRyQ/Zb2yfk2ezKjyFTRkvhR78TEhZQAAADwBnrtp971oxQXdP4ZAQAA4ElarddKPr8dIbjgbf55\n" +
                 "AQAAYF+9xgtndd+p9uvfo/YDAAB4Gb22s081Xz9i+34s888PAAAAP9Nqunip3uuHZJ1/ggAAAPiR\n" +
                 "XtNdrva8S3H66QEAAOBnWkl3rdrzLkQKPgAAgMOKtyq9VusJg/cAAAAOS8rNWk/qAucIAACAb+m1\n" +

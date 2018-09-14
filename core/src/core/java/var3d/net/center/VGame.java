@@ -226,7 +226,7 @@ public abstract class VGame implements ApplicationListener {
             Vector2 size = var3dListener.getAppScreenSize();
             int width = (int) size.x;
             int height = (int) size.y;
-            if ((width == 1125 && height == 2436) || (width == 2436 && height == 1125)) {
+            if ((width == 1242 && height == 2688) || (width == 2688 && height == 1242)) {
                 iphoneX = new TextureRegion(new Texture(var3dListener.getIphoneXPixmap("")));
             }
         }
@@ -462,32 +462,23 @@ public abstract class VGame implements ApplicationListener {
                     Array<PixmapPro> outPixmapPro = new Array<PixmapPro>();
                     assets.getAll(PixmapPro.class, outPixmapPro);
                     if (outPixmapPro.size > 0) {
-                        if (atlas == null) {
-                            atlas = new TextureAtlas();
-                        }
+                        if (atlas == null)atlas = new TextureAtlas();
                         for (PixmapPro pix : outPixmapPro) {
                             Texture texture = pix.getTextrue();
                             texture.setFilter(filter, filter);
-                            atlas.addRegion(pix.getName(), new TextureRegion(
-                                    texture));
+                            atlas.addRegion(pix.getName(), new TextureRegion(texture));
                             assets.unload(pix.getName());
                         }
                     }
                 }
                 if (inpacks.size > 0) {
-                    if (packer == null) {
-                        packer = new PixmapPacker(pageWidth, pageWidth,
-                                Format.RGBA8888, 2, true);
-                    }
-                    if (atlas == null) {
-                        atlas = new TextureAtlas();
-                    }
+                    if (packer == null)packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 2, true);
+                    if (atlas == null)atlas = new TextureAtlas();
                     for (String path : inpacks) {
                         try {
                             Pixmap pixmap;
                             if (isProtect && !isReProtect) {
-                                pixmap = assets.get(path, PixmapPro.class)
-                                        .getPixmap();
+                                pixmap = assets.get(path, PixmapPro.class).getPixmap();
                             } else {
                                 pixmap = assets.get(path, Pixmap.class);
                             }
@@ -1137,7 +1128,7 @@ public abstract class VGame implements ApplicationListener {
                 Vector2 size = var3dListener.getAppScreenSize();
                 out_w = (int) size.x;
                 out_h = (int) size.y;
-                if (out_w == 1125 || out_h == 1125) {
+                if (iphoneX!=null) {
                     path += "/iphoneX";
                     Gdx.files.absolute(path).mkdirs();
                 } else if (out_w == 2732 || out_h == 2732) {//ipad
@@ -1162,7 +1153,8 @@ public abstract class VGame implements ApplicationListener {
                         final Pixmap outPixmap = new Pixmap(out_w, out_h, Format.RGB888);
                         Thread t = new Thread(new Runnable() {
                             public void run() {
-                                outPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out_w, out_h);
+                                outPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight()
+                                        , 0, 0, out_w, out_h);
                                 writePNG(Gdx.files.absolute(f_name), outPixmap);
                                 Gdx.app.error("Var3D Studio消息", finalNa + time + "截取成功!");
                             }
@@ -1179,7 +1171,8 @@ public abstract class VGame implements ApplicationListener {
                             final Pixmap out5sPixmap = new Pixmap(out5s_w, out5s_h, Format.RGB888);
                             Thread t2 = new Thread(new Runnable() {
                                 public void run() {
-                                    out5sPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, out5s_w, out5s_h);
+                                    out5sPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight()
+                                            , 0, 0, out5s_w, out5s_h);
                                     String name = f_path5s + "/" + finalNa + time + ".jpg";
                                     writePNG(Gdx.files.absolute(name), out5sPixmap);
                                     Gdx.app.error("Var3D Studio消息", finalNa + time + "截取成功!");
