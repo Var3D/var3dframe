@@ -3,8 +3,10 @@ package var3d.net.center.desktop;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl.LwjglGraphics;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -49,6 +51,7 @@ import java.awt.RenderingHints;
 import java.awt.Robot;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
@@ -61,7 +64,6 @@ import java.awt.font.GlyphVector;
 import java.awt.font.TextAttribute;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -72,7 +74,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.AttributedString;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -86,17 +87,11 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 
 import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
@@ -104,26 +99,22 @@ import var3d.net.center.VListener;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
-import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreePaint;
-
-import static com.badlogic.gdx.Input.Keys.B;
-import static com.badlogic.gdx.Input.Keys.R;
 
 public abstract class VDesktopLauncher implements VListener {
     private VGame game;
-    public static final JFrame appFrame=new JFrame();
-
-    public static void initialize(ApplicationListener listener, LwjglApplicationConfiguration config) {
-        appFrame.setSize(config.width, config.height);
-        appFrame.setLocationRelativeTo(null);
-        appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Canvas canvas=new Canvas();
-        canvas.setSize(config.width, config.height);
-        appFrame.add(canvas);
-        appFrame.setVisible(true);
-        LwjglApplication app=new LwjglApplication(listener,canvas);
-    }
+//    public static final JFrame appFrame=new JFrame();
+//
+//    public static void initialize(ApplicationListener listener, LwjglApplicationConfiguration config) {
+//        appFrame.setSize(config.width, config.height);
+//        appFrame.setLocationRelativeTo(null);
+//        appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        Canvas canvas=new Canvas();
+//        canvas.setSize(config.width, config.height);
+//        appFrame.add(canvas);
+//        appFrame.setVisible(true);
+//        LwjglApplication app=new LwjglApplication(listener,canvas);
+//    }
 
     public void setGame(VGame game) {
         this.game = game;
@@ -561,8 +552,10 @@ public abstract class VDesktopLauncher implements VListener {
         Display.setTitle(load.getName() + "加密完成");
     }
 
+    private static LwjglApplicationConfiguration config;
     public static LwjglApplicationConfiguration getConfig(int width, int height, float scale) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config = new LwjglApplicationConfiguration();
+        config.resizable=false;
         config.width = (int) (width * scale);
         config.height = (int) (height * scale);
         config.samples = 4;
@@ -615,8 +608,8 @@ public abstract class VDesktopLauncher implements VListener {
 
     public static LwjglApplicationConfiguration getConfig(Size size) {
         //获取电脑屏幕分辨率(日了狗了mac能通过测试但是windows会报错，只好弃用了)
-        int screenWidth = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width * .9f);
-        int screenHeight = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height * .9f);
+        int screenWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * .9f);
+        int screenHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * .9f);
         float bl = 1;
         switch (size) {
             case iphone_h:
@@ -1573,8 +1566,9 @@ public abstract class VDesktopLauncher implements VListener {
         private FocusListener focusListener;
 
         public VTextField(){
-            super(pref==null?appFrame:pref);
-           // super(pref);
+            //super(pref==null?appFrame:pref);
+            super(pref);
+            setAlwaysOnTop(true);
             setLayout(null);
             setUndecorated(true);//禁用或启用窗口装饰，如果为true,则为没有启动窗口装饰，只有在窗口不可见时才能调用，否则会抛出异常
             getRootPane().setWindowDecorationStyle(JRootPane.NONE);//设置不使用窗口装饰
@@ -1607,9 +1601,37 @@ public abstract class VDesktopLauncher implements VListener {
             textMessage.setFont(textField.getFont());
             add(textMessage);
 
-            appFrame.addComponentListener(new ComponentAdapter() {
-                public void componentMoved(ComponentEvent componentEvent) {
-                    if(isVisible()) setLocation(appFrame.getX()+1+sysX,appFrame.getY()+sysY);
+         //   System.out.println("x="+Display.getX()+"y="+Display.getY());
+
+//            appFrame.addComponentListener(new ComponentAdapter() {
+//                public void componentMoved(ComponentEvent componentEvent) {
+//                    if(isVisible()) setLocation(appFrame.getX()+1+sysX,appFrame.getY()+sysY);
+//                    //System.out.println("x="+monitor.virtualX+"y="+monitor.virtualX);
+//
+//                }
+//            });
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if(isVisible()) setLocation(Display.getX()+1+sysX,Display.getY()+sysY);
+                }
+            },1,10);
+
+            Gdx.app.addLifecycleListener(new LifecycleListener() {
+                @Override
+                public void pause() {
+                    setAlwaysOnTop(false);
+                }
+
+                @Override
+                public void resume() {
+                    setAlwaysOnTop(true);
+                }
+
+                @Override
+                public void dispose() {
+                   setVisible(false);
                 }
             });
 
@@ -1908,8 +1930,8 @@ public abstract class VDesktopLauncher implements VListener {
        // private String prefText;
         public void setVisible(boolean isVisible){
             if(isVisible){
-                setLocation(appFrame.getX()+1+sysX,appFrame.getY()+sysY);
-                //setText(textField.getText());
+               // setLocation(appFrame.getX()+1+sysX,appFrame.getY()+sysY);
+                setLocation(Display.getX()+1+sysX,Display.getY()+sysY);
             }
             super.setVisible(isVisible);
         }
@@ -1954,8 +1976,10 @@ public abstract class VDesktopLauncher implements VListener {
                 }
                 sysX= (int) ((cutWidth+fx)*blx);
                 float my=(cutHeight+fy)*bly;
-                sysY= (int) ((appFrame.getHeight()-getHeight())-my);
-                setLocation(appFrame.getX()+sysX+1,appFrame.getY()+sysY);
+//                sysY= (int) ((appFrame.getHeight()-getHeight())-my);
+//                setLocation(appFrame.getX()+sysX+1,appFrame.getY()+sysY);
+                sysY= (int) ((Display.getHeight()-getHeight())-my);
+                setLocation(Display.getX()+sysX+1,Display.getY()+sysY);
             }else setVisible(false);
         }
 
