@@ -30,6 +30,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.sun.awt.AWTUtilities;
 
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 
 import java.awt.AWTException;
@@ -39,6 +40,8 @@ import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Composite;
 import java.awt.CompositeContext;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -46,6 +49,7 @@ import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Paint;
 import java.awt.RenderingHints;
 import java.awt.Robot;
@@ -1553,6 +1557,17 @@ public abstract class VDesktopLauncher implements VListener {
         }
     };
 
+    //获取窗口边框尺寸
+    private Insets insets;
+    public Insets getInset(){
+        if(insets!=null)return insets;
+        JDialog jDialog=new JDialog();
+        jDialog.setVisible(true);
+        insets=jDialog.getInsets();
+        jDialog.setVisible(false);
+        return insets;
+    }
+
     private JDialog pref;
 
     public class VTextField extends JDialog implements Pool.Poolable{
@@ -1564,6 +1579,7 @@ public abstract class VDesktopLauncher implements VListener {
         private MouseListener mouseListener;
         private KeyListener keyListener;
         private FocusListener focusListener;
+        private float top;
 
         public VTextField(){
             //super(pref==null?appFrame:pref);
@@ -1934,6 +1950,8 @@ public abstract class VDesktopLauncher implements VListener {
                 setLocation(Display.getX()+1+sysX,Display.getY()+sysY);
             }
             super.setVisible(isVisible);
+//            top=getInsets().top;
+//            System.out.println("top="+top);
         }
 
 
@@ -1978,7 +1996,7 @@ public abstract class VDesktopLauncher implements VListener {
                 float my=(cutHeight+fy)*bly;
 //                sysY= (int) ((appFrame.getHeight()-getHeight())-my);
 //                setLocation(appFrame.getX()+sysX+1,appFrame.getY()+sysY);
-                sysY= (int) ((Display.getHeight()-getHeight())-my);
+                sysY= (int) ((Display.getHeight()+getInset().top-getHeight())-my);
                 setLocation(Display.getX()+sysX+1,Display.getY()+sysY);
             }else setVisible(false);
         }
