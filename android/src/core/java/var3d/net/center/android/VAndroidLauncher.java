@@ -1,12 +1,11 @@
 package var3d.net.center.android;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -16,12 +15,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -36,7 +32,6 @@ import android.text.SpannedString;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
@@ -59,7 +54,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -68,7 +62,6 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
@@ -115,9 +108,15 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     }
 
     @Override
-    public void goToShare(String title, String context, String url,
-                          byte[] imgByte, final Runnable success, final Runnable failure) {
-
+    public void goToShare(String title, String context, String url, byte[] imgByte, final Runnable success
+            , final Runnable failure) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        if (title != null && !"".equals(title)) {
+            intent.putExtra(Intent.EXTRA_SUBJECT, title);
+        }
+        intent.putExtra(Intent.EXTRA_TEXT, context+url);
+        startActivity(Intent.createChooser(intent, title));
     }
 
     @Override

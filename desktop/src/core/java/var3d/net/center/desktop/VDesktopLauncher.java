@@ -1579,7 +1579,6 @@ public abstract class VDesktopLauncher implements VListener {
         private MouseListener mouseListener;
         private KeyListener keyListener;
         private FocusListener focusListener;
-        private float top;
 
         public VTextField(){
             //super(pref==null?appFrame:pref);

@@ -12,6 +12,7 @@ public class R {
     public static class image {
         public static String badlogic = "image/badlogic.jpg";
         public static String bg = "image/bg.jpg";
+        public static String card_background = "image/card_background.png";
         public static String headtop = "image/headtop.png";
         public static String pause_btn_bg = "image/pause_btn_bg.png";
         public static String tank_4 = "image/tank_4.jpg";

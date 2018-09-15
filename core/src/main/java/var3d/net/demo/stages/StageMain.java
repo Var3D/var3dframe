@@ -1,5 +1,6 @@
 package var3d.net.demo.stages;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
@@ -74,6 +75,30 @@ public class StageMain extends VStage {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
                 game.setStage(StageCards.class);
+            }
+        });
+
+        //分享例子
+        Button btn_share = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_share .add(game.getLabel("分享示例").setFontScale(0.6f).getActor());
+        btn_share .addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                 if(Gdx.app.getType()== Application.ApplicationType.Desktop){
+                     game.showMessege("分享功能仅支持 ios 端和 android 端");
+                 }else{
+                     //暂不支持图片分享，ios 有回调，安卓没有回调
+                     game.var3dListener.goToShare("分享示例", "分享一个免费苹果游戏网站"
+                             , "http://www.var3d.net", null, new Runnable() {
+                                 public void run() {
+                                     game.showMessege("分享成功!");
+                                 }
+                             }, new Runnable() {
+                                 public void run() {
+                                     game.showMessege("分享失败!");
+                                 }
+                             });
+                 }
             }
         });
 
