@@ -134,6 +134,12 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
+    public void showAchievements(){};
+
+    public void updataAchievements(String identifier, double percentComplete){};
+
+    public void showChallenges(){};
+
     @Override
     public void log(String txt) {
 

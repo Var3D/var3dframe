@@ -159,6 +159,12 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
+    public void showAchievements(){};
+
+    public void updataAchievements(String identifier, double percentComplete){};
+
+    public void showChallenges(){};
+
     @Override
     public void log(String txt) {
         // TODO Auto-generated method stub

@@ -85,6 +85,10 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         this.game = game;
     }
 
+    public VGame getGame(){
+        return game;
+    }
+
     private UIColor getColor(Color color) {
         return UIColor.fromRGBA(color.r, color.g, color.b, color.a);
     }
@@ -207,6 +211,21 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     public void getTopList(String id) {
         // TODO Auto-generated method stub
+
+    }
+
+    //显示成就
+    public void showAchievements(){
+
+    }
+
+    //上传成就
+    public void updataAchievements(String identifier, double percentComplete){
+
+    }
+
+    //显示挑战
+    public void showChallenges(){
 
     }
 

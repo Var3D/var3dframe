@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Align;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
+import var3d.net.demo.dialogs.DialogAD;
 import var3d.net.demo.dialogs.DialogLogin;
 import var3d.net.demo.dialogs.DialogRatio;
 import var3d.net.demo.dialogs.DialogTestFull;
@@ -88,6 +89,16 @@ public class StageDialogs extends VStage {
         btn_tost.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.showMessege("这是一个Tost范例");
+            }
+        });
+
+        //自推广广告
+        Button btn_ad = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_ad.add(game.getLabel("自推广广告").setFontScale(0.6f).getActor());
+        btn_ad.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.showDialog(DialogAD.class);
             }
         });
 

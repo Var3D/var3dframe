@@ -180,6 +180,12 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
 
     }
 
+    public void showAchievements(){};
+
+    public void updataAchievements(String identifier, double percentComplete){};
+
+    public void showChallenges(){};
+
     @Override
     public void log(String txt) {
 
