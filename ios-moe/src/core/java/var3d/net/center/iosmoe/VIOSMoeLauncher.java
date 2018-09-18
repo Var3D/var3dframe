@@ -595,11 +595,6 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
             case setMessageColor:
                 textfield = textFieldHashMap.get(nativeTextField);
                 color=nativeTextField.getMessageColor();
-//                NSDictionary<NSString, ?> arr=new NSDictionary<>(
-//                        NSAttributedString.ForegroundColor.value()
-//                        ,UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a)
-//                        ,NSAttributedStringAttribute.Font.value()
-//                        ,textfield.font());
 
                 NSDictionary<?,?> arr = NSDictionary.dictionaryWithObjectsAndKeys(
                         UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a),
@@ -694,12 +689,18 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                     bly= (float) (1f/fullHeight*screenSize.height());
                     w=nativeTextField.getWidth()*blx;
                     h=nativeTextField.getHeight()*bly;
+                    System.out.print("w " + w + "  h  " + h);
                     x= (float) textfield.uiTextField.frame().origin().x();
                     y= (float) textfield.uiTextField.frame().origin().y();
-                    cgRect.size().setWidth(w);
-                    cgRect.size().setHeight(h);
-                    cgRect.origin().setX(x);
-                    cgRect.origin().setY(y);
+                    CGSize size = cgRect.size();
+                    size.setWidth(w);
+                    size.setHeight(h);
+                    cgRect.setSize(size);
+
+                    CGPoint point = cgRect.origin();
+                    point.setY(y);
+                    point.setX(x);
+                    cgRect.setOrigin(point);
                     textfield.uiTextField.setFrame(cgRect);
                 }else {
                     textfield.uiTextField.setHidden(true);
@@ -776,7 +777,9 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
             if(frame.origin().y()+frame.size().height()> keyboardHeight) {
                 switch (nativeTextField.getAdaptKeyboardType()){
                     case Self:
-                        frame.origin().setY(keyboardHeight-frame.size().height());
+                        CGPoint point = frame.origin();
+                        point.setY(keyboardHeight-frame.size().height());
+                        frame.setOrigin(point);
                         uiTextField.setFrame(frame);
                         break;
                 }
@@ -874,10 +877,16 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                 //y= (cutAndHeight-fy)*bly-h;
                 float my=(cutHeight+fy)*bly;
                 y= (float) (screenSize.height()-h)-my;
-                cgRect.size().setWidth(w);
-                cgRect.size().setHeight(h);
-                cgRect.origin().setX(x);
-                cgRect.origin().setY(y);
+                CGSize size = cgRect.size();
+                size.setWidth(w);
+                size.setHeight(h);
+                cgRect.setSize(size);
+
+                CGPoint point = cgRect.origin();
+                point.setX(x);
+                point.setY(y);
+                cgRect.setOrigin(point);
+                System.out.print("height "+cgRect.size().height()+" width "+cgRect.size().width());
                 uiTextField.setFrame(cgRect);
             }else uiTextField.setHidden(true);
         }
