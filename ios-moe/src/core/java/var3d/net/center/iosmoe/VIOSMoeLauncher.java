@@ -28,26 +28,35 @@ import org.moe.natj.objc.ann.Selector;
 import org.moe.natj.objc.map.ObjCObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
+import apple.NSObject;
 import apple.coregraphics.struct.CGPoint;
 import apple.coregraphics.struct.CGRect;
 import apple.coregraphics.struct.CGSize;
+import apple.foundation.NSArray;
 import apple.foundation.NSAttributedString;
 import apple.foundation.NSBundle;
 import apple.foundation.NSData;
 import apple.foundation.NSDictionary;
+import apple.foundation.NSError;
 import apple.foundation.NSLocale;
+import apple.foundation.NSMutableArray;
 import apple.foundation.NSMutableAttributedString;
 import apple.foundation.NSNotification;
 import apple.foundation.NSNotificationCenter;
 import apple.foundation.NSNumber;
 import apple.foundation.NSString;
+import apple.foundation.NSURL;
 import apple.foundation.NSValue;
 import apple.foundation.c.Foundation;
 import apple.foundation.struct.NSRange;
 import apple.uikit.ITargetAction;
+import apple.uikit.UIActivity;
+import apple.uikit.UIActivityViewController;
 import apple.uikit.UIApplication;
 import apple.uikit.UIColor;
 import apple.uikit.UIControl;
@@ -61,6 +70,7 @@ import apple.uikit.UIView;
 import apple.uikit.c.UIKit;
 import apple.uikit.enums.NSTextAlignment;
 import apple.uikit.enums.NSUnderlineStyle;
+import apple.uikit.enums.UIActivityCategory;
 import apple.uikit.enums.UIControlEvents;
 import apple.uikit.enums.UIKeyboardType;
 import apple.uikit.enums.UIReturnKeyType;
@@ -197,6 +207,41 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
     @Override
     public void goToShare(String title, String context, String url,
                           byte[] imgByte, final Runnable success, final Runnable failure) {
+
+        NSURL nsurl=NSURL.alloc().initWithString(url);
+        NSMutableArray activityItems = NSMutableArray.alloc().init();
+        activityItems.add(title);
+        activityItems.add(context);
+        activityItems.add(nsurl);
+
+        UIActivityViewController activityShare = UIActivityViewController.alloc().initWithActivityItemsApplicationActivities(
+                activityItems,null);
+        NSMutableArray<String> exs = (NSMutableArray<String>) NSMutableArray.alloc().init();
+        exs.add(UIKit.UIActivityTypeAirDrop());
+        exs.add(UIKit.UIActivityTypeMail());
+        exs.add(UIKit.UIActivityTypeOpenInIBooks());
+        exs.add(UIKit.UIActivityTypeAssignToContact());
+        exs.add(UIKit.UIActivityTypeCopyToPasteboard());
+        exs.add(UIKit.UIActivityTypePrint());
+        exs.add(UIKit.UIActivityTypeSaveToCameraRoll());
+        exs.add(UIKit.UIActivityTypeAddToReadingList());
+        exs.add(UIKit.UIActivityTypePostToFlickr());
+        exs.add(UIKit.UIActivityTypePostToVimeo());
+
+        activityShare.setExcludedActivityTypes(exs);
+        activityShare.setCompletionWithItemsHandler(new ShareCompleteionListener(){
+            @Override
+            public void call_setCompletionWithItemsHandler(String arg0, boolean completed, NSArray<?> arg2, NSError arg3) {
+                if(completed){
+                    success.run();
+                }else{
+                    failure.run();
+                }
+            }
+        });
+
+        ((IOSApplication)Gdx.app).getUIViewController()
+                .presentViewControllerAnimatedCompletion(activityShare, true, null);
     }
 
     @Override
