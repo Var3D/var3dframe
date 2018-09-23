@@ -14,32 +14,49 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.SnapshotArray;
 
+import org.moe.natj.general.NatJ;
 import org.moe.natj.general.Pointer;
+import org.moe.natj.general.ann.ByValue;
 import org.moe.natj.general.ann.Generated;
+import org.moe.natj.general.ann.Owned;
+import org.moe.natj.general.ann.RegisterOnStartup;
+import org.moe.natj.objc.ObjCRuntime;
 import org.moe.natj.objc.SEL;
+import org.moe.natj.objc.ann.ObjCClassName;
+import org.moe.natj.objc.ann.Property;
 import org.moe.natj.objc.ann.Selector;
+import org.moe.natj.objc.map.ObjCObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
+import apple.NSObject;
 import apple.coregraphics.struct.CGPoint;
 import apple.coregraphics.struct.CGRect;
 import apple.coregraphics.struct.CGSize;
+import apple.foundation.NSArray;
 import apple.foundation.NSAttributedString;
 import apple.foundation.NSBundle;
 import apple.foundation.NSData;
 import apple.foundation.NSDictionary;
+import apple.foundation.NSError;
 import apple.foundation.NSLocale;
+import apple.foundation.NSMutableArray;
 import apple.foundation.NSMutableAttributedString;
 import apple.foundation.NSNotification;
 import apple.foundation.NSNotificationCenter;
 import apple.foundation.NSNumber;
 import apple.foundation.NSString;
+import apple.foundation.NSURL;
 import apple.foundation.NSValue;
 import apple.foundation.c.Foundation;
 import apple.foundation.struct.NSRange;
 import apple.uikit.ITargetAction;
+import apple.uikit.UIActivity;
+import apple.uikit.UIActivityViewController;
 import apple.uikit.UIApplication;
 import apple.uikit.UIColor;
 import apple.uikit.UIControl;
@@ -53,6 +70,7 @@ import apple.uikit.UIView;
 import apple.uikit.c.UIKit;
 import apple.uikit.enums.NSTextAlignment;
 import apple.uikit.enums.NSUnderlineStyle;
+import apple.uikit.enums.UIActivityCategory;
 import apple.uikit.enums.UIControlEvents;
 import apple.uikit.enums.UIKeyboardType;
 import apple.uikit.enums.UIReturnKeyType;
@@ -189,6 +207,41 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
     @Override
     public void goToShare(String title, String context, String url,
                           byte[] imgByte, final Runnable success, final Runnable failure) {
+
+        NSURL nsurl=NSURL.alloc().initWithString(url);
+        NSMutableArray activityItems = NSMutableArray.alloc().init();
+        activityItems.add(title);
+        activityItems.add(context);
+        activityItems.add(nsurl);
+
+        UIActivityViewController activityShare = UIActivityViewController.alloc().initWithActivityItemsApplicationActivities(
+                activityItems,null);
+        NSMutableArray<String> exs = (NSMutableArray<String>) NSMutableArray.alloc().init();
+        exs.add(UIKit.UIActivityTypeAirDrop());
+        exs.add(UIKit.UIActivityTypeMail());
+        exs.add(UIKit.UIActivityTypeOpenInIBooks());
+        exs.add(UIKit.UIActivityTypeAssignToContact());
+        exs.add(UIKit.UIActivityTypeCopyToPasteboard());
+        exs.add(UIKit.UIActivityTypePrint());
+        exs.add(UIKit.UIActivityTypeSaveToCameraRoll());
+        exs.add(UIKit.UIActivityTypeAddToReadingList());
+        exs.add(UIKit.UIActivityTypePostToFlickr());
+        exs.add(UIKit.UIActivityTypePostToVimeo());
+
+        activityShare.setExcludedActivityTypes(exs);
+        activityShare.setCompletionWithItemsHandler(new ShareCompleteionListener(){
+            @Override
+            public void call_setCompletionWithItemsHandler(String arg0, boolean completed, NSArray<?> arg2, NSError arg3) {
+                if(completed){
+                    success.run();
+                }else{
+                    failure.run();
+                }
+            }
+        });
+
+        ((IOSApplication)Gdx.app).getUIViewController()
+                .presentViewControllerAnimatedCompletion(activityShare, true, null);
     }
 
     @Override
@@ -453,13 +506,13 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
             cgRect.origin().setY(0);
             cgRect.size().setWidth(100);
             cgRect.size().setHeight(100);
-            VMoeUITextField textfield = new VMoeUITextField(UITextField.alloc().initWithFrame(cgRect));
-            textfield.uiTextField.setKeyboardType(UIKeyboardType.Default);
-            textfield.uiTextField.setReturnKeyType(UIReturnKeyType.Done);
-            textfield.uiTextField.setAutocapitalizationType(UITextAutocapitalizationType.None);
-            textfield.uiTextField.setAutocorrectionType(UITextAutocorrectionType.No);
-            textfield.uiTextField.setSpellCheckingType(UITextSpellCheckingType.No);
-            textfield.uiTextField.setBorderStyle(UITextBorderStyle.RoundedRect);
+            VMoeUITextField textfield = VMoeUITextField.initWithListener(VIOSMoeLauncher.this,cgRect);
+            textfield.setKeyboardType(UIKeyboardType.Default);
+            textfield.setReturnKeyType(UIReturnKeyType.Done);
+            textfield.setAutocapitalizationType(UITextAutocapitalizationType.None);
+            textfield.setAutocorrectionType(UITextAutocorrectionType.No);
+            textfield.setSpellCheckingType(UITextSpellCheckingType.No);
+            textfield.setBorderStyle(UITextBorderStyle.RoundedRect);
             return textfield;
         }
     };
@@ -475,9 +528,9 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                 VMoeUITextField textfield = pool_textFields.obtain();
                 textfield.setLibgdxTextField(nativeTextField);
                 textFieldHashMap.put(nativeTextField,textfield);
-                textfield.uiTextField.setText("");
-                textfield.uiTextField.setSecureTextEntry(false);
-                ((IOSApplication)Gdx.app).getUIViewController().view().addSubview(textfield.uiTextField);
+                textfield.setText("");
+                textfield.setSecureTextEntry(false);
+                ((IOSApplication)Gdx.app).getUIViewController().view().addSubview(textfield);
                 break;
             case setTextFieldListener:
                 textfield = textFieldHashMap.get(nativeTextField);
@@ -485,118 +538,110 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                 UITextListener editBeginAction = new UITextListener(UIControlEvents.EditingDidBegin) {
                     @Override
                     public void onEvent(Object source, long event) {
-                        if (event == UIControlEvents.EditingDidBegin){
-                            finalTextfield.uiTextField.setText(nativeTextField.getText());
+                            finalTextfield.setText(nativeTextField.getText());
                             nativeTextField.getTextFieldListener().didBeginEditing(nativeTextField);
 
                             finalTextfield.registered();
-                        }
                     }
                 };
-                textfield.uiTextField.addTargetActionForControlEvents(editBeginAction, UIControlEvents.EditingDidBegin);
+                textfield.addTargetActionForControlEvents(editBeginAction, UIControlEvents.EditingDidBegin);
                 nativeTextField.addNativeListener(editBeginAction);
 
 
                 UITextListener editEndAction = new UITextListener(UIControlEvents.EditingDidEnd) {
                     @Override
                     public void onEvent(Object source, long event) {
-                        if (event == UIControlEvents.EditingDidEnd){
-                            nativeTextField.setText(finalTextfield.uiTextField.text());
-                            nativeTextField.getTextFieldListener().didEndEditing(nativeTextField);
+                        nativeTextField.setText(finalTextfield.text());
+                        nativeTextField.getTextFieldListener().didEndEditing(nativeTextField);
 
-                            finalTextfield.synchronousPosition();
+                        finalTextfield.synchronousPosition();
 
-                            finalTextfield.removeRegistered();
-                        }
+                        finalTextfield.removeRegistered();
                     }
                 };
-                textfield.uiTextField.addTargetActionForControlEvents(editEndAction, UIControlEvents.EditingDidEnd);
+                textfield.addTargetActionForControlEvents(editEndAction, UIControlEvents.EditingDidEnd);
                 nativeTextField.addNativeListener(editEndAction);
 
 
 
-                UITextListener PrimaryAction = new UITextListener(UIControlEvents.PrimaryActionTriggered) {
+                UITextListener primaryAction = new UITextListener(UIControlEvents.PrimaryActionTriggered) {
                     @Override
                     public void onEvent(Object source, long event) {
-                        if (event == UIControlEvents.PrimaryActionTriggered){
-                            boolean isResignFirstResponder=nativeTextField.getTextFieldListener()
-                                    .shouldReturn(nativeTextField);
-                            if(isResignFirstResponder){
-                                finalTextfield.uiTextField.resignFirstResponder();
-                                finalTextfield.synchronousPosition();
-                                finalTextfield.removeRegistered();
-                            }
+                        boolean isResignFirstResponder=nativeTextField.getTextFieldListener()
+                                .shouldReturn(nativeTextField);
+                        if(isResignFirstResponder){
+                            finalTextfield.resignFirstResponder();
+                            finalTextfield.synchronousPosition();
+                            finalTextfield.removeRegistered();
                         }
                     }
                 };
-                textfield.uiTextField.addTargetActionForControlEvents(PrimaryAction, UIControlEvents.PrimaryActionTriggered);
-                nativeTextField.addNativeListener(PrimaryAction);
+                textfield.addTargetActionForControlEvents(primaryAction, UIControlEvents.PrimaryActionTriggered);
+                nativeTextField.addNativeListener(primaryAction);
 
 
 
                 UITextListener EditingChangedAction = new UITextListener(UIControlEvents.EditingChanged) {
                     @Override
                     public void onEvent(Object source, long event) {
-                        if (event == UIControlEvents.EditingChanged){
-                            nativeTextField.setText(finalTextfield.uiTextField.text());
-                            String text=nativeTextField.getTextFieldListener().onEditingChanged(nativeTextField);
-                            if(text!=null) {
-                                finalTextfield.uiTextField.setText(text);
-                                nativeTextField.setText(text);
-                            }
+                        nativeTextField.setText(finalTextfield.text());
+                        String text=nativeTextField.getTextFieldListener().onEditingChanged(nativeTextField);
+                        if(text!=null) {
+                            finalTextfield.setText(text);
+                            nativeTextField.setText(text);
                         }
                     }
                 };
-                textfield.uiTextField.addTargetActionForControlEvents(EditingChangedAction, UIControlEvents.EditingChanged);
+                textfield.addTargetActionForControlEvents(EditingChangedAction, UIControlEvents.EditingChanged);
                 nativeTextField.addNativeListener(EditingChangedAction);
                 break;
             case becomeFirstResponder:
                 textfield = textFieldHashMap.get(nativeTextField);
                 textfield.registered();
-                textfield.uiTextField.becomeFirstResponder();
+                textfield.becomeFirstResponder();
                 break;
             case resignFirstResponder:
                 textfield = textFieldHashMap.get(nativeTextField);
                 textfield.removeRegistered();
-                textfield.uiTextField.resignFirstResponder();
+                textfield.resignFirstResponder();
                 break;
             case setText:
                 textfield = textFieldHashMap.get(nativeTextField);
-                textfield.uiTextField.setText(nativeTextField.getText());
+                textfield.setText(nativeTextField.getText());
                 break;
             case setVisible:
                 textfield = textFieldHashMap.get(nativeTextField);
-                textfield.uiTextField.setHidden(!nativeTextField.isVisible());
+                textfield.setHidden(!nativeTextField.isVisible());
                 break;
             case setHidden:
                 textfield = textFieldHashMap.get(nativeTextField);
-                textfield.uiTextField.setHidden(nativeTextField.isHidden());
+                textfield.setHidden(nativeTextField.isHidden());
                 break;
             case setBorderStyle:
                 textfield = textFieldHashMap.get(nativeTextField);
-                textfield.uiTextField.setBorderStyle((nativeTextField.getBorderStyle().value()));
+                textfield.setBorderStyle((nativeTextField.getBorderStyle().value()));
                 break;
             case setBackgroundColor:
                 textfield = textFieldHashMap.get(nativeTextField);
                 Color color=nativeTextField.getColor();
-                textfield.uiTextField.setBackgroundColor(UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a));
+                textfield.setBackgroundColor(UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a));
                 break;
             case setReturnKeyType:
                 textfield = textFieldHashMap.get(nativeTextField);
-                textfield.uiTextField.setReturnKeyType((nativeTextField.getReturnKeyType().value()));
+                textfield.setReturnKeyType((nativeTextField.getReturnKeyType().value()));
                 break;
             case setPasswordMode:
                 textfield = textFieldHashMap.get(nativeTextField);
-                textfield.uiTextField.setSecureTextEntry(nativeTextField.isPasswordMode());
+                textfield.setSecureTextEntry(nativeTextField.isPasswordMode());
                 break;
             case setMessageText:
                 textfield = textFieldHashMap.get(nativeTextField);
-                textfield.uiTextField.setPlaceholder(nativeTextField.getMessageText());
+                textfield.setPlaceholder(nativeTextField.getMessageText());
                 break;
             case setTintColor:
                 textfield = textFieldHashMap.get(nativeTextField);
                 color=nativeTextField.getTintColor();
-                textfield.uiTextField.setTintColor(UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a));
+                textfield.setTintColor(UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a));
                 break;
             case setMessageColor:
                 textfield = textFieldHashMap.get(nativeTextField);
@@ -605,53 +650,53 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                 NSDictionary<?,?> arr = NSDictionary.dictionaryWithObjectsAndKeys(
                         UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a),
                         "NSForegroundColorAttributeName",
-                        textfield.uiTextField.font(),
+                        textfield.font(),
                         "NSFontAttributeName"
 
                 );
 
                 NSAttributedString attrString =NSAttributedString.alloc()
                         .initWithStringAttributes(nativeTextField.getMessageText(), (NSDictionary<String, ?>) arr);
-                textfield.uiTextField.setAttributedPlaceholder(attrString);
+                textfield.setAttributedPlaceholder(attrString);
                 break;
             case setFontColor:
                 textfield = textFieldHashMap.get(nativeTextField);
                 color=nativeTextField.getFontColor();
-                textfield.uiTextField.setTextColor(UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a));
+                textfield.setTextColor(UIColor.colorWithRedGreenBlueAlpha(color.r,color.g,color.b,color.a));
                 break;
             case setKeyboardType:
                 textfield = textFieldHashMap.get(nativeTextField);
-                textfield.uiTextField.setKeyboardType((nativeTextField.getKeyboardType().value()));
+                textfield.setKeyboardType((nativeTextField.getKeyboardType().value()));
                 break;
             case setAlignment:
                 textfield = textFieldHashMap.get(nativeTextField);
                 switch (nativeTextField.getAlignment()){
                     case Align.left:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Left);
+                        textfield.setTextAlignment(NSTextAlignment.Left);
                         break;
                     case Align.bottomLeft:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Left);
+                        textfield.setTextAlignment(NSTextAlignment.Left);
                         break;
                     case Align.topLeft:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Left);
+                        textfield.setTextAlignment(NSTextAlignment.Left);
                         break;
                     case Align.right:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Right);
+                        textfield.setTextAlignment(NSTextAlignment.Right);
                         break;
                     case Align.bottomRight:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Right);
+                        textfield.setTextAlignment(NSTextAlignment.Right);
                         break;
                     case Align.topRight:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Right);
+                        textfield.setTextAlignment(NSTextAlignment.Right);
                         break;
                     case Align.top:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Center);
+                        textfield.setTextAlignment(NSTextAlignment.Center);
                         break;
                     case Align.center:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Center);
+                        textfield.setTextAlignment(NSTextAlignment.Center);
                         break;
                     case Align.bottom:
-                        textfield.uiTextField.setTextAlignment(NSTextAlignment.Center);
+                        textfield.setTextAlignment(NSTextAlignment.Center);
                         break;
                 }
                 break;
@@ -670,7 +715,7 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                         fullWidth = stage.getWidth();
                     }
                     blx = (float) (1f / fullWidth * screenSize.width());
-                    textfield.uiTextField.setFont(UIFont.boldSystemFontOfSize(nativeTextField.getFontSize()*blx));
+                    textfield.setFont(UIFont.boldSystemFontOfSize(nativeTextField.getFontSize()*blx));
                 }
                 break;
             case positionChanged:
@@ -696,8 +741,8 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                     w=nativeTextField.getWidth()*blx;
                     h=nativeTextField.getHeight()*bly;
                     System.out.print("w " + w + "  h  " + h);
-                    x= (float) textfield.uiTextField.frame().origin().x();
-                    y= (float) textfield.uiTextField.frame().origin().y();
+                    x= (float) textfield.frame().origin().x();
+                    y= (float) textfield.frame().origin().y();
                     CGSize size = cgRect.size();
                     size.setWidth(w);
                     size.setHeight(h);
@@ -707,9 +752,9 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                     point.setY(y);
                     point.setX(x);
                     cgRect.setOrigin(point);
-                    textfield.uiTextField.setFrame(cgRect);
+                    textfield.setFrame(cgRect);
                 }else {
-                    textfield.uiTextField.setHidden(true);
+                    textfield.setHidden(true);
                 }
                 break;
             case remove:
@@ -718,190 +763,19 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                 for(Object object:nativeAllListener){
                     if(object instanceof UITextListener){
                         UITextListener textListener = (UITextListener) object;
-                        textfield.uiTextField.removeTargetActionForControlEvents(textListener,textListener.event);
+                        textfield.removeTargetActionForControlEvents(textListener,textListener.event);
                     }
 
 
 
                 }
                 nativeAllListener.clear();
-                textfield.uiTextField.removeFromSuperview();
+                textfield.removeFromSuperview();
                 pool_textFields.free(textfield);
                 textFieldHashMap.remove(textfield);
                 break;
         }
     }
 
-    public class   UITextListener implements ITargetAction{
-        public long event = 0;
 
-
-        public UITextListener(long event){
-            this.event = event;
-        }
-
-        @Override
-        public void onEvent(Object source, long event) {
-
-        }
-    }
-
-    @Generated
-    public class VMoeUITextField  implements Pool.Poolable {
-        private NativeTextField nativeTextField;
-        public UITextField uiTextField;
-
-        protected VMoeUITextField(UITextField uiTextField) {
-            this.uiTextField = uiTextField;
-        }
-
-        public void setLibgdxTextField(NativeTextField nativeTextField){
-            this.nativeTextField =nativeTextField;
-        }
-
-
-        @Generated
-        @Selector("changeTextFieldFrame")
-        public void changeTextFieldFrame(final NSNotification aNotification){
-            final NSDictionary userInfo = aNotification.userInfo();
-            //NSValue fValue = (NSValue) userInfo.get("UIKeyboardAnimationDurationUserInfoKey");
-            NSValue aValue = (NSValue) userInfo.get("UIKeyboardFrameEndUserInfoKey");
-            CGRect keyboardRect =aValue.CGRectValue();
-            CGRect frame = uiTextField.frame();
-            double keyboardHeight=screenSize.height()-keyboardRect.size().height();
-            final Stage stage = nativeTextField.getStage();
-            //键盘高度转换为 libgdx 坐标系
-            final float libgdxKeyboardHeight,bly;
-            if(stage!=null) {
-                float fullHeight = stage instanceof VStage ? ((VStage) stage).getFullHeight() : stage.getHeight();
-                bly= (float) (1f/screenSize.height() * fullHeight);
-                libgdxKeyboardHeight = (float) (keyboardRect.size().height() *bly);
-            }else{
-                return;
-            }
-
-            if(frame.origin().y()+frame.size().height()> keyboardHeight) {
-                switch (nativeTextField.getAdaptKeyboardType()){
-                    case Self:
-                        CGPoint point = frame.origin();
-                        point.setY(keyboardHeight-frame.size().height());
-                        frame.setOrigin(point);
-                        uiTextField.setFrame(frame);
-                        break;
-                }
-            }
-            if(nativeTextField.getTextFieldListener()!=null) {
-                nativeTextField.getTextFieldListener().keyboardWillShow(nativeTextField, libgdxKeyboardHeight);
-            }
-        }
-
-
-        private void synchronizeAllForStage(Group root){
-            SnapshotArray<Actor> children= root.getChildren();
-            for(Actor actor:children){
-                if(actor instanceof NativeTextField){
-                    NativeTextField son=(NativeTextField)actor;
-                    linkNativeTextField(son, NativeTextField.Method.positionChanged);
-                }
-                if(actor instanceof Group)synchronizeAllForStage((Group)actor);
-            }
-        }
-
-        @Generated
-        @Selector("keyboardWillHide")
-        public void keyboardWillHide(NSNotification aNotification) {
-            switch (nativeTextField.getAdaptKeyboardType()){
-                case Self:
-                    synchronousPosition();
-                    break;
-            }
-        }
-
-
-        //注册通知，以便获取键盘高度
-        private boolean isRegistered=false;
-        public void registered(){
-            if(isRegistered)return;
-            isRegistered=true;
-            NSNotificationCenter defaultCenter=NSNotificationCenter.defaultCenter();
-            defaultCenter.addObserverSelectorNameObject(this,new SEL("changeTextFieldFrame")
-                    ,"UIKeyboardWillChangeFrameNotification"
-            ,null);
-            defaultCenter.addObserverSelectorNameObject(this,
-                    new SEL("keyboardWillHide"),"UIKeyboardWillHideNotification"
-            ,null);
-        }
-
-        //移出注册
-        public void removeRegistered(){
-            isRegistered=false;
-            NSNotificationCenter defaultCenter=NSNotificationCenter.defaultCenter();
-            defaultCenter.removeObserver(this);
-        }
-
-
-        //本地输入框同步为 libgdx 端坐标
-        public void synchronousPosition(){
-            if(nativeTextField.getStage()!=null) {
-                Stage stage = nativeTextField.getStage();
-                float w,h,x,y,blx,bly;
-                float fullWidth,fullHeight,cutWidth=0,cutHeight=0;
-                if(stage instanceof VStage){
-                    VStage vStage= (VStage) stage;
-                    fullWidth=vStage.getFullWidth();
-                    fullHeight=vStage.getFullHeight();
-                    cutWidth=vStage.getCutWidth();
-                    cutHeight=vStage.getCutHeight();
-                }else {
-                    fullWidth=stage.getWidth();
-                    fullHeight=stage.getHeight();
-                }
-                blx= (float) (1f/fullWidth*screenSize.width());
-                bly= (float) (1f/fullHeight*screenSize.height());
-                w=(float) uiTextField.frame().size().width();
-                h= (float) uiTextField.frame().size().height();
-                float fx=nativeTextField.getX();
-                float fy=nativeTextField.getY();
-                Group father=nativeTextField.getParent();
-                Group root=stage.getRoot();
-                float dx=root.getX()-cutWidth;
-                float dy=root.getY()/root.getScaleY()-cutHeight;
-                //float dy=root.getY()-cutHeight;
-                fx+=dx;
-                fy+=dy;
-                while(father!=root){
-                    Group nextFather=father.getParent();
-                    fx+=father.getX();
-                    fy+=father.getY();
-                    father=nextFather;
-                    if(father==null){
-                        uiTextField.setHidden(true);
-                        return;
-                    }
-                }
-                x=(cutWidth+fx)*blx;
-                //y= (cutAndHeight-fy)*bly-h;
-                float my=(cutHeight+fy)*bly;
-                y= (float) (screenSize.height()-h)-my;
-                CGSize size = cgRect.size();
-                size.setWidth(w);
-                size.setHeight(h);
-                cgRect.setSize(size);
-
-                CGPoint point = cgRect.origin();
-                point.setX(x);
-                point.setY(y);
-                cgRect.setOrigin(point);
-                System.out.print("height "+cgRect.size().height()+" width "+cgRect.size().width());
-                uiTextField.setFrame(cgRect);
-            }else uiTextField.setHidden(true);
-        }
-
-        @Override
-        public void reset() {
-            if(isRegistered) {
-                removeRegistered();
-            }
-        }
-    }
 }
