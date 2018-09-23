@@ -32,6 +32,7 @@ import com.sun.awt.AWTUtilities;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
 import java.awt.AWTException;
 import java.awt.AlphaComposite;
@@ -97,6 +98,7 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentListener;
 
+import sun.awt.SunToolkit;
 import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
@@ -618,8 +620,9 @@ public abstract class VDesktopLauncher implements VListener {
 
     public static LwjglApplicationConfiguration getConfig(Size size) {
         //获取电脑屏幕分辨率(日了狗了mac能通过测试但是windows会报错，只好弃用了)
-        int screenWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * .9f);
-        int screenHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * .9f);
+        int screenWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() * .9f);
+        int screenHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * .9f);
+
         float bl = 1;
         switch (size) {
             case iphone_h:
@@ -637,8 +640,6 @@ public abstract class VDesktopLauncher implements VListener {
                 if (blw < bl) bl = blw;
                 break;
             case iphoneX_w:
-//                height = 1125;
-//                width = 2436;
                 height = 1242;
                 width = 2688;
                 blw = screenWidth / (float) width;
@@ -660,8 +661,6 @@ public abstract class VDesktopLauncher implements VListener {
                 if (blw < bl) bl = blw;
                 break;
             case iphoneX_h:
-//                height = 2436;
-//                width = 1125;
                 height = 2688;
                 width = 1242;
                 blw = screenWidth / (float) width;

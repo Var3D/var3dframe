@@ -1,4 +1,4 @@
-package var3d.net.demo;
+package core;
 
 public class R {
 

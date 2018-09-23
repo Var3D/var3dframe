@@ -101,6 +101,16 @@ public class StageMain extends VStage {
                  }
             }
         });
+        //摇杆示例
+        Button btn_touchpad = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_touchpad.add(game.getLabel("摇杆示例").setFontScale(0.6f).getActor());
+        btn_touchpad.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                //stage跳转
+                game.setStage(StageTouchpad.class);
+            }
+        });
 
         //等待添加
         Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(pref())

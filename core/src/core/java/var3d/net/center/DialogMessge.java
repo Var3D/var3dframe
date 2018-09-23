@@ -85,7 +85,6 @@ public class DialogMessge extends VDialog {
 
     @Override
     public void start() {
-
     }
 
     @Override
