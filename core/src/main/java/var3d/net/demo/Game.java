@@ -23,7 +23,7 @@ public class Game extends VGame {
     @Override
     public void init() {
         //开启自动将 fbx模型 转为 g3db。测试时会提示你将 fbx-conv 工具包复制到某个路径。按照要求复制进去，就能正常转换了。
-        autoFbx2G3db();
+         autoFbx2G3db();
         // openAutoScreenshots(5,StageTest.class);//开启自动截图
         setResources(R.class);//不设置这一句无法使用R.strings.xxxxx的形式使用多语言,但可以使用其他在assets里的资源
         // openProtect("image");//加密image文件夹资源
