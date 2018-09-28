@@ -20,6 +20,10 @@ public class R {
         public static String touchpad_center = "image/touchpad_center.png";
     }
 
+    public static class model {
+        public static String test = "model/test.fbx";
+    }
+
     public static class strings {
         public static String test = "test";
         public static String tost = "tost";

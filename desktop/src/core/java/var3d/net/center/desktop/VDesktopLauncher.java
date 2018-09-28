@@ -1,9 +1,11 @@
 package var3d.net.center.desktop;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.LifecycleListener;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglGraphics;
@@ -30,6 +32,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.sun.awt.AWTUtilities;
 
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -74,9 +77,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -2132,6 +2140,61 @@ public abstract class VDesktopLauncher implements VListener {
                 //pool_textFields.free(textfield);
                 textFieldHashMap.remove(textfield);
                 break;
+        }
+    }
+
+    public void autoFbx2G3db(String homePath){
+        if(Gdx.app.getType()!= Application.ApplicationType.Desktop)return;
+        if(homePath==null)homePath=System.getProperty("java.home")+"/fbx-conv";
+        autoFbx2G3db2(homePath);
+    }
+
+    //开启自动将 fbx模型 转为 G3db模型文件,mac实测通过，windows 和 linux待测
+    //path为
+    private void autoFbx2G3db2(String convPath){
+        if(new File(convPath).exists())fbxToG3dbs(Gdx.files.internal("").file().getAbsoluteFile(),convPath);
+        else {
+            Gdx.app.error("缺少工具包","请将fbx-conv文件夹复制到路径"+convPath);
+            Gdx.app.error("fbx-conv下载地址","https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
+        }
+    }
+
+    private void fbxToG3dbs(File group,String toolPath){
+        //分析 assets，将 fbx 后缀的文件转为 g3db
+        File[] list= group.listFiles();
+        for(File file:list){
+            if(file.isDirectory()){
+                fbxToG3dbs(file,toolPath);
+            }else{
+                if(file.getName().endsWith(".fbx"))fbxToG3db(file,toolPath);
+            }
+        }
+    }
+
+    private void fbxToG3db(File fbxPath,String toolPath){
+        Process process = null;
+        try {
+            switch ( LWJGLUtil.getPlatform() ) {
+                case LWJGLUtil.PLATFORM_LINUX:
+                    String[] convPath=new String[]{toolPath+"/fbx-conv-lin64","-f",fbxPath.getAbsolutePath()};
+                    process = Runtime.getRuntime().exec(convPath);
+                    break;
+                case LWJGLUtil.PLATFORM_WINDOWS:
+                    convPath=new String[]{toolPath+"/fbx-conv-win32.exe"};
+                    process = Runtime.getRuntime().exec("cmd /c dir "+convPath +" -f "+fbxPath.getAbsolutePath());
+                    break;
+                case LWJGLUtil.PLATFORM_MACOSX://目前仅 mac 测试过
+                    convPath=new String[]{toolPath+"/fbx-conv-mac","-f",fbxPath.getAbsolutePath()};
+                    process = Runtime.getRuntime().exec(convPath);
+                    break;
+            }
+            process.waitFor();
+            fbxPath.getAbsoluteFile().delete();//删除 fbx
+            Gdx.app.log("Var3DFrame框架消息",fbxPath.getName()+"转换成g3db模型成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

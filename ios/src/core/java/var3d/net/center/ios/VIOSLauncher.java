@@ -896,4 +896,8 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         ((IOSApplication)Gdx.app).getUIViewController().presentViewController(activityShare, true, null);
     }
 
+    public void autoFbx2G3db(String toolPath){
+
+    }
+
 }

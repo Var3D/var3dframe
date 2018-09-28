@@ -904,4 +904,8 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
             }
         }
     }
+
+    public void autoFbx2G3db(String toolPath){
+
+    }
 }

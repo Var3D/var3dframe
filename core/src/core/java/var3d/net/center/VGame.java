@@ -1689,32 +1689,6 @@ public abstract class VGame implements ApplicationListener {
         return null;
     }
 
-//    private HashMap<String, Constructor> hashConstructor;
-//
-//    public <T extends Actor> UI<T> getUI(Class<T> clazz, Object... objects) {
-//        try {
-//            Constructor[] constructors = clazz.getConstructors();
-//            if (hashConstructor == null) {
-//                hashConstructor = new HashMap<>();
-//                for (Constructor constructor : constructors) {
-//                    if (hashConstructor.get("" + constructor.getParameterTypes().length) != null)
-//                        throw new UnsupportedOperationException("getUI方法不支持调用<构造方法相同且方法参数个数相等>的类");
-//                    hashConstructor.put("" + constructor.getTypeParameters().length, constructor);
-//                    Gdx.app.log("aaaaaaa", constructor.toString());
-//                    Gdx.app.log("aaaaaaa", "constr=" + constructor.getParameterTypes().length);
-//                }
-//            }
-//            Gdx.app.log("aaaaaaa", "objects=" + objects.length);
-//            Constructor constructor = hashConstructor.get("" + objects.length);
-//            Gdx.app.log("aaaaaaa", "c=" + (constructor == null));
-//            constructor.newInstance(objects);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new UnsupportedOperationException(clazz + "构造方法参数错误");
-//        }
-//        return null;
-//    }
-
 
     /**
      * 创建Image
@@ -2332,5 +2306,17 @@ public abstract class VGame implements ApplicationListener {
 
     public void setCenterY(int centerY) {
         this.centerY = centerY;
+    }
+
+
+    /**
+     * 开启自动 fbx 转 g3db
+     */
+    public void autoFbx2G3db(){
+       var3dListener.autoFbx2G3db(null);
+    }
+
+    public void autoFbx2G3db(String toolPath){
+       var3dListener.autoFbx2G3db(toolPath);
     }
 }

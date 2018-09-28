@@ -1141,4 +1141,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         });
 
     }
+
+    public void autoFbx2G3db(String toolPath){
+
+    }
 }
