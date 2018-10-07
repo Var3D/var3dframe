@@ -2149,7 +2149,7 @@ public abstract class VDesktopLauncher implements VListener {
                     String[] convPath=new String[]{toolPath+File.separator+"fbx-conv-lin64","-f",fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
-                case LWJGLUtil.PLATFORM_WINDOWS:
+                case LWJGLUtil.PLATFORM_WINDOWS://windwos10≤‚ ‘Õ®π˝
                     convPath=new String[]{toolPath+File.separator+"fbx-conv-win32.exe","-f",fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
