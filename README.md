@@ -65,7 +65,7 @@ dependencies {
 + [Huang YunKun](https://github.com/htynkn)
 
 # Game case based on var3dframe
-![](https://www.tapegg.com/games/snake3d-ad.jpg)
+![](https://www.tapegg.com/games/snake3d-ad.jpg)![](https://www.tapegg.com/games/hero-ad-en.jpg)
 + [King Greedy Snake](https://itunes.apple.com/us/app/id1249822516)
 + [Snake Kill Brick](https://itunes.apple.com/us/app/id1403252096)
 + [Hero Fighting](https://itunes.apple.com/us/app/id1344510227)
