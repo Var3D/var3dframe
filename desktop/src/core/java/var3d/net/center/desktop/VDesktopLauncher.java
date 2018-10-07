@@ -1,14 +1,9 @@
 package var3d.net.center.desktop;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.LifecycleListener;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl.LwjglGraphics;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -25,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
@@ -33,35 +27,19 @@ import com.badlogic.gdx.utils.StringBuilder;
 import com.sun.awt.AWTUtilities;
 
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 
-import java.awt.AWTException;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
-import java.awt.Canvas;
-import java.awt.Component;
-import java.awt.Composite;
-import java.awt.CompositeContext;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.Paint;
 import java.awt.RenderingHints;
-import java.awt.Robot;
 import java.awt.Shape;
-import java.awt.Stroke;
 import java.awt.Toolkit;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -77,14 +55,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,7 +79,6 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentListener;
 
-import sun.awt.SunToolkit;
 import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
@@ -117,18 +89,14 @@ import var3d.net.center.freefont.FreePaint;
 
 public abstract class VDesktopLauncher implements VListener {
     private VGame game;
-//    public static final JFrame appFrame=new JFrame();
-//
-//    public static void initialize(ApplicationListener listener, LwjglApplicationConfiguration config) {
-//        appFrame.setSize(config.width, config.height);
-//        appFrame.setLocationRelativeTo(null);
-//        appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        Canvas canvas=new Canvas();
-//        canvas.setSize(config.width, config.height);
-//        appFrame.add(canvas);
-//        appFrame.setVisible(true);
-//        LwjglApplication app=new LwjglApplication(listener,canvas);
-//    }
+
+    public VDesktopLauncher(){
+        autoFbx2G3db(null);
+    }
+
+    public VDesktopLauncher(boolean isOpenAutoFbx2G3db){
+        if(isOpenAutoFbx2G3db)autoFbx2G3db(null);
+    }
 
     public void setGame(VGame game) {
         this.game = game;
@@ -346,7 +314,7 @@ public abstract class VDesktopLauncher implements VListener {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setFont(font);
         if (vpaint.getStrokeColor() != null) {
-            // æè¾¹
+            // Ãè±ß
             GlyphVector v = font.createGlyphVector(fm.getFontRenderContext(),
                     txt);
             Shape shape = v.getOutline();
@@ -357,14 +325,14 @@ public abstract class VDesktopLauncher implements VListener {
             g.setColor(getColor(vpaint.getStrokeColor()));
             g.draw(shape);
         } else if (vpaint.getUnderlineText() == true) {
-            // ä¸‹åˆ’çº¿
+            // ÏÂ»®Ïß
             AttributedString as = new AttributedString(txt);
             as.addAttribute(TextAttribute.FONT, font);
             as.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
             g.setColor(getColor(vpaint.getColor()));
             g.drawString(as.getIterator(), 0, fm.getAscent());
         } else if (vpaint.getStrikeThruText() == true) {
-            // åˆ é™¤çº¿
+            // É¾³ıÏß
             AttributedString as = new AttributedString(txt);
             as.addAttribute(TextAttribute.FONT, font);
             as.addAttribute(TextAttribute.STRIKETHROUGH,
@@ -372,7 +340,7 @@ public abstract class VDesktopLauncher implements VListener {
             g.setColor(getColor(vpaint.getColor()));
             g.drawString(as.getIterator(), 0, fm.getAscent());
         } else {
-            // æ™®é€š
+            // ÆÕÍ¨
             g.setColor(getColor(vpaint.getColor()));
             g.drawString(txt, 0, fm.getAscent());
         }
@@ -496,10 +464,10 @@ public abstract class VDesktopLauncher implements VListener {
 
     private void Protect(boolean isReProtect, String... names) {
         for (String name : names) {
-            String proName = Gdx.files.getLocalStoragePath() + name;// æ–‡ä»¶å¤¹å
+            String proName = Gdx.files.getLocalStoragePath() + name;// ÎÄ¼ş¼ĞÃû
             FileHandle hand = Gdx.files.absolute(proName);
             if (!hand.isDirectory())
-                continue;// å¦‚æœä¸æ˜¯æ–‡ä»¶å¤¹å°±è·³è¿‡
+                continue;// Èç¹û²»ÊÇÎÄ¼ş¼Ğ¾ÍÌø¹ı
             FileHandle[] files = hand.list();
             for (FileHandle file : files) {
                 if (file.name().startsWith("."))
@@ -525,7 +493,7 @@ public abstract class VDesktopLauncher implements VListener {
         fis.read(defByte, 0, 2);
         String str_head = game.bytesToHexString(defByte);
         if (str_head.equals("8950") || str_head.equals("ffd8")) {
-            // å¦‚æœæ˜¯å›¾ç‰‡,å°±è·³è¿‡
+            // Èç¹ûÊÇÍ¼Æ¬,¾ÍÌø¹ı
             return;
         }
         File defFile = new File(load.getPath() + "_var3d_def");
@@ -541,7 +509,7 @@ public abstract class VDesktopLauncher implements VListener {
         fis.close();
         load.delete();
         defFile.renameTo(load);
-        Display.setTitle(load.getName() + "è§£å¯†å®Œæˆ");
+        Display.setTitle(load.getName() + "½âÃÜÍê³É");
     }
 
     @SuppressWarnings("resource")
@@ -551,7 +519,7 @@ public abstract class VDesktopLauncher implements VListener {
         fis.read(defByte, 0, 2);
         String str_head = game.bytesToHexString(defByte);
         if (!str_head.equals("8950") && !str_head.equals("ffd8")) {
-            // å¦‚æœä¸æ˜¯å›¾ç‰‡,å°±è·³è¿‡
+            // Èç¹û²»ÊÇÍ¼Æ¬,¾ÍÌø¹ı
             return;
         }
         File defFile = new File(load.getPath() + "_var3d_def");
@@ -569,7 +537,7 @@ public abstract class VDesktopLauncher implements VListener {
         fis.close();
         load.delete();
         defFile.renameTo(load);
-        Display.setTitle(load.getName() + "åŠ å¯†å®Œæˆ");
+        Display.setTitle(load.getName() + "¼ÓÃÜÍê³É");
     }
 
     private static LwjglApplicationConfiguration config;
@@ -627,7 +595,7 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     public static LwjglApplicationConfiguration getConfig(Size size) {
-        //è·å–ç”µè„‘å±å¹•åˆ†è¾¨ç‡(æ—¥äº†ç‹—äº†macèƒ½é€šè¿‡æµ‹è¯•ä½†æ˜¯windowsä¼šæŠ¥é”™ï¼Œåªå¥½å¼ƒç”¨äº†)
+        //»ñÈ¡µçÄÔÆÁÄ»·Ö±æÂÊ(ÈÕÁË¹·ÁËmacÄÜÍ¨¹ı²âÊÔµ«ÊÇwindows»á±¨´í£¬Ö»ºÃÆúÓÃÁË)
         int screenWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() * .9f);
         int screenHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * .9f);
 
@@ -686,33 +654,33 @@ public abstract class VDesktopLauncher implements VListener {
     public void create() {
     }
 
-    //ä»¥ä¸‹æ˜¯ç®€æ˜“UIç¼–è¾‘å™¨
+    //ÒÔÏÂÊÇ¼òÒ×UI±à¼­Æ÷
 
     private boolean isEdit = false;
     private HashMap<Actor, Data> allDatas = new HashMap<Actor, Data>();
     //private ToolFrame toolFrame;
 
     public class Data {
-        public HashMap<Actor, Data> sonDatas = new HashMap<Actor, Data>();//ç”¨æ¥ä¿å­˜å„¿å­ä»¬çš„å±æ€§
-        public Array<EventListener> allListeners;//è¯¥Actoræœ¬æ¥çš„ç›‘å¬
-        public boolean isEdit = false;//æ˜¯å¦è¢«ç¼–è¾‘
-        public Field filed;//ä¿å­˜å¯¹åº”çš„å¯¹è±¡
-        public Touchable prefTouchable;//æœ€åˆçš„Actorå“åº”å±æ€§
-        public int variableType = 1;//æˆå‘˜å˜é‡1ï¼Œå±€éƒ¨å˜é‡2ï¼ŒåŒ¿åå˜é‡0, æš‚ä¸å¯ä¿å­˜å˜é‡-1
-        public String name = null;//å˜é‡å
+        public HashMap<Actor, Data> sonDatas = new HashMap<Actor, Data>();//ÓÃÀ´±£´æ¶ù×ÓÃÇµÄÊôĞÔ
+        public Array<EventListener> allListeners;//¸ÃActor±¾À´µÄ¼àÌı
+        public boolean isEdit = false;//ÊÇ·ñ±»±à¼­
+        public Field filed;//±£´æ¶ÔÓ¦µÄ¶ÔÏó
+        public Touchable prefTouchable;//×î³õµÄActorÏìÓ¦ÊôĞÔ
+        public int variableType = 1;//³ÉÔ±±äÁ¿1£¬¾Ö²¿±äÁ¿2£¬ÄäÃû±äÁ¿0, Ôİ²»¿É±£´æ±äÁ¿-1
+        public String name = null;//±äÁ¿Ãû
     }
 
     private String getPrefName() {
         Data data = allDatas.get(prefActor);
-        if (data == null) return "åŒ¿åæ§ä»¶";
+        if (data == null) return "ÄäÃû¿Ø¼ş";
         if (data.variableType == -1) {
-            return "åŒ¿åæ§ä»¶";
+            return "ÄäÃû¿Ø¼ş";
         } else if (data.variableType == 1) {
-            return data.name + "æ§ä»¶";
+            return data.name + "¿Ø¼ş";
         } else if (data.variableType == 2) {
-            return data.name + "æ§ä»¶";
+            return data.name + "¿Ø¼ş";
         } else {
-            return "åŒ¿åæ§ä»¶";
+            return "ÄäÃû¿Ø¼ş";
         }
     }
 
@@ -722,38 +690,38 @@ public abstract class VDesktopLauncher implements VListener {
         keys.add(key);
         if (nowActor == null) return;
         if (keys.size == 1) {
-            //å•æŒ‰é’®
+            //µ¥°´Å¥
             switch (key) {
-                case Input.Keys.LEFT://å·¦ç§»
+                case Input.Keys.LEFT://×óÒÆ
                     moveByActor(-1, 0);
                     break;
-                case Input.Keys.RIGHT://å³ç§»
+                case Input.Keys.RIGHT://ÓÒÒÆ
                     moveByActor(1, 0);
                     break;
-                case Input.Keys.UP://ä¸Šç§»
+                case Input.Keys.UP://ÉÏÒÆ
                     moveByActor(0, 1);
                     break;
-                case Input.Keys.DOWN://ä¸‹ç§»
+                case Input.Keys.DOWN://ÏÂÒÆ
                     moveByActor(0, -1);
                     break;
             }
         } else if (keys.size == 2) {
-            //åŒæŒ‰é’®ç»„åˆ
+            //Ë«°´Å¥×éºÏ
             int fistKey = keys.get(0);
             if (fistKey == Input.Keys.SHIFT_RIGHT) fistKey = Input.Keys.SHIFT_LEFT;
             if (7 < fistKey && fistKey < 11) {
                 int speed = fistKey == 8 ? 10 : fistKey == 9 ? 50 : 100;
                 switch (key) {
-                    case Input.Keys.LEFT://å·¦ç§»
+                    case Input.Keys.LEFT://×óÒÆ
                         moveByActor(-speed, 0);
                         break;
-                    case Input.Keys.RIGHT://å³ç§»
+                    case Input.Keys.RIGHT://ÓÒÒÆ
                         moveByActor(speed, 0);
                         break;
-                    case Input.Keys.UP://ä¸Šç§»
+                    case Input.Keys.UP://ÉÏÒÆ
                         moveByActor(0, speed);
                         break;
-                    case Input.Keys.DOWN://ä¸‹ç§»
+                    case Input.Keys.DOWN://ÏÂÒÆ
                         moveByActor(0, -speed);
                         break;
                 }
@@ -761,33 +729,33 @@ public abstract class VDesktopLauncher implements VListener {
                 switch (fistKey) {
                     case Input.Keys.SHIFT_LEFT:
                         switch (keys.get(1)) {
-                            case Input.Keys.C: //å±…ä¸­å¯¹é½
+                            case Input.Keys.C: //¾ÓÖĞ¶ÔÆë
                                 if (prefActor != null) {
-                                    messeg = "ç›¸å¯¹" + getPrefName() + "å±…ä¸­å¯¹é½";
+                                    messeg = "Ïà¶Ô" + getPrefName() + "¾ÓÖĞ¶ÔÆë";
                                     moveActor(prefActor.getX(Align.center), prefActor.getY(Align.center), Align.center);
                                 }
                                 break;
-                            case Input.Keys.LEFT://å±…å·¦å¯¹é½
+                            case Input.Keys.LEFT://¾Ó×ó¶ÔÆë
                                 if (prefActor != null) {
-                                    messeg = "ç›¸å¯¹" + getPrefName() + "å±…å·¦å¯¹é½";
+                                    messeg = "Ïà¶Ô" + getPrefName() + "¾Ó×ó¶ÔÆë";
                                     moveActor(prefActor.getX(), nowActor.getY(), Align.bottomLeft);
                                 }
                                 break;
-                            case Input.Keys.RIGHT://å±…å³å¯¹é½
+                            case Input.Keys.RIGHT://¾ÓÓÒ¶ÔÆë
                                 if (prefActor != null) {
-                                    messeg = "ç›¸å¯¹" + getPrefName() + "å±…å³å¯¹é½";
+                                    messeg = "Ïà¶Ô" + getPrefName() + "¾ÓÓÒ¶ÔÆë";
                                     moveActor(prefActor.getRight(), nowActor.getY(), Align.bottomRight);
                                 }
                                 break;
-                            case Input.Keys.UP://å±…ä¸Šå¯¹é½
+                            case Input.Keys.UP://¾ÓÉÏ¶ÔÆë
                                 if (prefActor != null) {
-                                    messeg = "ç›¸å¯¹" + getPrefName() + "å±…ä¸Šå¯¹é½";
+                                    messeg = "Ïà¶Ô" + getPrefName() + "¾ÓÉÏ¶ÔÆë";
                                     moveActor(nowActor.getX(), prefActor.getTop(), Align.topLeft);
                                 }
                                 break;
-                            case Input.Keys.DOWN://å±…ä¸‹å¯¹é½
+                            case Input.Keys.DOWN://¾ÓÏÂ¶ÔÆë
                                 if (prefActor != null) {
-                                    messeg = "ç›¸å¯¹" + getPrefName() + "å±…ä¸‹å¯¹é½";
+                                    messeg = "Ïà¶Ô" + getPrefName() + "¾ÓÏÂ¶ÔÆë";
                                     moveActor(nowActor.getX(), prefActor.getY(), Align.bottomLeft);
                                 }
                                 break;
@@ -796,24 +764,24 @@ public abstract class VDesktopLauncher implements VListener {
                     case Input.Keys.TAB:
                         Stage father = nowActor.getStage();
                         switch (key) {
-                            case Input.Keys.C: //actorç›¸å¯¹äºçˆ¶å…ƒç´ å±…ä¸­
-                                messeg = "ç›¸å¯¹çˆ¶å…ƒç´ å±…ä¸­å¯¹é½";
+                            case Input.Keys.C: //actorÏà¶ÔÓÚ¸¸ÔªËØ¾ÓÖĞ
+                                messeg = "Ïà¶Ô¸¸ÔªËØ¾ÓÖĞ¶ÔÆë";
                                 moveActor(father.getWidth() / 2, father.getHeight() / 2, Align.center);
                                 break;
-                            case Input.Keys.LEFT://ã€‚ã€‚ã€‚ã€‚å±…å·¦
-                                messeg = "ç›¸å¯¹çˆ¶å…ƒç´ å±…å·¦å¯¹é½";
+                            case Input.Keys.LEFT://¡£¡£¡£¡£¾Ó×ó
+                                messeg = "Ïà¶Ô¸¸ÔªËØ¾Ó×ó¶ÔÆë";
                                 moveActor(0, nowActor.getY(), Align.bottomLeft);
                                 break;
-                            case Input.Keys.RIGHT://....å±…å³
-                                messeg = "ç›¸å¯¹çˆ¶å…ƒç´ å±…å³å¯¹é½";
+                            case Input.Keys.RIGHT://....¾ÓÓÒ
+                                messeg = "Ïà¶Ô¸¸ÔªËØ¾ÓÓÒ¶ÔÆë";
                                 moveActor(father.getWidth(), nowActor.getY(), Align.bottomRight);
                                 break;
-                            case Input.Keys.UP://ã€‚ã€‚ã€‚ã€‚å±…ä¸Š
-                                messeg = "ç›¸å¯¹çˆ¶å…ƒç´ å±…ä¸Šå¯¹é½";
+                            case Input.Keys.UP://¡£¡£¡£¡£¾ÓÉÏ
+                                messeg = "Ïà¶Ô¸¸ÔªËØ¾ÓÉÏ¶ÔÆë";
                                 moveActor(nowActor.getX(), father.getHeight(), Align.topLeft);
                                 break;
-                            case Input.Keys.DOWN://....å±…ä¸‹
-                                messeg = "ç›¸å¯¹çˆ¶å…ƒç´ å±…ä¸‹å¯¹é½";
+                            case Input.Keys.DOWN://....¾ÓÏÂ
+                                messeg = "Ïà¶Ô¸¸ÔªËØ¾ÓÏÂ¶ÔÆë";
                                 moveActor(nowActor.getX(), 0, Align.bottomLeft);
                                 break;
                         }
@@ -823,23 +791,23 @@ public abstract class VDesktopLauncher implements VListener {
                 }
             }
         } else if (keys.size == 3) {
-            //ä¸‰æŒ‰é’®ç»„åˆ
+            //Èı°´Å¥×éºÏ
             int fistKey = keys.get(0);
             if (fistKey == Input.Keys.SHIFT_RIGHT) fistKey = Input.Keys.SHIFT_LEFT;
             switch (fistKey) {
                 case Input.Keys.SHIFT_LEFT:
                     if ((keys.get(1) == Input.Keys.LEFT && keys.get(2) == Input.Keys.RIGHT)
                             || (keys.get(1) == Input.Keys.RIGHT && keys.get(2) == Input.Keys.LEFT)) {
-                        //åŒæ—¶æŒ‰ä¸‹å·¦å³é”®ï¼Œxå±…ä¸­å¯¹é½
+                        //Í¬Ê±°´ÏÂ×óÓÒ¼ü£¬x¾ÓÖĞ¶ÔÆë
                         if (prefActor != null) {
-                            messeg = "ç›¸å¯¹" + getPrefName() + "æ°´å¹³å±…ä¸­å¯¹é½";
+                            messeg = "Ïà¶Ô" + getPrefName() + "Ë®Æ½¾ÓÖĞ¶ÔÆë";
                             moveActor(prefActor.getX(Align.center), nowActor.getY(), Align.bottom);
                         }
                     } else if ((keys.get(1) == Input.Keys.UP && keys.get(2) == Input.Keys.DOWN)
                             || (keys.get(1) == Input.Keys.DOWN && keys.get(2) == Input.Keys.UP)) {
-                        //åŒæ—¶æŒ‰ä¸‹ä¸Šä¸‹é”®ï¼Œyå±…ä¸­å¯¹é½
+                        //Í¬Ê±°´ÏÂÉÏÏÂ¼ü£¬y¾ÓÖĞ¶ÔÆë
                         if (prefActor != null) {
-                            messeg = "ç›¸å¯¹" + getPrefName() + "å‚ç›´å±…ä¸­å¯¹é½";
+                            messeg = "Ïà¶Ô" + getPrefName() + "´¹Ö±¾ÓÖĞ¶ÔÆë";
                             moveActor(nowActor.getX(), prefActor.getY(Align.center), Align.left);
                         }
                     }
@@ -855,9 +823,9 @@ public abstract class VDesktopLauncher implements VListener {
     private void moveByActor(float x, float y) {
         if (nowActor == null) return;
         nowActor.moveBy(x, y);
-        String fx = x < 0 ? "å·¦" : x > 0 ? "å³" : y < 0 ? "ä¸‹" : "ä¸Š";
+        String fx = x < 0 ? "×ó" : x > 0 ? "ÓÒ" : y < 0 ? "ÏÂ" : "ÉÏ";
         int speed = (int) Math.abs(x) + (int) Math.abs(y);
-        messeg = fx + "ç§»" + speed + "åƒç´ ";
+        messeg = fx + "ÒÆ" + speed + "ÏñËØ";
         msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
     }
 
@@ -867,18 +835,18 @@ public abstract class VDesktopLauncher implements VListener {
         msg(nowActor, allDatas.get(nowActor), "X:" + (int) nowActor.getX() + ",Y:" + (int) nowActor.getY());
     }
 
-    private Actor prefActor, nowActor;//å½“å‰ç¼–è¾‘çš„Actor
+    private Actor prefActor, nowActor;//µ±Ç°±à¼­µÄActor
 
     public void edit(VStage stage) {
         if (isEdit) {
             isEdit = false;
-            Display.setTitle("UIç¼–è¾‘å…³é—­");
+            Display.setTitle("UI±à¼­¹Ø±Õ");
             for (final Actor actor : stage.getRoot().getChildren()) {
                 Data data = allDatas.get(actor);
                 actor.setDebug(false);
                 actor.setTouchable(data.prefTouchable);
                 if (actor instanceof Group) {
-                    //å¦‚æœæ˜¯Groupï¼Œé‚£å°±éœ€è¦æƒ³åŠæ³•æŠŠå„¿å­ä»¬ç¦æ­¢å“åº”äº†
+                    //Èç¹ûÊÇGroup£¬ÄÇ¾ÍĞèÒªÏë°ì·¨°Ñ¶ù×ÓÃÇ½ûÖ¹ÏìÓ¦ÁË
                     Group group = (Group) actor;
                     for (Actor son : group.getChildren()) {
                         Data sonData = data.sonDatas.get(son);
@@ -895,9 +863,9 @@ public abstract class VDesktopLauncher implements VListener {
             allDatas.clear();
         } else {
             isEdit = true;
-            Display.setTitle("UIç¼–è¾‘å¼€å¯");
+            Display.setTitle("UI±à¼­¿ªÆô");
             //new SubFrame();
-            //ç”¨åå°„å–å¾—è¯¥Actorçš„å˜é‡å
+            //ÓÃ·´ÉäÈ¡µÃ¸ÃActorµÄ±äÁ¿Ãû
             Class clazz = stage.getClass();
             Field[] fields = clazz.getDeclaredFields();
             for (final Actor actor : stage.getRoot().getChildren()) {
@@ -923,7 +891,7 @@ public abstract class VDesktopLauncher implements VListener {
                 actor.setTouchable(Touchable.enabled);
                 data.allListeners = actor.getListeners();
                 if (actor instanceof Group) {
-                    //å¦‚æœæ˜¯Groupï¼Œé‚£å°±éœ€è¦æƒ³åŠæ³•æŠŠå„¿å­ä»¬ç¦æ­¢å“åº”äº†
+                    //Èç¹ûÊÇGroup£¬ÄÇ¾ÍĞèÒªÏë°ì·¨°Ñ¶ù×ÓÃÇ½ûÖ¹ÏìÓ¦ÁË
                     Group group = (Group) actor;
                     for (Actor son : group.getChildren()) {
                         Data sonData = new Data();
@@ -934,7 +902,7 @@ public abstract class VDesktopLauncher implements VListener {
                 }
                 allDatas.put(actor, data);
                 if (data.filed == null) {
-                    //è¯´æ˜æ˜¯åŒ¿åå˜é‡æˆ–è€…å±€éƒ¨å˜é‡ï¼Œç›´æ¥æŠ“æºç åˆ†æ
+                    //ËµÃ÷ÊÇÄäÃû±äÁ¿»òÕß¾Ö²¿±äÁ¿£¬Ö±½Ó×¥Ô´Âë·ÖÎö
                     String name = getPartialVariable(stage, actor);
                     if (name == null) {
                         data.variableType = -1;
@@ -951,7 +919,7 @@ public abstract class VDesktopLauncher implements VListener {
 
                     public boolean touchDown(InputEvent event, float px, float py, int pointer, int but) {
                         if (nowActor != actor) {
-                            messeg = "é€‰å–";
+                            messeg = "Ñ¡È¡";
                             if (prefActor != null) prefActor.setDebug(false);
                             prefActor = nowActor;
                             if (prefActor != null) prefActor.setDebug(true);
@@ -968,15 +936,15 @@ public abstract class VDesktopLauncher implements VListener {
 
                     public void touchDragged(InputEvent event, float x, float y, int pointer) {
                         if (keys.size == 0) {
-                            messeg = "æ‹–åŠ¨";
+                            messeg = "ÍÏ¶¯";
                             actor.moveBy(x - starX, y - starY);
                         } else if (keys.size == 1) {
                             int key = keys.get(0);
                             if (key == Input.Keys.X) {
-                                messeg = "å‚ç›´é”å®š";
+                                messeg = "´¹Ö±Ëø¶¨";
                                 actor.moveBy(x - starX, 0);
                             } else if (key == Input.Keys.Y) {
-                                messeg = "æ°´å¹³é”å®š";
+                                messeg = "Ë®Æ½Ëø¶¨";
                                 actor.moveBy(0, y - starY);
                             }
                         }
@@ -995,29 +963,29 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    private String messeg = "";//æ“ä½œæ¶ˆæ¯
+    private String messeg = "";//²Ù×÷ÏûÏ¢
 
     private void msg(Actor actor, Data data, String xy) {
         String name, type = "";
         if (data.variableType == -1) {
-            name = "æ— æ³•ä¿å­˜çš„Actor";
+            name = "ÎŞ·¨±£´æµÄActor";
         } else if (data.variableType == 1) {
-            type = "æˆå‘˜å˜é‡";
+            type = "³ÉÔ±±äÁ¿";
             name = data.name;
         } else if (data.variableType == 2) {
-            type = "å±€éƒ¨å˜é‡";
+            type = "¾Ö²¿±äÁ¿";
             name = data.name;
         } else {
-            type = "åŒ¿åå˜é‡";
+            type = "ÄäÃû±äÁ¿";
             name = "";
         }
-        Display.setTitle(type + ":" + name + " ç±»å‹:" + actor.getClass().getSimpleName()
-                + " åæ ‡:" + xy + " æ¶ˆæ¯:" + messeg);
+        Display.setTitle(type + ":" + name + " ÀàĞÍ:" + actor.getClass().getSimpleName()
+                + " ×ø±ê:" + xy + " ÏûÏ¢:" + messeg);
     }
 
     private class SubFrame extends JFrame {
         public SubFrame() {
-            setTitle("å­çª—å£");
+            setTitle("×Ó´°¿Ú");
             setSize(400, 300);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationByPlatform(true);
@@ -1027,19 +995,19 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    //ç”¨æ¥è·å–actorçš„å±€éƒ¨å˜é‡åï¼Œé™¤éä¸ºåŒ¿åå˜é‡
+    //ÓÃÀ´»ñÈ¡actorµÄ¾Ö²¿±äÁ¿Ãû£¬³ı·ÇÎªÄäÃû±äÁ¿
     private String getPartialVariable(VStage stage, Actor actor) {
         FileHandle fileHandle = getStageJavaFile(stage);
         if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
         if (fileHandle == null) return null;
         String javaStr = fileHandle.readString();
-        String[] javaStrLines = javaStr.split("\n");//æŠŠä»£ç æŒ‰è¡Œå·å­˜æ”¾è¿›æ•°ç»„ä¸­
+        String[] javaStrLines = javaStr.split("\n");//°Ñ´úÂë°´ĞĞºÅ´æ·Å½øÊı×éÖĞ
         Data data = allDatas.get(actor);
         StackTraceElement[] elements = allStacks.get(actor);
-        if (elements == null) return null;//ä¸ºnullè¡¨ç¤ºè¿™æ˜¯éUIç±»åˆ›å»ºçš„æ§ä»¶ï¼Œä»¥åå†å®ç°éUIç±»åˆ›å»ºçš„æ§ä»¶
-        String str_class = elements[2].getClassName();//å˜é‡æ‰€åœ¨çš„ç±»å…¨å
-        if (str_class.equals(stage.getClass().getName())) {//å¦‚æœæ‰€åœ¨çš„ç±»å°±æ˜¯ä¼ å…¥çš„è¿™ä¸ªStage
-            int linNumber = elements[2].getLineNumber();//è·å–è¯¥å˜é‡è°ƒç”¨åˆå§‹åŒ–æ‰€åœ¨çš„è¡Œå·
+        if (elements == null) return null;//Îªnull±íÊ¾ÕâÊÇ·ÇUIÀà´´½¨µÄ¿Ø¼ş£¬ÒÔºóÔÙÊµÏÖ·ÇUIÀà´´½¨µÄ¿Ø¼ş
+        String str_class = elements[2].getClassName();//±äÁ¿ËùÔÚµÄÀàÈ«Ãû
+        if (str_class.equals(stage.getClass().getName())) {//Èç¹ûËùÔÚµÄÀà¾ÍÊÇ´«ÈëµÄÕâ¸öStage
+            int linNumber = elements[2].getLineNumber();//»ñÈ¡¸Ã±äÁ¿µ÷ÓÃ³õÊ¼»¯ËùÔÚµÄĞĞºÅ
             Array<String> javaStrArr = new Array<>();
             int partNumber = 0;
             for (int i = linNumber - 1; i > 1; i--) {
@@ -1047,8 +1015,8 @@ public abstract class VDesktopLauncher implements VListener {
                 javaStrLine = javaStrLine.replaceAll(" +", " ");
                 javaStrLine = javaStrLine.replaceAll(" \\.", ".");
                 javaStrLine = javaStrLine.replaceAll("\\. ", ".");
-                javaStrLine = javaStrLine.replaceAll(" ", "ãœ¶");
-                //ç§»é™¤æ³¨é‡Š
+                javaStrLine = javaStrLine.replaceAll(" ", replace);
+                //ÒÆ³ı×¢ÊÍ
                 String noAnnotations = javaStrLine.replaceAll(
                         "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
                 if (noAnnotations.indexOf(";") != -1 || fileType == FileType.Kotlin) {
@@ -1071,13 +1039,13 @@ public abstract class VDesktopLauncher implements VListener {
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = javaStrArr.size - 1; i > -1; i--) {
                 String strLine = javaStrArr.get(i);
-                stringBuilder.append("ãœ¶");
+                stringBuilder.append(replace);
                 stringBuilder.append(strLine);
             }
             String codeStr = stringBuilder.toString();
             int idex;
             if ((idex = codeStr.indexOf("=")) != -1) {
-                String name = codeStr.substring(0, idex).replaceAll("ãœ¶", " ").trim();
+                String name = codeStr.substring(0, idex).replaceAll(replace, " ").trim();
                 name = name.replaceAll(" +", " ");
                 idex = name.lastIndexOf(" ");
                 if (idex != -1) {
@@ -1085,7 +1053,7 @@ public abstract class VDesktopLauncher implements VListener {
                 }
                 return name.trim();
             } else {
-                return "?";//åŒ¿åå˜é‡
+                return "?";//ÄäÃû±äÁ¿
             }
         }
 
@@ -1093,14 +1061,15 @@ public abstract class VDesktopLauncher implements VListener {
         return null;
     }
 
-    //ä¿å­˜ç¼–è¾‘è¿‡çš„Actor
+    //±£´æ±à¼­¹ıµÄActor
+   private final static String replace="ıU";
     public void saveUI(VStage stage) {
-        //éå†stageä¸­çš„actorï¼Œå¹¶æ‰¾å‡ºè¯¥actoråœ¨stageåˆå§‹åŒ–æ—¶çš„è¡Œå·ä½ç½®
+        //±éÀústageÖĞµÄactor£¬²¢ÕÒ³ö¸ÃactorÔÚstage³õÊ¼»¯Ê±µÄĞĞºÅÎ»ÖÃ
         FileHandle fileHandle = getStageJavaFile(stage);
         if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
         if (fileHandle == null) return;
         String javaStr = fileHandle.readString();
-        String[] javaStrLines = javaStr.split("\n");//æŠŠä»£ç æŒ‰è¡Œå·å­˜æ”¾è¿›æ•°ç»„ä¸­
+        String[] javaStrLines = javaStr.split("\n");//°Ñ´úÂë°´ĞĞºÅ´æ·Å½øÊı×éÖĞ
         for (final Actor actor : stage.getRoot().getChildren()) {
             Data data = allDatas.get(actor);
             if (data == null) return;
@@ -1118,8 +1087,8 @@ public abstract class VDesktopLauncher implements VListener {
                         javaStrLine = javaStrLine.replaceAll(" +", " ");
                         javaStrLine = javaStrLine.replaceAll(" \\.", ".");
                         javaStrLine = javaStrLine.replaceAll("\\. ", ".");
-                        javaStrLine = javaStrLine.replaceAll(" ", "ãœ¶");
-                        //ç§»é™¤æ³¨é‡Š
+                        javaStrLine = javaStrLine.replaceAll(" ", replace);
+                        //ÒÆ³ı×¢ÊÍ
                         String noAnnotations = javaStrLine.replaceAll(
                                 "\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
                         if (noAnnotations.indexOf(";") != -1 || fileType == FileType.Kotlin) {
@@ -1143,11 +1112,11 @@ public abstract class VDesktopLauncher implements VListener {
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int len = javaStrArr.size - 1, i = len; i > -1; i--) {
                         String strLine = javaStrArr.get(i).trim();
-                        stringBuilder.append("ãœ¶");
+                        stringBuilder.append(replace);
                         stringBuilder.append(strLine);
                     }
-                    String codeStr = stringBuilder.toString().replaceAll("ãœ¶+", "ãœ¶");
-                    if (codeStr.startsWith("ãœ¶")) {
+                    String codeStr = stringBuilder.toString().replaceAll(replace+"+", replace);
+                    if (codeStr.startsWith(replace)) {
                         codeStr = codeStr.substring(1);
                     }
                     // Gdx.app.log("aaaaaa", codeStr);
@@ -1156,15 +1125,15 @@ public abstract class VDesktopLauncher implements VListener {
                         floatNumberSuffix = "f";
                     int idex;
                     if ((idex = codeStr.lastIndexOf("setPosition(")) != -1) {
-                        //è¯´æ˜æ‹¥æœ‰setPositionæ–¹æ³•
+                        //ËµÃ÷ÓµÓĞsetPosition·½·¨
                         String s1 = codeStr.substring(idex);
                         s1 = s1.substring(0, s1.indexOf(")") + 1);
                         codeStr = codeStr.replace(s1, "setPosition(" + (int) actor.getX() + floatNumberSuffix + "," + (int) actor.getY() + floatNumberSuffix + ")");
                     } else {
-                        //å¦‚æœæ²¡æœ‰setPositionæ–¹æ³•,é‚£ä¹ˆå»å®šä½show,getActor()
+                        //Èç¹ûÃ»ÓĞsetPosition·½·¨,ÄÇÃ´È¥¶¨Î»show,getActor()
                         idex = codeStr.lastIndexOf(".show(");
                         if (idex == -1) idex = codeStr.lastIndexOf(".getActor(");
-                        //æ¥ç€æŠŠå­—ç¬¦åˆ†ä¸ºä¸¤æ®µ
+                        //½Ó×Å°Ñ×Ö·û·ÖÎªÁ½¶Î
                         String s1 = codeStr.substring(0, idex);
                         String s2 = codeStr.substring(idex);
                         codeStr = s1 + ".setPosition(" + (int) actor.getX() + floatNumberSuffix + "," + (int) actor.getY() + floatNumberSuffix + ")" + s2;
@@ -1192,7 +1161,7 @@ public abstract class VDesktopLauncher implements VListener {
                     for (int i = 0; i < listStr.size(); i++) {
                         out.append("        ");
                         // Gdx.app.log("bbbbbb", listStr.get(i));
-                        String sline = listStr.get(i).replaceAll("ãœ¶", " ");
+                        String sline = listStr.get(i).replaceAll(replace, " ");
                         //Gdx.app.log("cccccc", sline);
                         sline = sline.replaceAll(" \\.", ".");
                         sline = sline.replaceAll("\\. ", ".");
@@ -1204,7 +1173,7 @@ public abstract class VDesktopLauncher implements VListener {
                 }
             }
         }
-        //é‡æ–°ç»„è£…javaä»£ç 
+        //ÖØĞÂ×é×°java´úÂë
         StringBuilder out = new StringBuilder();
         boolean prefLineIsNull = false;
         for (int i = 0; i < javaStrLines.length; i++) {
@@ -1219,13 +1188,13 @@ public abstract class VDesktopLauncher implements VListener {
             out.append(javaStrLines[i]);
             out.append("\n");
         }
-        //ä¿å­˜javaä»£ç 
+        //±£´æjava´úÂë
         fileHandle.writeString(out.toString(), false);
-        //å…³é—­çª—å£
+        //¹Ø±Õ´°¿Ú
         Gdx.app.exit();
     }
 
-    //è¯»å–Stage javaæ–‡ä»¶
+    //¶ÁÈ¡Stage javaÎÄ¼ş
     private HashMap<VStage, FileHandle> stageFiles = new HashMap<VStage, FileHandle>();
 
     private FileType fileType;
@@ -1240,7 +1209,7 @@ public abstract class VDesktopLauncher implements VListener {
         String tryPath = proName + "/core/src/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
         FileHandle fileHandle = Gdx.files.absolute(tryPath);
         if (!fileHandle.exists()) {
-            //å¦‚æœä¸å­˜åœ¨ï¼Œåˆ™æ‰¾å¦ä¸€ä¸ªè·¯å¾„
+            //Èç¹û²»´æÔÚ£¬ÔòÕÒÁíÒ»¸öÂ·¾¶
             tryPath = proName + "/core/src/main/java/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
             fileHandle = Gdx.files.absolute(tryPath);
         }
@@ -1258,7 +1227,7 @@ public abstract class VDesktopLauncher implements VListener {
         String tryPath = proName + "/core/src/" + pack + "/" + stage.getClass().getSimpleName() + ".kt";
         FileHandle fileHandle = Gdx.files.absolute(tryPath);
         if (!fileHandle.exists()) {
-            //å¦‚æœä¸å­˜åœ¨ï¼Œåˆ™æ‰¾å¦ä¸€ä¸ªè·¯å¾„
+            //Èç¹û²»´æÔÚ£¬ÔòÕÒÁíÒ»¸öÂ·¾¶
             tryPath = proName + "/core/src/main/java/" + pack + "/" + stage.getClass().getSimpleName() + ".kt";
             fileHandle = Gdx.files.absolute(tryPath);
         }
@@ -1269,7 +1238,7 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    //è·å–è¡Œå·æ¥å£å®ç°
+    //»ñÈ¡ĞĞºÅ½Ó¿ÚÊµÏÖ
     private HashMap<Actor, StackTraceElement[]> allStacks = new HashMap<>();
 
     public void getLineNumber(Actor actor) {
@@ -1278,7 +1247,7 @@ public abstract class VDesktopLauncher implements VListener {
         allStacks.put(actor, elements);
     }
 
-    //è¿”å›å®‰å…¨åŒºåŸŸ(landLeft[132.0,63.0,132.0,0.0]/port[0.0,102.0,0.0,132.0])
+    //·µ»Ø°²È«ÇøÓò(landLeft[132.0,63.0,132.0,0.0]/port[0.0,102.0,0.0,132.0])
     private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
@@ -1469,9 +1438,9 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     /**
-     * ä½¿ç”¨zipè¿›è¡Œè§£å‹ç¼©
+     * Ê¹ÓÃzip½øĞĞ½âÑ¹Ëõ
      *
-     * @return è§£å‹åçš„å­—ç¬¦ä¸²
+     * @return ½âÑ¹ºóµÄ×Ö·û´®
      */
     public static final String unzip(String compressedStr) {
         if (compressedStr == null) {
@@ -1520,10 +1489,10 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     /**
-     * ä½¿ç”¨zipè¿›è¡Œå‹ç¼©
+     * Ê¹ÓÃzip½øĞĞÑ¹Ëõ
      *
-     * @param str å‹ç¼©å‰çš„æ–‡æœ¬
-     * @return è¿”å›å‹ç¼©åçš„æ–‡æœ¬
+     * @param str Ñ¹ËõÇ°µÄÎÄ±¾
+     * @return ·µ»ØÑ¹ËõºóµÄÎÄ±¾
      */
     public static final String zip(String str) {
         if (str == null)
@@ -1559,7 +1528,7 @@ public abstract class VDesktopLauncher implements VListener {
         return compressedStr;
     }
 
-    //åŸç”Ÿè¾“å…¥æ¡†
+    //Ô­ÉúÊäÈë¿ò
     private HashMap<NativeTextField,VTextField> textFieldHashMap;
 
     private Pool<VTextField> pool_textFields=new Pool<VTextField>() {
@@ -1570,7 +1539,7 @@ public abstract class VDesktopLauncher implements VListener {
         }
     };
 
-    //è·å–çª—å£è¾¹æ¡†å°ºå¯¸
+    //»ñÈ¡´°¿Ú±ß¿ò³ß´ç
     private Insets insets;
     public Insets getInset(){
         if(insets!=null)return insets;
@@ -1598,8 +1567,8 @@ public abstract class VDesktopLauncher implements VListener {
             super(pref);
             setAlwaysOnTop(true);
             setLayout(null);
-            setUndecorated(true);//ç¦ç”¨æˆ–å¯ç”¨çª—å£è£…é¥°ï¼Œå¦‚æœä¸ºtrue,åˆ™ä¸ºæ²¡æœ‰å¯åŠ¨çª—å£è£…é¥°ï¼Œåªæœ‰åœ¨çª—å£ä¸å¯è§æ—¶æ‰èƒ½è°ƒç”¨ï¼Œå¦åˆ™ä¼šæŠ›å‡ºå¼‚å¸¸
-            getRootPane().setWindowDecorationStyle(JRootPane.NONE);//è®¾ç½®ä¸ä½¿ç”¨çª—å£è£…é¥°
+            setUndecorated(true);//½ûÓÃ»òÆôÓÃ´°¿Ú×°ÊÎ£¬Èç¹ûÎªtrue,ÔòÎªÃ»ÓĞÆô¶¯´°¿Ú×°ÊÎ£¬Ö»ÓĞÔÚ´°¿Ú²»¿É¼ûÊ±²ÅÄÜµ÷ÓÃ£¬·ñÔò»áÅ×³öÒì³£
+            getRootPane().setWindowDecorationStyle(JRootPane.NONE);//ÉèÖÃ²»Ê¹ÓÃ´°¿Ú×°ÊÎ
             AWTUtilities.setWindowOpaque(this,false);
             pref=this;
             setName ("root");
@@ -1664,7 +1633,7 @@ public abstract class VDesktopLauncher implements VListener {
             });
 
             textField.addFocusListener(focusListener=new FocusListener() {
-                public void focusLost(FocusEvent e) {//å¤±å»ç„¦ç‚¹æ—¶
+                public void focusLost(FocusEvent e) {//Ê§È¥½¹µãÊ±
                     if(textField.getText()==null||textField.getText().equals("")){
                         if(textField.isVisible()) {
                             textField.setVisible(false);
@@ -1680,7 +1649,7 @@ public abstract class VDesktopLauncher implements VListener {
                         }
                     });
                 }
-                public void focusGained(FocusEvent e) {//è·å¾—ç„¦ç‚¹æ—¶
+                public void focusGained(FocusEvent e) {//»ñµÃ½¹µãÊ±
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
                             NativeTextField.TextFieldListener textFieldListener =nativeTextField.getTextFieldListener();
@@ -1695,7 +1664,7 @@ public abstract class VDesktopLauncher implements VListener {
             textField.addKeyListener(keyListener=new KeyListener() {
                 @Override
                 public void keyTyped(KeyEvent event) {
-                    //System.out.println("åˆ é™¤é”®");
+                    //System.out.println("É¾³ı¼ü");
                 }
 
                 @Override
@@ -1780,7 +1749,7 @@ public abstract class VDesktopLauncher implements VListener {
             setFocusable(true);
         }
 
-        //è·å¾—ç„¦ç‚¹
+        //»ñµÃ½¹µã
         public void becomeFirstResponder(){
             textField.setVisible(true);
             textMessage.setVisible(false);
@@ -1967,7 +1936,7 @@ public abstract class VDesktopLauncher implements VListener {
         }
 
 
-        //æœ¬åœ°è¾“å…¥æ¡†åŒæ­¥ä¸º libgdx ç«¯åæ ‡
+        //±¾µØÊäÈë¿òÍ¬²½Îª libgdx ¶Ë×ø±ê
         private int sysX,sysY;
         public void synchronousPosition(){
             if(nativeTextField.getStage()!=null) {
@@ -2143,24 +2112,25 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
-    public void autoFbx2G3db(String homePath){
-        if(Gdx.app.getType()!= Application.ApplicationType.Desktop)return;
-        if(homePath==null)homePath=System.getProperty("java.home")+"/fbx-conv";
+    private void autoFbx2G3db(String homePath){
+        //if(Gdx.app.getType()!= Application.ApplicationType.Desktop)return;
+        if(homePath==null)homePath=System.getProperty("java.home")+File.separator+"fbx-conv";
         autoFbx2G3db2(homePath);
     }
 
-    //å¼€å¯è‡ªåŠ¨å°† fbxæ¨¡å‹ è½¬ä¸º G3dbæ¨¡å‹æ–‡ä»¶,macå®æµ‹é€šè¿‡ï¼Œwindows å’Œ linuxå¾…æµ‹
-    //pathä¸º
+    //¿ªÆô×Ô¶¯½« fbxÄ£ĞÍ ×ªÎª G3dbÄ£ĞÍÎÄ¼ş,macÊµ²âÍ¨¹ı£¬windows ºÍ linux´ı²â
+    //pathÎª
     private void autoFbx2G3db2(String convPath){
-        if(new File(convPath).exists())fbxToG3dbs(Gdx.files.internal("").file().getAbsoluteFile(),convPath);
+        String assetsPath = System.getProperty("user.dir");
+        if(new File(convPath).exists())fbxToG3dbs(new File(assetsPath),convPath);
         else {
-            Gdx.app.error("ç¼ºå°‘å·¥å…·åŒ…","è¯·å°†fbx-convæ–‡ä»¶å¤¹å¤åˆ¶åˆ°è·¯å¾„"+convPath);
-            Gdx.app.error("fbx-convä¸‹è½½åœ°å€","https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
+            System.err.println("È±ÉÙ¹¤¾ß°ü : Çë½«fbx-convÎÄ¼ş¼Ğ¸´ÖÆµ½Â·¾¶"+convPath);
+            System.err.println("fbx-convÏÂÔØµØÖ· : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
         }
     }
 
     private void fbxToG3dbs(File group,String toolPath){
-        //åˆ†æ assetsï¼Œå°† fbx åç¼€çš„æ–‡ä»¶è½¬ä¸º g3db
+        //·ÖÎö assets£¬½« fbx ºó×ºµÄÎÄ¼ş×ªÎª g3db
         File[] list= group.listFiles();
         for(File file:list){
             if(file.isDirectory()){
@@ -2176,21 +2146,22 @@ public abstract class VDesktopLauncher implements VListener {
         try {
             switch ( LWJGLUtil.getPlatform() ) {
                 case LWJGLUtil.PLATFORM_LINUX:
-                    String[] convPath=new String[]{toolPath+"/fbx-conv-lin64","-f",fbxPath.getAbsolutePath()};
+                    String[] convPath=new String[]{toolPath+File.separator+"fbx-conv-lin64","-f",fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
                 case LWJGLUtil.PLATFORM_WINDOWS:
-                    convPath=new String[]{toolPath+"/fbx-conv-win32.exe"};
-                    process = Runtime.getRuntime().exec("cmd /c dir "+convPath +" -f "+fbxPath.getAbsolutePath());
+                    convPath=new String[]{toolPath+File.separator+"fbx-conv-win32.exe","-f",fbxPath.getAbsolutePath()};
+                    process = Runtime.getRuntime().exec(convPath);
                     break;
-                case LWJGLUtil.PLATFORM_MACOSX://ç›®å‰ä»… mac æµ‹è¯•è¿‡
-                    convPath=new String[]{toolPath+"/fbx-conv-mac","-f",fbxPath.getAbsolutePath()};
+                case LWJGLUtil.PLATFORM_MACOSX://Ä¿Ç°½ö mac ²âÊÔ¹ı
+                    convPath=new String[]{toolPath+File.separator+"fbx-conv-mac","-f",fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
             }
             process.waitFor();
-            fbxPath.getAbsoluteFile().delete();//åˆ é™¤ fbx
-            Gdx.app.log("Var3DFrameæ¡†æ¶æ¶ˆæ¯",fbxPath.getName()+"è½¬æ¢æˆg3dbæ¨¡å‹æˆåŠŸ");
+            fbxPath.getAbsoluteFile().delete();//É¾³ı fbx
+            System.err.println("Var3DFrame¿ò¼ÜÏûÏ¢ : "+fbxPath.getName()+"×ª»»³Ég3dbÄ£ĞÍ³É¹¦");
+            //System.err.println("Var3DFrame¿ò¼ÜÏûÏ¢ : ´°¿Ú½«»á¹Ø±Õ,ÇëÖØĞÂÆô¶¯²ÅÄÜ¼ÌĞø²âÊÔ");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -2307,16 +2307,4 @@ public abstract class VGame implements ApplicationListener {
     public void setCenterY(int centerY) {
         this.centerY = centerY;
     }
-
-
-    /**
-     * 开启自动 fbx 转 g3db
-     */
-    public void autoFbx2G3db(){
-       var3dListener.autoFbx2G3db(null);
-    }
-
-    public void autoFbx2G3db(String toolPath){
-       var3dListener.autoFbx2G3db(toolPath);
-    }
 }

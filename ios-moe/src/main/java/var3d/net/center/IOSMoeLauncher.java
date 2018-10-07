@@ -29,5 +29,4 @@ public class IOSMoeLauncher extends VIOSMoeLauncher {
     public static void main(String[] argv) {
         UIKit.UIApplicationMain(0, null, null, IOSMoeLauncher.class.getName());
     }
-
 }
