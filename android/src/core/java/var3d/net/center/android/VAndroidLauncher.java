@@ -115,7 +115,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         if (title != null && !"".equals(title)) {
             intent.putExtra(Intent.EXTRA_SUBJECT, title);
         }
-        intent.putExtra(Intent.EXTRA_TEXT, context+url);
+        intent.putExtra(Intent.EXTRA_TEXT, context + url);
         startActivity(Intent.createChooser(intent, title));
     }
 
@@ -134,11 +134,20 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
-    public void showAchievements(){};
+    public void showAchievements() {
+    }
 
-    public void updataAchievements(String identifier, double percentComplete){};
+    ;
 
-    public void showChallenges(){};
+    public void updataAchievements(String identifier, double percentComplete) {
+    }
+
+    ;
+
+    public void showChallenges() {
+    }
+
+    ;
 
     @Override
     public void log(String txt) {
@@ -185,7 +194,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
-    public void openAd(String str, Object... objects){
+    public void openAd(String str, Object... objects) {
 
     }
 
@@ -444,8 +453,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     public void keyUp(int key) {
     }
 
-    public Vector2 getAppScreenSize(){
-        return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+    public Vector2 getAppScreenSize() {
+        return new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     //返回安全区域
@@ -461,13 +470,13 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     //原生输入框
     private AbsoluteLayout parent;//父容器
-    private Activity activity=this;
-    private HashMap<NativeTextField,VEditText> textFieldHashMap;
-    private float screenWidth,screenHeight;
+    private Activity activity = this;
+    private HashMap<NativeTextField, VEditText> textFieldHashMap;
+    private float screenWidth, screenHeight;
     private RoundRectShape roundRectShape;
     private RectStrokeShape rectShape;
 
-    private Pool<VEditText> pool_textFields=new Pool<VEditText>() {
+    private Pool<VEditText> pool_textFields = new Pool<VEditText>() {
         @Override
         protected VEditText newObject() {
             VEditText textfield = new VEditText(activity);
@@ -477,18 +486,18 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     public class RectStrokeShape extends RectShape {
         private float strokeWidth;
-        private int  strokeColor,color;
+        private int strokeColor, color;
 
         public RectStrokeShape() {
 
         }
 
-        public void setStrokeWidth(float strokeWidth){
-            this.strokeWidth=strokeWidth;
+        public void setStrokeWidth(float strokeWidth) {
+            this.strokeWidth = strokeWidth;
         }
 
-        public void setStrokeColor(int strokeColor){
-            this.strokeColor=strokeColor;
+        public void setStrokeColor(int strokeColor) {
+            this.strokeColor = strokeColor;
         }
 
         @Override
@@ -512,13 +521,13 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         }
     }
 
-    public class VEditText extends EditText implements Pool.Poolable{
+    public class VEditText extends EditText implements Pool.Poolable {
         private NativeTextField nativeTextField;
         private AbsoluteLayout.LayoutParams layoutParams;
-        private ShapeDrawable drawable_roundRect,drawable_rect,drawable_cursor;
+        private ShapeDrawable drawable_roundRect, drawable_rect, drawable_cursor;
         private ColorDrawable colorDrawable;
         private GradientDrawable gradientDrawable;
-        private boolean isHasFocus=false;
+        private boolean isHasFocus = false;
 
         public VEditText(Context context) {
             super(context);
@@ -530,17 +539,19 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
             setMinHeight(0);
             setMinWidth(0);
             setMinimumHeight(0);
-            setPadding(getPaddingLeft(),0,getPaddingRight(),0);
+            setPadding(getPaddingLeft(), 0, getPaddingRight(), 0);
 
             setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);//关掉横屏模式下的键盘全屏
 
-            drawable_roundRect= new ShapeDrawable(roundRectShape);
+            drawable_roundRect = new ShapeDrawable(roundRectShape);
             drawable_roundRect.getPaint().setColor(android.graphics.Color.WHITE);
-            setBackground(drawable_roundRect);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                setBackground(drawable_roundRect);
+            }
         }
 
         //设置光标颜色，这个方法目前小米5s plus测试无效，待修改
-        public void setTintColor(Color color){
+        public void setTintColor(Color color) {
 //            try {
 //                Field fCursorDrawableRes =
 //                        TextView.class.getDeclaredField("mCursorDrawableRes");
@@ -565,10 +576,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         }
 
 
-        public void setFontSize(){
-            float fontSize=nativeTextField.getFontSize();
-            if(fontSize==0)return;
-            if(nativeTextField.getStage()!=null) {
+        public void setFontSize() {
+            float fontSize = nativeTextField.getFontSize();
+            if (fontSize == 0) return;
+            if (nativeTextField.getStage() != null) {
                 Stage stage = nativeTextField.getStage();
                 float blx;
                 float fullWidth;
@@ -579,12 +590,12 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                     fullWidth = stage.getWidth();
                 }
                 blx = 1f / fullWidth * Gdx.graphics.getWidth();
-                fontSize=nativeTextField.getFontSize()*blx;
-                setTextSize(TypedValue.COMPLEX_UNIT_PX,fontSize );
+                fontSize = nativeTextField.getFontSize() * blx;
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
                 // 新建一个可以添加属性的文本对象
                 SpannableString ss = new SpannableString(nativeTextField.getMessageText());
                 // 新建一个属性对象,设置文字的大小
-                AbsoluteSizeSpan ass = new AbsoluteSizeSpan((int)fontSize,false);
+                AbsoluteSizeSpan ass = new AbsoluteSizeSpan((int) fontSize, false);
                 // 附加属性到文本
                 ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 // 设置hint
@@ -592,13 +603,14 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
             }
         }
 
-        public void setLibgdxTextField(NativeTextField nativeTextField){
-            this.nativeTextField=nativeTextField;
+        public void setLibgdxTextField(NativeTextField nativeTextField) {
+            this.nativeTextField = nativeTextField;
         }
 
         //不知道为什么安卓也无法设置文本对齐...
-        public void  setAlignment(int alignment){
-                switch (alignment){
+        public void setAlignment(int alignment) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                switch (alignment) {
                     case Align.left:
                         setTextAlignment(TextView.TEXT_ALIGNMENT_TEXT_START);
                         break;
@@ -626,80 +638,89 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                     case Align.bottom:
                         setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
                         break;
+                }
+                invalidate();
+                parent.requestLayout();
             }
-            invalidate();
-            parent.requestLayout();
         }
 
         //本地输入框同步为 libgdx 端坐标
-        public void synchronousPosition(){
-            if(nativeTextField.getStage()!=null) {
+        public void synchronousPosition() {
+            if (nativeTextField.getStage() != null) {
                 Stage stage = nativeTextField.getStage();
-                float w,h,x,y,blx,bly;
-                float fullWidth,fullHeight,cutWidth=0,cutHeight=0;
-                if(stage instanceof VStage){
-                    VStage vStage= (VStage) stage;
-                    fullWidth=vStage.getFullWidth();
-                    fullHeight=vStage.getFullHeight();
-                    cutWidth=vStage.getCutWidth();
-                    cutHeight=vStage.getCutHeight();
-                }else {
-                    fullWidth=stage.getWidth();
-                    fullHeight=stage.getHeight();
+                float w, h, x, y, blx, bly;
+                float fullWidth, fullHeight, cutWidth = 0, cutHeight = 0;
+                if (stage instanceof VStage) {
+                    VStage vStage = (VStage) stage;
+                    fullWidth = vStage.getFullWidth();
+                    fullHeight = vStage.getFullHeight();
+                    cutWidth = vStage.getCutWidth();
+                    cutHeight = vStage.getCutHeight();
+                } else {
+                    fullWidth = stage.getWidth();
+                    fullHeight = stage.getHeight();
                 }
-                blx= (1f/fullWidth*screenWidth);
-                bly=  (1f/fullHeight*screenHeight);
-                w=(float) getWidth();
-                h= (float) getHeight();
-                float fx=nativeTextField.getX();
-                float fy=nativeTextField.getY();
-                Group father=nativeTextField.getParent();
-                Group root=stage.getRoot();
-                float dx=root.getX()/root.getScaleX()-cutWidth;//此处存有疑问，待测
-                float dy=root.getY()/root.getScaleY()-cutHeight;
-                fx+=dx;
-                fy+=dy;
-                while(father!=root){
-                    Group nextFather=father.getParent();
-                    fx+=father.getX();
-                    fy+=father.getY();
-                    father=nextFather;
-                    if(father==null){
+                blx = (1f / fullWidth * screenWidth);
+                bly = (1f / fullHeight * screenHeight);
+                w = (float) getWidth();
+                h = (float) getHeight();
+                float fx = nativeTextField.getX();
+                float fy = nativeTextField.getY();
+                Group father = nativeTextField.getParent();
+                Group root = stage.getRoot();
+                float dx = root.getX() / root.getScaleX() - cutWidth;//此处存有疑问，待测
+                float dy = root.getY() / root.getScaleY() - cutHeight;
+                fx += dx;
+                fy += dy;
+                while (father != root) {
+                    Group nextFather = father.getParent();
+                    fx += father.getX();
+                    fy += father.getY();
+                    father = nextFather;
+                    if (father == null) {
                         setVisibility(INVISIBLE);
                         return;
                     }
                 }
-                x=(cutWidth+fx)*blx;
-                float my=(cutHeight+fy)*bly;
-                y=(screenHeight-h)-my;
-                setX(x);
-                setY(y);
+                x = (cutWidth + fx) * blx;
+                float my = (cutHeight + fy) * bly;
+                y = (screenHeight - h) - my;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    setX(x);
+                    setY(y);
+                }
                 invalidate();
                 parent.requestLayout();
-            }else setVisibility(INVISIBLE);
+            } else setVisibility(INVISIBLE);
         }
 
-        public void setBorderStyle(NativeTextField.BorderStyle borderStyle){
-            switch (borderStyle){
+        public void setBorderStyle(NativeTextField.BorderStyle borderStyle) {
+            switch (borderStyle) {
                 case None:
-                    setBackground(null);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        setBackground(null);
+                    }
                     break;
                 case Line:
-                    if(rectShape==null){
-                        rectShape=new RectStrokeShape();
+                    if (rectShape == null) {
+                        rectShape = new RectStrokeShape();
                         rectShape.setStrokeWidth(8);
                         rectShape.setStrokeColor(getAnroidColor(Color.BLACK));
                         rectShape.setColor(getAnroidColor(nativeTextField.getColor()));
-                        drawable_rect=new ShapeDrawable(rectShape);
+                        drawable_rect = new ShapeDrawable(rectShape);
                     }
-                    setBackground(drawable_rect);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        setBackground(drawable_rect);
+                    }
                     break;
                 case Bezel:
                     setBackgroundColor(getAnroidColor(nativeTextField.getColor()));
                     break;
                 case RoundedRect:
                     drawable_rect.getPaint().setColor(getAnroidColor(nativeTextField.getColor()));
-                    setBackground(drawable_roundRect);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        setBackground(drawable_roundRect);
+                    }
                     break;
             }
             invalidateDrawable(getBackground());
@@ -707,45 +728,46 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         }
 
 
-        public void synchronousSize(){
-            if(nativeTextField.getStage()!=null) {
+        public void synchronousSize() {
+            if (nativeTextField.getStage() != null) {
                 Stage stage = nativeTextField.getStage();
-                float w,h,blx,bly;
-                float fullWidth,fullHeight;
-                if(stage instanceof VStage){
-                    VStage vStage= (VStage) stage;
-                    fullWidth=vStage.getFullWidth();
-                    fullHeight=vStage.getFullHeight();
-                }else {
-                    fullWidth=stage.getWidth();
-                    fullHeight=stage.getHeight();
+                float w, h, blx, bly;
+                float fullWidth, fullHeight;
+                if (stage instanceof VStage) {
+                    VStage vStage = (VStage) stage;
+                    fullWidth = vStage.getFullWidth();
+                    fullHeight = vStage.getFullHeight();
+                } else {
+                    fullWidth = stage.getWidth();
+                    fullHeight = stage.getHeight();
                 }
-                blx=(1f/fullWidth*screenWidth);
-                bly=(1f/fullHeight*screenHeight);
-                w=nativeTextField.getWidth()*blx;
-                h=nativeTextField.getHeight()*bly;
-                AbsoluteLayout.LayoutParams layoutParams= (AbsoluteLayout.LayoutParams) getLayoutParams();
-                layoutParams.height=(int)(h);
-                layoutParams.width=(int)w;
+                blx = (1f / fullWidth * screenWidth);
+                bly = (1f / fullHeight * screenHeight);
+                w = nativeTextField.getWidth() * blx;
+                h = nativeTextField.getHeight() * bly;
+                AbsoluteLayout.LayoutParams layoutParams = (AbsoluteLayout.LayoutParams) getLayoutParams();
+                layoutParams.height = (int) (h);
+                layoutParams.width = (int) w;
                 setLayoutParams(layoutParams);
                 invalidate();
                 parent.requestLayout();
 
-            }else {
+            } else {
                 setVisibility(INVISIBLE);
             }
         }
 
         //一个静态变量存储高度
-        public  int keyboardHeight = 0;
+        public int keyboardHeight = 0;
         boolean isVisiableForLast = false;
         private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = null;
-        private  View decorView;
-        private boolean isRegistered=false;
+        private View decorView;
+        private boolean isRegistered = false;
+
         public void addOnSoftKeyBoardVisibleListener() {
-           // if(isRegistered)return;
+            // if(isRegistered)return;
             //getKeyboradHeight();
-            if(keyboardHeight>0){
+            if (keyboardHeight > 0) {
                 return;
             }
             decorView = getWindow().getDecorView();
@@ -771,9 +793,9 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                         e.printStackTrace();
                     }
 
-                    if(visible!= isVisiableForLast){
-                        if(visible) {
-                            if(isHasFocus()) {
+                    if (visible != isVisiableForLast) {
+                        if (visible) {
+                            if (isHasFocus()) {
                                 //获得键盘高度
                                 keyboardHeight = hight - displayHight - statusBarHeight;
                                 NativeTextField.TextFieldListener textFieldListener = nativeTextField.getTextFieldListener();
@@ -784,20 +806,22 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                                     if (stage != null) {
                                         float fullHeight = stage instanceof VStage ? ((VStage) stage).getFullHeight() : stage.getHeight();
                                         bly = (1f / screenHeight * fullHeight);
-                                        libgdxKeyboardHeight = ((keyboardHeight+statusBarHeight) * bly);
+                                        libgdxKeyboardHeight = ((keyboardHeight + statusBarHeight) * bly);
                                         textFieldListener.keyboardWillShow(nativeTextField, libgdxKeyboardHeight);
                                     }
                                 }
                                 if (nativeTextField.getAdaptKeyboardType() == NativeTextField.AdaptKeyboardType.Self) {
-                                    setY(displayHight - getHeight());
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                                        setY(displayHight - getHeight());
+                                    }
                                     parent.requestLayout();
                                 }
                             }
-                        }else{
+                        } else {
                             //还原本来的坐标
                             synchronousPosition();
                             NativeTextField.TextFieldListener textFieldListener = nativeTextField.getTextFieldListener();
-                            if(textFieldListener!=null){
+                            if (textFieldListener != null) {
                                 textFieldListener.didEndEditing(nativeTextField);
                             }
                         }
@@ -806,15 +830,15 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                 }
             };
             decorView.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
-            isRegistered=true;
+            isRegistered = true;
         }
 
 
         public boolean onKeyPreIme(int keyCode, KeyEvent event) {
             if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-                NativeTextField.TextFieldListener textFieldListener=nativeTextField.getTextFieldListener();
-                if(textFieldListener!=null){
-                    if(isHasFocus())textFieldListener.didEndEditing(nativeTextField);
+                NativeTextField.TextFieldListener textFieldListener = nativeTextField.getTextFieldListener();
+                if (textFieldListener != null) {
+                    if (isHasFocus()) textFieldListener.didEndEditing(nativeTextField);
                 }
             }
             return false;
@@ -822,10 +846,12 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
 
         //yichu dui jianpan de jianting
-        public void removeOnGlobalLayoutListener(){
-            isRegistered=false;
-            if(decorView!=null)
-            decorView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
+        public void removeOnGlobalLayoutListener() {
+            isRegistered = false;
+            if (decorView != null)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    decorView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
+                }
         }
 
 
@@ -844,14 +870,14 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     }
 
 
-    public void linkNativeTextField(final NativeTextField nativeTextField, final NativeTextField.Method method){
+    public void linkNativeTextField(final NativeTextField nativeTextField, final NativeTextField.Method method) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                switch (method){
+                switch (method) {
                     case newObject:
-                        if(parent==null) {
-                            roundRectShape = new RoundRectShape(new float[]{20, 20, 20, 20, 20, 20, 20, 20}, null,null);
+                        if (parent == null) {
+                            roundRectShape = new RoundRectShape(new float[]{20, 20, 20, 20, 20, 20, 20, 20}, null, null);
                             DisplayMetrics dm = getResources().getDisplayMetrics();
                             screenHeight = dm.heightPixels;
                             screenWidth = dm.widthPixels;
@@ -859,13 +885,13 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                             AbsoluteLayout.LayoutParams layoutParams = new AbsoluteLayout.LayoutParams
                                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 0, 0);
                             addContentView(parent, layoutParams);
-                            textFieldHashMap=new HashMap<NativeTextField, VEditText>();
+                            textFieldHashMap = new HashMap<NativeTextField, VEditText>();
                         }
 
-                        VEditText textfield=pool_textFields.obtain();
+                        VEditText textfield = pool_textFields.obtain();
                         textfield.setLibgdxTextField(nativeTextField);
                         parent.addView(textfield);
-                        textFieldHashMap.put(nativeTextField,textfield);
+                        textFieldHashMap.put(nativeTextField, textfield);
                         break;
                     case setTextFieldListener:
                         //说实话，我也被这堆安卓的回调搞晕了，不想弄了。。。
@@ -889,8 +915,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                                     @Override
                                     public void run() {
                                         nativeTextField.setOnlyText(finalTextfield.getText().toString());
-                                        final String text=nativeTextField.getTextFieldListener().onEditingChanged(nativeTextField);
-                                        if(text!=null) {
+                                        final String text = nativeTextField.getTextFieldListener().onEditingChanged(nativeTextField);
+                                        if (text != null) {
                                             runOnUiThread(new Runnable() {
                                                 public void run() {
                                                     finalTextfield.setText(text);
@@ -898,7 +924,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                                                 }
                                             });
                                             nativeTextField.setOnlyText(text);
-                                         }
+                                        }
                                     }
                                 });
                             }
@@ -911,7 +937,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                                     // 此处为得到焦点时的处理内容
                                     nativeTextField.getTextFieldListener().didBeginEditing(nativeTextField);
                                     //finalTextfield.addOnSoftKeyBoardVisibleListener();
-                                   // Gdx.input.setOnscreenKeyboardVisible(true);
+                                    // Gdx.input.setOnscreenKeyboardVisible(true);
                                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                     imm.showSoftInput(finalTextfield, InputMethodManager.SHOW_FORCED);// 显示输入法
                                 } else {
@@ -929,14 +955,14 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                         textfield.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                             @Override
                             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                                if (actionId ==finalTextfield.getImeActionId()) {
-                                    if(!finalTextfield.isHasFocus())return false;
+                                if (actionId == finalTextfield.getImeActionId()) {
+                                    if (!finalTextfield.isHasFocus()) return false;
                                     Gdx.app.postRunnable(new Runnable() {
                                         @Override
                                         public void run() {
-                                            boolean isResignFirstResponder =nativeTextField.getTextFieldListener()
+                                            boolean isResignFirstResponder = nativeTextField.getTextFieldListener()
                                                     .shouldReturn(nativeTextField);
-                                            if(isResignFirstResponder){
+                                            if (isResignFirstResponder) {
                                                 finalTextfield.nativeTextField.getTextFieldListener().didEndEditing(nativeTextField);
                                                 runOnUiThread(new Runnable() {
                                                     @Override
@@ -990,12 +1016,12 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                         break;
                     case setVisible:
                         textfield = textFieldHashMap.get(nativeTextField);
-                        textfield.setVisibility(nativeTextField.isVisible()?View.VISIBLE:View.INVISIBLE);
+                        textfield.setVisibility(nativeTextField.isVisible() ? View.VISIBLE : View.INVISIBLE);
                         parent.requestLayout();
                         break;
                     case setHidden:
                         textfield = textFieldHashMap.get(nativeTextField);
-                        textfield.setVisibility(!nativeTextField.isHidden()?View.VISIBLE:View.INVISIBLE);
+                        textfield.setVisibility(!nativeTextField.isHidden() ? View.VISIBLE : View.INVISIBLE);
                         parent.requestLayout();
                         break;
                     case positionChanged:
@@ -1005,7 +1031,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                     case sizeChanged:
                         textfield = textFieldHashMap.get(nativeTextField);
                         textfield.synchronousSize();
-                        final VEditText finaltextfield=textfield;
+                        final VEditText finaltextfield = textfield;
                         textfield.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                             @Override
                             public boolean onPreDraw() {
@@ -1037,9 +1063,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                         break;
                     case setPasswordMode:
                         textfield = textFieldHashMap.get(nativeTextField);
-                        if(nativeTextField.isPasswordMode()) {
+                        if (nativeTextField.isPasswordMode()) {
                             textfield.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        }else textfield.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        } else
+                            textfield.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                         break;
                     case setAlignment:
                         textfield = textFieldHashMap.get(nativeTextField);
@@ -1047,48 +1074,48 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                         break;
                     case setReturnKeyType:
                         textfield = textFieldHashMap.get(nativeTextField);
-                        switch (nativeTextField.getReturnKeyType()){
+                        switch (nativeTextField.getReturnKeyType()) {
                             case Default:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_DONE);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
                                 break;
                             case Go:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_GO);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_GO);
                                 break;
                             case Google:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_SEARCH);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEARCH);
                                 break;
                             case Join:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_GO);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_GO);
                                 break;
                             case Next:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_NEXT);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_NEXT);
                                 break;
                             case Route:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_DONE);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
                                 break;
                             case Search:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_SEARCH);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEARCH);
                                 break;
                             case Send:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_SEND);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEND);
                                 break;
                             case Yahoo:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_DONE);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
                                 break;
                             case Done:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_DONE);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
                                 break;
                             case EmergencyCall:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_DONE);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
                                 break;
                             case Continue:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_NEXT);
+                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_NEXT);
                                 break;
                         }
                         break;
                     case setKeyboardType:
                         textfield = textFieldHashMap.get(nativeTextField);
-                        switch (nativeTextField.getKeyboardType()){
+                        switch (nativeTextField.getKeyboardType()) {
                             case Default:
                                 textfield.setInputType(InputType.TYPE_DATETIME_VARIATION_NORMAL);
                                 break;

@@ -1,12 +1,8 @@
 package var3d.net.demo.android;
 
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewParent;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import var3d.net.center.android.VAndroidLauncher;
 import var3d.net.demo.Game;
