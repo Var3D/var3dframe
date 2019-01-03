@@ -137,17 +137,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     public void showAchievements() {
     }
 
-    ;
-
     public void updataAchievements(String identifier, double percentComplete) {
     }
 
-    ;
-
     public void showChallenges() {
     }
-
-    ;
 
     @Override
     public void log(String txt) {
@@ -476,13 +470,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     private RoundRectShape roundRectShape;
     private RectStrokeShape rectShape;
 
-    private Pool<VEditText> pool_textFields = new Pool<VEditText>() {
-        @Override
-        protected VEditText newObject() {
-            VEditText textfield = new VEditText(activity);
-            return textfield;
-        }
-    };
+    private Pool<VEditText> pool_textFields=null;
 
     public class RectStrokeShape extends RectShape {
         private float strokeWidth;
@@ -887,7 +875,15 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                             addContentView(parent, layoutParams);
                             textFieldHashMap = new HashMap<NativeTextField, VEditText>();
                         }
-
+                        if (pool_textFields == null) {
+                            pool_textFields = new Pool<VEditText>() {
+                                @Override
+                                protected VEditText newObject() {
+                                    VEditText textfield = new VEditText(activity);
+                                    return textfield;
+                                }
+                            };
+                        }
                         VEditText textfield = pool_textFields.obtain();
                         textfield.setLibgdxTextField(nativeTextField);
                         parent.addView(textfield);
