@@ -67,6 +67,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Date;
@@ -2306,5 +2307,24 @@ public abstract class VGame implements ApplicationListener {
 
     public void setCenterY(int centerY) {
         this.centerY = centerY;
+    }
+
+    //ping网络,返回此时连接需要的时间(毫秒),返回-1表示网络不通
+    public int ping(){
+        return ping("http://www.baidu.com");
+    }
+
+    public int ping(String url){
+        try {
+            URL Url=new URL(url);
+            HttpURLConnection urlConnection=(HttpURLConnection)Url.openConnection();
+            long connectStart=System.currentTimeMillis();
+            urlConnection.connect();
+            int time= (int) (System.currentTimeMillis()-connectStart);
+            urlConnection.disconnect();
+            return time;
+        } catch (IOException e) {
+            return -1;
+        }
     }
 }
