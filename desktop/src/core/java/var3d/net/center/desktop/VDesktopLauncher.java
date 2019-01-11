@@ -51,12 +51,15 @@ import java.awt.font.TextAttribute;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.text.AttributedString;
 import java.util.ArrayList;
@@ -2158,12 +2161,33 @@ public abstract class VDesktopLauncher implements VListener {
                     process = Runtime.getRuntime().exec(convPath);
                     break;
             }
+
+            final InputStream is1 = process.getInputStream();
+            new Thread(new Runnable() {
+                public void run() {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is1));
+                    try {
+                        while (br.readLine() != null) ;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    finally {
+                        try {
+                            br.close();
+                            is1.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start(); // 启动单独的线程来清空p.getInputStream()的缓冲区
+
             process.waitFor();
             fbxPath.getAbsoluteFile().delete();//删除 fbx
             System.err.println("Var3DFrame框架消息 : "+fbxPath.getName()+"转换成g3db模型成功");
             //System.err.println("Var3DFrame框架消息 : 窗口将会关闭,请重新启动才能继续测试");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.toString());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
