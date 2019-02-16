@@ -196,12 +196,12 @@ public abstract class VGame implements ApplicationListener {
 
 
     //设置默认的 font 字体
-    public void setDefaultFont(FreePaint paint){
-        this.paint=paint;
+    public void setDefaultFont(FreePaint paint) {
+        this.paint = paint;
         setDefaultFontSize(paint.getTextSize());
     }
 
-    public FreePaint getDefaultPaint(){
+    public FreePaint getDefaultPaint() {
         return paint;
     }
 
@@ -217,7 +217,7 @@ public abstract class VGame implements ApplicationListener {
         // 全球化字体方案
         if (bundle == null) bundle = new VBundle(var3dListener);
         // 创建一个默认动态文本
-        FreeBitmapFont font = new FreeBitmapFont(this, paint==null?new FreePaint(getDefaultFontSize()):paint);
+        FreeBitmapFont font = new FreeBitmapFont(this, paint == null ? new FreePaint(getDefaultFontSize()) : paint);
         font.appendText("01234567890LoadingC" + getHeap());
         fonts.put("font", font);
         setStageLoad(StageLoad.class);
@@ -463,7 +463,7 @@ public abstract class VGame implements ApplicationListener {
                     Array<PixmapPro> outPixmapPro = new Array<PixmapPro>();
                     assets.getAll(PixmapPro.class, outPixmapPro);
                     if (outPixmapPro.size > 0) {
-                        if (atlas == null)atlas = new TextureAtlas();
+                        if (atlas == null) atlas = new TextureAtlas();
                         for (PixmapPro pix : outPixmapPro) {
                             Texture texture = pix.getTextrue();
                             texture.setFilter(filter, filter);
@@ -473,8 +473,9 @@ public abstract class VGame implements ApplicationListener {
                     }
                 }
                 if (inpacks.size > 0) {
-                    if (packer == null)packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 2, true);
-                    if (atlas == null)atlas = new TextureAtlas();
+                    if (packer == null)
+                        packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 2, true);
+                    if (atlas == null) atlas = new TextureAtlas();
                     for (String path : inpacks) {
                         try {
                             Pixmap pixmap;
@@ -759,18 +760,19 @@ public abstract class VGame implements ApplicationListener {
         for (VDialog dia : poolDialog.values()) {
             dia.pause();
             dia.setTouchable(Touchable.disabled);
-            setNativeTextFieldsHidden(dia,true);
+            setNativeTextFieldsHidden(dia, true);
         }
         // 禁止底层stage响应
         if (stage != null) {
             stage.pause();
+            stage.cancelTouchFocus();
             stage.getRoot().setTouchable(Touchable.disabled);
-            setNativeTextFieldsHidden(stage.getRoot(),true);
+            setNativeTextFieldsHidden(stage.getRoot(), true);
         }
         VDialog dia = getDialog(dialog);
         dia.setTouchable(Touchable.enabled);
         stageTop.addActor(dia);
-        setNativeTextFieldsHidden(dia,false);
+        setNativeTextFieldsHidden(dia, false);
         dia.show();
         return dia;
     }
@@ -806,7 +808,7 @@ public abstract class VGame implements ApplicationListener {
      * 移除dialog并恢复下层响应
      */
     public void removeDialog(VDialog dialog) {
-        setNativeTextFieldsHidden(dialog,true);
+        setNativeTextFieldsHidden(dialog, true);
         dialog.remove();
         // 遍历获取顶层所有对话框对象
         Array<VDialog> dialogs = new Array<VDialog>();
@@ -816,14 +818,14 @@ public abstract class VGame implements ApplicationListener {
             }
         }
         if (dialogs.size > 0) {
-            VDialog nowDialog=dialogs.peek();
+            VDialog nowDialog = dialogs.peek();
             nowDialog.setTouchable(Touchable.enabled);
             nowDialog.resume();
-            setNativeTextFieldsHidden(nowDialog,false);
+            setNativeTextFieldsHidden(nowDialog, false);
         } else {
             stage.getRoot().setTouchable(Touchable.enabled);
             stage.resume();
-            setNativeTextFieldsHidden(stage.getRoot(),false);
+            setNativeTextFieldsHidden(stage.getRoot(), false);
         }
     }
 
@@ -838,19 +840,19 @@ public abstract class VGame implements ApplicationListener {
                 dialogs.add((VDialog) actor);
             }
         }
-        VDialog dialog=dialogs.pop();
-        setNativeTextFieldsHidden(dialog,true);
+        VDialog dialog = dialogs.pop();
+        setNativeTextFieldsHidden(dialog, true);
         dialog.remove();
 
         if (dialogs.size > 0) {
-            VDialog nowDialog=dialogs.peek();
+            VDialog nowDialog = dialogs.peek();
             nowDialog.setTouchable(Touchable.enabled);
             nowDialog.resume();
-            setNativeTextFieldsHidden(nowDialog,false);
+            setNativeTextFieldsHidden(nowDialog, false);
         } else {
             stage.getRoot().setTouchable(Touchable.enabled);
             stage.resume();
-            setNativeTextFieldsHidden(stage.getRoot(),false);
+            setNativeTextFieldsHidden(stage.getRoot(), false);
         }
     }
 
@@ -862,16 +864,16 @@ public abstract class VGame implements ApplicationListener {
         Array<VDialog> dialogs = new Array<VDialog>();
         for (Actor actor : stageTop.getActors()) {
             if (actor instanceof VDialog) {
-                setNativeTextFieldsHidden((VDialog)actor,true);
+                setNativeTextFieldsHidden((VDialog) actor, true);
                 dialogs.add((VDialog) actor);
             }
         }
-        for(VDialog dialog:dialogs){
+        for (VDialog dialog : dialogs) {
             dialog.remove();
         }
         stage.getRoot().setTouchable(Touchable.enabled);
         stage.resume();
-        setNativeTextFieldsHidden(stage.getRoot(),false);
+        setNativeTextFieldsHidden(stage.getRoot(), false);
     }
 
     public boolean isHaveDialog(VDialog dialog) {
@@ -926,7 +928,7 @@ public abstract class VGame implements ApplicationListener {
             multiplexer.addProcessor(stageTop);
             prefStage = stage.getClass();
             //将当前的原生输入框隐藏掉
-            setNativeTextFieldsHidden(stage.getRoot(),true);
+            setNativeTextFieldsHidden(stage.getRoot(), true);
         } else {
             multiplexer.addProcessor(stageTop);
         }
@@ -943,7 +945,7 @@ public abstract class VGame implements ApplicationListener {
                     gesture = null;
                 }
                 //将当前的原生输入框显示出来
-                setNativeTextFieldsHidden(stage.getRoot(),false);
+                setNativeTextFieldsHidden(stage.getRoot(), false);
             }
         } while (stage == null);
     }
@@ -981,11 +983,11 @@ public abstract class VGame implements ApplicationListener {
     }
 
     //隐藏或显示原生输入框
-    public void setNativeTextFieldsHidden(Group father,boolean isHidden){
-        SnapshotArray<Actor> children= father.getChildren();
-        for(Actor actor:children){
-            if(actor instanceof NativeTextField){
-                ((NativeTextField)actor).setHidden(isHidden);
+    public void setNativeTextFieldsHidden(Group father, boolean isHidden) {
+        SnapshotArray<Actor> children = father.getChildren();
+        for (Actor actor : children) {
+            if (actor instanceof NativeTextField) {
+                ((NativeTextField) actor).setHidden(isHidden);
             }
         }
     }
@@ -995,8 +997,10 @@ public abstract class VGame implements ApplicationListener {
         var3dListener.onIOSPause();
         if (music != null)
             music.pause();
-        if (stage != null && isLoading)
+        if (stage != null && isLoading) {
             stage.pause();
+            stage.cancelTouchFocus();
+        }
     }
 
     public void resume() {
@@ -1129,7 +1133,7 @@ public abstract class VGame implements ApplicationListener {
                 Vector2 size = var3dListener.getAppScreenSize();
                 out_w = (int) size.x;
                 out_h = (int) size.y;
-                if (iphoneX!=null) {
+                if (iphoneX != null) {
                     path += "/iphoneX";
                     Gdx.files.absolute(path).mkdirs();
                 } else if (out_w == 2732 || out_h == 2732) {//ipad
@@ -1948,6 +1952,7 @@ public abstract class VGame implements ApplicationListener {
     public UI<VLabel> getLabel(String text, LabelStyle style) {
         return getUI(new VLabel(text, style));
     }
+
     /**
      * 创建Label
      */
@@ -2200,7 +2205,7 @@ public abstract class VGame implements ApplicationListener {
      * 创建ScrollPane
      */
     public UI<ScrollPane> getScrollPane(Actor actor, ScrollPaneStyle style) {
-        return getUI( new ScrollPane(actor, style));
+        return getUI(new ScrollPane(actor, style));
     }
 
     /**
@@ -2310,17 +2315,18 @@ public abstract class VGame implements ApplicationListener {
     }
 
     //ping网络,返回此时连接需要的时间(毫秒),返回-1表示网络不通
-    public int ping(){
-        return ping("http://www.baidu.com");
+    public int ping(int timeOut) {
+        return ping("http://www.baidu.com", timeOut);
     }
 
-    public int ping(String url){
+    public int ping(String url, int timeOut) {
         try {
-            URL Url=new URL(url);
-            HttpURLConnection urlConnection=(HttpURLConnection)Url.openConnection();
-            long connectStart=System.currentTimeMillis();
+            URL Url = new URL(url);
+            HttpURLConnection urlConnection = (HttpURLConnection) Url.openConnection();
+            urlConnection.setConnectTimeout(timeOut);
+            long connectStart = System.currentTimeMillis();
             urlConnection.connect();
-            int time= (int) (System.currentTimeMillis()-connectStart);
+            int time = (int) (System.currentTimeMillis() - connectStart);
             urlConnection.disconnect();
             return time;
         } catch (IOException e) {
