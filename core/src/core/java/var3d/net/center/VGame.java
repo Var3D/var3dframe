@@ -958,7 +958,7 @@ public abstract class VGame implements ApplicationListener {
 
     public <T> void removeStage(Class<T> type) {
         if (pool.containsKey(type.getName())) {
-            VStage stage = pool.get(type);
+            VStage stage = pool.get(type.getName());
             stage.dispose();
             pool.remove(stage);
         }
