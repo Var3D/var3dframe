@@ -112,6 +112,10 @@ public class StageActors extends VStage {
         });
     }
 
+    public void start() {
+
+    }
+
     @Override
     public void reStart() {
 

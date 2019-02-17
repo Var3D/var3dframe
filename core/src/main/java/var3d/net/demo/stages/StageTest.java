@@ -92,6 +92,10 @@ public class StageTest extends VStage {
 
     }
 
+    public void start() {
+
+    }
+
     @Override
     public void reStart() {
 

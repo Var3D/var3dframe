@@ -11,6 +11,10 @@ public class StageTop extends VStage {
 
 	}
 
+	public void start() {
+
+	}
+
 	public void reStart() {
 	}
 

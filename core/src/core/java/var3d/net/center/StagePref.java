@@ -36,6 +36,10 @@ public class StagePref extends VStage {
 
 	}
 
+	public void start() {
+
+	}
+
 	public void reStart() {
 	}
 

@@ -108,7 +108,7 @@ public class StageMain extends VStage {
         btn_touchpad.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageTouchpad.class);
+                game.setNewStage(StageTouchpad.class);
             }
         });
 
@@ -121,6 +121,10 @@ public class StageMain extends VStage {
                 game.showMessege("更多效果尽请期待...");
             }
         });
+
+    }
+
+    public void start() {
 
     }
 

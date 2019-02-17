@@ -73,6 +73,7 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 import var3d.net.center.freefont.FreeBitmapFont;
@@ -910,6 +911,7 @@ public abstract class VGame implements ApplicationListener {
 
     private GestureDetector gesture;
     private InputAdapter input;
+    private Set<String> stageNames=new HashSet<String>();//被创建过的stage的名字会被永久保存在这里
 
     public <T> void setStage(Class<T> type) {
         HashMap<String, Object> intent = new HashMap<>();
@@ -943,6 +945,10 @@ public abstract class VGame implements ApplicationListener {
         if (stage != null) stage.setIntent(intent);
         do {
             if (stage != null) {
+                if(!stageNames.contains(name)){
+                    stageNames.add(name);
+                    stage.start();
+                }
                 multiplexer.addProcessor(input = stage);
                 if (stage instanceof GestureDetector.GestureListener) {
                     gesture = new GestureDetector((GestureDetector.GestureListener) stage);
@@ -952,6 +958,7 @@ public abstract class VGame implements ApplicationListener {
                 }
                 //将当前的原生输入框显示出来
                 setNativeTextFieldsHidden(stage.getRoot(), false);
+
             }
         } while (stage == null);
     }

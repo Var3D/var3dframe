@@ -81,6 +81,11 @@ public abstract class VStage extends Stage {
 
     public abstract void init();
 
+    /**
+     * 该方法只会执行一次，即便再次创建这个stage
+     */
+    public abstract void start();
+
     public abstract void reStart();
 
     public abstract void back();

@@ -1,5 +1,6 @@
 package var3d.net.demo.stages;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -25,7 +26,7 @@ import var3d.net.demo.R;
 public class StageTouchpad extends VStage {
     private Image img_tank;
     private Touchpad touchpad;//摇杆
-    private float speedX,speedY;
+    private float speedX, speedY;
     private boolean isMoveing;
 
     public StageTouchpad(VGame game) {
@@ -37,8 +38,8 @@ public class StageTouchpad extends VStage {
         //设置背景
         setBackground(Color.DARK_GRAY);
         //tank
-        img_tank=game.getImage(R.image.tank).touchOff().setOrigin(Align.center).setPosition
-                (getWidth()/2,getHeight()/2,Align.center).show();
+        img_tank = game.getImage(R.image.tank).touchOff().setOrigin(Align.center).setPosition
+                (getWidth() / 2, getHeight() / 2, Align.center).show();
         //创建标题
         VLabel lab_title = game.getLabel("摇杆示例").setPosition(getWidth() / 2, getTop() - 10, Align.top)
                 .touchOff().show();
@@ -54,7 +55,7 @@ public class StageTouchpad extends VStage {
 
         //摇杆初始化
         touchpad = game.getTouchpad(30, R.image.touchpad_bg, R.image.touchpad_center).setPosition
-                (getLeft()+5, getBottom()+5).show();
+                (getLeft() + 5, getBottom() + 5).show();
         touchpad.addListener(new InputListener() {
 
             public boolean touchDown(InputEvent event, float px, float py, int pointer, int but) {
@@ -66,7 +67,7 @@ public class StageTouchpad extends VStage {
             }
 
             public void touchUp(InputEvent event, float px, float py, int pointer, int but) {
-                if(isMoveing==true) {
+                if (isMoveing == true) {
                     isMoveing = false;
                     //加个缓停效果
                     img_tank.clearActions();
@@ -77,33 +78,37 @@ public class StageTouchpad extends VStage {
     }
 
     private void move(float kpx, float kpy) {
-        isMoveing=true;
-        float radian =(float) (Math.atan2(kpx, -kpy))-MathUtils.PI/2;
-        img_tank.setRotation(radian*MathUtils.radiansToDegrees);
-        speedX=MathUtils.cos(radian)*5;
-        speedY=MathUtils.sin(radian)*5;
+        isMoveing = true;
+        float radian = (float) (Math.atan2(kpx, -kpy)) - MathUtils.PI / 2;
+        img_tank.setRotation(radian * MathUtils.radiansToDegrees);
+        speedX = MathUtils.cos(radian) * 5;
+        speedY = MathUtils.sin(radian) * 5;
     }
 
-    public void act(){
+    public void act() {
         super.act();
-        if(isMoveing){
-            img_tank.moveBy(speedX,speedY);
+        if (isMoveing) {
+            img_tank.moveBy(speedX, speedY);
         }
         inZone();
     }
 
     //将坦克限定在可视区域内
-    private void inZone(){
-        if(img_tank.getX()<getLeft()){
+    private void inZone() {
+        if (img_tank.getX() < getLeft()) {
             img_tank.setX(getLeft());
-        }else if(img_tank.getRight()>getRight()){
-            img_tank.setX(getRight(),Align.right);
+        } else if (img_tank.getRight() > getRight()) {
+            img_tank.setX(getRight(), Align.right);
         }
-        if(img_tank.getY()<getBottom()){
+        if (img_tank.getY() < getBottom()) {
             img_tank.setY(getBottom());
-        }else if(img_tank.getTop()>getTop()){
-            img_tank.setY(getTop(),Align.top);
+        } else if (img_tank.getTop() > getTop()) {
+            img_tank.setY(getTop(), Align.top);
         }
+    }
+
+    public void start() {
+        Gdx.app.log("aaaaaaa", "该方法在重启app前仅会执行一次");
     }
 
     @Override

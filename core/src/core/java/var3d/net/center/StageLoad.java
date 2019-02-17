@@ -95,6 +95,10 @@ public class StageLoad extends VStage {
         super.draw();
     }
 
+    public void start() {
+
+    }
+
     public void reStart() {
 
     }

@@ -120,6 +120,10 @@ public class StageDialogs extends VStage {
 //        game.getImage(getFullWidth(),1).setPosition(getWidth()/2,getHeight(),Align.center).touchOff().show();
     }
 
+    public void start() {
+
+    }
+
     @Override
     public void reStart() {
 

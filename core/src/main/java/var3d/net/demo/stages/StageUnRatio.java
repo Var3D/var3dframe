@@ -36,6 +36,10 @@ public class StageUnRatio extends VStage {
         });
     }
 
+    public void start() {
+
+    }
+
     @Override
     public void reStart() {
 

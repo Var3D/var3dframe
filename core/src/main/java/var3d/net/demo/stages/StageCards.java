@@ -64,6 +64,10 @@ public class StageCards extends VStage
         super.draw();
     }
 
+    public void start() {
+
+    }
+
     @Override
     public void reStart()
     {
