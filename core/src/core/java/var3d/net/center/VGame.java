@@ -960,7 +960,7 @@ public abstract class VGame implements ApplicationListener {
         if (pool.containsKey(type.getName())) {
             VStage stage = pool.get(type.getName());
             stage.dispose();
-            pool.remove(stage);
+            pool.remove(type.getName());
         }
     }
 
