@@ -559,8 +559,8 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 获取中转数据
      */
-    public Object getUserData() {
-        return userData;
+    public <T> T getUserData() {
+        return (T)userData;
     }
 
     /**
@@ -580,8 +580,8 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 获取中转数据
      */
-    public Object getUserData(String key) {
-        return userDatas.get(key);
+    public <T> T getUserData(String key) {
+        return (T)userDatas.get(key);
     }
 
     /**
@@ -614,8 +614,7 @@ public abstract class VGame implements ApplicationListener {
      */
 
     public <T extends VStage> T getStage(Class<T> type) {
-        T t = (T) pool.get(type.getName());
-        return t;
+        return (T) pool.get(type.getName());
     }
 
     /**
