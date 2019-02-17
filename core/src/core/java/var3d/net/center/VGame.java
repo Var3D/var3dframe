@@ -916,6 +916,12 @@ public abstract class VGame implements ApplicationListener {
         setStage(type, type.getName(), intent);
     }
 
+    public <T> void setNewStage(Class<T> type) {
+        HashMap<String, Object> intent = new HashMap<>();
+        removeStage(type);
+        setStage(type, type.getName(), intent);
+    }
+
     public <T> void setStage(Class<T> type, String name, HashMap<String, Object> intent) {
         isLoading = false;
         if (stage != null) {
@@ -948,6 +954,14 @@ public abstract class VGame implements ApplicationListener {
                 setNativeTextFieldsHidden(stage.getRoot(), false);
             }
         } while (stage == null);
+    }
+
+    public <T> void removeStage(Class<T> type) {
+        if (pool.containsKey(type.getName())) {
+            VStage stage = pool.get(type);
+            stage.dispose();
+            pool.remove(stage);
+        }
     }
 
     public <T> void addStage(Class<T> type) {
