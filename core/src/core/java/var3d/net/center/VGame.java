@@ -613,8 +613,9 @@ public abstract class VGame implements ApplicationListener {
      * 列表中获取stage
      */
 
-    public <T> VStage getStage(Class<T> type) {
-       return pool.get(type.getName());
+    public <T extends VStage> VStage getStage(Class<T> type) {
+        T t = (T) pool.get(type.getName());
+        return t;
     }
 
     /**
@@ -912,7 +913,7 @@ public abstract class VGame implements ApplicationListener {
 
     private GestureDetector gesture;
     private InputAdapter input;
-    private Set<String> stageNames=new HashSet<String>();//被创建过的stage的名字会被永久保存在这里
+    private Set<String> stageNames = new HashSet<String>();//被创建过的stage的名字会被永久保存在这里
 
     public <T> void setStage(Class<T> type) {
         HashMap<String, Object> intent = new HashMap<>();
@@ -946,7 +947,7 @@ public abstract class VGame implements ApplicationListener {
         if (stage != null) stage.setIntent(intent);
         do {
             if (stage != null) {
-                if(!stageNames.contains(name)){
+                if (!stageNames.contains(name)) {
                     stageNames.add(name);
                     stage.start();
                 }
