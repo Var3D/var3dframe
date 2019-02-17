@@ -613,7 +613,7 @@ public abstract class VGame implements ApplicationListener {
      * 列表中获取stage
      */
 
-    public <T extends VStage> VStage getStage(Class<T> type) {
+    public <T extends VStage> T getStage(Class<T> type) {
         T t = (T) pool.get(type.getName());
         return t;
     }
