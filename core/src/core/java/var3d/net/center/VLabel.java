@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.StringBuilder;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 
@@ -39,6 +40,10 @@ public class VLabel extends Label {
 
     public void setText(CharSequence newText) {
         super.setText(append(newText, getStyle()));
+    }
+
+    public StringBuilder getText () {
+        return new StringBuilder(((FreeBitmapFont) getStyle().font).emojiFontRestore(super.getText().toString()));
     }
 
 

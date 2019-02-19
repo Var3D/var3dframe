@@ -216,6 +216,21 @@ public class FreeBitmapFont extends BitmapFont {
         return string;
     }
 
+    //被转换为单字节的emoji字体恢复到多字节emoji
+    public String emojiFontRestore(String string) {
+        if (string == null || string.length() == 0)
+            return "";
+        if (isEmoji) {
+            for (Emoji emoji2 : emojis2) {
+                string = string.replaceAll(emoji2.text, emoji2.key);
+            }
+            for (Emoji emoji4 : emojis4) {
+                string = string.replaceAll(emoji4.text, emoji4.key);
+            }
+        }
+        return string;
+    }
+
     private Array<String> cs = new Array<String>();
 
     private void create(String characters, boolean haveMinPageSize) {

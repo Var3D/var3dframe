@@ -3,6 +3,9 @@ package var3d.net.center;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.StringBuilder;
+
+import var3d.net.center.freefont.FreeBitmapFont;
 
 /**
  * Created by feng on 2018/6/1.
@@ -21,6 +24,10 @@ public class SLabel extends Group {
 
     public void setText(CharSequence newText) {
         label.setText(newText);
+    }
+
+    public StringBuilder getText () {
+        return label.getText();
     }
 
     public void setColor(Color color) {
