@@ -18,7 +18,7 @@ public class VLabel extends Label {
     private ShadowOption shadowOption = ShadowOption.Disable;//设置阴影选项
     private Color shadowColor = new Color(Color.GRAY);//阴影颜色
     private BitmapFontCache fontCache;
-    private StringBuilder text;
+    private StringBuilder text=new StringBuilder();
     // private boolean isHasEmoji=false;//是否含有emoji
 
     //  private Color labColor=new Color(1,1,1,1);//当使用带 emoji 的 FreeFontBitmap 时，调用 setColor 将会设置给这个参数
