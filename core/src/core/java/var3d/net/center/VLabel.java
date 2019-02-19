@@ -11,28 +11,44 @@ import var3d.net.center.freefont.FreeBitmapFont;
 
 public class VLabel extends Label {
     private boolean isStroke = false;// 是否描边
-    private Color strokeColor=new Color();
+    private Color strokeColor = new Color();
     private float strokeWidth;
     private float shadowOffsetX = 0f;//设置阴影位移x
     private float shadowOffsetY = 0f;//设置阴影位移x
     private ShadowOption shadowOption = ShadowOption.Disable;//设置阴影选项
     private Color shadowColor = new Color(Color.GRAY);//阴影颜色
     private BitmapFontCache fontCache;
-    private boolean isHasEmoji=false;//是否含有emoji
+    private StringBuilder text;
+    // private boolean isHasEmoji=false;//是否含有emoji
 
-  //  private Color labColor=new Color(1,1,1,1);//当使用带 emoji 的 FreeFontBitmap 时，调用 setColor 将会设置给这个参数
+    //  private Color labColor=new Color(1,1,1,1);//当使用带 emoji 的 FreeFontBitmap 时，调用 setColor 将会设置给这个参数
 
     public enum ShadowOption {
         Disable, Projection, Smear
     }
 
-    public VLabel(CharSequence text, LabelStyle style) {
-        super(append(text, style), style);
+    public VLabel(CharSequence newText, LabelStyle style) {
+        super(append(newText, style), style);
+        addText(newText);
         setSize(getPrefWidth(), getPrefHeight());
         setColor(style.fontColor);
         fontCache = getBitmapFontCache();
     }
 
+    private void addText(CharSequence newText) {
+        if (newText == null) newText = "";
+        if (newText instanceof StringBuilder) {
+            if (!text.equals(newText)) {
+                text.setLength(0);
+                text.append((StringBuilder) newText);
+            }
+        } else {
+            if (!textEquals(newText)) {
+                text.setLength(0);
+                text.append(newText);
+            }
+        }
+    }
 
     private static CharSequence append(CharSequence text, LabelStyle style) {
         return ((FreeBitmapFont) style.font).appendTextPro(text.toString());
@@ -40,10 +56,11 @@ public class VLabel extends Label {
 
     public void setText(CharSequence newText) {
         super.setText(append(newText, getStyle()));
+        addText(newText);
     }
 
-    public StringBuilder getText () {
-        return new StringBuilder(((FreeBitmapFont) getStyle().font).emojiFontRestore(super.getText().toString()));
+    public StringBuilder getText() {
+        return text;
     }
 
 
@@ -177,25 +194,25 @@ public class VLabel extends Label {
         }
     }
 
-    public void act(float delta){
+    public void act(float delta) {
         super.act(delta);
-        if(getActions().size>0){
+        if (getActions().size > 0) {
             fontCache.tint(getColor());
         }
     }
 
-    public void setBackground(Drawable drawable){
-        getStyle().background=drawable;
+    public void setBackground(Drawable drawable) {
+        getStyle().background = drawable;
     }
 
 
     public void drawLabel(Batch batch, float parentAlpha) {
         validate();
         if (getStyle().background != null) {
-            batch.setColor(1,1,1,getColor().a);
-            float padding=getHeight()*0.15f;
-            float paddingX=getStyle().font.getSpaceWidth()*0.5f;
-            getStyle().background.draw(batch, getX()-paddingX, getY(), getWidth()+paddingX*2, getHeight()+padding);
+            batch.setColor(1, 1, 1, getColor().a);
+            float padding = getHeight() * 0.15f;
+            float paddingX = getStyle().font.getSpaceWidth() * 0.5f;
+            getStyle().background.draw(batch, getX() - paddingX, getY(), getWidth() + paddingX * 2, getHeight() + padding);
         }
         if (isStroke) {
             strokeColor.a = getColor().a;

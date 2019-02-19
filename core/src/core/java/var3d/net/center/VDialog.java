@@ -41,7 +41,7 @@ public abstract class VDialog extends Group {
         this.game = game;
         stageTop = game.getTopStage();
         //在有内置虚拟按钮的安卓上会出现屏幕分辨率被改变的状况造成遮盖层无法完全覆盖底层,故强制放大1.5倍解决这个问题
-        bg0 = game.getImage(stageTop.getFullWidth()*1.5f, stageTop.getFullHeight()*1.5f, Color.BLACK)
+        bg0 = game.getImage(stageTop.getFullWidth() * 1.5f, stageTop.getFullHeight() * 1.5f, Color.BLACK)
                 .setPosition(game.getCenterX(), game.getCenterY(), Align.center).getActor();
         if (isStretching) {
             setScale(1f / stageTop.getRoot().getScaleX(), 1f / stageTop.getRoot().getScaleY());
