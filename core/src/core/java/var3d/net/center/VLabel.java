@@ -43,10 +43,8 @@ public class VLabel extends Label {
                 text.append((StringBuilder) newText);
             }
         } else {
-            if (!textEquals(newText)) {
-                text.setLength(0);
-                text.append(newText);
-            }
+            text.setLength(0);
+            text.append(newText);
         }
     }
 
