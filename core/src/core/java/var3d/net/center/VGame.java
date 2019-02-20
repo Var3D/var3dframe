@@ -560,7 +560,26 @@ public abstract class VGame implements ApplicationListener {
      * 获取中转数据
      */
     public <T> T getUserData() {
-        return (T)userData;
+        return (T) userData;
+    }
+
+    private Object[] datas;
+
+    public <T> void setData(T... datas) {
+        datas = null;
+        this.datas = datas;
+    }
+
+    public <T> T[] getData() {
+        return (T[]) datas;
+    }
+
+    public <T> T getData(int index) {
+        return (T) datas[index];
+    }
+
+    public <T> T getUserDatas(String key) {
+        return (T) userDatas.get(key);
     }
 
     /**
@@ -581,7 +600,7 @@ public abstract class VGame implements ApplicationListener {
      * 获取中转数据
      */
     public <T> T getUserData(String key) {
-        return (T)userDatas.get(key);
+        return (T) userDatas.get(key);
     }
 
     /**

@@ -125,7 +125,6 @@ public class StageMain extends VStage {
     }
 
     public void start() {
-
     }
 
     @Override
