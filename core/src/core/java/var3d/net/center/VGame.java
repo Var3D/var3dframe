@@ -565,21 +565,17 @@ public abstract class VGame implements ApplicationListener {
 
     private Object[] datas;
 
-    public <T> void setData(T... datas) {
+    public <T> void setDatas(T... datas) {
         datas = null;
         this.datas = datas;
     }
 
-    public <T> T[] getData() {
+    public <T> T[] getDatas() {
         return (T[]) datas;
     }
 
     public <T> T getData(int index) {
         return (T) datas[index];
-    }
-
-    public <T> T getUserDatas(String key) {
-        return (T) userDatas.get(key);
     }
 
     /**
