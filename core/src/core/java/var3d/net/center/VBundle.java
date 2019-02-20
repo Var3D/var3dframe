@@ -22,6 +22,10 @@ public class VBundle {
 		return formatter.format(get(key), args);
 	}
 
+	public String formatVaule(String vaule, Object... args) {
+		return formatter.format(vaule, args);
+	}
+
 	class TextFormatter {
 		private MessageFormat messageFormat;
 		private StringBuilder buffer;

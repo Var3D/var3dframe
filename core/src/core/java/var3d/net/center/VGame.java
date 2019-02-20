@@ -267,6 +267,10 @@ public abstract class VGame implements ApplicationListener {
         }
     }
 
+    public String format(String vaule, Object... args) {
+        return bundle.formatVaule(vaule, args);
+    }
+
 
     /**
      * 加载文件夹里的图片并合成到大图,如果文件后缀不是jpg和png将自动忽略
