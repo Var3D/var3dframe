@@ -137,10 +137,12 @@ public class UI<T extends Actor> {
      * 添加点击变色效果
      */
     public UI<T> addClicAction(final Color color) {
-        final Color pref = t.getColor().cpy();
         t.addListener(new InputListener() {
+            private Color pref;
+
             public boolean touchDown(InputEvent event, float px, float py,
                                      int pointer, int but) {
+                if (pref == null) pref = t.getColor().cpy();
                 t.setColor(color);
                 return true;
             }
