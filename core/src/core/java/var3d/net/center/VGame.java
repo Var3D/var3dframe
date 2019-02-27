@@ -533,6 +533,9 @@ public abstract class VGame implements ApplicationListener {
                 font.draw(batch, getHeap(), 0, font.getCapHeight());
                 batch.end();
             }
+            if (soundRuns.size > 0) {//从音效池里拖一个音效出来播放,该构造避免同一帧播放过多音效导致播放失败
+                soundRuns.removeIndex(0).run();
+            }
         }
     }
 
@@ -1502,19 +1505,45 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 播放音效 音效必须在Game中设置预先加载，否则将出现第一次播放无法出现声音的情况
      */
-    public void playSound(String musicName) {
-        if (isSound == false)
-            return;
-        getSound(musicName).play();
+    private Array<Runnable> soundRuns = new Array<>();
+
+    public void playSound(final String musicName) {
+        if (isSound == false) return;
+        soundRuns.add(new Runnable() {
+            public void run() {
+                getSound(musicName).play();
+            }
+        });
+    }
+
+    public void playSound(final String musicName, final int vol) {
+        if (isSound == false) return;
+        soundRuns.add(new Runnable() {
+            public void run() {
+                getSound(musicName).play(vol);
+            }
+        });
     }
 
     /**
      * 循环播放音效
      */
-    public void playSoundLoop(String musicName) {
-        if (isSound == false)
-            return;
-        getSound(musicName).loop();
+    public void playSoundLoop(final String musicName) {
+        if (isSound == false) return;
+        soundRuns.add(new Runnable() {
+            public void run() {
+                getSound(musicName).loop();
+            }
+        });
+    }
+
+    public void playSoundLoop(final String musicName, final int vol) {
+        if (isSound == false) return;
+        soundRuns.add(new Runnable() {
+            public void run() {
+                getSound(musicName).loop(vol);
+            }
+        });
     }
 
     /**
