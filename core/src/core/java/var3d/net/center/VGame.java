@@ -1516,7 +1516,7 @@ public abstract class VGame implements ApplicationListener {
         });
     }
 
-    public void playSound(final String musicName, final int vol) {
+    public void playSound(final String musicName, final float vol) {
         if (isSound == false) return;
         soundRuns.add(new Runnable() {
             public void run() {
@@ -1537,7 +1537,7 @@ public abstract class VGame implements ApplicationListener {
         });
     }
 
-    public void playSoundLoop(final String musicName, final int vol) {
+    public void playSoundLoop(final String musicName, final float vol) {
         if (isSound == false) return;
         soundRuns.add(new Runnable() {
             public void run() {
