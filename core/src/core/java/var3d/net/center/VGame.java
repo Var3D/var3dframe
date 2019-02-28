@@ -1509,20 +1509,24 @@ public abstract class VGame implements ApplicationListener {
 
     public void playSound(final String musicName) {
         if (isSound == false) return;
-        soundRuns.add(new Runnable() {
-            public void run() {
-                getSound(musicName).play();
-            }
-        });
+        if (soundRuns.size > 5) {
+            soundRuns.add(new Runnable() {
+                public void run() {
+                    getSound(musicName).play();
+                }
+            });
+        } else getSound(musicName).play();
     }
 
     public void playSound(final String musicName, final float vol) {
         if (isSound == false) return;
-        soundRuns.add(new Runnable() {
-            public void run() {
-                getSound(musicName).play(vol);
-            }
-        });
+        if (soundRuns.size > 5) {
+            soundRuns.add(new Runnable() {
+                public void run() {
+                    getSound(musicName).play(vol);
+                }
+            });
+        } else getSound(musicName).play(vol);
     }
 
     /**
@@ -1530,20 +1534,24 @@ public abstract class VGame implements ApplicationListener {
      */
     public void playSoundLoop(final String musicName) {
         if (isSound == false) return;
-        soundRuns.add(new Runnable() {
-            public void run() {
-                getSound(musicName).loop();
-            }
-        });
+        if(soundRuns.size>5) {
+            soundRuns.add(new Runnable() {
+                public void run() {
+                    getSound(musicName).loop();
+                }
+            });
+        }else getSound(musicName).loop();
     }
 
     public void playSoundLoop(final String musicName, final float vol) {
         if (isSound == false) return;
-        soundRuns.add(new Runnable() {
-            public void run() {
-                getSound(musicName).loop(vol);
-            }
-        });
+        if(soundRuns.size>5) {
+            soundRuns.add(new Runnable() {
+                public void run() {
+                    getSound(musicName).loop(vol);
+                }
+            });
+        }else getSound(musicName).loop(vol);
     }
 
     /**
