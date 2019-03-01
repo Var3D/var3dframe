@@ -730,6 +730,11 @@ public abstract class VGame implements ApplicationListener {
             setStage(prefStage);
     }
 
+    //获取上一个界面是什么
+    public Class getPrefStage() {
+        return prefStage;
+    }
+
     public HashMap<String, VDialog> getDialogs() {
         return poolDialog;
     }
@@ -1534,24 +1539,24 @@ public abstract class VGame implements ApplicationListener {
      */
     public void playSoundLoop(final String musicName) {
         if (isSound == false) return;
-        if(soundRuns.size>5) {
+        if (soundRuns.size > 5) {
             soundRuns.add(new Runnable() {
                 public void run() {
                     getSound(musicName).loop();
                 }
             });
-        }else getSound(musicName).loop();
+        } else getSound(musicName).loop();
     }
 
     public void playSoundLoop(final String musicName, final float vol) {
         if (isSound == false) return;
-        if(soundRuns.size>5) {
+        if (soundRuns.size > 5) {
             soundRuns.add(new Runnable() {
                 public void run() {
                     getSound(musicName).loop(vol);
                 }
             });
-        }else getSound(musicName).loop(vol);
+        } else getSound(musicName).loop(vol);
     }
 
     /**
