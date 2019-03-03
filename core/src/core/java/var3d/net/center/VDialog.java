@@ -46,7 +46,6 @@ public abstract class VDialog extends Group {
         if (isStretching) {
             setScale(1f / stageTop.getRoot().getScaleX(), 1f / stageTop.getRoot().getScaleY());
         }
-        addBackgroundAcition();
     }
 
     public float getCutWidth() {

@@ -755,6 +755,7 @@ public abstract class VGame implements ApplicationListener {
                     this);
             poolDialog.put(name, dDialog);
             dDialog.init();
+            dDialog.addBackgroundAcition();
             dDialog.start();
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
