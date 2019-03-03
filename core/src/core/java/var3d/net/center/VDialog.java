@@ -15,8 +15,12 @@ public abstract class VDialog extends Group {
     public VGame game;
     private Image bg0 = null;
     private float endAlpha = 0.8f;
+    private int align = Align.center;//对话框对齐方式
+    private float padX, padY;//对齐偏移
+    private float showX, showY;
     private VStage stageTop;
     private boolean isStretching = false;//是否拉伸比例适配
+    private ActionType hideActionType = ActionType.NOEFFECTE, showActionType = ActionType.NOEFFECTE;//对话框移除动画
 
     //获取上一个刚添加的actor
     public Actor pref() {
@@ -29,7 +33,7 @@ public abstract class VDialog extends Group {
     }
 
     public enum ActionType {
-        NOEFFECTE, MOVELEFT, MOVERIGHT, MOVEODOWN, MOVEUP, FADEIN, POPUP
+        NOEFFECTE, MOVELEFT, MOVERIGHT, MOVEODOWN, MOVEUP, FADE, POPUP
     }
 
     public VDialog(VGame game) {
@@ -144,7 +148,38 @@ public abstract class VDialog extends Group {
     private void setThis(Actor actor) {
         setSize(actor.getWidth(), actor.getHeight());
         setOrigin(Align.center);
-        setPosition(game.getCenterX(), game.getCenterY(), Align.center);
+        switch (align) {
+            case Align.center:
+                setPosition(game.getCenterX() + padX, game.getCenterY() + padY, Align.center);
+                break;
+            case Align.left:
+                setPosition(stageTop.getLeft() + padX, game.getCenterY() + padY, Align.left);
+                break;
+            case Align.right:
+                setPosition(stageTop.getRight() + padX, game.getCenterY() + padY, Align.right);
+                break;
+            case Align.top:
+                setPosition(game.getCenterX() + padX, stageTop.getTop() + padY, Align.top);
+                break;
+            case Align.bottom:
+                setPosition(game.getCenterX() + padX, stageTop.getBottom() + padY, Align.bottom);
+                break;
+            case Align.topLeft:
+                setPosition(stageTop.getLeft() + padX, stageTop.getTop() + padY, Align.topLeft);
+                break;
+            case Align.bottomLeft:
+                setPosition(stageTop.getLeft() + padX, stageTop.getBottom() + padY, Align.bottomLeft);
+                break;
+            case Align.topRight:
+                setPosition(stageTop.getRight() + padX, stageTop.getTop() + padY, Align.topRight);
+                break;
+            case Align.bottomRight:
+                setPosition(stageTop.getRight() + padX, stageTop.getBottom() + padY, Align.bottomRight);
+                break;
+
+        }
+        showX = getX();
+        showY = getY();
         addActor(actor);
     }
 
@@ -227,10 +262,27 @@ public abstract class VDialog extends Group {
         this.endAlpha = endAlpha;
     }
 
+
+    //设置对话框的对齐方式，默认居中
+    public void setAlignment(int align) {
+        this.align = align;
+    }
+
+    //设置对话框的对齐方式，默认居中
+    public void setAlignment(int align, float padX, float padY) {
+        this.align = align;
+        this.padX = padX;
+        this.padY = padY;
+    }
+
     public void addBackgroundAcition() {
         bg0.clearActions();
-        bg0.addAction(Actions.sequence(Actions.alpha(0),
-                Actions.alpha(endAlpha, 0.5f)));
+        bg0.addAction(Actions.sequence(Actions.alpha(0), Actions.alpha(endAlpha, 0.5f)));
+    }
+
+    public void addReBackgroundAcition() {
+        bg0.clearActions();
+        bg0.addAction(Actions.sequence(Actions.alpha(0, 0.2f)));
     }
 
     public void draw(Batch batch, float parentAlpha) {
@@ -239,43 +291,87 @@ public abstract class VDialog extends Group {
         super.draw(batch, parentAlpha);
     }
 
-    public void setStartActions(ActionType type) {
-        switch (type) {
+    public void playShowActions() {
+        switch (showActionType) {
             case NOEFFECTE:// 无效果
+                break;
+            case FADE://淡入
+                addAction(Actions.sequence(Actions.hide(), Actions.scaleTo(1, 1), Actions.moveTo(showX, showY),
+                        Actions.alpha(0), Actions.show(), Actions.alpha(1, 0.2f)));
                 break;
             case POPUP:// 弹出
                 if (isStretching) {
-                    addAction(Actions.sequence(Actions.scaleTo(0, 0), Actions.scaleTo(
-                            1f / stageTop.getRoot().getScaleX(), 1f / stageTop.getRoot().getScaleY()
-                            , 0.2f, Interpolation.bounce)));
+                    addAction(Actions.sequence(Actions.hide(), Actions.scaleTo(0, 0), Actions.moveTo(showX, showY)
+                            , Actions.show(), Actions.scaleTo(1f / stageTop.getRoot().getScaleX()
+                                    , 1f / stageTop.getRoot().getScaleY(), 0.2f, Interpolation.bounce)));
                 } else {
-                    addAction(Actions.sequence(Actions.scaleTo(0, 0),
-                            Actions.scaleTo(1, 1, 0.2f, Interpolation.bounce)));
+                    addAction(Actions.sequence(Actions.hide(), Actions.scaleTo(0, 0), Actions.moveTo(showX, showY)
+                            , Actions.show(), Actions.scaleTo(1, 1, 0.2f, Interpolation.bounce)));
                 }
                 break;
             case MOVERIGHT:// 从左到右
-                addAction(Actions.sequence(Actions.moveTo(-game.getStage()
-                        .getCutWidth() - getWidth(), getY()), Actions.moveTo(
-                        game.getCenterX() - getWidth() / 2, getY(), 0.2f,
-                        Interpolation.bounce)));
+                addAction(Actions.sequence(Actions.hide(), Actions.scaleTo(1, 1), Actions.moveTo(-getCutWidth() - getWidth(), showY),
+                        Actions.show(), Actions.moveTo(showX, showY, 0.2f, Interpolation.bounce)));
                 break;
             case MOVELEFT:// 从右到左
-                addAction(Actions.sequence(Actions.moveTo(game.WIDTH
-                        + game.getStage().getCutWidth(), getY()), Actions.moveTo(
-                        game.getCenterX() - getWidth() / 2, getY(), 0.2f,
-                        Interpolation.bounce)));
+                addAction(Actions.sequence(Actions.hide(), Actions.scaleTo(1, 1), Actions.moveTo(getCutAndWidth(), showY)
+                        , Actions.show(), Actions.moveTo(showX, showY, 0.2f, Interpolation.bounce)));
                 break;
             case MOVEODOWN:// 从上到下
-                addAction(Actions.sequence(Actions.moveTo(getX(), game.HEIGHT
-                        + game.getStage().getCutHeight()), Actions.moveTo(getX(),
-                        game.getCenterY() - getHeight() / 2, 0.2f,
-                        Interpolation.bounce)));
+                addAction(Actions.sequence(Actions.hide(), Actions.scaleTo(1, 1), Actions.moveTo(showX, getCutAndHeight())
+                        , Actions.show(), Actions.moveTo(showX, showY, 0.2f, Interpolation.bounce)));
                 break;
             case MOVEUP:// 从下到上
-                addAction(Actions.sequence(Actions.moveTo(getX(), -game.getStage()
-                        .getCutHeight() - getHeight()), Actions.moveTo(getX(),
-                        game.getCenterY() - getHeight() / 2, 0.2f,
-                        Interpolation.bounce)));
+                addAction(Actions.sequence(Actions.hide(), Actions.scaleTo(1, 1), Actions.moveTo(showX, -getCutHeight() - getHeight())
+                        , Actions.show(), Actions.moveTo(showX, showY, 0.2f, Interpolation.bounce)));
+                break;
+        }
+    }
+
+
+    public void setShowActions(ActionType type) {
+        this.showActionType = type;
+    }
+
+    public void setHideActions(ActionType type) {
+        this.hideActionType = type;
+    }
+
+
+    public void playHideActions(Runnable runnable) {
+        switch (hideActionType) {
+            case NOEFFECTE:// 无效果
+                runnable.run();
+                break;
+            case FADE://淡出
+                addAction(Actions.sequence(Actions.scaleTo(1, 1), Actions.moveTo(showX, showY),
+                        Actions.alpha(1), Actions.show(), Actions.alpha(0, 0.2f), Actions.run(runnable)));
+                break;
+            case POPUP:// 缩小
+                if (isStretching) {
+                    addAction(Actions.sequence(Actions.moveTo(showX, showY), Actions.scaleTo(1f / stageTop.getRoot().getScaleX()
+                            , 1f / stageTop.getRoot().getScaleY()), Actions.scaleTo(
+                            0, 0, 0.2f, Interpolation.bounce), Actions.run(runnable)));
+                } else {
+                    addAction(Actions.sequence(Actions.moveTo(showX, showY), Actions.scaleTo(1, 1), Actions.scaleTo(0, 0, 0.2f
+                            , Interpolation.bounce), Actions.run(runnable)));
+                }
+                break;
+            case MOVERIGHT:// 从左到右
+                addAction(Actions.sequence(Actions.moveTo(showX, showY), Actions.moveTo(
+                        getCutAndWidth(), showY, 0.2f, Interpolation.bounce), Actions.run(runnable)));
+                break;
+            case MOVELEFT:// 从右到左
+                addAction(Actions.sequence(Actions.moveTo(showX, showY), Actions.moveTo(-getCutWidth()
+                        - getWidth(), showY, 0.2f, Interpolation.bounce), Actions.run(runnable)));
+                break;
+            case MOVEODOWN:// 从上到下
+                addAction(Actions.sequence(Actions.moveTo(showX, showY), Actions.moveTo(showX, -getCutHeight()
+                        - getHeight(), 0.2f, Interpolation.bounce), Actions.run(runnable)));
+                break;
+            case MOVEUP:// 从下到上
+                addAction(Actions.sequence(Actions.moveTo(showX, showY), Actions.moveTo(
+                        showX, getCutAndHeight(), 0.2f, Interpolation.bounce), Actions.run(runnable)));
                 break;
         }
     }

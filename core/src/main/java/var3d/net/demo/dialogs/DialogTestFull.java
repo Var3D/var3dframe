@@ -24,6 +24,8 @@ public class DialogTestFull extends VDialog {
     public void init() {
         //设置背景
         setBackground(Color.valueOf("0075ed"));
+        setShowActions(ActionType.POPUP);
+        setHideActions(ActionType.POPUP);
         //设置标题
         game.getLabel("全屏对话框").touchOff().setFontScale(1.3f).setPosition(getWidth() / 2, getHeight() - 30, Align.top).show();
         //左右区域测试
@@ -49,7 +51,6 @@ public class DialogTestFull extends VDialog {
     @Override
     public void show() {
         //每次弹出对话框时调用
-        setStartActions(ActionType.MOVEODOWN);
     }
 
     @Override
@@ -66,4 +67,5 @@ public class DialogTestFull extends VDialog {
     public void resume() {
         //当该对话框恢复顶层时调用
     }
+
 }

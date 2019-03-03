@@ -52,7 +52,6 @@ public class DialogUnRatio extends VDialog {
     @Override
     public void show() {
         //每次弹出对话框时调用
-        setStartActions(ActionType.MOVEUP);
     }
 
     @Override

@@ -29,6 +29,8 @@ public class DialogLogin extends VDialog {
     public void init() {
         //设置背景
         setBackground(400, 300, Color.valueOf("0075ed"));
+        setShowActions(ActionType.POPUP);
+        setHideActions(ActionType.POPUP);
         //设置标题
         final VLabel lab_title= game.getLabel("登录对话框").touchOff().setFontScale(1.3f).setPosition
                (getWidth() / 2, getHeight() - 30, Align.top).show();
@@ -170,4 +172,5 @@ public class DialogLogin extends VDialog {
     public void resume() {
         //当该对话框恢复顶层时调用
     }
+
 }

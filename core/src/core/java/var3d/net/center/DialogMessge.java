@@ -28,6 +28,7 @@ public class DialogMessge extends VDialog {
     @Override
     public void init() {
         setBackground(game.getUI(new Actor()).setSize(getFullWidth(), getFullHeight()).getActor());
+        setShowActions(ActionType.POPUP);
         img_bg = game.getImage(getWidth() / 2, 1).touchOff().show(this);
         lab_msg = game.getLabel("messge").setColor(Color.DARK_GRAY).touchOff().show(this);
         lab_msg.setWrap(true);
@@ -48,8 +49,7 @@ public class DialogMessge extends VDialog {
 
     @Override
     public void show() {
-        clearActions();
-        setStartActions(MOVEUP);
+        img_bg.clearActions();
         Object obj = game.getUserData(MODEL);
         float time = 3;
         if (obj != null) {
@@ -66,7 +66,7 @@ public class DialogMessge extends VDialog {
             time = model.time;
 
             if ((int) time != -1) {
-                addAction(Actions.delay(time, Actions.run(new Runnable() {
+                img_bg.addAction(Actions.delay(time, Actions.run(new Runnable() {
                     @Override
                     public void run() {
                         game.removeDialog(DialogMessge.this);
@@ -74,7 +74,7 @@ public class DialogMessge extends VDialog {
                 })));
             }
         } else {
-            addAction(Actions.delay(time, Actions.run(new Runnable() {
+            img_bg.addAction(Actions.delay(time, Actions.run(new Runnable() {
                 @Override
                 public void run() {
                     game.removeDialog(DialogMessge.this);

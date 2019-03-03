@@ -34,6 +34,8 @@ public class DialogAD extends VDialog {
     public void init() {
         //设置背景
         setBackground(Color.valueOf("eeeeee"));
+        setShowActions(ActionType.POPUP);
+        setHideActions(ActionType.POPUP);
         //获取默认字体大小
         float fontSize=game.getFont().getLineHeight();
         //设置标题
@@ -90,7 +92,6 @@ public class DialogAD extends VDialog {
     @Override
     public void show() {
         //每次弹出对话框时调用
-        setStartActions(ActionType.POPUP);
     }
 
     @Override

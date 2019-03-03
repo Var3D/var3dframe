@@ -803,6 +803,7 @@ public abstract class VGame implements ApplicationListener {
         dia.setTouchable(Touchable.enabled);
         stageTop.addActor(dia);
         setNativeTextFieldsHidden(dia, false);
+        dia.playShowActions();
         dia.show();
         return dia;
     }
@@ -837,26 +838,31 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 移除dialog并恢复下层响应
      */
-    public void removeDialog(VDialog dialog) {
-        setNativeTextFieldsHidden(dialog, true);
-        dialog.remove();
-        // 遍历获取顶层所有对话框对象
-        Array<VDialog> dialogs = new Array<VDialog>();
-        for (Actor actor : stageTop.getActors()) {
-            if (actor instanceof VDialog) {
-                dialogs.add((VDialog) actor);
+    public void removeDialog(final VDialog dialog) {
+        dialog.addReBackgroundAcition();
+        dialog.playHideActions(new Runnable() {
+            public void run() {
+                dialog.remove();
+                // 遍历获取顶层所有对话框对象
+                Array<VDialog> dialogs = new Array<VDialog>();
+                for (Actor actor : stageTop.getActors()) {
+                    if (actor instanceof VDialog) {
+                        dialogs.add((VDialog) actor);
+                    }
+                }
+                if (dialogs.size > 0) {
+                    VDialog nowDialog = dialogs.peek();
+                    nowDialog.setTouchable(Touchable.enabled);
+                    nowDialog.resume();
+                    setNativeTextFieldsHidden(nowDialog, false);
+                } else {
+                    stage.getRoot().setTouchable(Touchable.enabled);
+                    stage.resume();
+                    setNativeTextFieldsHidden(stage.getRoot(), false);
+                }
             }
-        }
-        if (dialogs.size > 0) {
-            VDialog nowDialog = dialogs.peek();
-            nowDialog.setTouchable(Touchable.enabled);
-            nowDialog.resume();
-            setNativeTextFieldsHidden(nowDialog, false);
-        } else {
-            stage.getRoot().setTouchable(Touchable.enabled);
-            stage.resume();
-            setNativeTextFieldsHidden(stage.getRoot(), false);
-        }
+        });
+        setNativeTextFieldsHidden(dialog, true);
     }
 
     /**
@@ -871,19 +877,20 @@ public abstract class VGame implements ApplicationListener {
             }
         }
         VDialog dialog = dialogs.pop();
-        setNativeTextFieldsHidden(dialog, true);
-        dialog.remove();
+        removeDialog(dialog);
+//        setNativeTextFieldsHidden(dialog, true);
+//        dialog.remove();
 
-        if (dialogs.size > 0) {
-            VDialog nowDialog = dialogs.peek();
-            nowDialog.setTouchable(Touchable.enabled);
-            nowDialog.resume();
-            setNativeTextFieldsHidden(nowDialog, false);
-        } else {
-            stage.getRoot().setTouchable(Touchable.enabled);
-            stage.resume();
-            setNativeTextFieldsHidden(stage.getRoot(), false);
-        }
+//        if (dialogs.size > 0) {
+//            VDialog nowDialog = dialogs.peek();
+//            nowDialog.setTouchable(Touchable.enabled);
+//            nowDialog.resume();
+//            setNativeTextFieldsHidden(nowDialog, false);
+//        } else {
+//            stage.getRoot().setTouchable(Touchable.enabled);
+//            stage.resume();
+//            setNativeTextFieldsHidden(stage.getRoot(), false);
+//        }
     }
 
     /**
@@ -899,11 +906,12 @@ public abstract class VGame implements ApplicationListener {
             }
         }
         for (VDialog dialog : dialogs) {
-            dialog.remove();
+            //dialog.remove();
+            removeDialog(dialog);
         }
-        stage.getRoot().setTouchable(Touchable.enabled);
-        stage.resume();
-        setNativeTextFieldsHidden(stage.getRoot(), false);
+//        stage.getRoot().setTouchable(Touchable.enabled);
+//        stage.resume();
+//        setNativeTextFieldsHidden(stage.getRoot(), false);
     }
 
     public boolean isHaveDialog(VDialog dialog) {

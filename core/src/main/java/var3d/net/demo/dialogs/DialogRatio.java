@@ -21,6 +21,14 @@ public class DialogRatio extends VDialog {
 
     @Override
     public void init() {
+        //设置对话框对齐方式
+        setAlignment(Align.center);
+        //设置对话框底层透明度
+        setEndAlpha(0.5f);
+        //设置显示对话框时的动画
+        setShowActions(ActionType.FADE);
+        //设置移除对话框时的动画
+        setHideActions(ActionType.FADE);
         //设置背景
         setBackground(400, 300, Color.valueOf("0075ed"));
         //设置标题
@@ -31,7 +39,9 @@ public class DialogRatio extends VDialog {
         btn_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //game.removeDialog(DialogRatio.this);
-                game.removeDialog();//新的移除当前dialog方法,可以不带this参数
+                //game.removeDialog();//新的移除当前dialog方法,可以不带this参数
+                //game.removeTopDialog();
+                game.removeAllDialog();
             }
         });
     }
@@ -44,7 +54,6 @@ public class DialogRatio extends VDialog {
     @Override
     public void show() {
         //每次弹出对话框时调用
-        setStartActions(ActionType.POPUP);
     }
 
     @Override
@@ -61,4 +70,5 @@ public class DialogRatio extends VDialog {
     public void resume() {
         //当该对话框恢复顶层时调用
     }
+
 }
