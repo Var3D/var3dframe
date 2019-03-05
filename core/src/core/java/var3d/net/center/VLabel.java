@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import var3d.net.center.freefont.FreeBitmapFont;
+import var3d.net.center.tool.Reflection;
 
 public class VLabel extends Label {
     private boolean isStroke = false;// 是否描边
@@ -18,10 +19,7 @@ public class VLabel extends Label {
     private ShadowOption shadowOption = ShadowOption.Disable;//设置阴影选项
     private Color shadowColor = new Color(Color.GRAY);//阴影颜色
     private BitmapFontCache fontCache;
-    private StringBuilder text=new StringBuilder();
-    // private boolean isHasEmoji=false;//是否含有emoji
-
-    //  private Color labColor=new Color(1,1,1,1);//当使用带 emoji 的 FreeFontBitmap 时，调用 setColor 将会设置给这个参数
+    private StringBuilder text = new StringBuilder();
 
     public enum ShadowOption {
         Disable, Projection, Smear
@@ -29,10 +27,10 @@ public class VLabel extends Label {
 
     public VLabel(CharSequence newText, LabelStyle style) {
         super(append(newText, style), style);
+        fontCache = getBitmapFontCache();
         addText(newText);
         setSize(getPrefWidth(), getPrefHeight());
         setColor(style.fontColor);
-        fontCache = getBitmapFontCache();
     }
 
     private void addText(CharSequence newText) {
@@ -99,6 +97,8 @@ public class VLabel extends Label {
      * 设置字体缩放
      */
 
+    private boolean fontScaleChanged = true;
+
     public void setFontScale(float fontScale) {
         this.setFontScale(fontScale, fontScale);
     }
@@ -106,6 +106,7 @@ public class VLabel extends Label {
     public void setFontScale(float fontScaleX, float fontScaleY) {
         super.setFontScale(fontScaleX, fontScaleY);
         setSize(getPrefWidth(), getPrefHeight());
+        fontScaleChanged = true;
     }
 
     public float getShadowOffsetX() {

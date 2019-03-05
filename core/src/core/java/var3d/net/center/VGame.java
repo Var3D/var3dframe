@@ -13,6 +13,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Filter;
@@ -211,6 +212,7 @@ public abstract class VGame implements ApplicationListener {
         Gdx.input.setCatchBackKey(true);// 劫持系统返回键
         multiplexer = new InputMultiplexer();// 触控实例化
         Gdx.input.setInputProcessor(multiplexer);//
+        extColors();//扩展中文颜色
         stageTop = new StageTop(this);
         stageTop.setOff();
         isMusic = save.getBoolean("isMusic", true);
@@ -2423,6 +2425,59 @@ public abstract class VGame implements ApplicationListener {
             return time;
         } catch (IOException e) {
             return -1;
+        }
+    }
+
+    private void extColors() {
+        putColor("透明", Color.CLEAR);
+        putColor("黑", Color.BLACK);
+
+        putColor("白", Color.WHITE);
+        putColor("浅灰", Color.LIGHT_GRAY);
+        putColor("灰", Color.GRAY);
+        putColor("深灰", Color.DARK_GRAY);
+
+        putColor("蓝", Color.BLUE);
+        putColor("海蓝", Color.NAVY);
+        putColor("皇家蓝", Color.ROYAL);
+        putColor("石板蓝", Color.SLATE);
+        putColor("天蓝", Color.SKY);
+        putColor("青", Color.CYAN);
+        putColor("钢蓝", Color.TEAL);
+
+        putColor("绿", Color.GREEN);
+        putColor("黄绿", Color.CHARTREUSE);
+        putColor("浅绿", Color.LIME);
+        putColor("草绿", Color.FOREST);
+        putColor("橄榄绿", Color.OLIVE);
+
+        putColor("黄", Color.YELLOW);
+        putColor("金", Color.GOLD);
+        putColor("屎黄", Color.GOLDENROD);
+        putColor("橙", Color.ORANGE);
+
+        putColor("棕", Color.BROWN);
+        putColor("香槟", Color.TAN);
+        putColor("砖红", Color.FIREBRICK);
+
+        putColor("红", Color.RED);
+        putColor("深红", Color.SCARLET);
+        putColor("珊瑚", Color.CORAL);
+        putColor("橘红", Color.SALMON);
+        putColor("粉红", Color.PINK);
+        putColor("品红", Color.MAGENTA);
+
+        putColor("紫", Color.PURPLE);
+        putColor("紫罗兰", Color.VIOLET);
+        putColor("栗", Color.MAROON);
+    }
+
+    private void putColor(String colorName, Color color) {
+        Colors.put(colorName, color);
+        Colors.put(colorName + "色", color);
+        if (colorName.length() > 2) {
+            Colors.put(colorName.substring(0, 2), color);
+            Colors.put(colorName.substring(0, 2)+"色", color);
         }
     }
 }

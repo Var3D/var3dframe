@@ -3,6 +3,7 @@ package var3d.net.demo.stages;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -121,6 +122,14 @@ public class StageMain extends VStage {
                 game.showMessege("更多效果尽请期待...");
             }
         });
+
+
+        //文本换行测试
+        VLabel msg = game.getLabel("[红]红[橙]橙[黄]黄[绿]绿[青]青[蓝]蓝[紫]紫[橄榄色]橄榄色[品红]品红[海蓝]海蓝[天蓝]天蓝[砖红色]砖红色[金]金[屎黄]屎黄").show(this);
+        msg.setAlignment(Align.center, Align.left);
+        msg.setWidth(getWidth()*0.4f);
+        msg.setWrap(true);
+        msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
     }
 
     public void start() {

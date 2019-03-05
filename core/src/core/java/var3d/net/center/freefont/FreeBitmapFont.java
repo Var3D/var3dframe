@@ -6,6 +6,7 @@ import java.util.Set;
 
 import var3d.net.center.VGame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Filter;
@@ -32,7 +33,7 @@ public class FreeBitmapFont extends BitmapFont {
     private PixmapPacker packer = null;// 用于将单个字符合成到大纹理的packer
     private TextureFilter minFilter = TextureFilter.Linear;
     private TextureFilter magFilter = TextureFilter.Linear;
-    private BitmapFontData data;
+    private FreeBitmapFontData data;
     private int size;
     // 实现emoji
     private boolean isEmoji = false;
@@ -68,7 +69,8 @@ public class FreeBitmapFont extends BitmapFont {
     }
 
     public FreeBitmapFont(VGame game, FreePaint paint) {
-        super(new BitmapFontData(), new TextureRegion(), false);
+        super(new FreeBitmapFontData(), new TextureRegion(), false);
+        data= (FreeBitmapFontData) getData();
         pageWidth=paint.getPageWidth();
         updataSize(paint.getTextSize());
         this.game = game;
@@ -77,8 +79,8 @@ public class FreeBitmapFont extends BitmapFont {
         setIsEmoji(paint.isEmoji());
     }
 
+
     public void updataSize(int newSize) {
-        data = getData();
         size = Math.max(newSize, size);
         data.down = -size;
         data.ascent = -size;
