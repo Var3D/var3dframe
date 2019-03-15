@@ -74,11 +74,13 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
+import var3d.net.center.tool.ClazzUtils;
 
 /**
  * Var3D核心框架
@@ -234,13 +236,21 @@ public abstract class VGame implements ApplicationListener {
                 iphoneX = new TextureRegion(new Texture(var3dListener.getIphoneXPixmap("")));
             }
         }
+        autoSetResources();//自动设置R类
+    }
 
+    private void autoSetResources(){
+        try {
+            Class resource=Class.forName(getClass().getPackage().getName()+".R");
+            setResources(resource);
+        } catch (ClassNotFoundException e) {
+        }
     }
 
     //设置R文件
     private Class resource;
 
-    public <T> void setResources(Class<T> resource) {
+    private <T> void setResources(Class<T> resource) {
         this.resource = resource;
         if (bundle == null) {
             bundle = new VBundle(var3dListener);

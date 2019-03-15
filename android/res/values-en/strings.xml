@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<string name="app_name">var3dframe for gdx1.9.7</string>
+<string name="app_name">var3d框架</string>
 <string name="dialogTitle">Dialog box example</string>
 <string name="logo">var3d frame</string>
 <string name="test">this is test</string>

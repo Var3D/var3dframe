@@ -26,9 +26,6 @@ public class R {
         public static String app_name = "app_name";
         public static String logo = "logo";
         public static String dialogTitle = "dialogTitle";
-
-        public static class format {
-        }
     }
 
     public static class var3d {

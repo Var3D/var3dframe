@@ -35,7 +35,7 @@ public class StageMain extends VStage {
         //设置背景
         setBackground(Color.DARK_GRAY);
         //创建标题
-        VLabel lab_title = game.getLabel("Var3D框架").setPosition(getWidth() / 2, getTop() - 10, Align.top).touchOff().show();
+        VLabel lab_title = game.getLabel(R.strings.app_name).setPosition(getWidth() / 2, getTop() - 10, Align.top).touchOff().show();
         //对话框
         Button btn_dialog = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40).setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_dialog.add(game.getLabel("对话框例子").setFontScale(0.6f).getActor());
