@@ -1213,7 +1213,7 @@ public abstract class VGame implements ApplicationListener {
                                 outPixmap.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight()
                                         , 0, 0, out_w, out_h);
                                 writePNG(Gdx.files.absolute(f_name), outPixmap);
-                                Gdx.app.error("Var3D Studio消息", finalNa + time + "截取成功!");
+                                Gdx.app.error("Var3D Studio messge", finalNa + time + " successful screenshot!");
                             }
                         });
                         t.start();
@@ -1232,7 +1232,7 @@ public abstract class VGame implements ApplicationListener {
                                             , 0, 0, out5s_w, out5s_h);
                                     String name = f_path5s + "/" + finalNa + time + ".jpg";
                                     writePNG(Gdx.files.absolute(name), out5sPixmap);
-                                    Gdx.app.error("Var3D Studio消息", finalNa + time + "截取成功!");
+                                    Gdx.app.error("Var3D Studio messge", finalNa + time + " successful screenshot!");
                                 }
                             });
                             t2.start();
