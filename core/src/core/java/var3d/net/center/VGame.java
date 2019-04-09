@@ -1353,7 +1353,7 @@ public abstract class VGame implements ApplicationListener {
         setResources(resource);
         clearAllUI(null);//销毁原界面
         setStage(nowStage);
-        Gdx.app.error("Var3D Studio消息", "切换语言为:" + language);
+        Gdx.app.error("Var3D Studio messge", "Switch language to:" + language);
     }
 
     public void writePNG(final FileHandle file, final Pixmap pixmap) {
