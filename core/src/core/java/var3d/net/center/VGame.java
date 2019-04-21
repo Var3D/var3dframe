@@ -268,7 +268,7 @@ public abstract class VGame implements ApplicationListener {
                     for (int i = 0; i < R_fields.length; i++) {
                         Field field = R_fields[i];
                         field.set(null, bundle.get(field.getName()));
-                        //Gdx.app.log("aaaaaaaaaaaaaaaaaa","name="+field.getName());
+                        Gdx.app.log("aaaaaaaaaaaaaaaaaa","name="+field.getName());
                     }
                     return;
                 }else continue;
