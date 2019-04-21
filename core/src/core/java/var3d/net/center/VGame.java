@@ -108,7 +108,7 @@ public abstract class VGame implements ApplicationListener {
     private final HashMap<String, Texture> textures = new HashMap<String, Texture>();// 保存new出来得资源或者网络资源
     private TextureAtlas atlas;
     private final HashMap<String, VStage> pool = new HashMap<String, VStage>();// stage列表
-    private final HashMap<String, VDialog> poolDialog = new HashMap<String, VDialog>();// dialog列表
+    private final HashMap<Class<?>, VDialog> poolDialog = new HashMap<Class<?>, VDialog>();// dialog列表
     private final HashMap<String, FreeBitmapFont> fonts = new HashMap<String, FreeBitmapFont>();// 字体列表
     // private String prefStageName;// 上一个页面的名字
     @SuppressWarnings("rawtypes")
@@ -735,7 +735,7 @@ public abstract class VGame implements ApplicationListener {
         return prefStage;
     }
 
-    public HashMap<String, VDialog> getDialogs() {
+    public HashMap<Class<?>, VDialog> getDialogs() {
         return poolDialog;
     }
 
@@ -743,17 +743,16 @@ public abstract class VGame implements ApplicationListener {
      * 列表中获取Dialog
      */
     public <T> VDialog getDialog(Class<T> type) {
-        String name = type.getName();
-        VDialog dDialog = poolDialog.get(name);
+        //String name = type.getName();
+        VDialog dDialog = poolDialog.get(type);
         if (dDialog != null) {
             dDialog.addBackgroundAcition();
             dDialog.reStart();
             return dDialog;
         }
         try {
-            dDialog = (VDialog) type.getConstructor(VGame.class).newInstance(
-                    this);
-            poolDialog.put(name, dDialog);
+            dDialog = (VDialog) type.getConstructor(VGame.class).newInstance(this);
+            poolDialog.put(type, dDialog);
             dDialog.init();
             dDialog.addBackgroundAcition();
             dDialog.start();
@@ -820,8 +819,8 @@ public abstract class VGame implements ApplicationListener {
             if (idex > -1) className = className.substring(0, idex);
             Class<?> clazz = loader.loadClass(className);
             if (VDialog.class.isAssignableFrom(clazz)) {
-                HashMap<String, VDialog> pools = getDialogs();
-                VDialog dialog = pools.get(clazz.getName());
+                HashMap<Class<?>, VDialog> pools = getDialogs();
+                VDialog dialog = pools.get(clazz);
                 removeDialog(dialog);
             }
         } catch (ClassNotFoundException e) {

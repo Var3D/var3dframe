@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<string name="app_name">Var3D框架</string>
+<string name="dialogTitle">dialog příklad.</string>
+<string name="logo">var3d 框架示例</string>
+<string name="test">je to test.</string>
+<string name="tost">- učebnicový příklad</string>
+
+</resources>

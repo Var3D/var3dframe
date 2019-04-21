@@ -3,22 +3,14 @@ package var3d.net.demo.stages;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Colors;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.SnapshotArray;
 
-import var3d.net.center.NativeTextField;
-import var3d.net.center.SLabel;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
-import var3d.net.demo.ImageTest;
 import var3d.net.demo.R;
 
 /**
