@@ -262,6 +262,7 @@ public abstract class VGame implements ApplicationListener {
             Class innerClazz[] = R_clazz.getDeclaredClasses();
             for (@SuppressWarnings("rawtypes") Class cls : innerClazz) {
                 String name = cls.getSimpleName();
+                Gdx.app.log("aaaaaaaaaaaa","name="+name);
                 if (name.equals("strings")) {
                     Field[] R_fields = cls.getDeclaredFields();
                     for (Field field : R_fields) {
