@@ -44,8 +44,8 @@ public class UI<T extends Actor> {
             if (VStage.class.isAssignableFrom(clazz)) {//判断clazz是否为VStage的实例或子类实例
                 show(game.getStage());
             } else {
-                HashMap<String, VDialog> pools = game.getDialogs();
-                VDialog dialog = pools.get(clazz.getName());
+                HashMap<Class<?>, VDialog> pools = game.getDialogs();
+                VDialog dialog = pools.get(clazz);
                 show(dialog);
             }
         } catch (ClassNotFoundException e) {
