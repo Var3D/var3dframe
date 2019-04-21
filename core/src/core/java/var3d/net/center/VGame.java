@@ -265,8 +265,7 @@ public abstract class VGame implements ApplicationListener {
                 if (name.equals("strings")) {
                     Field[] R_fields = cls.getDeclaredFields();
                     for (Field field : R_fields) {
-                        if (field.getModifiers() == 9)// public
-                            // static就等于9，不服就去吃屎
+                        //if (field.getModifiers() == 9)// public static就等于9，不服就去吃屎
                             field.set(null, bundle.get(field.getName()));
                     }
                     break;
