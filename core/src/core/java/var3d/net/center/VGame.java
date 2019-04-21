@@ -236,21 +236,21 @@ public abstract class VGame implements ApplicationListener {
                 iphoneX = new TextureRegion(new Texture(var3dListener.getIphoneXPixmap("")));
             }
         }
-        autoSetResources();//自动设置R类
+        //autoSetResources();//自动设置R类
     }
 
-    private void autoSetResources() {
-        try {
-            Class resource = Class.forName(getClass().getPackage().getName() + ".R");
-            setResources(resource);
-        } catch (ClassNotFoundException e) {
-        }
-    }
+//    private void autoSetResources() {
+//        try {
+//            Class resource = Class.forName(getClass().getPackage().getName() + ".R");
+//            setResources(resource);
+//        } catch (ClassNotFoundException e) {
+//        }
+//    }
 
     //设置R文件
     private Class resource;
 
-    private <T> void setResources(Class<T> resource) {
+    public <T> void setResources(Class<T> resource) {
         this.resource = resource;
         if (bundle == null) {
             bundle = new VBundle(var3dListener);
@@ -258,17 +258,14 @@ public abstract class VGame implements ApplicationListener {
         if (resource == null) return;
         // 将多语言本地文本赋值到R文件，如果有的话
         try {
-            @SuppressWarnings("rawtypes")
             Class R_clazz = resource;
-            @SuppressWarnings("rawtypes")
             Class innerClazz[] = R_clazz.getDeclaredClasses();
-            for (@SuppressWarnings("rawtypes") Class cls : innerClazz) {
+            for (Class cls : innerClazz) {
                 Field[] R_fields = cls.getDeclaredFields();
                 if (isStringClazz(R_fields)) {
                     for (int i = 0; i < R_fields.length; i++) {
                         Field field = R_fields[i];
                         field.set(null, bundle.get(field.getName()));
-                        Gdx.app.log("aaaaaaaaaaaaaaaaaa","name="+field.getName());
                     }
                     return;
                 }else continue;
