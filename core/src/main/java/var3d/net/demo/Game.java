@@ -22,7 +22,6 @@ public class Game extends VGame {
 
     @Override
     public void init() {
-        setResources(R.class);//设置R类
         // openAutoScreenshots(5,StageTest.class);//开启自动截图
         // openProtect("image");//加密image文件夹资源
         // unProtect("image");

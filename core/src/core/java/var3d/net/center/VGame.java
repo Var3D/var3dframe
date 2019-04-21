@@ -74,11 +74,13 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
+import var3d.net.center.tool.ClazzUtils;
 
 /**
  * Var3D核心框架
@@ -234,21 +236,21 @@ public abstract class VGame implements ApplicationListener {
                 iphoneX = new TextureRegion(new Texture(var3dListener.getIphoneXPixmap("")));
             }
         }
-       // autoSetResources();//自动设置R类
+        autoSetResources();//自动设置R类
     }
 
-//    private void autoSetResources(){
-//        try {
-//            Class resource=Class.forName(getClass().getPackage().getName()+".R");
-//            setResources(resource);
-//        } catch (ClassNotFoundException e) {
-//        }
-//    }
+    private void autoSetResources() {
+        try {
+            Class resource = Class.forName(getClass().getPackage().getName() + ".R");
+            setResources(resource);
+        } catch (ClassNotFoundException e) {
+        }
+    }
 
     //设置R文件
     private Class resource;
 
-    public <T> void setResources(Class<T> resource) {
+    private <T> void setResources(Class<T> resource) {
         this.resource = resource;
         if (bundle == null) {
             bundle = new VBundle(var3dListener);
@@ -261,20 +263,29 @@ public abstract class VGame implements ApplicationListener {
             @SuppressWarnings("rawtypes")
             Class innerClazz[] = R_clazz.getDeclaredClasses();
             for (@SuppressWarnings("rawtypes") Class cls : innerClazz) {
-                String name = cls.getSimpleName();
-                Gdx.app.log("aaaaaaaaaaaa","name="+name);
-                if (name.equals("strings")) {
-                    Field[] R_fields = cls.getDeclaredFields();
-                    for (Field field : R_fields) {
-                        //if (field.getModifiers() == 9)// public static就等于9，不服就去吃屎
-                            field.set(null, bundle.get(field.getName()));
+                Field[] R_fields = cls.getDeclaredFields();
+                if (isStringClazz(R_fields)) {
+                    for (int i = 0; i < R_fields.length; i++) {
+                        Field field = R_fields[i];
+                        field.set(null, bundle.get(field.getName()));
+                        //Gdx.app.log("aaaaaaaaaaaaaaaaaa","name="+field.getName());
                     }
-                    break;
-                }
+                    return;
+                }else continue;
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isStringClazz(Field[] R_fields) {
+        for (int i = 0; i < R_fields.length; i++) {
+            Field field = R_fields[i];
+            if (field.getName().equals("app_name")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String format(String vaule, Object... args) {
@@ -741,7 +752,7 @@ public abstract class VGame implements ApplicationListener {
      * 列表中获取Dialog
      */
     public <T> VDialog getDialog(Class<T> type) {
-        //String name = type.getName();
+        // String name = type.getName();
         VDialog dDialog = poolDialog.get(type);
         if (dDialog != null) {
             dDialog.addBackgroundAcition();
@@ -749,7 +760,8 @@ public abstract class VGame implements ApplicationListener {
             return dDialog;
         }
         try {
-            dDialog = (VDialog) type.getConstructor(VGame.class).newInstance(this);
+            dDialog = (VDialog) type.getConstructor(VGame.class).newInstance(
+                    this);
             poolDialog.put(type, dDialog);
             dDialog.init();
             dDialog.addBackgroundAcition();
@@ -2466,7 +2478,7 @@ public abstract class VGame implements ApplicationListener {
         Colors.put(colorName + "色", color);
         if (colorName.length() > 2) {
             Colors.put(colorName.substring(0, 2), color);
-            Colors.put(colorName.substring(0, 2)+"色", color);
+            Colors.put(colorName.substring(0, 2) + "色", color);
         }
     }
 }
