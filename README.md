@@ -3,6 +3,10 @@
 
 A game framework base on LibGDX
 
+一个基于Libgdx的轻量级游戏框架，使Libgdx非常方便的支持中文以及任意字符，更方便使用的UI控件以及界面对话框的管理，低耦合的特性使你可以混合使用原生Libgdx的API
+
+[加入QQ群获得技术支持](https://jq.qq.com/?_wv=1027&k=51c4s6D)
+
 # Getting Started
 Include var3dframe via Gradle
 
@@ -66,11 +70,11 @@ dependencies {
 
 # Game case based on var3dframe
 ![](https://www.tapegg.com/games/snake3d-ad.jpg)![](https://www.tapegg.com/games/hero-ad-en.jpg)
-+ [Our Craft](https://itunes.apple.com/app/id1144041654)
-+ [King Greedy Snake](https://itunes.apple.com/app/id1249822516)
-+ [Snake Kill Brick](https://itunes.apple.com/app/id1403252096)
-+ [Hero Fighting](https://itunes.apple.com/app/id1344510227)
-+ [Hot Chariot](https://itunes.apple.com/app/id1280455730)
++ [Our Craft](https://itunes.apple.com/cn/app/id1144041654)
++ [King Greedy Snake](https://itunes.apple.com/cn/app/id1249822516)
++ [Snake Kill Brick](https://itunes.apple.com/cn/app/id1403252096)
++ [Hero Fighting](https://itunes.apple.com/cn/app/id1344510227)
++ [Hot Chariot](https://itunes.apple.com/cn/app/id1280455730)
 + [More](https://www.var3d.net/)
 
 # License
