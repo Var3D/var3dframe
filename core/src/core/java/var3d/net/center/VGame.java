@@ -749,7 +749,6 @@ public abstract class VGame implements ApplicationListener {
      * 列表中获取Dialog
      */
     public <T> VDialog getDialog(Class<T> type) {
-        // String name = type.getName();
         VDialog dDialog = poolDialog.get(type);
         if (dDialog != null) {
             dDialog.addBackgroundAcition();
@@ -757,8 +756,7 @@ public abstract class VGame implements ApplicationListener {
             return dDialog;
         }
         try {
-            dDialog = (VDialog) type.getConstructor(VGame.class).newInstance(
-                    this);
+            dDialog = (VDialog) type.getConstructor(VGame.class).newInstance(this);
             poolDialog.put(type, dDialog);
             dDialog.init();
             dDialog.addBackgroundAcition();
