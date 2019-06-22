@@ -3,10 +3,13 @@ package var3d.net.demo.stages;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
@@ -116,13 +119,14 @@ public class StageMain extends VStage {
         });
 
 
-        //文本换行测试
+        //文本测试
         VLabel msg = game.getLabel("[红]红[橙],,橙[黄]黄[绿]绿[青]青,[蓝]蓝[紫]紫[橄榄色]橄榄色[品红]品红[海蓝]海蓝[天蓝],,天蓝[砖红色]砖红色[金]金[屎黄]屎黄").show(this);
         msg.setDebug(true);
         msg.setAlignment(Align.center, Align.center);
         msg.setWidth(getWidth()*0.4f);
         msg.setWrap(true);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
+
     }
 
     public void start() {
