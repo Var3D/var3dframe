@@ -51,7 +51,6 @@ public class VJSON {
 	 * 
 	 * @param jsonPath
 	 *            例如"rpg/man/hp",rpg和man为jsonObject
-	 * @return
 	 */
 	public Object get(String jsonPath) {
 		jsonPath = jsonPath.replaceAll("\\.", "/");
@@ -75,7 +74,6 @@ public class VJSON {
 	 * 
 	 * @param jsonPath
 	 *            例如"rpg/man/hp",rpg和man为jsonObject
-	 * @return
 	 */
 	public Object getIt(String jsonPath) {
 		jsonPath = jsonPath.replaceAll("\\.", "/");

@@ -157,8 +157,7 @@ public class FreeBitmapFont extends BitmapFont {
         Pixmap pixmap = game.getPixmap(imgname);
         pixmap.setFilter(Filter.BiLinear);
         Pixmap pixmap2 = new Pixmap(size, size, Format.RGBA8888);
-        pixmap2.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(),
-                0, 0, size, size);
+        pixmap2.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, size, size);
         pixmap.dispose();
         pixmap = null;
         appendEmoji(txt, pixmap2);

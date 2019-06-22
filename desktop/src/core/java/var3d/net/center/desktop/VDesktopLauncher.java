@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.sun.awt.AWTUtilities;
 
@@ -93,12 +94,12 @@ import var3d.net.center.freefont.FreePaint;
 public abstract class VDesktopLauncher implements VListener {
     private VGame game;
 
-    public VDesktopLauncher(){
+    public VDesktopLauncher() {
         autoFbx2G3db(null);
     }
 
-    public VDesktopLauncher(boolean isOpenAutoFbx2G3db){
-        if(isOpenAutoFbx2G3db)autoFbx2G3db(null);
+    public VDesktopLauncher(boolean isOpenAutoFbx2G3db) {
+        if (isOpenAutoFbx2G3db) autoFbx2G3db(null);
     }
 
     public void setGame(VGame game) {
@@ -140,11 +141,20 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
-    public void showAchievements(){};
+    public void showAchievements() {
+    }
 
-    public void updataAchievements(String identifier, double percentComplete){};
+    ;
 
-    public void showChallenges(){};
+    public void updataAchievements(String identifier, double percentComplete) {
+    }
+
+    ;
+
+    public void showChallenges() {
+    }
+
+    ;
 
     @Override
     public void log(String txt) {
@@ -200,7 +210,7 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
-    public void openAd(String str, Object... objects){
+    public void openAd(String str, Object... objects) {
 
     }
 
@@ -311,8 +321,7 @@ public abstract class VDesktopLauncher implements VListener {
         if (strWidth == 0) {
             strWidth = strHeight = vpaint.getTextSize();
         }
-        BufferedImage bi = new BufferedImage(strWidth, strHeight,
-                BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage bi = new BufferedImage(strWidth, strHeight, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = bi.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setFont(font);
@@ -426,11 +435,11 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     private I18NBundle bundle = null;
-    private String prefLanguage="auto";
+    private String prefLanguage = "auto";
 
     public String getString(String key) {
         String language = game.getLanguage();
-        if(language==null)language="auto";
+        if (language == null) language = "auto";
         String out = null;
         if (bundle == null || !language.equals(prefLanguage)) {
             try {
@@ -544,9 +553,10 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     private static LwjglApplicationConfiguration config;
+
     public static LwjglApplicationConfiguration getConfig(int width, int height, float scale) {
         config = new LwjglApplicationConfiguration();
-        config.resizable=false;
+        config.resizable = false;
         config.width = (int) (width * scale);
         config.height = (int) (height * scale);
         config.samples = 4;
@@ -1065,7 +1075,8 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     //保存编辑过的Actor
-   private final static String replace="齍";
+    private final static String replace = "齍";
+
     public void saveUI(VStage stage) {
         //遍历stage中的actor，并找出该actor在stage初始化时的行号位置
         FileHandle fileHandle = getStageJavaFile(stage);
@@ -1118,7 +1129,7 @@ public abstract class VDesktopLauncher implements VListener {
                         stringBuilder.append(replace);
                         stringBuilder.append(strLine);
                     }
-                    String codeStr = stringBuilder.toString().replaceAll(replace+"+", replace);
+                    String codeStr = stringBuilder.toString().replaceAll(replace + "+", replace);
                     if (codeStr.startsWith(replace)) {
                         codeStr = codeStr.substring(1);
                     }
@@ -1364,20 +1375,20 @@ public abstract class VDesktopLauncher implements VListener {
 
         public final static String str_angle =
                 "UEsDBBQACAgIAO+Lm0wAAAAAAAAAAAAAAAABAAAAMO2ca67jIAyFN+SRMAQC+9/Y2NXVaB63nSQF\n" +
-                "bNKjyEfqj0o5X6mDwSTmTBHRJzgT7xJpJw6BSqYU6UfM5bCYW1g1EhPXKOgz1UbbRkzh14WfYAjy\n" +
-                "JsgFdAq07xTLb8CBvn9wJc6Vmoxu/hY1kHfBLLk7R6pVPr7EDNjXIknKKBs1wVEPAAbmU8FNIkbK\n" +
-                "R8mC8JHYkgzaQi0QbyfBAu6ziJJqt53KfoEouH7DMzxKj3xlhILpXyy1lijn0yh4/hlJEqdUY/nI\n" +
-                "XAosn4Q+fAKV1oXhR3LkKg/v12UTGD4Lfa7E9KzCB8HXI69EKqkzufvTC404yNxwALgbo+PClK9P\n" +
-                "pz+Pm07zuMhQG8bsZtR0kX1/r8D4IGK8FUpjcti9eEVhxYn6ztBuCItbpTr677c8KZYMlY8vLn8k\n" +
-                "J5aqckJqWpiSrv/wuMnU2ox0hz3OSdjrAdKBw3EymjXwaJ9G6LMYeC84UQteizHjG81jvFhh8QpG\n" +
-                "84vRn8grFn0emaRcx1D0AW0JxBmSx3wOQL5g6KbS3MmtWx5aLk4thdzS0OWFiYWzXxYxz1tmcU1C\n" +
-                "V+WsAZiD0GVc6yeHMQZd93eRI+0oxAk7H84Z6F6ZtWlDBLq9OnSr0DeB0EZuLrv3r/0I1maN7D+a\n" +
-                "WMytWpiPYUz3zgLe7ZcPTKxrq2D3VrcFnKfeDZJL+NbGWr/XGNsp9ewlXsS1dqFbG5trWk+BWW4S\n" +
-                "GHhmVyXqeMsyO+lwQmUhx3q+ydrQPMPx7cNcS/nVw4DWZmbZ3dI75x4Xc6tHZ62NTDPbrF1M8vo4\n" +
-                "ae4/O/XxGm1bC2ZZTZv/+UQXp/oGCmsDU4y2NTLvez55P/MuEevrsk99L431zU+wWdf5Ka+65INv\n" +
-                "F/JyXXLJTjpJhppsnhfSenhM/33fmLfrtEd20+ozzmKyvuXhFvcVyunrDhP73ZXq4lA7jE59AbKm\n" +
-                "6Dta7e8CMlxqc3ATkOGybQ5uAjJc2ME9QCAQCAQCgUAgEAgEAoFAIBAIBAKBQCD/yE9QSwcIryFV\n" +
-                "i/gCAAD1eAAA";
+                        "bNKjyEfqj0o5X6mDwSTmTBHRJzgT7xJpJw6BSqYU6UfM5bCYW1g1EhPXKOgz1UbbRkzh14WfYAjy\n" +
+                        "JsgFdAq07xTLb8CBvn9wJc6Vmoxu/hY1kHfBLLk7R6pVPr7EDNjXIknKKBs1wVEPAAbmU8FNIkbK\n" +
+                        "R8mC8JHYkgzaQi0QbyfBAu6ziJJqt53KfoEouH7DMzxKj3xlhILpXyy1lijn0yh4/hlJEqdUY/nI\n" +
+                        "XAosn4Q+fAKV1oXhR3LkKg/v12UTGD4Lfa7E9KzCB8HXI69EKqkzufvTC404yNxwALgbo+PClK9P\n" +
+                        "pz+Pm07zuMhQG8bsZtR0kX1/r8D4IGK8FUpjcti9eEVhxYn6ztBuCItbpTr677c8KZYMlY8vLn8k\n" +
+                        "J5aqckJqWpiSrv/wuMnU2ox0hz3OSdjrAdKBw3EymjXwaJ9G6LMYeC84UQteizHjG81jvFhh8QpG\n" +
+                        "84vRn8grFn0emaRcx1D0AW0JxBmSx3wOQL5g6KbS3MmtWx5aLk4thdzS0OWFiYWzXxYxz1tmcU1C\n" +
+                        "V+WsAZiD0GVc6yeHMQZd93eRI+0oxAk7H84Z6F6ZtWlDBLq9OnSr0DeB0EZuLrv3r/0I1maN7D+a\n" +
+                        "WMytWpiPYUz3zgLe7ZcPTKxrq2D3VrcFnKfeDZJL+NbGWr/XGNsp9ewlXsS1dqFbG5trWk+BWW4S\n" +
+                        "GHhmVyXqeMsyO+lwQmUhx3q+ydrQPMPx7cNcS/nVw4DWZmbZ3dI75x4Xc6tHZ62NTDPbrF1M8vo4\n" +
+                        "ae4/O/XxGm1bC2ZZTZv/+UQXp/oGCmsDU4y2NTLvez55P/MuEevrsk99L431zU+wWdf5Ka+65INv\n" +
+                        "F/JyXXLJTjpJhppsnhfSenhM/33fmLfrtEd20+ozzmKyvuXhFvcVyunrDhP73ZXq4lA7jE59AbKm\n" +
+                        "6Dta7e8CMlxqc3ATkOGybQ5uAjJc2ME9QCAQCAQCgUAgEAgEAoFAIBAIBAKBQCD/yE9QSwcIryFV\n" +
+                        "i/gCAAD1eAAA";
 
         public static String[] getStr_angles() {
             String unzip = unzip(str_angle);
@@ -1386,53 +1397,53 @@ public abstract class VDesktopLauncher implements VListener {
 
         public static String str_title =
                 "UEsDBBQACAgIAI6Lm0wAAAAAAAAAAAAAAAABAAAAMO3djXLjqBKG4RviVNE00HD/N3bAsxGejO3Y\n" +
-                "iRyQ/Zb2yfk2ezKjyFTRkvhR78TEhZQAAADwBnrtp971oxQXdP4ZAQAA4ElarddKPr8dIbjgbf55\n" +
-                "AQAAYF+9xgtndd+p9uvfo/YDAAB4Gb22s081Xz9i+34s888PAAAAP9Nqunip3uuHZJ1/ggAAAPiR\n" +
-                "XtNdrva8S3H66QEAAOBnWkl3rdrzLkQKPgAAgMOKtyq9VusJg/cAAAAOS8rNWk/qAucIAACAb+m1\n" +
-                "3M1ajy05cABSUjDVqC4G8ZZi+14OKlVSEmdVcpCs4qqvKYRczNWqpmbBnPgYQ87W/o9ncfz38TPj\n" +
-                "zxl/9vj7xjnMvhoAADxbrxBvVpAxTz9H4JJRsSVrZV9IvdoLWXPK7b7ocl24QqxRgy/mz8+b6hMA\n" +
-                "8Np6RXmz4gzMO8Fa1KtY1Fpd8SXmmLUuUUk+K47fcvzmsz8DAAD21OvNW/VoZT8TLMIHkay9QAtJ\n" +
-                "veV47fX3+8VxRcZVmv55AQCwg3ptLe4/h80/Q7w31VxyMHGp1ORT0v4ePlgMalGXqBNXjtuFGldv\n" +
-                "u6CzP1kAAH7Cbs9YSmH6GeJ9SZJUTIO5EoMkn9PKA0mPFs+u6XadZ3/iAAB8Vytab66uSS+HSaTU\n" +
-                "VDVVV7P3SUzWqARfOVbLpUaTenb1p7cDAAC+4/bIgwVOEG9nzE0SLz4Vb8rT2llx+wCYMQYAOK7b\n" +
-                "oxT89PPDm9FWXgXNRq27atw+lpBrLEULa3kBAI7ldu1L9YvfM4aKjhfraxR8xHsGQTDUFwBwPFTC\n" +
-                "WMG2DgDz0o4exyfI4g4AgEOhKsYKzlcZm1/YEfeK43Od3cIAALgHlTGm2zZAWKGWIz43st0FAOA4\n" +
-                "qJMx23vs5Uv8E882iFug7QEAcMuXdXJkwww8z/kaa/NrOOKMyIpuAIAjiF9XzVoWOE+8Kp4sE0cb\n" +
-                "mN0aAQC47o6qmTWc8CRSUjDVqEvUbsSF4tYyZrdRAAAuu70P9KmG9jx5xnOwGgbxclx/PQ3JJWrI\n" +
-                "6tR8ijmqOPMWfU5VXPU1hZALm98QiUTiO8da1dQsmCs1ZKvtn7O+YvQfW5cyu28D8KB4e8f5fkhh\n" +
-                "bAWeo/UsmlOu3GcQP5UfW8uY3UYvOS0p76PQgolEIpG4exxdi6Z2v60xcJMNHIqWr2+weXiGJxhb\n" +
-                "wq7QmxGXj8ttIby9W0gpFamJPamJRCKROCMmayGkXlHx1hs4kPD1qHFRVvnD/mIQbykm3hES74mj\n" +
-                "vcxuuR+4/yYSiUTicjH7rLEkli4ADkFq/vJmvDKDG/sbncUKXRdx9bhWcTHGna9wbYhEIpFIvBpH\n" +
-                "lzW78wRwm+Sv7su9y7wlx/4sWdWUubch3hXNolnJC0yK2wYDjpVyVrhARCKRSCRejWddFkPagfWJ\n" +
-                "fH2PLnn6aeL1nC8RPb/vIq4eR3Uxu+WOJXRWuC5EIpFIJD4Yx8rrs7tUANfp1zPO+26/3KljX2Pr\n" +
-                "jhU6LOLqsVouNZrMv0vPrd0Gn4wxIEQikUg8ZBw7pc3uUgFcc88tundi3KRjXyv0UsRDxWAxqC0w\n" +
-                "FZ1hIEQikUg8dBwd2ewuFcAVKvfdprPIBHa2Qi9FPFRc5jb97FTWuDJEIpFIJD4Yl+lUAVwm9vVu\n" +
-                "5/1IrO2OfTHmnfhIXGfM+wpXg0gkEonEXeLsThXAZeL1rrv07ALP27Ajxg0TH4nrLB/H4yUikUgk\n" +
-                "HjzyJh1YWnRy38T0PjV99snilbALG/GRuM4ubMVS0XZSa1wXIpFIJBIfjExKB5am992cn27QvZ9/\n" +
-                "vngZ2WeNJTGnl3hXHO1lestlcXcikUgkHjmyuDuwMsn3rRh32oGtV8Zh+injNcQg3lJM3OUQ74mj\n" +
-                "vcxuuWyRTiQSicRDR7ZIB1YW4923595JmT//E69BkqRiyjxe4n1xay/TW24uUUPWs0nxS1wgIpFI\n" +
-                "JBKvxbMu66MXm92dAvhE71u+fQxt5wkb9tN6Cc0pV16dE/+Oo2XMbqMfVHPJPrJOApFIJBJXj6PL\n" +
-                "mt15AviX5HuXffvvBrz9WIzTTxuvIZWafErKPQ3x7zhaxuw2+ld7TalITcKbcCKRSCQuE9dZdwXA\n" +
-                "FfWhG+5+y81gdOxDSgqmylJuxM9xaxmz2+hf7fVj8B433kQikUicGJO1EFKfzMewcmBh8uiNtncp\n" +
-                "zz9tvIziS8wxKzct7xtHG5jdGq8Zg/SYDUEkEonEnePoWsaan7M7PgDX9X3EHj+kzl+5CK9BvYpF\n" +
-                "rdxAv28cbWB2a7xlex0wVoIde7aM7VXFB2uljzEAg0gkEt8xbn3A6BhGZzE6kNOD2WCseAQsLT42\n" +
-                "ifrjKOwBhv3wuvmdYglJveXI0zYAwDrkwYV9P45WEYuffvZ4ET6IZF2kYiM+N45Pe3q7AwCgi+Ye\n" +
-                "2X+Sh8R4ElbcfM245nqZAID39t3HwacJBS54VpzHPrZBdSUGST4nCuGjxvEJMlISALCW2Hy78vUu\n" +
-                "U/hiP5IkFdNgrlouNRrr6R4gnn1W2+c3uyUBAPBB5Cel7ulRb6Znw440FR8094U3xLdsjHtYLG4f\n" +
-                "S8g1lqKFdeEAAAsJ+Ye1re87//WVIqb/KngZ5wskUuCuUsoeY8lCAMC7ia79z0+rWd96vLLAL4OX\n" +
-                "IqWmqqkyQmHC+IJx9ae3AwAAzojJDpVrX2dMKpu9Yl9jfCazy/aPZ9eUcbAAgDXF8O0Vvz4fqu2P\n" +
-                "Y24z9rVNmj9fEozt6e6M24UaV49VCAAAi4ou605VaT8qo1nxJNti/mxr9s+D0LH1F1seAACWJumn\n" +
-                "iwN8PmSB3wqva8zieY8KdPyWzF8CAByA/Hxq/ufj9GRl/m+GlyYlBVPtL5GtFWEh9YVZQ9accl15\n" +
-                "4Og4x3He43eZfVUBALgpRid7zIP/fITiQuDZCX7HmAwTg3hLsX0v+6yxpFaNmUWzkoO66msKIZdW\n" +
-                "Y1Y1NetV28UhjTV7n8REzn7GquR2p6Xi2p8lVVL7kfH3MSEHAHA0waU9x0SeH7FVgjwRAQAA+IHo\n" +
-                "yvc3kr/jta+0eo0ndwAAAN8h4VkP1T6O0gfoMUgPAADgEaLPfJr2cVTvKNQAAADuI/E3CrTT0zTl\n" +
-                "1ScAAMAXROsvFWf9MGUuAQAAwEXRSXjGsh63jtj+YhY/AAAAOBP6cP3frcn60ZdiYyFfAACA09K3\n" +
-                "T1v07KvDnKQ8/xIAAADMIq0eipNKsT9HDa0gZAdxAADwTvo+UDK1BPtzqDqpPBoDAABvIAaXZ72N\n" +
-                "/HwEJ76cTmn6ZQEAANhddGLi5r58/Kf+qu2k/AIXBwAAYCfBXPrt1SnuO7K44OP8KwQAAPBdMZ1e\n" +
-                "5c0uq64fctrCUhh5DwAADiTaaQvJGSt7PXYEZ5Wx9QAAYG0xtNIqLjY46/aRspNUTouLTb98AAAA\n" +
-                "nRQnfnaR9L1D+rvMVhGWvkM3UxMBAMAv01ZGZe0T9Z5Z8fwvpPx2X0I8VahiiRVZAQDAk8RWzrV6\n" +
-                "I4uLK9Q/fJnyJbnUanrJrfBsDSLMbpQAAOCYpNURfSWvxmuzQJXDl6W/iLkc/rzl1vZvuSl993Y7\n" +
-                "taQQfaMLtGwAAPB88T99k8rsgvZ6IDqp/S10rxeq07hA+bLwl/8DUEsHCNI0CX9/CgAAw8MDAA==";
+                        "iRyQ/Zb2yfk2ezKjyFTRkvhR78TEhZQAAADwBnrtp971oxQXdP4ZAQAA4ElarddKPr8dIbjgbf55\n" +
+                        "AQAAYF+9xgtndd+p9uvfo/YDAAB4Gb22s081Xz9i+34s888PAAAAP9Nqunip3uuHZJ1/ggAAAPiR\n" +
+                        "XtNdrva8S3H66QEAAOBnWkl3rdrzLkQKPgAAgMOKtyq9VusJg/cAAAAOS8rNWk/qAucIAACAb+m1\n" +
+                        "3M1ajy05cABSUjDVqC4G8ZZi+14OKlVSEmdVcpCs4qqvKYRczNWqpmbBnPgYQ87W/o9ncfz38TPj\n" +
+                        "zxl/9vj7xjnMvhoAADxbrxBvVpAxTz9H4JJRsSVrZV9IvdoLWXPK7b7ocl24QqxRgy/mz8+b6hMA\n" +
+                        "8Np6RXmz4gzMO8Fa1KtY1Fpd8SXmmLUuUUk+K47fcvzmsz8DAAD21OvNW/VoZT8TLMIHkay9QAtJ\n" +
+                        "veV47fX3+8VxRcZVmv55AQCwg3ptLe4/h80/Q7w31VxyMHGp1ORT0v4ePlgMalGXqBNXjtuFGldv\n" +
+                        "u6CzP1kAAH7Cbs9YSmH6GeJ9SZJUTIO5EoMkn9PKA0mPFs+u6XadZ3/iAAB8Vytab66uSS+HSaTU\n" +
+                        "VDVVV7P3SUzWqARfOVbLpUaTenb1p7cDAAC+4/bIgwVOEG9nzE0SLz4Vb8rT2llx+wCYMQYAOK7b\n" +
+                        "oxT89PPDm9FWXgXNRq27atw+lpBrLEULa3kBAI7ldu1L9YvfM4aKjhfraxR8xHsGQTDUFwBwPFTC\n" +
+                        "WMG2DgDz0o4exyfI4g4AgEOhKsYKzlcZm1/YEfeK43Od3cIAALgHlTGm2zZAWKGWIz43st0FAOA4\n" +
+                        "qJMx23vs5Uv8E882iFug7QEAcMuXdXJkwww8z/kaa/NrOOKMyIpuAIAjiF9XzVoWOE+8Kp4sE0cb\n" +
+                        "mN0aAQC47o6qmTWc8CRSUjDVqEvUbsSF4tYyZrdRAAAuu70P9KmG9jx5xnOwGgbxclx/PQ3JJWrI\n" +
+                        "6tR8ijmqOPMWfU5VXPU1hZALm98QiUTiO8da1dQsmCs1ZKvtn7O+YvQfW5cyu28D8KB4e8f5fkhh\n" +
+                        "bAWeo/UsmlOu3GcQP5UfW8uY3UYvOS0p76PQgolEIpG4exxdi6Z2v60xcJMNHIqWr2+weXiGJxhb\n" +
+                        "wq7QmxGXj8ttIby9W0gpFamJPamJRCKROCMmayGkXlHx1hs4kPD1qHFRVvnD/mIQbykm3hES74mj\n" +
+                        "vcxuuR+4/yYSiUTicjH7rLEkli4ADkFq/vJmvDKDG/sbncUKXRdx9bhWcTHGna9wbYhEIpFIvBpH\n" +
+                        "lzW78wRwm+Sv7su9y7wlx/4sWdWUubch3hXNolnJC0yK2wYDjpVyVrhARCKRSCRejWddFkPagfWJ\n" +
+                        "fH2PLnn6aeL1nC8RPb/vIq4eR3Uxu+WOJXRWuC5EIpFIJD4Yx8rrs7tUANfp1zPO+26/3KljX2Pr\n" +
+                        "jhU6LOLqsVouNZrMv0vPrd0Gn4wxIEQikUg8ZBw7pc3uUgFcc88tundi3KRjXyv0UsRDxWAxqC0w\n" +
+                        "FZ1hIEQikUg8dBwd2ewuFcAVKvfdprPIBHa2Qi9FPFRc5jb97FTWuDJEIpFIJD4Yl+lUAVwm9vVu\n" +
+                        "5/1IrO2OfTHmnfhIXGfM+wpXg0gkEonEXeLsThXAZeL1rrv07ALP27Ajxg0TH4nrLB/H4yUikUgk\n" +
+                        "HjzyJh1YWnRy38T0PjV99snilbALG/GRuM4ubMVS0XZSa1wXIpFIJBIfjExKB5am992cn27QvZ9/\n" +
+                        "vngZ2WeNJTGnl3hXHO1lestlcXcikUgkHjmyuDuwMsn3rRh32oGtV8Zh+injNcQg3lJM3OUQ74mj\n" +
+                        "vcxuuWyRTiQSicRDR7ZIB1YW4923595JmT//E69BkqRiyjxe4n1xay/TW24uUUPWs0nxS1wgIpFI\n" +
+                        "JBKvxbMu66MXm92dAvhE71u+fQxt5wkb9tN6Cc0pV16dE/+Oo2XMbqMfVHPJPrJOApFIJBJXj6PL\n" +
+                        "mt15AviX5HuXffvvBrz9WIzTTxuvIZWafErKPQ3x7zhaxuw2+ld7TalITcKbcCKRSCQuE9dZdwXA\n" +
+                        "FfWhG+5+y81gdOxDSgqmylJuxM9xaxmz2+hf7fVj8B433kQikUicGJO1EFKfzMewcmBh8uiNtncp\n" +
+                        "zz9tvIziS8wxKzct7xtHG5jdGq8Zg/SYDUEkEonEnePoWsaan7M7PgDX9X3EHj+kzl+5CK9BvYpF\n" +
+                        "rdxAv28cbWB2a7xlex0wVoIde7aM7VXFB2uljzEAg0gkEt8xbn3A6BhGZzE6kNOD2WCseAQsLT42\n" +
+                        "ifrjKOwBhv3wuvmdYglJveXI0zYAwDrkwYV9P45WEYuffvZ4ET6IZF2kYiM+N45Pe3q7AwCgi+Ye\n" +
+                        "2X+Sh8R4ElbcfM245nqZAID39t3HwacJBS54VpzHPrZBdSUGST4nCuGjxvEJMlISALCW2Hy78vUu\n" +
+                        "U/hiP5IkFdNgrlouNRrr6R4gnn1W2+c3uyUBAPBB5Cel7ulRb6Znw440FR8094U3xLdsjHtYLG4f\n" +
+                        "S8g1lqKFdeEAAAsJ+Ye1re87//WVIqb/KngZ5wskUuCuUsoeY8lCAMC7ia79z0+rWd96vLLAL4OX\n" +
+                        "IqWmqqkyQmHC+IJx9ae3AwAAzojJDpVrX2dMKpu9Yl9jfCazy/aPZ9eUcbAAgDXF8O0Vvz4fqu2P\n" +
+                        "Y24z9rVNmj9fEozt6e6M24UaV49VCAAAi4ou605VaT8qo1nxJNti/mxr9s+D0LH1F1seAACWJumn\n" +
+                        "iwN8PmSB3wqva8zieY8KdPyWzF8CAByA/Hxq/ufj9GRl/m+GlyYlBVPtL5GtFWEh9YVZQ9accl15\n" +
+                        "4Og4x3He43eZfVUBALgpRid7zIP/fITiQuDZCX7HmAwTg3hLsX0v+6yxpFaNmUWzkoO66msKIZdW\n" +
+                        "Y1Y1NetV28UhjTV7n8REzn7GquR2p6Xi2p8lVVL7kfH3MSEHAHA0waU9x0SeH7FVgjwRAQAA+IHo\n" +
+                        "yvc3kr/jta+0eo0ndwAAAN8h4VkP1T6O0gfoMUgPAADgEaLPfJr2cVTvKNQAAADuI/E3CrTT0zTl\n" +
+                        "1ScAAMAXROsvFWf9MGUuAQAAwEXRSXjGsh63jtj+YhY/AAAAOBP6cP3frcn60ZdiYyFfAACA09K3\n" +
+                        "T1v07KvDnKQ8/xIAAADMIq0eipNKsT9HDa0gZAdxAADwTvo+UDK1BPtzqDqpPBoDAABvIAaXZ72N\n" +
+                        "/HwEJ76cTmn6ZQEAANhddGLi5r58/Kf+qu2k/AIXBwAAYCfBXPrt1SnuO7K44OP8KwQAAPBdMZ1e\n" +
+                        "5c0uq64fctrCUhh5DwAADiTaaQvJGSt7PXYEZ5Wx9QAAYG0xtNIqLjY46/aRspNUTouLTb98AAAA\n" +
+                        "nRQnfnaR9L1D+rvMVhGWvkM3UxMBAMAv01ZGZe0T9Z5Z8fwvpPx2X0I8VahiiRVZAQDAk8RWzrV6\n" +
+                        "I4uLK9Q/fJnyJbnUanrJrfBsDSLMbpQAAOCYpNURfSWvxmuzQJXDl6W/iLkc/rzl1vZvuSl993Y7\n" +
+                        "taQQfaMLtGwAAPB88T99k8rsgvZ6IDqp/S10rxeq07hA+bLwl/8DUEsHCNI0CX9/CgAAw8MDAA==";
 
         public static String[] getStr_titles() {
             String unzip = unzip(str_title);
@@ -1532,9 +1543,9 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     //原生输入框
-    private HashMap<NativeTextField,VTextField> textFieldHashMap;
+    private HashMap<NativeTextField, VTextField> textFieldHashMap;
 
-    private Pool<VTextField> pool_textFields=new Pool<VTextField>() {
+    private Pool<VTextField> pool_textFields = new Pool<VTextField>() {
         @Override
         protected VTextField newObject() {
             VTextField textfield = new VTextField();
@@ -1544,18 +1555,19 @@ public abstract class VDesktopLauncher implements VListener {
 
     //获取窗口边框尺寸
     private Insets insets;
-    public Insets getInset(){
-        if(insets!=null)return insets;
-        JDialog jDialog=new JDialog();
+
+    public Insets getInset() {
+        if (insets != null) return insets;
+        JDialog jDialog = new JDialog();
         jDialog.setVisible(true);
-        insets=jDialog.getInsets();
+        insets = jDialog.getInsets();
         jDialog.setVisible(false);
         return insets;
     }
 
     private JDialog pref;
 
-    public class VTextField extends JDialog implements Pool.Poolable{
+    public class VTextField extends JDialog implements Pool.Poolable {
         private NativeTextField nativeTextField;
         private JTextField textField;
         private JTextField textMessage;
@@ -1565,43 +1577,43 @@ public abstract class VDesktopLauncher implements VListener {
         private KeyListener keyListener;
         private FocusListener focusListener;
 
-        public VTextField(){
+        public VTextField() {
             //super(pref==null?appFrame:pref);
             super(pref);
             setAlwaysOnTop(true);
             setLayout(null);
             setUndecorated(true);//禁用或启用窗口装饰，如果为true,则为没有启动窗口装饰，只有在窗口不可见时才能调用，否则会抛出异常
             getRootPane().setWindowDecorationStyle(JRootPane.NONE);//设置不使用窗口装饰
-            AWTUtilities.setWindowOpaque(this,false);
-            pref=this;
-            setName ("root");
+            AWTUtilities.setWindowOpaque(this, false);
+            pref = this;
+            setName("root");
 
-            panel = new JPanel(){
-                public void paintComponent(Graphics g){
+            panel = new JPanel() {
+                public void paintComponent(Graphics g) {
                     Graphics2D g2d = (Graphics2D) g;
                     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                   // g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_DEFAULT);
+                    // g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_DEFAULT);
                     g2d.setComposite(AlphaComposite.DstAtop);
                     g2d.setColor(textField.getBackground());
                     Shape shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 18, 18);
                     g2d.fill(shape);
                 }
             };
-            textMessage=new JTextField();
+            textMessage = new JTextField();
 
             textField = new JTextField();
-            textField.setLocation(0,9);
+            textField.setLocation(0, 9);
             setBorderStyle(NativeTextField.BorderStyle.RoundedRect);
             textField.setFont(VDesktopLauncher.this.getFont(game.getDefaultPaint()));
             add(textField);
             textField.setVisible(false);
 
-            textMessage.setLocation(0,9);
+            textMessage.setLocation(0, 9);
             textMessage.setForeground(java.awt.Color.gray);
             textMessage.setFont(textField.getFont());
             add(textMessage);
 
-         //   System.out.println("x="+Display.getX()+"y="+Display.getY());
+            //   System.out.println("x="+Display.getX()+"y="+Display.getY());
 
 //            appFrame.addComponentListener(new ComponentAdapter() {
 //                public void componentMoved(ComponentEvent componentEvent) {
@@ -1614,9 +1626,9 @@ public abstract class VDesktopLauncher implements VListener {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if(isVisible()) setLocation(Display.getX()+1+sysX,Display.getY()+sysY);
+                    if (isVisible()) setLocation(Display.getX() + 1 + sysX, Display.getY() + sysY);
                 }
-            },1,10);
+            }, 1, 10);
 
             Gdx.app.addLifecycleListener(new LifecycleListener() {
                 @Override
@@ -1631,32 +1643,33 @@ public abstract class VDesktopLauncher implements VListener {
 
                 @Override
                 public void dispose() {
-                   setVisible(false);
+                    setVisible(false);
                 }
             });
 
-            textField.addFocusListener(focusListener=new FocusListener() {
+            textField.addFocusListener(focusListener = new FocusListener() {
                 public void focusLost(FocusEvent e) {//失去焦点时
-                    if(textField.getText()==null||textField.getText().equals("")){
-                        if(textField.isVisible()) {
+                    if (textField.getText() == null || textField.getText().equals("")) {
+                        if (textField.isVisible()) {
                             textField.setVisible(false);
                             textMessage.setVisible(true);
                         }
                     }
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
-                            NativeTextField.TextFieldListener textFieldListener =nativeTextField.getTextFieldListener();
-                            if(textFieldListener!=null){
+                            NativeTextField.TextFieldListener textFieldListener = nativeTextField.getTextFieldListener();
+                            if (textFieldListener != null) {
                                 textFieldListener.didEndEditing(nativeTextField);
                             }
                         }
                     });
                 }
+
                 public void focusGained(FocusEvent e) {//获得焦点时
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
-                            NativeTextField.TextFieldListener textFieldListener =nativeTextField.getTextFieldListener();
-                            if(textFieldListener!=null){
+                            NativeTextField.TextFieldListener textFieldListener = nativeTextField.getTextFieldListener();
+                            if (textFieldListener != null) {
                                 textFieldListener.didBeginEditing(nativeTextField);
                             }
                         }
@@ -1664,7 +1677,7 @@ public abstract class VDesktopLauncher implements VListener {
                 }
             });
 
-            textField.addKeyListener(keyListener=new KeyListener() {
+            textField.addKeyListener(keyListener = new KeyListener() {
                 @Override
                 public void keyTyped(KeyEvent event) {
                     //System.out.println("删除键");
@@ -1680,10 +1693,10 @@ public abstract class VDesktopLauncher implements VListener {
 
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
-                            NativeTextField.TextFieldListener textFieldListener =nativeTextField.getTextFieldListener();
-                            if(textFieldListener!=null){
-                                String text=textFieldListener.onEditingChanged(nativeTextField);
-                                if(text!=null) {
+                            NativeTextField.TextFieldListener textFieldListener = nativeTextField.getTextFieldListener();
+                            if (textFieldListener != null) {
+                                String text = textFieldListener.onEditingChanged(nativeTextField);
+                                if (text != null) {
                                     textField.setText(text);
                                     textField.requestFocus();
                                     textField.setSelectionStart(text.length());
@@ -1695,10 +1708,10 @@ public abstract class VDesktopLauncher implements VListener {
                     });
 
 
-                    switch (event.getKeyCode()){
+                    switch (event.getKeyCode()) {
                         case KeyEvent.VK_BACK_SPACE:
-                            if(textField.getText()==null||textField.getText().equals("")){
-                                if(textField.isVisible()) {
+                            if (textField.getText() == null || textField.getText().equals("")) {
+                                if (textField.isVisible()) {
                                     textField.setVisible(false);
                                     textMessage.setVisible(true);
                                 }
@@ -1708,8 +1721,8 @@ public abstract class VDesktopLauncher implements VListener {
                             Gdx.app.postRunnable(new Runnable() {
                                 public void run() {
                                     NativeTextField.TextFieldListener textFieldListener
-                                            =nativeTextField.getTextFieldListener();
-                                    if(textFieldListener!=null){
+                                            = nativeTextField.getTextFieldListener();
+                                    if (textFieldListener != null) {
                                         textFieldListener.shouldReturn(nativeTextField);
                                     }
                                 }
@@ -1719,7 +1732,7 @@ public abstract class VDesktopLauncher implements VListener {
                 }
             });
 
-            textMessage.addMouseListener(new MouseListener(){
+            textMessage.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
                     textField.setVisible(true);
@@ -1753,15 +1766,15 @@ public abstract class VDesktopLauncher implements VListener {
         }
 
         //获得焦点
-        public void becomeFirstResponder(){
+        public void becomeFirstResponder() {
             textField.setVisible(true);
             textMessage.setVisible(false);
             textField.requestFocus();
             textField.setFocusable(true);
         }
 
-        public void setSecureTextEntry(boolean isPasswordMode){
-            JTextField newTextField=isPasswordMode?new JPasswordField():new JTextField();
+        public void setSecureTextEntry(boolean isPasswordMode) {
+            JTextField newTextField = isPasswordMode ? new JPasswordField() : new JTextField();
             newTextField.setText(textField.getText());
             newTextField.setBounds(textField.getBounds());
             newTextField.setVisible(textField.isVisible());
@@ -1775,17 +1788,17 @@ public abstract class VDesktopLauncher implements VListener {
             newTextField.addFocusListener(focusListener);
             remove(textField);
             add(newTextField);
-            textField=newTextField;
+            textField = newTextField;
         }
 
-        public void setText(String text){
-            if(text.equals("")){
-                if(textField.isVisible()){
-                textField.setVisible(false);
-                textMessage.setVisible(true);
+        public void setText(String text) {
+            if (text.equals("")) {
+                if (textField.isVisible()) {
+                    textField.setVisible(false);
+                    textMessage.setVisible(true);
                 }
-             }else{
-                if(!textField.isVisible()) {
+            } else {
+                if (!textField.isVisible()) {
                     textField.setVisible(true);
                     textMessage.setVisible(false);
                 }
@@ -1793,65 +1806,65 @@ public abstract class VDesktopLauncher implements VListener {
         }
 
 
-        public void setFontColor(Color color){
+        public void setFontColor(Color color) {
             //fontColor=getColor(color);
             textField.setForeground(getColor(color));
         }
 
-        public void setMessageColor(Color color){
+        public void setMessageColor(Color color) {
             //this.messageColor=getColor(color);
             textMessage.setForeground(getColor(color));
         }
 
-        public void setMessageText(){
-            if(!nativeTextField.getMessageText().equals("")){
+        public void setMessageText() {
+            if (!nativeTextField.getMessageText().equals("")) {
                 textField.setVisible(false);
                 textMessage.setVisible(true);
                 textMessage.setText(nativeTextField.getMessageText());
-            }else{
+            } else {
                 textField.setVisible(true);
                 textMessage.setVisible(false);
             }
         }
 
-        public void setBackgroundColor(Color color){
+        public void setBackgroundColor(Color color) {
             textField.setBackground(getColor(color));
             textMessage.setBackground(textField.getBackground());
         }
 
-        public void setTintColor(Color color){
+        public void setTintColor(Color color) {
             textField.setCaretColor(getColor(color));
             textMessage.setCaretColor(textField.getCaretColor());
         }
 
-        public void setSize(int w,int h){
-            super.setSize(w,h);
-            panel.setSize(w,h);
-            if(nativeTextField==null||nativeTextField.getBorderStyle()!= NativeTextField.BorderStyle.RoundedRect){
-                textField.setSize(getWidth(),getHeight());
-                textField.setLocation(0,0);
-                textMessage.setSize(getWidth(),getHeight());
-                textMessage.setLocation(0,0);
-            }else {
-                textField.setSize(getWidth(),getHeight()-18);
-                textField.setLocation(0,9);
-                textMessage.setSize(getWidth(),getHeight()-18);
-                textMessage.setLocation(0,9);
+        public void setSize(int w, int h) {
+            super.setSize(w, h);
+            panel.setSize(w, h);
+            if (nativeTextField == null || nativeTextField.getBorderStyle() != NativeTextField.BorderStyle.RoundedRect) {
+                textField.setSize(getWidth(), getHeight());
+                textField.setLocation(0, 0);
+                textMessage.setSize(getWidth(), getHeight());
+                textMessage.setLocation(0, 0);
+            } else {
+                textField.setSize(getWidth(), getHeight() - 18);
+                textField.setLocation(0, 9);
+                textMessage.setSize(getWidth(), getHeight() - 18);
+                textMessage.setLocation(0, 9);
             }
 
         }
 
-        public void setFontSize(int fontSize){
-            textField.setFont(new Font(null,0,fontSize));
+        public void setFontSize(int fontSize) {
+            textField.setFont(new Font(null, 0, fontSize));
             textMessage.setFont(textField.getFont());
         }
 
-        public void setLibgdxTextField(NativeTextField nativeTextField){
-            this.nativeTextField=nativeTextField;
+        public void setLibgdxTextField(NativeTextField nativeTextField) {
+            this.nativeTextField = nativeTextField;
         }
 
-        public void setBorderStyle(NativeTextField.BorderStyle borderStyle){
-            switch (borderStyle){
+        public void setBorderStyle(NativeTextField.BorderStyle borderStyle) {
+            switch (borderStyle) {
                 case None:
                     textField.setOpaque(false);
                     textField.setBorder(BorderFactory.createEmptyBorder());
@@ -1878,60 +1891,60 @@ public abstract class VDesktopLauncher implements VListener {
                     textField.setBorder(BorderFactory.createEmptyBorder());
                     textMessage.setOpaque(true);
                     textMessage.setBorder(textField.getBorder());
-                    add(panel,0);
+                    add(panel, 0);
                     break;
             }
-            setSize(getWidth(),getHeight());
+            setSize(getWidth(), getHeight());
         }
 
 
-        public void  setTextAlignment(int alignment){
-           switch (alignment){
-               case Align.left:
-                   textField.setHorizontalAlignment(JTextField.LEFT);
-                   textMessage.setHorizontalAlignment(JTextField.LEFT);
-                   break;
-               case Align.bottomLeft:
-                   textField.setHorizontalAlignment(JTextField.LEFT);
-                   textMessage.setHorizontalAlignment(JTextField.LEFT);
-                   break;
-               case Align.topLeft:
-                   textField.setHorizontalAlignment(JTextField.LEFT);
-                   textMessage.setHorizontalAlignment(JTextField.LEFT);
-                   break;
-               case Align.right:
-                   textField.setHorizontalAlignment(JTextField.RIGHT);
-                   textMessage.setHorizontalAlignment(JTextField.RIGHT);
-                   break;
-               case Align.bottomRight:
-                   textField.setHorizontalAlignment(JTextField.RIGHT);
-                   textMessage.setHorizontalAlignment(JTextField.RIGHT);
-                   break;
-               case Align.topRight:
-                   textField.setHorizontalAlignment(JTextField.RIGHT);
-                   textMessage.setHorizontalAlignment(JTextField.RIGHT);
-                   break;
-               case Align.top:
-                   textField.setHorizontalAlignment(JTextField.CENTER);
-                   textMessage.setHorizontalAlignment(JTextField.CENTER);
-                   break;
-               case Align.center:
-                   textField.setHorizontalAlignment(JTextField.CENTER);
-                   textMessage.setHorizontalAlignment(JTextField.CENTER);
-                   break;
-               case Align.bottom:
-                   textField.setHorizontalAlignment(JTextField.CENTER);
-                   textMessage.setHorizontalAlignment(JTextField.CENTER);
-                   break;
-           }
+        public void setTextAlignment(int alignment) {
+            switch (alignment) {
+                case Align.left:
+                    textField.setHorizontalAlignment(JTextField.LEFT);
+                    textMessage.setHorizontalAlignment(JTextField.LEFT);
+                    break;
+                case Align.bottomLeft:
+                    textField.setHorizontalAlignment(JTextField.LEFT);
+                    textMessage.setHorizontalAlignment(JTextField.LEFT);
+                    break;
+                case Align.topLeft:
+                    textField.setHorizontalAlignment(JTextField.LEFT);
+                    textMessage.setHorizontalAlignment(JTextField.LEFT);
+                    break;
+                case Align.right:
+                    textField.setHorizontalAlignment(JTextField.RIGHT);
+                    textMessage.setHorizontalAlignment(JTextField.RIGHT);
+                    break;
+                case Align.bottomRight:
+                    textField.setHorizontalAlignment(JTextField.RIGHT);
+                    textMessage.setHorizontalAlignment(JTextField.RIGHT);
+                    break;
+                case Align.topRight:
+                    textField.setHorizontalAlignment(JTextField.RIGHT);
+                    textMessage.setHorizontalAlignment(JTextField.RIGHT);
+                    break;
+                case Align.top:
+                    textField.setHorizontalAlignment(JTextField.CENTER);
+                    textMessage.setHorizontalAlignment(JTextField.CENTER);
+                    break;
+                case Align.center:
+                    textField.setHorizontalAlignment(JTextField.CENTER);
+                    textMessage.setHorizontalAlignment(JTextField.CENTER);
+                    break;
+                case Align.bottom:
+                    textField.setHorizontalAlignment(JTextField.CENTER);
+                    textMessage.setHorizontalAlignment(JTextField.CENTER);
+                    break;
+            }
         }
 
 
-       // private String prefText;
-        public void setVisible(boolean isVisible){
-            if(isVisible){
-               // setLocation(appFrame.getX()+1+sysX,appFrame.getY()+sysY);
-                setLocation(Display.getX()+1+sysX,Display.getY()+sysY);
+        // private String prefText;
+        public void setVisible(boolean isVisible) {
+            if (isVisible) {
+                // setLocation(appFrame.getX()+1+sysX,appFrame.getY()+sysY);
+                setLocation(Display.getX() + 1 + sysX, Display.getY() + sysY);
             }
             super.setVisible(isVisible);
 //            top=getInsets().top;
@@ -1940,72 +1953,73 @@ public abstract class VDesktopLauncher implements VListener {
 
 
         //本地输入框同步为 libgdx 端坐标
-        private int sysX,sysY;
-        public void synchronousPosition(){
-            if(nativeTextField.getStage()!=null) {
+        private int sysX, sysY;
+
+        public void synchronousPosition() {
+            if (nativeTextField.getStage() != null) {
                 Stage stage = nativeTextField.getStage();
-                float blx,bly;
-                float fullWidth,fullHeight,cutWidth=0,cutHeight=0;
-                if(stage instanceof VStage){
-                    VStage vStage= (VStage) stage;
-                    fullWidth=vStage.getFullWidth();
-                    fullHeight=vStage.getFullHeight();
-                    cutWidth=vStage.getCutWidth();
-                    cutHeight=vStage.getCutHeight();
-                }else {
-                    fullWidth=stage.getWidth();
-                    fullHeight=stage.getHeight();
+                float blx, bly;
+                float fullWidth, fullHeight, cutWidth = 0, cutHeight = 0;
+                if (stage instanceof VStage) {
+                    VStage vStage = (VStage) stage;
+                    fullWidth = vStage.getFullWidth();
+                    fullHeight = vStage.getFullHeight();
+                    cutWidth = vStage.getCutWidth();
+                    cutHeight = vStage.getCutHeight();
+                } else {
+                    fullWidth = stage.getWidth();
+                    fullHeight = stage.getHeight();
                 }
-                blx= (1f/fullWidth*Gdx.graphics.getWidth());
-                bly= (1f/fullHeight*Gdx.graphics.getHeight());
-                float fx=nativeTextField.getX();
-                float fy=nativeTextField.getY();
-                Group father=nativeTextField.getParent();
-                Group root=stage.getRoot();
-                float dx=root.getX()/root.getScaleX()-cutWidth;
-                float dy=root.getY()/root.getScaleY()-cutHeight;
-                fx+=dx;
-                fy+=dy;
-                while(father!=root){
-                    Group nextFather=father.getParent();
-                    fx+=father.getX();
-                    fy+=father.getY();
-                    father=nextFather;
-                    if(father==null){
+                blx = (1f / fullWidth * Gdx.graphics.getWidth());
+                bly = (1f / fullHeight * Gdx.graphics.getHeight());
+                float fx = nativeTextField.getX();
+                float fy = nativeTextField.getY();
+                Group father = nativeTextField.getParent();
+                Group root = stage.getRoot();
+                float dx = root.getX() / root.getScaleX() - cutWidth;
+                float dy = root.getY() / root.getScaleY() - cutHeight;
+                fx += dx;
+                fy += dy;
+                while (father != root) {
+                    Group nextFather = father.getParent();
+                    fx += father.getX();
+                    fy += father.getY();
+                    father = nextFather;
+                    if (father == null) {
                         setVisible(false);
                         return;
                     }
                 }
-                sysX= (int) ((cutWidth+fx)*blx);
-                float my=(cutHeight+fy)*bly;
+                sysX = (int) ((cutWidth + fx) * blx);
+                float my = (cutHeight + fy) * bly;
 //                sysY= (int) ((appFrame.getHeight()-getHeight())-my);
 //                setLocation(appFrame.getX()+sysX+1,appFrame.getY()+sysY);
-                sysY= (int) ((Display.getHeight()+getInset().top-getHeight())-my);
-                setLocation(Display.getX()+sysX+1,Display.getY()+sysY);
-            }else setVisible(false);
+                sysY = (int) ((Display.getHeight() + getInset().top - getHeight()) - my);
+                setLocation(Display.getX() + sysX + 1, Display.getY() + sysY);
+            } else setVisible(false);
         }
 
-        public void synchronousSize(){
-            if(nativeTextField.getStage()!=null) {
+        public void synchronousSize() {
+            if (nativeTextField.getStage() != null) {
                 Stage stage = nativeTextField.getStage();
-                float blx,bly;
-                int w,h;
-                float fullWidth,fullHeight;
-                if(stage instanceof VStage){
-                    VStage vStage= (VStage) stage;
-                    fullWidth=vStage.getFullWidth();
-                    fullHeight=vStage.getFullHeight();
-                }else {
-                    fullWidth=stage.getWidth();
-                    fullHeight=stage.getHeight();
+                float blx, bly;
+                int w, h;
+                float fullWidth, fullHeight;
+                if (stage instanceof VStage) {
+                    VStage vStage = (VStage) stage;
+                    fullWidth = vStage.getFullWidth();
+                    fullHeight = vStage.getFullHeight();
+                } else {
+                    fullWidth = stage.getWidth();
+                    fullHeight = stage.getHeight();
                 }
-                blx= (1f/fullWidth*Gdx.graphics.getWidth());
-                bly= (1f/fullHeight*Gdx.graphics.getHeight());
-                w= (int) (nativeTextField.getWidth()*blx);
-                h= (int) (nativeTextField.getHeight()*bly);
-                setSize(w,h);
+                blx = (1f / fullWidth * Gdx.graphics.getWidth());
+                bly = (1f / fullHeight * Gdx.graphics.getHeight());
+                w = (int) (nativeTextField.getWidth() * blx);
+                h = (int) (nativeTextField.getHeight() * bly);
+                setSize(w, h);
                 synchronousPosition();
-            }else {
+            } else {
                 setVisible(false);
             }
         }
@@ -2016,15 +2030,15 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
-    public void linkNativeTextField(NativeTextField nativeTextField,NativeTextField.Method method){
-        switch (method){
+    public void linkNativeTextField(NativeTextField nativeTextField, NativeTextField.Method method) {
+        switch (method) {
             case newObject:
-                if(textFieldHashMap==null){
-                    textFieldHashMap=new HashMap<>();
+                if (textFieldHashMap == null) {
+                    textFieldHashMap = new HashMap<>();
                 }
                 VTextField textfield = pool_textFields.obtain();
                 textfield.setLibgdxTextField(nativeTextField);
-                textFieldHashMap.put(nativeTextField,textfield);
+                textFieldHashMap.put(nativeTextField, textfield);
                 break;
             case positionChanged:
                 textfield = textFieldHashMap.get(nativeTextField);
@@ -2068,9 +2082,9 @@ public abstract class VDesktopLauncher implements VListener {
                 break;
             case setFontSize:
                 textfield = textFieldHashMap.get(nativeTextField);
-                float fontSize=nativeTextField.getFontSize();
-                if(fontSize==0)return;
-                if(nativeTextField.getStage()!=null) {
+                float fontSize = nativeTextField.getFontSize();
+                if (fontSize == 0) return;
+                if (nativeTextField.getStage() != null) {
                     Stage stage = nativeTextField.getStage();
                     float blx;
                     float fullWidth;
@@ -2081,7 +2095,7 @@ public abstract class VDesktopLauncher implements VListener {
                         fullWidth = stage.getWidth();
                     }
                     blx = 1f / fullWidth * Gdx.graphics.getWidth();
-                    textfield.setFontSize((int) (nativeTextField.getFontSize()*blx));
+                    textfield.setFontSize((int) (nativeTextField.getFontSize() * blx));
                 }
                 break;
             case setPasswordMode:
@@ -2115,49 +2129,50 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
-    private void autoFbx2G3db(String homePath){
+    private void autoFbx2G3db(String homePath) {
         //if(Gdx.app.getType()!= Application.ApplicationType.Desktop)return;
-        if(homePath==null)homePath=System.getProperty("java.home")+File.separator+"fbx-conv";
+        if (homePath == null)
+            homePath = System.getProperty("java.home") + File.separator + "fbx-conv";
         autoFbx2G3db2(homePath);
     }
 
     //开启自动将 fbx模型 转为 G3db模型文件,mac实测通过，windows 和 linux待测
     //path为
-    private void autoFbx2G3db2(String convPath){
+    private void autoFbx2G3db2(String convPath) {
         String assetsPath = System.getProperty("user.dir");
-        if(new File(convPath).exists())fbxToG3dbs(new File(assetsPath),convPath);
+        if (new File(convPath).exists()) fbxToG3dbs(new File(assetsPath), convPath);
         else {
-            System.err.println("缺少工具包 : 请将fbx-conv文件夹复制到路径"+convPath);
+            System.err.println("缺少工具包 : 请将fbx-conv文件夹复制到路径" + convPath);
             System.err.println("fbx-conv下载地址 : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
         }
     }
 
-    private void fbxToG3dbs(File group,String toolPath){
+    private void fbxToG3dbs(File group, String toolPath) {
         //分析 assets，将 fbx 后缀的文件转为 g3db
-        File[] list= group.listFiles();
-        for(File file:list){
-            if(file.isDirectory()){
-                fbxToG3dbs(file,toolPath);
-            }else{
-                if(file.getName().endsWith(".fbx"))fbxToG3db(file,toolPath);
+        File[] list = group.listFiles();
+        for (File file : list) {
+            if (file.isDirectory()) {
+                fbxToG3dbs(file, toolPath);
+            } else {
+                if (file.getName().endsWith(".fbx")) fbxToG3db(file, toolPath);
             }
         }
     }
 
-    private void fbxToG3db(File fbxPath,String toolPath){
+    private void fbxToG3db(File fbxPath, String toolPath) {
         Process process = null;
         try {
-            switch ( LWJGLUtil.getPlatform() ) {
+            switch (LWJGLUtil.getPlatform()) {
                 case LWJGLUtil.PLATFORM_LINUX:
-                    String[] convPath=new String[]{toolPath+File.separator+"fbx-conv-lin64","-f",fbxPath.getAbsolutePath()};
+                    String[] convPath = new String[]{toolPath + File.separator + "fbx-conv-lin64", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
                 case LWJGLUtil.PLATFORM_WINDOWS://windwos10测试通过
-                    convPath=new String[]{toolPath+File.separator+"fbx-conv-win32.exe","-f",fbxPath.getAbsolutePath()};
+                    convPath = new String[]{toolPath + File.separator + "fbx-conv-win32.exe", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
                 case LWJGLUtil.PLATFORM_MACOSX://目前仅 mac 测试过
-                    convPath=new String[]{toolPath+File.separator+"fbx-conv-mac","-f",fbxPath.getAbsolutePath()};
+                    convPath = new String[]{toolPath + File.separator + "fbx-conv-mac", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
             }
@@ -2170,8 +2185,7 @@ public abstract class VDesktopLauncher implements VListener {
                         while (br.readLine() != null) ;
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
-                    finally {
+                    } finally {
                         try {
                             br.close();
                             is1.close();
@@ -2184,7 +2198,7 @@ public abstract class VDesktopLauncher implements VListener {
 
             process.waitFor();
             fbxPath.getAbsoluteFile().delete();//删除 fbx
-            System.err.println("Var3DFrame框架消息 : "+fbxPath.getName()+"转换成g3db模型成功");
+            System.err.println("Var3DFrame框架消息 : " + fbxPath.getName() + "转换成g3db模型成功");
             //System.err.println("Var3DFrame框架消息 : 窗口将会关闭,请重新启动才能继续测试");
         } catch (IOException e) {
             System.out.println(e.toString());

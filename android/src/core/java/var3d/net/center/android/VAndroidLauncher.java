@@ -56,7 +56,9 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
@@ -288,11 +290,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     public Pixmap getFontPixmap(String txt, FreePaint vpaint) {
         Paint paint = new Paint();
         if (!vpaint.getTTFName().equals("")) {
-            // Typeface fontFace = fontFaces.get(vpaint.getTTFName());
             Typeface fontFace = Typeface.createFromAsset(getAssets(),
-                    vpaint.getTTFName()
-                            + (vpaint.getTTFName().endsWith(".ttf") ? ""
-                            : ".ttf"));
+                    vpaint.getTTFName() + (vpaint.getTTFName().endsWith(".ttf") ? "" : ".ttf"));
             fontFaces.put(vpaint.getTTFName(), fontFace);
             paint.setTypeface(fontFace);
         }
@@ -470,7 +469,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     private RoundRectShape roundRectShape;
     private RectStrokeShape rectShape;
 
-    private Pool<VEditText> pool_textFields=null;
+    private Pool<VEditText> pool_textFields = null;
 
     public class RectStrokeShape extends RectShape {
         private float strokeWidth;

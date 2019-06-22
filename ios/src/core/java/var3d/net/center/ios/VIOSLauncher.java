@@ -125,8 +125,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         try {
             NSString string = new NSString(strings);
             CGSize dim = string.getSize(font);
-            UILabel label = new UILabel(new CGRect(0, 0, dim.getWidth(),
-                    dim.getHeight()));
+            UILabel label = new UILabel(new CGRect(0, 0, dim.getWidth(), dim.getHeight()));
             UILabel label2 = null;// 描边层
             label.setText(strings);
             label.setBackgroundColor(UIColor.fromRGBA(1, 1, 1, 0));
@@ -159,18 +158,18 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                         NSNumber.valueOf(vpaint.getStrokeWidth()), range);
                 label2.setAttributedText(mutableString2);
             } else if (vpaint.getUnderlineText() == true) {
-                mutableString.addAttribute(
-                        NSAttributedStringAttribute.UnderlineStyle,
-                        NSNumber.valueOf(NSUnderlineStyle.StyleSingle.value()),
-                        range);
+//                mutableString.addAttribute(
+//                        NSAttributedStringAttribute.UnderlineStyle,
+//                        NSNumber.valueOf(NSUnderlineStyle.StyleSingle.value()),
+//                        range);
             } else if (vpaint.getStrikeThruText() == true) {
-                mutableString
-                        .addAttribute(
-                                NSAttributedStringAttribute.StrikethroughStyle,
-                                NSNumber.valueOf(NSUnderlineStyle.StyleSingle
-                                        .value()
-                                        | NSUnderlineStyle.PatternSolid.value()),
-                                range);
+//                mutableString
+//                        .addAttribute(
+//                                NSAttributedStringAttribute.StrikethroughStyle,
+//                                NSNumber.valueOf(NSUnderlineStyle.StyleSingle
+//                                        .value()
+//                                        | NSUnderlineStyle.PatternSolid.value()),
+//                                range);
             }
             label.setAttributedText(mutableString);
             UIGraphics.beginImageContext(dim, false, 1);

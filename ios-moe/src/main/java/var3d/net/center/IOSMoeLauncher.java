@@ -2,11 +2,11 @@ package var3d.net.center;
 
 import com.badlogic.gdx.backends.iosmoe.IOSApplication;
 import com.badlogic.gdx.backends.iosmoe.IOSApplicationConfiguration;
-import com.badlogic.gdx.math.Vector2;
 
 import org.moe.natj.general.Pointer;
 
 import apple.uikit.c.UIKit;
+import var3d.net.center.freefont.FreePaint;
 import var3d.net.center.iosmoe.VIOSMoeLauncher;
 import var3d.net.demo.Game;
 
@@ -28,5 +28,10 @@ public class IOSMoeLauncher extends VIOSMoeLauncher {
 
     public static void main(String[] argv) {
         UIKit.UIApplicationMain(0, null, null, IOSMoeLauncher.class.getName());
+    }
+
+    @Override
+    public Pixmaps getFontsPixmap(String txts, FreePaint vpaint) {
+        return null;
     }
 }
