@@ -10,6 +10,7 @@ public class VTextButton extends TextButton {
 		super(append(text, style), style);
 	}
 
+	//添加文本
 	private static String append(String text, TextButtonStyle style) {
 		return ((FreeBitmapFont) style.font).appendTextPro(text);
 	}

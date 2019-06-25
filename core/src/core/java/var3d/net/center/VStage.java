@@ -135,6 +135,7 @@ public abstract class VStage extends Stage {
         }
     }
 
+    //计算黑边宽度和全屏尺寸
     private void calculationCuts() {
         cutAndWidth = getWidth() + cutWidth;
         cutAndHeight = getHeight() + cutHeight;

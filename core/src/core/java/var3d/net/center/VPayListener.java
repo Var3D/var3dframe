@@ -1,5 +1,8 @@
 package var3d.net.center;
 
+/**
+ * 支付接口
+ */
 
 public interface VPayListener {
 

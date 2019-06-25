@@ -133,9 +133,6 @@ public class UI<T extends Actor> {
         return this;
     }
 
-    /**
-     * 添加点击变色效果
-     */
     public UI<T> addClicAction(final Color color) {
         t.addListener(new InputListener() {
             private Color pref;

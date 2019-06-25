@@ -2228,7 +2228,8 @@ public abstract class VGame implements ApplicationListener {
      * 创建TextButton
      */
     public UI<VTextButton> getTextButton(String text, FreeBitmapFont font, Color up, Color down, Color checked) {
-        TextButtonStyle style = new TextButtonStyle(getRectColorDrawable(1, 1, up), getRectColorDrawable(1, 1, down), getRectColorDrawable(1, 1, checked), font);
+        TextButtonStyle style = new TextButtonStyle(getRectColorDrawable(1, 1, up), getRectColorDrawable(1, 1, down)
+                , getRectColorDrawable(1, 1, checked), font);
         return getTextButton(text, style);
     }
 

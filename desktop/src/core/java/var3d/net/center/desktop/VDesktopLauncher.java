@@ -381,11 +381,8 @@ public abstract class VDesktopLauncher implements VListener {
             } else {
                 try {
                     ByteArrayInputStream in = new ByteArrayInputStream(
-                            Gdx.files.internal(
-                                    vpaint.getTTFName()
-                                            + (vpaint.getTTFName().endsWith(
-                                            ".ttf") ? "" : ".ttf"))
-                                    .readBytes());
+                            Gdx.files.internal(vpaint.getTTFName() + (vpaint.getTTFName().endsWith(
+                                            ".ttf") ? "" : ".ttf")).readBytes());
                     BufferedInputStream fb = new BufferedInputStream(in);
                     font = Font.createFont(Font.TRUETYPE_FONT, fb).deriveFont(
                             Font.BOLD, vpaint.getTextSize());
@@ -521,7 +518,7 @@ public abstract class VDesktopLauncher implements VListener {
         fis.close();
         load.delete();
         defFile.renameTo(load);
-        Display.setTitle(load.getName() + "解密完成");
+        Display.setTitle(load.getName() + " decryption completed!");
     }
 
     @SuppressWarnings("resource")
@@ -549,7 +546,7 @@ public abstract class VDesktopLauncher implements VListener {
         fis.close();
         load.delete();
         defFile.renameTo(load);
-        Display.setTitle(load.getName() + "加密完成");
+        Display.setTitle(load.getName() + " encryption completed!");
     }
 
     private static LwjglApplicationConfiguration config;

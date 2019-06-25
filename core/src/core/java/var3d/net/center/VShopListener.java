@@ -3,6 +3,9 @@ package var3d.net.center;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * 商店用接口
+ */
 public interface VShopListener {
 
 	public void productsReceived(ArrayList<HashMap<String, Object>> products);

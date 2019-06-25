@@ -13,7 +13,6 @@ public class VTextField extends TextField {
 	static private final char BACKSPACE = 8;
 	static private final char TAB = '\t';
 	VTextField field;
-	boolean passwordMode;
 
 	public VTextField(String text, TextFieldStyle style) {
 		super(append(text, style), style);

@@ -5,6 +5,11 @@ import com.badlogic.gdx.utils.Array;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 
+/**
+ * 下拉框
+ * @param <T>
+ */
+
 public class VSelectBox<T> extends SelectBox<T> {
 	private static FreeBitmapFont font;
 
