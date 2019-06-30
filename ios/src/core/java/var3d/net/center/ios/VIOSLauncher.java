@@ -41,12 +41,15 @@ import org.robovm.apple.uikit.UIActivityViewController;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIColor;
 import org.robovm.apple.uikit.UIControl;
+import org.robovm.apple.uikit.UIDevice;
 import org.robovm.apple.uikit.UIEdgeInsets;
 import org.robovm.apple.uikit.UIFont;
 import org.robovm.apple.uikit.UIGraphics;
 import org.robovm.apple.uikit.UIImage;
 import org.robovm.apple.uikit.UIKeyboardType;
 import org.robovm.apple.uikit.UILabel;
+import org.robovm.apple.uikit.UIPopoverArrowDirection;
+import org.robovm.apple.uikit.UIPopoverController;
 import org.robovm.apple.uikit.UIReturnKeyType;
 import org.robovm.apple.uikit.UIScreen;
 import org.robovm.apple.uikit.UITextAutocapitalizationType;
@@ -54,6 +57,7 @@ import org.robovm.apple.uikit.UITextAutocorrectionType;
 import org.robovm.apple.uikit.UITextBorderStyle;
 import org.robovm.apple.uikit.UITextField;
 import org.robovm.apple.uikit.UITextSpellCheckingType;
+import org.robovm.apple.uikit.UIUserInterfaceIdiom;
 import org.robovm.apple.uikit.UIView;
 import org.robovm.objc.Selector;
 import org.robovm.objc.annotation.Property;
@@ -387,8 +391,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     public String getVersionName() {
-        return NSBundle.getMainBundle().getInfoDictionary()
-                .getString("CFBundleShortVersionString");
+        return NSBundle.getMainBundle().getInfoDictionary().getString("CFBundleShortVersionString");
     }
 
     public void openProtect(String... names) {
@@ -864,13 +867,13 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     public void goToShare(String title, String context, String url, byte[] imgByte,
                           final Runnable success, final Runnable failure) {
-        List activityItems=new ArrayList();
+        List activityItems = new ArrayList();
         activityItems.add(title);
         activityItems.add(context);
-        NSURL nsurl=new NSURL(url);
+        NSURL nsurl = new NSURL(url);
         activityItems.add(nsurl);
-        UIActivityViewController activityShare = new UIActivityViewController(activityItems,null);
-        List<String> exs=new ArrayList();
+        UIActivityViewController activityShare = new UIActivityViewController(activityItems, null);
+        List<String> exs = new ArrayList();
         exs.add(UIActivityType.AirDrop());
         exs.add(UIActivityType.Mail());
         exs.add(UIActivityType.OpenInIBooks());
@@ -881,18 +884,27 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         exs.add(UIActivityType.AddToReadingList());
         exs.add(UIActivityType.PostToFlickr());
         exs.add(UIActivityType.PostToVimeo());
+        exs.add(UIActivityType.Message());
         activityShare.setExcludedActivityTypes(exs);
         activityShare.setCompletionWithItemsHandler(new VoidBlock4<String, Boolean, NSArray<NSObject>, NSError>() {
-            @Override
             public void invoke(String s, Boolean completed, NSArray<NSObject> nsObjects, NSError nsError) {
-                if(completed){
+                if (completed) {
                     success.run();
-                }else{
+                } else {
                     failure.run();
                 }
             }
         });
-        ((IOSApplication)Gdx.app).getUIViewController().presentViewController(activityShare, true, null);
+        IOSApplication iosApplication = (IOSApplication) Gdx.app;
+        if (UIDevice.getCurrentDevice().getUserInterfaceIdiom() == UIUserInterfaceIdiom.Phone) {
+            //iPhone
+            iosApplication.getUIViewController().presentViewController(activityShare, true, null);
+        } else {
+            //iPad
+            UIPopoverController popover = new UIPopoverController(activityShare);
+            UIView view = iosApplication.getUIViewController().getView();
+            CGRect rect = new CGRect(view.getFrame().getWidth() / 2, view.getFrame().getHeight() / 4, 0, 0);
+            popover.presentFromRectInView(rect, view, UIPopoverArrowDirection.Any, true);
+        }
     }
-
 }
