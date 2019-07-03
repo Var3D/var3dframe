@@ -33,6 +33,7 @@ import org.robovm.apple.foundation.NSRange;
 import org.robovm.apple.foundation.NSString;
 import org.robovm.apple.foundation.NSURL;
 import org.robovm.apple.foundation.NSValue;
+import org.robovm.apple.storekit.SKStoreReviewController;
 import org.robovm.apple.uikit.NSAttributedStringAttribute;
 import org.robovm.apple.uikit.NSTextAlignment;
 import org.robovm.apple.uikit.NSUnderlineStyle;
@@ -207,6 +208,10 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     }
 
+    public void showFiveStarDialog(){
+        SKStoreReviewController.requestReview();
+    }
+
     @Override
     public void getTopList() {
 
@@ -247,20 +252,6 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         return null;
     }
 
-    @Override
-    public void startLevel(String level) {
-
-    }
-
-    @Override
-    public void failLevel(String level) {
-
-    }
-
-    @Override
-    public void finishLevel(String level) {
-
-    }
 
     @Override
     public void getAdDialog() {

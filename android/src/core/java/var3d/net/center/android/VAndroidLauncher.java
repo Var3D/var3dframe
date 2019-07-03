@@ -126,6 +126,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
+    public void showFiveStarDialog(){
+
+    }
+
     @Override
     public void getTopList() {
 
@@ -160,20 +164,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         return null;
     }
 
-    @Override
-    public void startLevel(String level) {
-
-    }
-
-    @Override
-    public void failLevel(String level) {
-
-    }
-
-    @Override
-    public void finishLevel(String level) {
-
-    }
 
     @Override
     public void getAdDialog() {

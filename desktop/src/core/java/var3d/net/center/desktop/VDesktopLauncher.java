@@ -130,6 +130,10 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
+    public void showFiveStarDialog(){
+
+    }
+
     @Override
     public void getTopList() {
         // TODO Auto-generated method stub
@@ -174,23 +178,6 @@ public abstract class VDesktopLauncher implements VListener {
         return null;
     }
 
-    @Override
-    public void startLevel(String level) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void failLevel(String level) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void finishLevel(String level) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void getAdDialog() {
