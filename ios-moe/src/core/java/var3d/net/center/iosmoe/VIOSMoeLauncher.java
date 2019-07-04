@@ -196,6 +196,10 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
 
     }
 
+   public void showFiveStarDialog(){
+
+   }
+
     @Override
     public void getTopList() {
 
@@ -225,21 +229,6 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
     @Override
     public String getCountry() {
         return null;
-    }
-
-    @Override
-    public void startLevel(String level) {
-
-    }
-
-    @Override
-    public void failLevel(String level) {
-
-    }
-
-    @Override
-    public void finishLevel(String level) {
-
     }
 
     @Override
