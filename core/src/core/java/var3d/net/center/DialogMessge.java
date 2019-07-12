@@ -27,12 +27,13 @@ public class DialogMessge extends VDialog {
     public void init() {
         setBackground(game.getUI(new Actor()).setSize(getFullWidth(), getFullHeight()).getActor());
         setShowActions(ActionType.POPUP);
-        img_bg = game.getImage(getWidth() / 2, 1).touchOff().show(this);
+        setHideActions(ActionType.POPUP);
+        img_bg = game.getImage(getWidth()*0.5f, 1).touchOff().show(this);
         lab_msg = game.getLabel("messge").setColor(Color.DARK_GRAY).touchOff().show(this);
         lab_msg.setWrap(true);
         lab_msg.setAlignment(Align.center);
-        lab_msg.setWidth(getWidth() / 2 - game.getDefaultFontSize());
-        lab_msg.setPosition(getWidth() / 2, getHeight() / 2, Align.center);
+        lab_msg.setWidth(getWidth() / 2 - game.getDefaultFontSize()*2);
+        lab_msg.setPosition(getWidth() / 2-game.getDefaultFontSize()*0.5f, getHeight() / 2, Align.center);
         addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.removeDialog(DialogMessge.this);
