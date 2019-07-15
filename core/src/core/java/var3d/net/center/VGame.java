@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
@@ -51,6 +52,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
@@ -268,7 +270,7 @@ public abstract class VGame implements ApplicationListener {
                         field.set(null, bundle.get(field.getName()));
                     }
                     return;
-                }else continue;
+                } else continue;
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -2122,6 +2124,15 @@ public abstract class VGame implements ApplicationListener {
         pixmap.dispose();
         NinePatchDrawable nine = new NinePatchDrawable(new NinePatch(colorPoint, 2, 2, 2, 2));
         return nine;
+    }
+
+    public TextFieldStyle getTextFieldStyle(BitmapFont font, Color cursor, Color selection, Color background) {
+        Drawable drawable_background = getRectColorDrawable(1, 1, background);
+        Drawable drawable_cursor = getRectColorDrawable(1, 1, cursor);
+        Drawable drawable_selection = getRectColorDrawable(1, 1,selection);
+        TextField.TextFieldStyle style = new TextField.TextFieldStyle(font, Color.WHITE, drawable_cursor
+                , drawable_selection, drawable_background);
+        return style;
     }
 
     /**

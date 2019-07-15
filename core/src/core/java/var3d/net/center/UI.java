@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 
 import java.lang.reflect.Method;
@@ -399,6 +400,8 @@ public class UI<T extends Actor> {
             ((SLabel) t).setAlignment(alignment);
         } else if (t instanceof Label) {
             ((Label) t).setAlignment(alignment);
+        }else if (t instanceof TextField) {
+            ((TextField) t).setAlignment(alignment);
         } else Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel/SLabel/Label上有效");
         return this;
     }
