@@ -37,6 +37,7 @@ import org.robovm.apple.storekit.SKStoreReviewController;
 import org.robovm.apple.uikit.NSAttributedStringAttribute;
 import org.robovm.apple.uikit.NSTextAlignment;
 import org.robovm.apple.uikit.NSUnderlineStyle;
+import org.robovm.apple.uikit.NSValueExtensions;
 import org.robovm.apple.uikit.UIActivityType;
 import org.robovm.apple.uikit.UIActivityViewController;
 import org.robovm.apple.uikit.UIApplication;
@@ -47,6 +48,7 @@ import org.robovm.apple.uikit.UIEdgeInsets;
 import org.robovm.apple.uikit.UIFont;
 import org.robovm.apple.uikit.UIGraphics;
 import org.robovm.apple.uikit.UIImage;
+import org.robovm.apple.uikit.UIKeyboardAnimation;
 import org.robovm.apple.uikit.UIKeyboardType;
 import org.robovm.apple.uikit.UILabel;
 import org.robovm.apple.uikit.UIPopoverArrowDirection;
@@ -60,7 +62,9 @@ import org.robovm.apple.uikit.UITextField;
 import org.robovm.apple.uikit.UITextSpellCheckingType;
 import org.robovm.apple.uikit.UIUserInterfaceIdiom;
 import org.robovm.apple.uikit.UIView;
+import org.robovm.apple.uikit.UIWindow;
 import org.robovm.objc.Selector;
+import org.robovm.objc.annotation.Method;
 import org.robovm.objc.annotation.Property;
 import org.robovm.objc.block.VoidBlock4;
 
@@ -73,6 +77,7 @@ import java.util.Locale;
 import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
+import var3d.net.center.VListenerOnKeyboardChange;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
@@ -898,4 +903,65 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
             popover.presentFromRectInView(rect, view, UIPopoverArrowDirection.Any, true);
         }
     }
+
+    private boolean keyBoardVisible;
+    private boolean isAddListener;
+    private VListenerOnKeyboardChange onKeyboardChangeListener;
+    private float keyboardHeight;
+    private NSNotificationCenter center;
+
+    public void setListenerOnKeyboardChange(VListenerOnKeyboardChange listener){
+        if(isAddListener)return;
+        isAddListener=true;
+        this.onKeyboardChangeListener=listener;
+        //在平台接口的初始化代码中调用下面代码
+       if(center==null)center = NSNotificationCenter.getDefaultCenter();
+        center.addObserver(this, Selector.register("keyboardWillShow:"), UIWindow.KeyboardWillShowNotification(), null);
+        center.addObserver(this, Selector.register("keyboardWillHide:"), UIWindow.KeyboardWillHideNotification(), null);
+    }
+
+    public VListenerOnKeyboardChange getListenerOnKeyboardChange(){
+        return onKeyboardChangeListener;
+    }
+
+    public void removeListenerOnKeyboardChange(){
+        if(isAddListener==false)return;
+        isAddListener=false;
+        //注意在不想监听的时候调用下面代码
+        NSNotificationCenter center = NSNotificationCenter.getDefaultCenter();
+        center.removeObserver(this);
+    }
+
+
+    //对应两个Selector方法实现
+    @SuppressWarnings("unchecked")
+    @Method(selector="keyboardWillShow:")
+    public void keyboardWillShow(NSNotification notification){
+        keyBoardVisible = true;
+
+        //获取键盘的高度
+        NSDictionary<NSString, NSObject> userInfo = (NSDictionary<NSString, NSObject>) notification.getUserInfo();
+        NSValue value = (NSValue) userInfo.get(UIKeyboardAnimation.Keys.FrameEnd());
+        CGRect keyboardRect = NSValueExtensions.getRectValue(value);
+        double height = keyboardRect.getSize().getHeight();
+        //这里将键盘高度由原生转换到引擎端与stage高度对应
+        float gameHeight = 1136;
+        float hScale = (float) (UIScreen.getMainScreen().getBounds().getHeight() / gameHeight);  //1.69
+        keyboardHeight = (int) (height / hScale);
+
+        if (onKeyboardChangeListener != null) {
+            onKeyboardChangeListener.onKeyboardChange(keyBoardVisible, keyboardHeight);
+        }
+    }
+
+    @Method(selector="keyboardWillHide:")
+    public void keyboardWillHide(NSNotification notification){
+        keyBoardVisible = false;
+        keyboardHeight = 0;
+        if (onKeyboardChangeListener != null) {
+            onKeyboardChangeListener.onKeyboardChange(keyBoardVisible, keyboardHeight);
+        }
+    }
+
+
 }

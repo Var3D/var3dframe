@@ -253,7 +253,8 @@ public abstract class VStage extends Stage {
     }
 
     public boolean keyDown(int arg0) {
-        if (isOff == true) return false;
+        if (isOff == true||game.isCloseShortcut()) return false;
+
         if (Gdx.app.getType() == ApplicationType.Desktop) {
             game.var3dListener.keyDown(arg0);
             if (arg0 == Input.Keys.DEL) {
@@ -286,7 +287,7 @@ public abstract class VStage extends Stage {
     }
 
     public boolean keyUp(int arg0) {
-        if (isOff == true) return false;
+        if (isOff == true||game.isCloseShortcut()) return false;
         if (Gdx.app.getType() == ApplicationType.Desktop) {
             game.var3dListener.keyUp(arg0);
         }

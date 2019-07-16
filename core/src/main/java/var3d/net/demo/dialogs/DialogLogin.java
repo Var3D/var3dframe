@@ -129,8 +129,8 @@ public class DialogLogin extends VDialog {
 
             @Override
             public String onEditingChanged(NativeTextField nativeTextField) {
-                if(nativeTextField.getText().length()>10){//限制输入字符的长度为10
-                    return nativeTextField.getText().substring(0,10);
+                if(nativeTextField.getText().length()>5){//限制输入字符的长度为10
+                    return nativeTextField.getText().substring(0,5);
                 }
                 return null;
             }

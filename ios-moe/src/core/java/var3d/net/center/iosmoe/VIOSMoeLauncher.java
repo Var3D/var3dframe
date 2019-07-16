@@ -65,6 +65,7 @@ import var3d.net.center.NativeTextField;
 import var3d.net.center.UI;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
+import var3d.net.center.VListenerOnKeyboardChange;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
@@ -892,5 +893,15 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
                 removeRegistered();
             }
         }
+    }
+
+    public void setListenerOnKeyboardChange(VListenerOnKeyboardChange listener){
+    }
+
+    public VListenerOnKeyboardChange getListenerOnKeyboardChange(){
+        return null;
+    }
+
+    public void removeListenerOnKeyboardChange(){
     }
 }

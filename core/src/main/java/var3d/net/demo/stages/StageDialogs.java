@@ -11,6 +11,7 @@ import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
 import var3d.net.demo.dialogs.DialogAD;
 import var3d.net.demo.dialogs.DialogLogin;
+import var3d.net.demo.dialogs.DialogLoginGdx;
 import var3d.net.demo.dialogs.DialogRatio;
 import var3d.net.demo.dialogs.DialogTestFull;
 import var3d.net.demo.dialogs.DialogUnRatio;
@@ -72,13 +73,23 @@ public class StageDialogs extends VStage {
                 game.showDialog(DialogTestFull.class);
             }
         });
-        //登录对话框
+        //登录对话框(原生输入框)
         Button btn_login = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
                 .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
-        btn_login.add(game.getLabel("登录对话框").setFontScale(0.6f).getActor());
+        btn_login.add(game.getLabel("登录(原生输入)").setFontScale(0.6f).getActor());
         btn_login.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.showDialog(DialogLogin.class);
+            }
+        });
+
+        //登录对话框(libgdx输入框)
+        Button btn_login_gdx = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_login_gdx.add(game.getLabel("登录(gdx输入)").setFontScale(0.6f).getActor());
+        btn_login_gdx.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.showDialog(DialogLoginGdx.class);
             }
         });
 
@@ -104,7 +115,7 @@ public class StageDialogs extends VStage {
 
         //等待添加
         Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(120, 40)
-                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(pref().getRight()+10, lab_title.getY() - 10, Align.topLeft).addClicAction().show();
         btn_more.add(game.getLabel("等待添加...").setFontScale(0.6f).getActor());
         btn_more.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {

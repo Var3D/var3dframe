@@ -126,6 +126,7 @@ public abstract class VGame implements ApplicationListener {
     private boolean isShowFps = false;// 是否显示fps
     private boolean isProtect = false;// 是否保护图片资源
     private boolean isReProtect = false;// 是否关闭保护图片资源
+    private boolean isCloseShortcut=false;//是否关闭框架的快捷键（截图等）
 
     private Object userData;// 场景切换时用于数据中转
     private final HashMap<String, Object> userDatas = new HashMap<String, Object>();// 用于数据中转
@@ -133,6 +134,8 @@ public abstract class VGame implements ApplicationListener {
     private Stack<Class> stageStack = new Stack<>();
 
     public TextureRegion iphoneX;//iphoneX的壳子,当用Desktop测试时选择iphoneX的尺寸时才会叠加到所有画面之上
+
+    public static VGame game;
 
     //语言代号,常用语言(以后做游戏就做这8种语言了)
     public enum Languages {
@@ -211,7 +214,16 @@ public abstract class VGame implements ApplicationListener {
         return paint;
     }
 
+    public void setIsCloseShortcut(boolean isCloseShortcut){
+        this.isCloseShortcut=isCloseShortcut;
+    }
+
+    public boolean isCloseShortcut(){
+        return isCloseShortcut;
+    }
+
     public void create() {
+        game=this;
         save = Gdx.app.getPreferences(getProjectName());// 数据存储实例化
         Gdx.input.setCatchBackKey(true);// 劫持系统返回键
         multiplexer = new InputMultiplexer();// 触控实例化

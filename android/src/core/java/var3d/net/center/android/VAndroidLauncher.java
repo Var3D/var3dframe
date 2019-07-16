@@ -68,6 +68,7 @@ import java.util.Locale;
 import var3d.net.center.NativeTextField;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
+import var3d.net.center.VListenerOnKeyboardChange;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
@@ -1152,5 +1153,15 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
             }
         });
 
+    }
+
+    public void setListenerOnKeyboardChange(VListenerOnKeyboardChange listener){
+    }
+
+    public VListenerOnKeyboardChange getListenerOnKeyboardChange(){
+        return null;
+    }
+
+    public void removeListenerOnKeyboardChange(){
     }
 }
