@@ -1786,6 +1786,13 @@ public abstract class VGame implements ApplicationListener {
         return null;
     }
 
+    /**
+     * 创建Image
+     */
+    public UI<Image> getImage(Drawable drawable) {
+        Image img = new Image(drawable);
+        return getUI(img);
+    }
 
     /**
      * 创建Image
