@@ -2,15 +2,24 @@ package var3d.net.demo.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import var3d.net.center.KeyboardType;
+import var3d.net.center.NativeTextField;
+import var3d.net.center.ReturnKeyType;
 import var3d.net.center.VDialog;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
+import var3d.net.center.VListenerOnKeyboardChange;
+import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
 
 /**
@@ -56,57 +65,55 @@ public class DialogLoginGdx extends VDialog {
         });
 
         //输入框
-        field_user=game.getTextField("").setSize(200,40).setPosition(
-                getWidth()/2,lab_title.getY()-20,Align.top).show();
+        field_user=game.getTextField("").setSize(200,40).setPosition(getWidth()/2,lab_title.getY()-60,Align.top).show();
         game.getLabel("帐号:").setPosition(pref().getX(),pref().getY(Align.center),Align.right).show();
         field_user.setMessageText("请输入帐号");
-        field_user.setVTextFieldListener(new VTextField.VTextFieldListener() {
-            @Override
-            public void didBeginEditing(VTextField vTextField) {
-
-            }
-
-            @Override
-            public void didEndEditing(VTextField vTextField) {
-
-            }
-
-            @Override
-            public boolean shouldReturn(VTextField vTextField) {
-                return false;
-            }
-
-            @Override
-            public String onEditingChanged(VTextField vTextField) {
-                if(vTextField.getText().length()>5){//限制输入字符的长度为5
-                    return vTextField.getText().substring(0,5);
-                }else return null;
-            }
-
-            @Override
-            public void keyboardWillShow(VTextField vTextField, float keyboardHeight) {
-                Gdx.app.log("aaaaaaa","keyboardHeight="+keyboardHeight);
-                game.showMessege("keyboardHeight="+keyboardHeight);
-            }
-        });
-
+        field_user.setKeyboardType(KeyboardType.ASCIICapable);//设置键盘类型
+        field_user.setReturnKeyType(ReturnKeyType.Done);//设置回车键文本为 next
+        //回调暂时有点问题，需修改
+//        field_user.setVTextFieldListener(new VTextField.VTextFieldListener() {
+//            @Override
+//            public void didBeginEditing(VTextField vTextField) {
+//                Gdx.app.log("aaaaaa","点击激活输入框时调用");
+//            }
+//
+//            @Override
+//            public void didEndEditing(VTextField vTextField) {
+//                Gdx.app.log("aaaaaa","按了回车键结束编辑调用");
+//                field_user.resignFirstResponder();
+//                field_password.becomeFirstResponder();
+//            }
+//
+//            @Override
+//            public String onEditingChanged(VTextField vTextField) {
+//                Gdx.app.log("aaaaaa","文本框字符发生变化时调用");
+//                return vTextField.getText();
+//            }
+//
+//            @Override
+//            public void keyboardWillShow(VTextField vTextField, boolean isShow, float keyboardHeight) {
+//                Gdx.app.log("aaaaaa","虚拟键盘高度发生变化时调用");
+//            }
+//        });
 
 
         field_password=game.getTextField("").setSize(200,40).setPosition(getWidth()/2
                 ,field_user.getY()-10,Align.top).show();
         game.getLabel("密码:").setPosition(pref().getX(),pref().getY(Align.center),Align.right).show();
         field_password.setMessageText("请输入密码");
-        field_password.setPasswordCharacter("*");
+        field_password.setPasswordMode(true);
+        field_password.setKeyboardType(KeyboardType.ASCIICapable);
+
     }
 
     @Override
     public void reStart() {
     }
 
-    @Override
+
     public void show() {
-        field_password.resignFirstResponder();//移出密码框的焦点
-        field_user.becomeFirstResponder();//设置账户框为焦点
+        field_password.resignFirstResponder();
+        field_user.becomeFirstResponder();
     }
 
     @Override
@@ -123,9 +130,7 @@ public class DialogLoginGdx extends VDialog {
 
     @Override
     public void resume() {
-        //当该对话框恢复顶层时调用
-        field_password.resignFirstResponder();//移出密码框的焦点
-        field_user.becomeFirstResponder();//设置账户框为焦点
+
     }
 
 }

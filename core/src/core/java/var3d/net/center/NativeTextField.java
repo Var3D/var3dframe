@@ -2,7 +2,6 @@ package var3d.net.center;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
@@ -68,32 +67,6 @@ public class NativeTextField extends Group {
         None//不适配
     }
 
-    //键盘类型
-    public enum KeyboardType{
-        Default(0L),//默认键盘，支持所有字符
-        ASCIICapable(1L),//支持ASCII的默认键盘
-        NumbersAndPunctuation(2L),//标准电话键盘，支持＋＊＃字符
-        URL(3L),//URL键盘，支持.com按钮 只支持URL字符
-        NumberPad(4L),//数字键盘
-        PhonePad(5L),//电话键盘
-        NamePhonePad(6L),//电话键盘，也支持输入人名
-        EmailAddress(7L),//用于输入电子 邮件地址的键盘
-        DecimalPad(8L),//数字键盘 有数字和小数点
-        Twitter(9L),//优化的键盘，方便输入@、#字符
-        WebSearch(10L),//方便浏览器使用的键盘
-        ASCIICapableNumberPad(11L),//看起来像数字键盘
-        Alphabet(1L);//字母键盘，等于ASCIICapable
-
-        private final long n;
-
-        KeyboardType(long n) {
-            this.n = n;
-        }
-
-        public long value() {
-            return this.n;
-        }
-    }
 
     //边框类型
     public enum BorderStyle{
@@ -113,31 +86,6 @@ public class NativeTextField extends Group {
         }
     }
 
-    //键盘 Reterun 键类型
-    public enum ReturnKeyType{
-        Default(0L),
-        Go(1L),
-        Google(2L),
-        Join(3L),
-        Next(4L),
-        Route(5L),
-        Search(6L),
-        Send(7L),
-        Yahoo(8L),
-        Done(9L),
-        EmergencyCall(10L),
-        Continue(11L);
-
-        private final long n;
-
-        ReturnKeyType(long n) {
-            this.n = n;
-        }
-
-        public long value() {
-            return this.n;
-        }
-    }
 
     public NativeTextField(VGame game){
         this.game=game;

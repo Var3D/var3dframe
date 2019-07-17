@@ -2,6 +2,7 @@ package var3d.net.center.ios;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
+import com.badlogic.gdx.backends.iosrobovm.IOSInput;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Rectangle;
@@ -36,7 +37,6 @@ import org.robovm.apple.foundation.NSValue;
 import org.robovm.apple.storekit.SKStoreReviewController;
 import org.robovm.apple.uikit.NSAttributedStringAttribute;
 import org.robovm.apple.uikit.NSTextAlignment;
-import org.robovm.apple.uikit.NSUnderlineStyle;
 import org.robovm.apple.uikit.NSValueExtensions;
 import org.robovm.apple.uikit.UIActivityType;
 import org.robovm.apple.uikit.UIActivityViewController;
@@ -81,6 +81,7 @@ import var3d.net.center.VListenerOnKeyboardChange;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
+import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreePaint;
 import var3d.net.center.freefont.TTFParser;
 
@@ -448,6 +449,11 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     private CGRect cgRect=new CGRect();
     private CGSize screenSize;
 
+    public CGSize getScreenSize(){
+        if(screenSize==null)screenSize=UIScreen.getMainScreen().getBounds().getSize();
+        return screenSize;
+    }
+
     public class VUITextField extends UITextField implements Pool.Poolable{
         private NativeTextField nativeTextField;
 
@@ -469,13 +475,13 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
             NSValue aValue = (NSValue) userInfo.get("UIKeyboardFrameEndUserInfoKey");
             CGRect keyboardRect =aValue.rectValue();
             CGRect frame = getFrame();
-            double keyboardHeight=screenSize.getHeight()-keyboardRect.getHeight();
+            double keyboardHeight= getScreenSize().getHeight()-keyboardRect.getHeight();
             final Stage stage = nativeTextField.getStage();
             //键盘高度转换为 libgdx 坐标系
             final float libgdxKeyboardHeight,bly;
             if(stage!=null) {
                 float fullHeight = stage instanceof VStage ? ((VStage) stage).getFullHeight() : stage.getHeight();
-                bly= (float) (1f/screenSize.getHeight() * fullHeight);
+                bly= (float) (1f/getScreenSize().getHeight() * fullHeight);
                 libgdxKeyboardHeight = (float) (keyboardRect.getHeight() *bly);
             }else{
                 return;
@@ -557,8 +563,8 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                     fullWidth=stage.getWidth();
                     fullHeight=stage.getHeight();
                 }
-                blx= (float) (1f/fullWidth*screenSize.getWidth());
-                bly= (float) (1f/fullHeight*screenSize.getHeight());
+                blx= (float) (1f/fullWidth*getScreenSize().getWidth());
+                bly= (float) (1f/fullHeight*getScreenSize().getHeight());
                 w=(float) getFrame().getWidth();
                 h= (float) getFrame().getHeight();
                 float fx=nativeTextField.getX();
@@ -582,7 +588,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                 }
                 x=(cutWidth+fx)*blx;
                 float my=(cutHeight+fy)*bly;
-                y= (float) (screenSize.getHeight()-h)-my;
+                y= (float) (getScreenSize().getHeight()-h)-my;
                 cgRect.setWidth(w);
                 cgRect.setHeight(h);
                 cgRect.setX(x);
@@ -609,9 +615,9 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
             VUITextField textfield = new VUITextField(cgRect);
             textfield.setKeyboardType(UIKeyboardType.Default);
             textfield.setReturnKeyType(UIReturnKeyType.Done);
-            textfield.setAutocapitalizationType(UITextAutocapitalizationType.None);
-            textfield.setAutocorrectionType(UITextAutocorrectionType.No);
-            textfield.setSpellCheckingType(UITextSpellCheckingType.No);
+            textfield.setAutocapitalizationType(UITextAutocapitalizationType.None);//设置自动大写类型
+            textfield.setAutocorrectionType(UITextAutocorrectionType.No);//设置自动更正类型
+            textfield.setSpellCheckingType(UITextSpellCheckingType.No);//设置拼写检查类型
             textfield.setBorderStyle(UITextBorderStyle.RoundedRect);
             return textfield;
         }
@@ -623,7 +629,6 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
             case newObject:
                 if(textFieldHashMap==null){
                     textFieldHashMap=new HashMap<>();
-                    screenSize=UIScreen.getMainScreen().getBounds().getSize();
                 }
                 VUITextField textfield = pool_textFields.obtain();
                 textfield.setLibgdxTextField(nativeTextField);
@@ -803,7 +808,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                     } else {
                         fullWidth = stage.getWidth();
                     }
-                    blx = (float) (1f / fullWidth * screenSize.getWidth());
+                    blx = (float) (1f / fullWidth * getScreenSize().getWidth());
                     textfield.setFont(UIFont.getSystemFont(nativeTextField.getFontSize()*blx));
                 }
                 break;
@@ -825,8 +830,8 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
                         fullWidth=stage.getWidth();
                         fullHeight=stage.getHeight();
                     }
-                    blx= (float) (1f/fullWidth*screenSize.getWidth());
-                    bly= (float) (1f/fullHeight*screenSize.getHeight());
+                    blx= (float) (1f/fullWidth*getScreenSize().getWidth());
+                    bly= (float) (1f/fullHeight*getScreenSize().getHeight());
                     w=nativeTextField.getWidth()*blx;
                     h=nativeTextField.getHeight()*bly;
                     x= (float) textfield.getFrame().getX();
@@ -905,52 +910,44 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     private boolean keyBoardVisible;
-    private boolean isAddListener;
-    private VListenerOnKeyboardChange onKeyboardChangeListener;
+    //private VListenerOnKeyboardChange onKeyboardChangeListener;
+    private VListenerOnKeyboardChange listeners;
+    private VStage stage;
     private float keyboardHeight;
     private NSNotificationCenter center;
 
-    public void setListenerOnKeyboardChange(VListenerOnKeyboardChange listener){
-        if(isAddListener)return;
-        isAddListener=true;
-        this.onKeyboardChangeListener=listener;
+    public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
+        this.listeners = listener;
+        this.stage=stage;
         //在平台接口的初始化代码中调用下面代码
-       if(center==null)center = NSNotificationCenter.getDefaultCenter();
-        center.addObserver(this, Selector.register("keyboardWillShow:"), UIWindow.KeyboardWillShowNotification(), null);
-        center.addObserver(this, Selector.register("keyboardWillHide:"), UIWindow.KeyboardWillHideNotification(), null);
+        if (center == null) {
+            center = NSNotificationCenter.getDefaultCenter();
+            center.addObserver(this, Selector.register("keyboardWillShow:"), UIWindow.KeyboardWillShowNotification(), null);
+            center.addObserver(this, Selector.register("keyboardWillHide:"), UIWindow.KeyboardWillHideNotification(), null);
+        }
     }
 
-    public VListenerOnKeyboardChange getListenerOnKeyboardChange(){
-        return onKeyboardChangeListener;
-    }
 
     public void removeListenerOnKeyboardChange(){
-        if(isAddListener==false)return;
-        isAddListener=false;
-        //注意在不想监听的时候调用下面代码
-        NSNotificationCenter center = NSNotificationCenter.getDefaultCenter();
-        center.removeObserver(this);
+        this.listeners=null;
+        this.stage=null;
+        //center.removeObserver(this);
     }
 
 
     //对应两个Selector方法实现
-    @SuppressWarnings("unchecked")
     @Method(selector="keyboardWillShow:")
     public void keyboardWillShow(NSNotification notification){
-        keyBoardVisible = true;
 
+        keyBoardVisible = true;
         //获取键盘的高度
         NSDictionary<NSString, NSObject> userInfo = (NSDictionary<NSString, NSObject>) notification.getUserInfo();
         NSValue value = (NSValue) userInfo.get(UIKeyboardAnimation.Keys.FrameEnd());
         CGRect keyboardRect = NSValueExtensions.getRectValue(value);
-        double height = keyboardRect.getSize().getHeight();
-        //这里将键盘高度由原生转换到引擎端与stage高度对应
-        float gameHeight = 1136;
-        float hScale = (float) (UIScreen.getMainScreen().getBounds().getHeight() / gameHeight);  //1.69
-        keyboardHeight = (int) (height / hScale);
-
-        if (onKeyboardChangeListener != null) {
-            onKeyboardChangeListener.onKeyboardChange(keyBoardVisible, keyboardHeight);
+        keyboardHeight= (float) (keyboardRect.getHeight());
+        if(listeners!=null){
+            float bly= (float) (1f/getScreenSize().getHeight() * stage.getFullHeight());
+            listeners.onKeyboardChange(keyBoardVisible, keyboardHeight*bly);
         }
     }
 
@@ -958,10 +955,15 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     public void keyboardWillHide(NSNotification notification){
         keyBoardVisible = false;
         keyboardHeight = 0;
-        if (onKeyboardChangeListener != null) {
-            onKeyboardChangeListener.onKeyboardChange(keyBoardVisible, keyboardHeight);
-        }
+        if(listeners!=null)listeners.onKeyboardChange(keyBoardVisible, keyboardHeight);
     }
 
 
+    public void linkVTextField(VTextField vTextField){
+        IOSInput iosInput= (IOSInput) Gdx.input;
+        UITextField uiTextField=iosInput.getKeyboardTextField();
+        uiTextField.setKeyboardType(UIKeyboardType.valueOf(vTextField.getKeyboardType().value()));
+        uiTextField.setReturnKeyType(UIReturnKeyType.valueOf(vTextField.getReturnKeyType().value()));
+
+    }
 }

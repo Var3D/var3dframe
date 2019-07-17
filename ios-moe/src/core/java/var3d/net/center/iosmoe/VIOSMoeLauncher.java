@@ -61,7 +61,9 @@ import apple.uikit.enums.UITextAutocorrectionType;
 import apple.uikit.enums.UITextBorderStyle;
 import apple.uikit.enums.UITextSpellCheckingType;
 import apple.uikit.struct.UIEdgeInsets;
+import var3d.net.center.KeyboardType;
 import var3d.net.center.NativeTextField;
+import var3d.net.center.ReturnKeyType;
 import var3d.net.center.UI;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
@@ -69,6 +71,7 @@ import var3d.net.center.VListenerOnKeyboardChange;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
+import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreePaint;
 import var3d.net.center.freefont.TTFParser;
 
@@ -895,13 +898,13 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
         }
     }
 
-    public void setListenerOnKeyboardChange(VListenerOnKeyboardChange listener){
-    }
-
-    public VListenerOnKeyboardChange getListenerOnKeyboardChange(){
-        return null;
+    public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
     }
 
     public void removeListenerOnKeyboardChange(){
+    }
+
+
+    public void linkVTextField(VTextField vTextField){
     }
 }

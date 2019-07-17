@@ -65,13 +65,16 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
 
+import var3d.net.center.KeyboardType;
 import var3d.net.center.NativeTextField;
+import var3d.net.center.ReturnKeyType;
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.VListenerOnKeyboardChange;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
+import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreePaint;
 
 public abstract class VAndroidLauncher extends AndroidApplication implements
@@ -1155,13 +1158,14 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
-    public void setListenerOnKeyboardChange(VListenerOnKeyboardChange listener){
+    public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
     }
 
-    public VListenerOnKeyboardChange getListenerOnKeyboardChange(){
-        return null;
-    }
 
     public void removeListenerOnKeyboardChange(){
+    }
+
+
+    public void linkVTextField(VTextField vTextField){
     }
 }

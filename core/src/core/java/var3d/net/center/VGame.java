@@ -135,7 +135,7 @@ public abstract class VGame implements ApplicationListener {
 
     public TextureRegion iphoneX;//iphoneX的壳子,当用Desktop测试时选择iphoneX的尺寸时才会叠加到所有画面之上
 
-    public static VGame game;
+    public static VGame game;//保存自己的实例，这样就可以直接 VGame.game的方式来调用本类里的所有 public 方法
 
     //语言代号,常用语言(以后做游戏就做这8种语言了)
     public enum Languages {

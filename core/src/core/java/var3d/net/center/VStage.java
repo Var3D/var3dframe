@@ -27,6 +27,7 @@ public abstract class VStage extends Stage {
     public ArrayList<Actor> bgList;
     private float cutWidth, cutHeight, cutAndWidth, cutAndHeight, fullWidth, fullHeight;
     private float safeLeft, safeRight, safeTop, safeBottom;
+    private float startX,startY;
     private boolean isStretching = false;//是否拉伸比例适配
     public Rectangle safeAreaInsets = new Rectangle();//安全区域边距
 
@@ -110,6 +111,8 @@ public abstract class VStage extends Stage {
             cutHeight = 0;
             getRoot().setScale(bl, 1);
             getRoot().setPosition(cutWidth, 0);
+            startX=cutWidth;
+            startY=0;
             cutWidth = cutWidth / getRoot().getScaleX();
             calculationAafeArea(bl, 1);
         } else if (bl >= 1) {
@@ -117,10 +120,24 @@ public abstract class VStage extends Stage {
             cutHeight = (1 - 1 / bl) * getHeight() / 2f;
             getRoot().setScale(1, 1 / bl);
             getRoot().setPosition(0, cutHeight);
+            startX=0;
+            startY=cutHeight;
             cutHeight = cutHeight / getRoot().getScaleY();
             calculationAafeArea(1, bl);
         }
         calculationCuts();
+    }
+
+    public float getStartX(){
+        return startX;
+    }
+
+    public float getStartY(){
+        return startY;
+    }
+
+    public void resetStage(){
+        getRoot().setPosition(startX,startY);
     }
 
     private void calculationAafeArea(float blx, float bly) {

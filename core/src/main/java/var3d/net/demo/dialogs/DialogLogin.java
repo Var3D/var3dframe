@@ -8,7 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import var3d.net.center.KeyboardType;
 import var3d.net.center.NativeTextField;
+import var3d.net.center.ReturnKeyType;
 import var3d.net.center.VDialog;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
@@ -29,8 +31,9 @@ public class DialogLogin extends VDialog {
     public void init() {
         //设置背景
         setBackground(400, 300, Color.valueOf("0075ed"));
-        setShowActions(ActionType.POPUP);
-        setHideActions(ActionType.POPUP);
+        //建议有原生输入框的界面关闭弹出动画和移出动画
+        //setShowActions(ActionType.POPUP);
+        //setHideActions(ActionType.POPUP);
         //设置标题
         final VLabel lab_title= game.getLabel("登录对话框").touchOff().setFontScale(1.3f).setPosition
                (getWidth() / 2, getHeight() - 30, Align.top).show();
@@ -60,8 +63,8 @@ public class DialogLogin extends VDialog {
                 getWidth()/2,lab_title.getY()-20,Align.top).show();
         game.getLabel("帐号:").setPosition(0,pref().getHeight()/2f,Align.right).show(ntf_user);
         ntf_user.setMessageText("请输入帐号");
-        ntf_user.setKeyboardType(NativeTextField.KeyboardType.Alphabet);
-        ntf_user.setReturnKeyType(NativeTextField.ReturnKeyType.Next);
+        ntf_user.setKeyboardType(KeyboardType.Alphabet);
+        ntf_user.setReturnKeyType(ReturnKeyType.Next);
         ntf_user.setAdaptKeyboardType(NativeTextField.AdaptKeyboardType.None);
         ntf_user.setTextFieldListener(new NativeTextField.TextFieldListener() {
             @Override
@@ -105,7 +108,7 @@ public class DialogLogin extends VDialog {
         game.getLabel("密码:").setPosition(0,pref().getHeight()/2f,Align.right).show(ntf_password);
         ntf_password.setMessageText("请输入密码");
         ntf_password.setPasswordMode(true);
-        ntf_password.setReturnKeyType(NativeTextField.ReturnKeyType.Go);
+        ntf_password.setReturnKeyType(ReturnKeyType.Go);
         ntf_password.setAdaptKeyboardType(NativeTextField.AdaptKeyboardType.None);
         ntf_password.setTextFieldListener(new NativeTextField.TextFieldListener() {
             @Override

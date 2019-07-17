@@ -63,6 +63,17 @@ public class StageMain extends VStage {
             }
         });
 
+        //输入框
+        Button btn_textfeild = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_textfeild.add(game.getLabel("输入框").setFontScale(0.6f).getActor());
+        btn_textfeild.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                //stage跳转
+                game.setStage(StageTextFeild.class);
+            }
+        });
+
         //VCard
         Button btn_card = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
                 .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();

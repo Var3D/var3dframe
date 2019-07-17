@@ -1,0 +1,357 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		AB0000001000000000000c /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.h"; path = "com.badlogic.gdx.backends.iosrobovm/j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000000d /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.m"; path = "com.badlogic.gdx.backends.iosrobovm/j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000000f /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.h"; path = "com.badlogic.gdx.backends.iosrobovm/j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000010 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.m"; path = "com.badlogic.gdx.backends.iosrobovm/j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000012 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.h"; path = "com.badlogic.gdx.backends.iosrobovm/j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000013 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.m"; path = "com.badlogic.gdx.backends.iosrobovm/j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000015 /* j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.h"; path = "com.badlogic.gdx.backends.iosrobovm/j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000016 /* j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.m"; path = "com.badlogic.gdx.backends.iosrobovm/j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000019 /* j_var3d_net_center_ios_VIOSLauncher$VUITextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "j_var3d_net_center_ios_VIOSLauncher$VUITextField.h"; path = "var3d.net.center.ios/j_var3d_net_center_ios_VIOSLauncher$VUITextField.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000001a /* j_var3d_net_center_ios_VIOSLauncher$VUITextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "j_var3d_net_center_ios_VIOSLauncher$VUITextField.m"; path = "var3d.net.center.ios/j_var3d_net_center_ios_VIOSLauncher$VUITextField.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000005f /* Prefix.pch */ = {isa = PBXFileReference; name = "Prefix.pch"; path = "Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000001d /* Default-568h@2x.png */ = {isa = PBXFileReference; name = "Default-568h@2x.png"; path = "../../../data/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000020 /* Default-414w-736h@3x.png */ = {isa = PBXFileReference; name = "Default-414w-736h@3x.png"; path = "../../../data/Default-414w-736h@3x.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000022 /* Default~ipad.png */ = {isa = PBXFileReference; name = "Default~ipad.png"; path = "../../../data/Default~ipad.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000023 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Media.xcassets"; path = "../../../data/Media.xcassets"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000026 /* Default.png */ = {isa = PBXFileReference; name = "Default.png"; path = "../../../data/Default.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000002c /* Default-375w-812h@3x.png */ = {isa = PBXFileReference; name = "Default-375w-812h@3x.png"; path = "../../../data/Default-375w-812h@3x.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003e /* Default@2x.png */ = {isa = PBXFileReference; name = "Default@2x.png"; path = "../../../data/Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000040 /* Default-375w-667h@2x.png */ = {isa = PBXFileReference; name = "Default-375w-667h@2x.png"; path = "../../../data/Default-375w-667h@2x.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004a /* Default@2x~ipad.png */ = {isa = PBXFileReference; name = "Default@2x~ipad.png"; path = "../../../data/Default@2x~ipad.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000001f /* cs */ = {isa = PBXFileReference; name = "cs"; path = "../../../resources/cs.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000021 /* ja */ = {isa = PBXFileReference; name = "ja"; path = "../../../resources/ja.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000030 /* zh */ = {isa = PBXFileReference; name = "zh"; path = "../../../resources/zh.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000038 /* en */ = {isa = PBXFileReference; name = "en"; path = "../../../resources/en.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000047 /* Base */ = {isa = PBXFileReference; name = "Base"; path = "../../../resources/Base.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004b /* ko */ = {isa = PBXFileReference; name = "ko"; path = "../../../resources/ko.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000025 /* iphonex_title.png */ = {isa = PBXFileReference; name = "iphonex_title.png"; path = "../../../../android/assets/var3d/iphonex_title.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000029 /* iphonex.png */ = {isa = PBXFileReference; name = "iphonex.png"; path = "../../../../android/assets/var3d/iphonex.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000032 /* iphonex_w.png */ = {isa = PBXFileReference; name = "iphonex_w.png"; path = "../../../../android/assets/var3d/iphonex_w.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003a /* iphonex_homew.png */ = {isa = PBXFileReference; name = "iphonex_homew.png"; path = "../../../../android/assets/var3d/iphonex_homew.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004c /* iphonex_angle.png */ = {isa = PBXFileReference; name = "iphonex_angle.png"; path = "../../../../android/assets/var3d/iphonex_angle.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004e /* iphonex_homeh.png */ = {isa = PBXFileReference; name = "iphonex_homeh.png"; path = "../../../../android/assets/var3d/iphonex_homeh.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000028 /* mainfont.ttf */ = {isa = PBXFileReference; name = "mainfont.ttf"; path = "../../../../android/assets/font/mainfont.ttf"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000033 /* DroidSans.ttf */ = {isa = PBXFileReference; name = "DroidSans.ttf"; path = "../../../../android/assets/font/DroidSans.ttf"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000034 /* test.ttf */ = {isa = PBXFileReference; name = "test.ttf"; path = "../../../../android/assets/font/test.ttf"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000002b /* strings_en.properties */ = {isa = PBXFileReference; name = "strings_en.properties"; path = "../../../../android/assets/values/strings_en.properties"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000002d /* strings_ko.properties */ = {isa = PBXFileReference; name = "strings_ko.properties"; path = "../../../../android/assets/values/strings_ko.properties"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000037 /* strings_ja.properties */ = {isa = PBXFileReference; name = "strings_ja.properties"; path = "../../../../android/assets/values/strings_ja.properties"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000039 /* strings_cs.properties */ = {isa = PBXFileReference; name = "strings_cs.properties"; path = "../../../../android/assets/values/strings_cs.properties"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003b /* strings.properties */ = {isa = PBXFileReference; name = "strings.properties"; path = "../../../../android/assets/values/strings.properties"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000043 /* strings_zh.properties */ = {isa = PBXFileReference; name = "strings_zh.properties"; path = "../../../../android/assets/values/strings_zh.properties"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000002f /* tank_4.jpg */ = {isa = PBXFileReference; name = "tank_4.jpg"; path = "../../../../android/assets/image/tank_4.jpg"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000031 /* card_background.png */ = {isa = PBXFileReference; name = "card_background.png"; path = "../../../../android/assets/image/card_background.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003c /* tank.png */ = {isa = PBXFileReference; name = "tank.png"; path = "../../../../android/assets/image/tank.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003d /* touchpad_bg.png */ = {isa = PBXFileReference; name = "touchpad_bg.png"; path = "../../../../android/assets/image/touchpad_bg.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003f /* badlogic.jpg */ = {isa = PBXFileReference; name = "badlogic.jpg"; path = "../../../../android/assets/image/badlogic.jpg"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000042 /* bg.jpg */ = {isa = PBXFileReference; name = "bg.jpg"; path = "../../../../android/assets/image/bg.jpg"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000044 /* touchpad_center.png */ = {isa = PBXFileReference; name = "touchpad_center.png"; path = "../../../../android/assets/image/touchpad_center.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000046 /* pause_btn_bg.png */ = {isa = PBXFileReference; name = "pause_btn_bg.png"; path = "../../../../android/assets/image/pause_btn_bg.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000036 /* ja */ = {isa = PBXFileReference; name = "ja"; path = "../../../resources/ja.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000041 /* zh */ = {isa = PBXFileReference; name = "zh"; path = "../../../resources/zh.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000045 /* Base */ = {isa = PBXFileReference; name = "Base"; path = "../../../resources/Base.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000048 /* ko */ = {isa = PBXFileReference; name = "ko"; path = "../../../resources/ko.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000049 /* en */ = {isa = PBXFileReference; name = "en"; path = "../../../resources/en.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004d /* cs */ = {isa = PBXFileReference; name = "cs"; path = "../../../resources/cs.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004f /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "UIKit.framework"; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		AB00000010000000000051 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "OpenGLES.framework"; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		AB00000010000000000053 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "QuartzCore.framework"; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		AB00000010000000000055 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreGraphics.framework"; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		AB00000010000000000057 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "OpenAL.framework"; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		AB00000010000000000059 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AudioToolbox.framework"; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		AB0000001000000000005b /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AVFoundation.framework"; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		AB0000001000000000005d /* UIKIT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "UIKIT.framework"; path = System/Library/Frameworks/UIKIT.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		AB00000010000000000001 /* root */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000004 /* frameworks */,
+				AB00000010000000000003 /* resources */,
+				AB00000010000000000002 /* sources */,
+			);
+			name = "root";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000002 /* sources */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000001000000000000b /* com.badlogic.gdx.backends.iosrobovm */,
+				AB00000010000000000018 /* var3d.net.center.ios */,
+				AB0000001000000000005f /* Prefix.pch */,
+			);
+			name = "sources";
+			sourceTree = "<group>";
+		};
+		AB0000001000000000000b /* com.badlogic.gdx.backends.iosrobovm */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000001000000000000c /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.h */,
+				AB0000001000000000000d /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.m */,
+				AB00000010000000000012 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.h */,
+				AB00000010000000000013 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.m */,
+				AB0000001000000000000f /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.h */,
+				AB00000010000000000010 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.m */,
+				AB00000010000000000015 /* j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.h */,
+				AB00000010000000000016 /* j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.m */,
+			);
+			name = "com.badlogic.gdx.backends.iosrobovm";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000018 /* var3d.net.center.ios */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000019 /* j_var3d_net_center_ios_VIOSLauncher$VUITextField.h */,
+				AB0000001000000000001a /* j_var3d_net_center_ios_VIOSLauncher$VUITextField.m */,
+			);
+			name = "var3d.net.center.ios";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000003 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000027 /* ../android/assets/font */,
+				AB0000001000000000002e /* ../android/assets/image */,
+				AB0000001000000000002a /* ../android/assets/values */,
+				AB00000010000000000024 /* ../android/assets/var3d */,
+				AB00000010000000000035 /* InfoPlist.strings */,
+				AB0000001000000000001e /* Localizable.strings */,
+				AB0000001000000000001c /* data */,
+			);
+			name = "resources";
+			sourceTree = "<group>";
+		};
+		AB0000001000000000001c /* data */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000040 /* Default-375w-667h@2x.png */,
+				AB0000001000000000002c /* Default-375w-812h@3x.png */,
+				AB00000010000000000020 /* Default-414w-736h@3x.png */,
+				AB0000001000000000001d /* Default-568h@2x.png */,
+				AB00000010000000000026 /* Default.png */,
+				AB0000001000000000003e /* Default@2x.png */,
+				AB0000001000000000004a /* Default@2x~ipad.png */,
+				AB00000010000000000022 /* Default~ipad.png */,
+				AB00000010000000000023 /* Media.xcassets */,
+			);
+			name = "data";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000024 /* ../android/assets/var3d */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000029 /* iphonex.png */,
+				AB0000001000000000004c /* iphonex_angle.png */,
+				AB0000001000000000004e /* iphonex_homeh.png */,
+				AB0000001000000000003a /* iphonex_homew.png */,
+				AB00000010000000000025 /* iphonex_title.png */,
+				AB00000010000000000032 /* iphonex_w.png */,
+			);
+			name = "../android/assets/var3d";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000027 /* ../android/assets/font */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000033 /* DroidSans.ttf */,
+				AB00000010000000000028 /* mainfont.ttf */,
+				AB00000010000000000034 /* test.ttf */,
+			);
+			name = "../android/assets/font";
+			sourceTree = "<group>";
+		};
+		AB0000001000000000002a /* ../android/assets/values */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000001000000000003b /* strings.properties */,
+				AB00000010000000000039 /* strings_cs.properties */,
+				AB0000001000000000002b /* strings_en.properties */,
+				AB00000010000000000037 /* strings_ja.properties */,
+				AB0000001000000000002d /* strings_ko.properties */,
+				AB00000010000000000043 /* strings_zh.properties */,
+			);
+			name = "../android/assets/values";
+			sourceTree = "<group>";
+		};
+		AB0000001000000000002e /* ../android/assets/image */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000001000000000003f /* badlogic.jpg */,
+				AB00000010000000000042 /* bg.jpg */,
+				AB00000010000000000031 /* card_background.png */,
+				AB00000010000000000046 /* pause_btn_bg.png */,
+				AB0000001000000000003c /* tank.png */,
+				AB0000001000000000002f /* tank_4.jpg */,
+				AB0000001000000000003d /* touchpad_bg.png */,
+				AB00000010000000000044 /* touchpad_center.png */,
+			);
+			name = "../android/assets/image";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000004 /* frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000001000000000005b /* AVFoundation.framework */,
+				AB00000010000000000059 /* AudioToolbox.framework */,
+				AB00000010000000000055 /* CoreGraphics.framework */,
+				AB00000010000000000057 /* OpenAL.framework */,
+				AB00000010000000000051 /* OpenGLES.framework */,
+				AB00000010000000000053 /* QuartzCore.framework */,
+				AB0000001000000000005d /* UIKIT.framework */,
+				AB0000001000000000004f /* UIKit.framework */,
+			);
+			name = "frameworks";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBVariantXGroup section */
+		AB0000001000000000001e /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AB00000010000000000047 /* Base */,
+				AB0000001000000000001f /* cs */,
+				AB00000010000000000038 /* en */,
+				AB00000010000000000021 /* ja */,
+				AB0000001000000000004b /* ko */,
+				AB00000010000000000030 /* zh */,
+			);
+			name = "Localizable.strings";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000035 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AB00000010000000000045 /* Base */,
+				AB0000001000000000004d /* cs */,
+				AB00000010000000000049 /* en */,
+				AB00000010000000000036 /* ja */,
+				AB00000010000000000048 /* ko */,
+				AB00000010000000000041 /* zh */,
+			);
+			name = "InfoPlist.strings";
+			sourceTree = "<group>";
+		};
+/* End PBVariantXGroup section */
+
+/* Begin PBXBuildFile section */
+		AB0000001000000000000e /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000000d /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.m */; };
+		AB00000010000000000011 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000010 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.m */; };
+		AB00000010000000000014 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000013 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.m */; };
+		AB00000010000000000017 /* j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000016 /* j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.m */; };
+		AB0000001000000000001b /* j_var3d_net_center_ios_VIOSLauncher$VUITextField.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000001a /* j_var3d_net_center_ios_VIOSLauncher$VUITextField.m */; };
+		AB00000010000000000050 /* UIKit.framework */ = {isa = PBXBuildFile; fileRef = AB0000001000000000004f /* UIKit.framework */; };
+		AB00000010000000000052 /* OpenGLES.framework */ = {isa = PBXBuildFile; fileRef = AB00000010000000000051 /* OpenGLES.framework */; };
+		AB00000010000000000054 /* QuartzCore.framework */ = {isa = PBXBuildFile; fileRef = AB00000010000000000053 /* QuartzCore.framework */; };
+		AB00000010000000000056 /* CoreGraphics.framework */ = {isa = PBXBuildFile; fileRef = AB00000010000000000055 /* CoreGraphics.framework */; };
+		AB00000010000000000058 /* OpenAL.framework */ = {isa = PBXBuildFile; fileRef = AB00000010000000000057 /* OpenAL.framework */; };
+		AB0000001000000000005a /* AudioToolbox.framework */ = {isa = PBXBuildFile; fileRef = AB00000010000000000059 /* AudioToolbox.framework */; };
+		AB0000001000000000005c /* AVFoundation.framework */ = {isa = PBXBuildFile; fileRef = AB0000001000000000005b /* AVFoundation.framework */; };
+		AB0000001000000000005e /* UIKIT.framework */ = {isa = PBXBuildFile; fileRef = AB0000001000000000005d /* UIKIT.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AB00000010000000000008 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB0000001000000000000e /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$1.m */,
+				AB00000010000000000011 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIViewController.m */,
+				AB00000010000000000014 /* j_com_badlogic_gdx_backends_iosrobovm_IOSGraphics$IOSUIView.m */,
+				AB00000010000000000017 /* j_com_badlogic_gdx_backends_iosrobovm_IOSInput$HiddenTextField.m */,
+				AB0000001000000000001b /* j_var3d_net_center_ios_VIOSLauncher$VUITextField.m */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AB00000010000000000009 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB00000010000000000050 /* UIKit.framework */,
+				AB00000010000000000052 /* OpenGLES.framework */,
+				AB00000010000000000054 /* QuartzCore.framework */,
+				AB00000010000000000056 /* CoreGraphics.framework */,
+				AB00000010000000000058 /* OpenAL.framework */,
+				AB0000001000000000005a /* AudioToolbox.framework */,
+				AB0000001000000000005c /* AVFoundation.framework */,
+				AB0000001000000000005e /* UIKIT.framework */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		AB0000001000000000000a /* RoboVM */ = {
+			isa = PBXNativeTarget;
+			buildPhases = (
+				AB00000010000000000008 /* Sources */,
+				AB00000010000000000009 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RoboVM";
+			productName = "RoboVM";
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin XCBuildConfiguration section */
+		AB00000010000000000007 /* RoboVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SDKROOT = iphoneos;
+				PRODUCT_NAME = "RoboVM";
+				GCC_PRECOMPILE_PREFIX_HEADER = "YES";
+				GCC_PREFIX_HEADER = Prefix.pch;
+			};
+			name = "RoboVM";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AB00000010000000000006 /* Build configuration list for PBXProject */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB00000010000000000007 /* RoboVM */,
+			);
+			defaultConfigurationName = RoboVM;
+		};
+/* End XCConfigurationList section */
+
+/* Begin PBXProject section */
+		AB00000010000000000000 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = AB00000010000000000006 /* Build configuration list for PBXProject */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = AB00000010000000000001;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AB0000001000000000000a /* RoboVM */,
+			);
+		};
+/* End PBXProject section */
+
+	};
+	rootObject = AB00000010000000000000 /* Project object */;
+}

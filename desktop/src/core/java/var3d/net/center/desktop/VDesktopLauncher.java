@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.sun.awt.AWTUtilities;
 
@@ -90,6 +89,7 @@ import var3d.net.center.VListenerOnKeyboardChange;
 import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
+import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreePaint;
 
 public abstract class VDesktopLauncher implements VListener {
@@ -1528,12 +1528,12 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     //ԭ�������
-    private HashMap<NativeTextField, VTextField> textFieldHashMap;
+    private HashMap<NativeTextField, VJTextField> textFieldHashMap;
 
-    private Pool<VTextField> pool_textFields = new Pool<VTextField>() {
+    private Pool<VJTextField> pool_textFields = new Pool<VJTextField>() {
         @Override
-        protected VTextField newObject() {
-            VTextField textfield = new VTextField();
+        protected VJTextField newObject() {
+            VJTextField textfield = new VJTextField();
             return textfield;
         }
     };
@@ -1552,7 +1552,7 @@ public abstract class VDesktopLauncher implements VListener {
 
     private JDialog pref;
 
-    public class VTextField extends JDialog implements Pool.Poolable {
+    public class VJTextField extends JDialog implements Pool.Poolable {
         private NativeTextField nativeTextField;
         private JTextField textField;
         private JTextField textMessage;
@@ -1562,7 +1562,7 @@ public abstract class VDesktopLauncher implements VListener {
         private KeyListener keyListener;
         private FocusListener focusListener;
 
-        public VTextField() {
+        public VJTextField() {
             //super(pref==null?appFrame:pref);
             super(pref);
             setAlwaysOnTop(true);
@@ -2021,7 +2021,7 @@ public abstract class VDesktopLauncher implements VListener {
                 if (textFieldHashMap == null) {
                     textFieldHashMap = new HashMap<>();
                 }
-                VTextField textfield = pool_textFields.obtain();
+                VJTextField textfield = pool_textFields.obtain();
                 textfield.setLibgdxTextField(nativeTextField);
                 textFieldHashMap.put(nativeTextField, textfield);
                 break;
@@ -2193,13 +2193,13 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    public void setListenerOnKeyboardChange(VListenerOnKeyboardChange listener){
-    }
-
-    public VListenerOnKeyboardChange getListenerOnKeyboardChange(){
-        return null;
+    public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
     }
 
     public void removeListenerOnKeyboardChange(){
+    }
+
+
+    public void linkVTextField(VTextField vTextField){
     }
 }

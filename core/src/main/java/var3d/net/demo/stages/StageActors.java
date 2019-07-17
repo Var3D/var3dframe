@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import var3d.net.center.NativeTextField;
+import var3d.net.center.ReturnKeyType;
 import var3d.net.center.SLabel;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
@@ -77,7 +78,7 @@ public class StageActors extends VStage {
         field.setMessageColor(Color.RED);//设置消息文本颜色
         //field.setKeyboardType(NativeTextField.KeyboardType.NumberPad);//设置键盘类型
         //field.setPasswordMode(true);//设置为密码模式
-        field.setReturnKeyType(NativeTextField.ReturnKeyType.Done);//设置键盘 Renter 键的类型
+        field.setReturnKeyType(ReturnKeyType.Done);//设置键盘 Renter 键的类型
         field.setAdaptKeyboardType(NativeTextField.AdaptKeyboardType.Self);//适配键盘高度的类型
         field.setTextFieldListener(new NativeTextField.TextFieldListener() {
             @Override
