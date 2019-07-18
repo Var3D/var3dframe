@@ -2,24 +2,17 @@ package var3d.net.demo.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import var3d.net.center.KeyboardType;
-import var3d.net.center.NativeTextField;
 import var3d.net.center.ReturnKeyType;
 import var3d.net.center.VDialog;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
-import var3d.net.center.VListenerOnKeyboardChange;
-import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
 
 /**
@@ -59,8 +52,7 @@ public class DialogLoginGdx extends VDialog {
         btn_login.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //game.removeDialog(DialogRatio.this)
-                game.showMessege("登录失败！因为这只是个例子...\n帐号:"+field_user.getText()
-                        +"\n密码:"+field_password.getText());
+               join();
             }
         });
 
@@ -69,32 +61,8 @@ public class DialogLoginGdx extends VDialog {
         game.getLabel("帐号:").setPosition(pref().getX(),pref().getY(Align.center),Align.right).show();
         field_user.setMessageText("请输入帐号");
         field_user.setKeyboardType(KeyboardType.ASCIICapable);//设置键盘类型
-        field_user.setReturnKeyType(ReturnKeyType.Done);//设置回车键文本为 next
-        //回调暂时有点问题，需修改
-//        field_user.setVTextFieldListener(new VTextField.VTextFieldListener() {
-//            @Override
-//            public void didBeginEditing(VTextField vTextField) {
-//                Gdx.app.log("aaaaaa","点击激活输入框时调用");
-//            }
-//
-//            @Override
-//            public void didEndEditing(VTextField vTextField) {
-//                Gdx.app.log("aaaaaa","按了回车键结束编辑调用");
-//                field_user.resignFirstResponder();
-//                field_password.becomeFirstResponder();
-//            }
-//
-//            @Override
-//            public String onEditingChanged(VTextField vTextField) {
-//                Gdx.app.log("aaaaaa","文本框字符发生变化时调用");
-//                return vTextField.getText();
-//            }
-//
-//            @Override
-//            public void keyboardWillShow(VTextField vTextField, boolean isShow, float keyboardHeight) {
-//                Gdx.app.log("aaaaaa","虚拟键盘高度发生变化时调用");
-//            }
-//        });
+        //设置回车键文本为 下一项，设置为该类型或者 继续 类型，不用做回车键监听，当按下键盘回车键时，将自动将焦点移动到下一个输入框
+        field_user.setReturnKeyType(ReturnKeyType.Next);
 
 
         field_password=game.getTextField("").setSize(200,40).setPosition(getWidth()/2
@@ -103,7 +71,20 @@ public class DialogLoginGdx extends VDialog {
         field_password.setMessageText("请输入密码");
         field_password.setPasswordMode(true);
         field_password.setKeyboardType(KeyboardType.ASCIICapable);
+        field_password.setReturnKeyType(ReturnKeyType.Join);//设置回车键文本为 加入
+        field_password.setReturnListener(new VTextField.ReturnListener() {
+            public boolean shouldReturn(VTextField vTextField) {
+                //回车键回调
+                join();
+                return true;//返回 true 在按下回车键后会关闭键盘
+            }
+        });
 
+    }
+
+    private void join(){
+        game.showMessege("登录失败！因为这只是个例子...\n帐号:"+field_user.getText()
+                +"\n密码:"+field_password.getText());
     }
 
     @Override

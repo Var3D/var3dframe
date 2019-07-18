@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import var3d.net.center.KeyboardType;
+import var3d.net.center.ReturnKeyType;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
@@ -46,13 +47,15 @@ public class StageTextFeild extends VStage {
         field.setMessageText("输入数字");//设置消息文本
         field.setAlignment(Align.center);//设置文本对齐方式
         field.setKeyboardType(KeyboardType.NumberPad);//设置为只能输入数字
+        field.setReturnKeyType(ReturnKeyType.Continue);
 
         VTextField field4=game.getTextField("").setSize(400,50).setPosition(getWidth()/2
-                ,pref().getY()+10,Align.bottom).show();
+                ,pref().getTop()+10,Align.bottom).show();
         field4.setColor(Color.WHITE);//设置输入框背景色
         field4.setMessageText("输入网址");//设置消息文本
         field4.setAlignment(Align.left);//设置文本对齐方式
         field4.setKeyboardType(KeyboardType.URL);//网址
+        field4.setReturnKeyType(ReturnKeyType.Continue);
 
         VTextField field2=game.getTextField("").setSize(400,50).setPosition(getWidth()/2
                 ,getTop(),Align.top).show();
@@ -61,6 +64,7 @@ public class StageTextFeild extends VStage {
         field2.setAlignment(Align.left);//设置文本对齐方式
         field2.setKeyboardType(KeyboardType.Default);//设置为可输入任意字符
         field2.setAdaptKeyboardType(VTextField.AdaptKeyboardType.None);//设置为不适配键盘移动
+        field2.setReturnKeyType(ReturnKeyType.Continue);
 
 
         VTextField field3=game.getTextField("").setSize(400,50).setPosition(getWidth()/2
@@ -70,7 +74,7 @@ public class StageTextFeild extends VStage {
         field3.setAlignment(Align.left);//设置文本对齐方式
         field3.setKeyboardType(KeyboardType.EmailAddress);//电子邮件键盘
         field3.setAdaptKeyboardType(VTextField.AdaptKeyboardType.Sticky);//设置为沾粘到键盘
-
+        field3.setReturnKeyType(ReturnKeyType.Continue);
     }
 
     public void start() {

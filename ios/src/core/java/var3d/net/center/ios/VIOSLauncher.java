@@ -59,6 +59,8 @@ import org.robovm.apple.uikit.UITextAutocapitalizationType;
 import org.robovm.apple.uikit.UITextAutocorrectionType;
 import org.robovm.apple.uikit.UITextBorderStyle;
 import org.robovm.apple.uikit.UITextField;
+import org.robovm.apple.uikit.UITextFieldDelegate;
+import org.robovm.apple.uikit.UITextFieldDidEndEditingReason;
 import org.robovm.apple.uikit.UITextSpellCheckingType;
 import org.robovm.apple.uikit.UIUserInterfaceIdiom;
 import org.robovm.apple.uikit.UIView;
@@ -67,6 +69,7 @@ import org.robovm.objc.Selector;
 import org.robovm.objc.annotation.Method;
 import org.robovm.objc.annotation.Property;
 import org.robovm.objc.block.VoidBlock4;
+import org.robovm.rt.bro.annotation.ByVal;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -915,6 +918,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     private VStage stage;
     private float keyboardHeight;
     private NSNotificationCenter center;
+    private UITextField uiTextField;
 
     public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
         this.listeners = listener;
@@ -958,12 +962,18 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         if(listeners!=null)listeners.onKeyboardChange(keyBoardVisible, keyboardHeight);
     }
 
+    private UITextField getDefaultUiTextField(){
+        if(uiTextField==null){
+            IOSInput iosInput= (IOSInput) Gdx.input;
+            iosInput.setKeyboardCloseOnReturnKey(false);
+            uiTextField=iosInput.getKeyboardTextField();
+        }
+        return uiTextField;
+    }
 
-    public void linkVTextField(VTextField vTextField){
-        IOSInput iosInput= (IOSInput) Gdx.input;
-        UITextField uiTextField=iosInput.getKeyboardTextField();
+    public void linkVTextField(final VTextField vTextField){
+        UITextField uiTextField=getDefaultUiTextField();
         uiTextField.setKeyboardType(UIKeyboardType.valueOf(vTextField.getKeyboardType().value()));
         uiTextField.setReturnKeyType(UIReturnKeyType.valueOf(vTextField.getReturnKeyType().value()));
-
     }
 }

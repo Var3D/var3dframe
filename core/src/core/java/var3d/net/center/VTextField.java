@@ -1,6 +1,7 @@
 package var3d.net.center;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,10 +14,11 @@ import var3d.net.center.freefont.FreeBitmapFont;
 import static var3d.net.center.VGame.game;
 
 public class VTextField extends TextField {
-	static private final char BACKSPACE = 8;
+
 	static private final char TAB = '\t';
 	VTextField field;
 	private VTextFieldListener listener;
+	private ReturnListener returnListener;
 	private KeyboardType keyboardType=KeyboardType.Default;
 	private ReturnKeyType returnKeyType=ReturnKeyType.Default;
 	private AdaptKeyboardType adaptKeyboardType= AdaptKeyboardType.Default;
@@ -29,44 +31,93 @@ public class VTextField extends TextField {
 	}
 
 
-	public interface VTextFieldListener{
+	public  interface VTextFieldListener  extends ReturnListener{
 		// 当输入框获得焦点时，执行该方法 （光标出现时）。
 		void didBeginEditing(VTextField vTextField);
 
 		//当结束编辑时执行该方法(收起键盘键)
 		void didEndEditing(VTextField vTextField);
 
-		// 当点击键盘的返回键（右下角）时，执行该方法。返回值为 true 时关闭键盘
-		boolean shouldReturn(NativeTextField nativeTextField);
-
 		//当输入框的文本发生变化时调用，可用此方法实现字符长度限制，返回值将被重新设置给输入框
 		String onEditingChanged(VTextField vTextField);
 
 		//当键盘出现或改变时调用(此刻会返回键盘高度,可用于动态调整输入框或整个界面的位置，以免键盘挡住了输入框)
 		void keyboardWillShow(VTextField vTextField,boolean isShow,float keyboardHeight);
+
 	}
 
-	public void setVTextFieldListener (VTextFieldListener listener) {
-		this.listener = listener;
+
+	public  interface  ReturnListener {
+		// 当点击键盘的回车键时，执行该方法。返回值为 true 时关闭键盘
+		boolean shouldReturn(VTextField vTextField);
+	}
+
+
+	public void setVTextFieldListener(VTextFieldListener listener) {
+		this.listener =listener;
+	}
+
+	public VTextFieldListener getVTextFieldListener(){
+		return listener;
+	}
+
+	public void setReturnListener(ReturnListener listener){
+		this.returnListener=listener;
+	}
+
+	public ReturnListener getReturnListener() {
+		return returnListener;
 	}
 
 	public VTextField(String text, TextFieldStyle style) {
 		super(append(text, style), style);
 		setOnlyFontChars(false);
 		field = this;
+		setOnscreenKeyboard(new OnscreenKeyboard() {
+			public void show(boolean visible) {
+				//将父类此接口重置，可实现在显示键盘之前对本地输入框控件键盘进行属性设置
+				game.var3dListener.linkVTextField(VTextField.this);
+				Gdx.input.setOnscreenKeyboardVisible(visible);
+			}
+		});
 		ClickListener appendListener = new ClickListener() {
 
 			public boolean keyTyped(InputEvent event, char character) {
-				Gdx.app.log("aaaaaa","character="+character);
+				//Gdx.app.log("aaaaaa","character="+(character==(char)13));
 
-				if(isDisabled()||character<32||character == TAB) return false;
+				//if(isDisabled()||character<32||character == TAB) return false;
+				if(isDisabled()||character == TAB) return false;
 
-				Stage stage = getStage();
-				if (stage == null || stage.getKeyboardFocus() != VTextField.this)return false;
-
-				if(character==ENTER_ANDROID||character==ENTER_DESKTOP){
-					if(listener!=null){
-						listener.didEndEditing(VTextField.this);
+				Stage stage1 = getStage();
+				if (!(stage1 instanceof VStage)||stage1 == null || stage1.getKeyboardFocus() != VTextField.this)return false;
+				VStage stage= (VStage) stage1;
+				if(character==ENTER_ANDROID||character==ENTER_DESKTOP||character==(char)13){
+					if(returnKeyType==ReturnKeyType.Next||returnKeyType==ReturnKeyType.Continue){
+						VTextField.this.next(true);
+						if(stage.getKeyboardFocus() instanceof VTextField){
+							VTextField next=(VTextField)stage.getKeyboardFocus();
+							getOnscreenKeyboard().show(false);
+							next.becomeFirstResponder();
+							next.getOnscreenKeyboard().show(true);
+						}
+					}else if(listener!=null){
+						boolean isHideKeybord=listener.shouldReturn(VTextField.this);
+						if(isHideKeybord){
+							getOnscreenKeyboard().show(false);
+							stage.getRoot().getActions();
+							stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
+						}
+					}else if(returnListener!=null){
+						boolean isHideKeybord=returnListener.shouldReturn(VTextField.this);
+						if(isHideKeybord){
+							getOnscreenKeyboard().show(false);
+							stage.getRoot().getActions();
+							stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
+						}
+					} else {
+						getOnscreenKeyboard().show(false);
+						stage.getRoot().getActions();
+						stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
 					}
 				} else {
 					boolean enter = character == ENTER_DESKTOP || character == ENTER_ANDROID;
@@ -92,18 +143,11 @@ public class VTextField extends TextField {
 				//Gdx.app.log("aaaaaa","点击了输入框");
 				if(listener!=null)listener.didBeginEditing(VTextField.this);
 				//Gdx.input.setOnscreenKeyboardVisible(false);
+				getOnscreenKeyboard().show(false);
 				becomeFirstResponder();
 				return true;
 			}
 		});//保证内置的这个监听早于父类内置的监听先执行
-
-		setOnscreenKeyboard(new OnscreenKeyboard() {
-			public void show(boolean visible) {
-				//将父类此接口重置，可实现在显示键盘之前对本地输入框控件键盘进行属性设置
-				game.var3dListener.linkVTextField(VTextField.this);
-				Gdx.input.setOnscreenKeyboardVisible(visible);
-			}
-		});
 	}
 
 	public void updateDisplay(){
@@ -150,22 +194,13 @@ public class VTextField extends TextField {
 					VStage stage= (VStage) getStage();
 					if(stage==null)return;
 					if (visible==false) {
-						switch (adaptKeyboardType){
-							case Default:
-								stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
-								break;
-							case Sticky:
-								stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
-								break;
-							case None:
-								break;
-						}
+						stage.getRoot().getActions();
+						stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
 						game.var3dListener.removeListenerOnKeyboardChange();
 						stage.setKeyboardFocus(null);
 						if(listener!=null){
 							listener.keyboardWillShow(VTextField.this,false,0);
 							listener.didEndEditing(VTextField.this);
-							//VTextField.this.next(UIUtils.shift());
 						}
 					}else {
 						Actor focus=stage.getKeyboardFocus();
@@ -173,9 +208,13 @@ public class VTextField extends TextField {
 							float h = keyboardHeight - getStageY(focus, stage.getCutHeight());
 							switch (((VTextField)focus).getAdaptKeyboardType()){
 								case Default:
-									if(h>0)stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), h, 0.2f));
+									if(h>0){
+										stage.getRoot().getActions();
+										stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), h, 0.2f));
+									}
 									break;
 								case Sticky:
+									stage.getRoot().getActions();
 									stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), h, 0.2f));
 									break;
 								case None:
@@ -202,7 +241,8 @@ public class VTextField extends TextField {
 	public void resignFirstResponder(){
 		if(getStage()!=null)getStage().setKeyboardFocus(null);
 		game.var3dListener.removeListenerOnKeyboardChange();
-		Gdx.input.setOnscreenKeyboardVisible(false);
+		//Gdx.input.setOnscreenKeyboardVisible(false);
+		getOnscreenKeyboard().show(false);
 	}
 
 	public AdaptKeyboardType getAdaptKeyboardType() {
