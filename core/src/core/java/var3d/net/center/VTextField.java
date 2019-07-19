@@ -96,9 +96,9 @@ public class VTextField extends TextField {
 					if(returnKeyType==ReturnKeyType.Next||returnKeyType==ReturnKeyType.Continue){
 						VTextField.this.next(true);
 						if(stage.getKeyboardFocus() instanceof VTextField){
-							getOnscreenKeyboard().show(false);
 							final VTextField next=(VTextField)stage.getKeyboardFocus();
-							game.delayRun(0.1f, new Runnable() {
+							getOnscreenKeyboard().show(false);
+							game.delayRun(0.2f, new Runnable() {
 								public void run() {
 									next.becomeFirstResponder();
 									next.getOnscreenKeyboard().show(true);
