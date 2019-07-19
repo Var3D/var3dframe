@@ -94,7 +94,7 @@ public class VTextField extends TextField {
 				final VStage stage= (VStage) stage1;
 				if(character==ENTER_ANDROID||character==ENTER_DESKTOP||character==ENTER){
 					if(returnKeyType==ReturnKeyType.Next||returnKeyType==ReturnKeyType.Continue){
-						VTextField.this.next(true);
+						VTextField.this.next(false);
 						if(stage.getKeyboardFocus() instanceof VTextField){
 							final VTextField next=(VTextField)stage.getKeyboardFocus();
 							getOnscreenKeyboard().show(false);
