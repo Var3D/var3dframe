@@ -57,7 +57,7 @@ public class DialogLoginGdx extends VDialog {
         });
 
         //输入框
-        field_user=game.getTextField("").setSize(200,40).setPosition(getWidth()/2,lab_title.getY()-60,Align.top).show();
+        field_user=game.getTextField("").setSize(200,40).setPosition(getWidth()/2,lab_title.getY()-20,Align.top).show();
         game.getLabel("帐号:").setPosition(pref().getX(),pref().getY(Align.center),Align.right).show();
         field_user.setMessageText("请输入帐号");
         field_user.setKeyboardType(KeyboardType.ASCIICapable);//设置键盘类型
@@ -72,11 +72,28 @@ public class DialogLoginGdx extends VDialog {
         field_password.setPasswordMode(true);
         field_password.setKeyboardType(KeyboardType.ASCIICapable);
         field_password.setReturnKeyType(ReturnKeyType.Join);//设置回车键文本为 加入
-        field_password.setReturnListener(new VTextField.ReturnListener() {
+        field_password.setVTextFieldListener(new VTextField.VTextFieldListener() {
+            public void didBeginEditing(VTextField vTextField) {
+                // 当输入框获得焦点时，执行该方法 （光标出现时）。
+            }
+
+            public void didEndEditing(VTextField vTextField) {
+                //当结束编辑时执行该方法(收起键盘键)
+            }
+
+            public String onEditingChanged(VTextField vTextField) {
+                //当输入框的文本发生变化时调用，可用此方法实现字符长度限制，返回值将被重新设置给输入框
+                return null;
+            }
+
+            public void keyboardWillShow(VTextField vTextField, boolean isShow, float keyboardHeight) {
+                //当键盘出现或改变时调用(一般无需自己处理)
+            }
+
             public boolean shouldReturn(VTextField vTextField) {
-                //回车键回调
+                //自定义回车键事件
                 join();
-                return true;//返回 true 在按下回车键后会关闭键盘
+                return true;//返回值为 true 将会在回车事件后隐藏键盘
             }
         });
 

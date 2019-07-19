@@ -907,4 +907,8 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
 
     public void linkVTextField(VTextField vTextField){
     }
+
+    public void setOnscreenKeyboardVisible(boolean isvisibe){
+
+    }
 }

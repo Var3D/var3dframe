@@ -2202,4 +2202,8 @@ public abstract class VDesktopLauncher implements VListener {
 
     public void linkVTextField(VTextField vTextField){
     }
+
+    public void setOnscreenKeyboardVisible(boolean isvisibe){
+
+    }
 }

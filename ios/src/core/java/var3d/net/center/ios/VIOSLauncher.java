@@ -913,7 +913,6 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     private boolean keyBoardVisible;
-    //private VListenerOnKeyboardChange onKeyboardChangeListener;
     private VListenerOnKeyboardChange listeners;
     private VStage stage;
     private float keyboardHeight;
@@ -975,5 +974,9 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         UITextField uiTextField=getDefaultUiTextField();
         uiTextField.setKeyboardType(UIKeyboardType.valueOf(vTextField.getKeyboardType().value()));
         uiTextField.setReturnKeyType(UIReturnKeyType.valueOf(vTextField.getReturnKeyType().value()));
+    }
+
+    public void setOnscreenKeyboardVisible(boolean isvisibe){
+
     }
 }

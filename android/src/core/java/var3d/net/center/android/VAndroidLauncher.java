@@ -41,6 +41,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsoluteLayout;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.badlogic.gdx.Gdx;
@@ -56,9 +57,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
@@ -76,6 +75,8 @@ import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreePaint;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public abstract class VAndroidLauncher extends AndroidApplication implements
         VListener {
@@ -864,7 +865,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                             screenWidth = dm.widthPixels;
                             parent = new AbsoluteLayout(activity);
                             AbsoluteLayout.LayoutParams layoutParams = new AbsoluteLayout.LayoutParams
-                                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 0, 0);
+                                    (MATCH_PARENT, MATCH_PARENT, 0, 0);
                             addContentView(parent, layoutParams);
                             textFieldHashMap = new HashMap<NativeTextField, VEditText>();
                         }
@@ -1063,88 +1064,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                         break;
                     case setReturnKeyType:
                         textfield = textFieldHashMap.get(nativeTextField);
-                        switch (nativeTextField.getReturnKeyType()) {
-                            case Default:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
-                                break;
-                            case Go:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_GO);
-                                break;
-                            case Google:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEARCH);
-                                break;
-                            case Join:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_GO);
-                                break;
-                            case Next:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_NEXT);
-                                break;
-                            case Route:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
-                                break;
-                            case Search:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEARCH);
-                                break;
-                            case Send:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEND);
-                                break;
-                            case Yahoo:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
-                                break;
-                            case Done:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
-                                break;
-                            case EmergencyCall:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
-                                break;
-                            case Continue:
-                                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_NEXT);
-                                break;
-                        }
+                        setReturnText(textfield,nativeTextField.getReturnKeyType());
                         break;
                     case setKeyboardType:
                         textfield = textFieldHashMap.get(nativeTextField);
-                        switch (nativeTextField.getKeyboardType()) {
-                            case Default:
-                                textfield.setInputType(InputType.TYPE_DATETIME_VARIATION_NORMAL);
-                                break;
-                            case ASCIICapable:
-                                textfield.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-                                break;
-                            case NumbersAndPunctuation:
-                                textfield.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                break;
-                            case URL:
-                                textfield.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
-                                break;
-                            case NumberPad:
-                                textfield.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                break;
-                            case PhonePad:
-                                textfield.setInputType(InputType.TYPE_CLASS_PHONE);
-                                break;
-                            case NamePhonePad:
-                                textfield.setInputType(InputType.TYPE_CLASS_PHONE);
-                                break;
-                            case EmailAddress:
-                                textfield.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                                break;
-                            case DecimalPad:
-                                textfield.setInputType(InputType.TYPE_NULL);
-                                break;
-                            case Twitter:
-                                textfield.setInputType(InputType.TYPE_NULL);
-                                break;
-                            case WebSearch:
-                                textfield.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT);
-                                break;
-                            case ASCIICapableNumberPad:
-                                textfield.setInputType(InputType.TYPE_NULL);
-                                break;
-                            case Alphabet:
-                                textfield.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-                                break;
-                        }
+                        setInputType(textfield,nativeTextField.getKeyboardType());
                         break;
                     case remove:
                         textfield = textFieldHashMap.get(nativeTextField);
@@ -1158,14 +1082,348 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
-    public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
+    private VListenerOnKeyboardChange listener;
+    private boolean isKeyboardShow;
+    private float gameKeyboardHeight,screenKeyboardHeight;
+    private int visibleWidth,visibleHeight;
+    private View rootView;
+
+
+    public void setListenerOnKeyboardChange(final VStage stage,VListenerOnKeyboardChange listener){
+        this.listener=listener;
+        if(rootView==null) {
+            rootView = this.getWindow().getDecorView().getRootView();
+            Rect rect = new Rect();
+            rootView.getWindowVisibleDisplayFrame(rect);
+            visibleWidth = rect.width();
+            visibleHeight = rect.height();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+                rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                    @Override
+                    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                        Rect rect = new Rect();
+                        rootView.getWindowVisibleDisplayFrame(rect);
+
+                        if (!(visibleWidth == rect.width() && visibleHeight == rect.height())) {
+                            visibleWidth = rect.width();
+                            visibleHeight = rect.height();
+                            float bly=(1f/Gdx.graphics.getHeight() * stage.getFullHeight());
+
+                            screenKeyboardHeight = Gdx.graphics.getHeight() - visibleHeight;
+                            gameKeyboardHeight = (int) (screenKeyboardHeight * bly);
+                            isKeyboardShow = gameKeyboardHeight > 4;
+
+                            if (VAndroidLauncher.this.listener != null) {
+                                VAndroidLauncher.this.listener.onKeyboardChange(isKeyboardShow, gameKeyboardHeight);
+                            }
+                        }
+                    }
+                });
+            }
+        }
     }
 
 
     public void removeListenerOnKeyboardChange(){
+        this.listener=null;
     }
 
 
+    private EditText editText;
+    private FrameLayout frameLayout;
+    private VTextField mTextField;
+
     public void linkVTextField(VTextField vTextField){
+        mTextField=vTextField;
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if(editText==null) {
+                    frameLayout = new FrameLayout(activity);
+                    editText = new EditText(activity);
+
+                    editText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);//关掉横屏模式下的键盘全屏
+                    frameLayout.addView(editText);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
+                    activity.addContentView(frameLayout, layoutParams);
+
+                    TextWatcher editclick = new TextWatcher() {
+
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            if(s.length()==0||start>s.length()-1)return;
+                            for(int i=0;i<count;i++) {
+                                final char newchar = s.charAt(start+i);
+                                Gdx.app.postRunnable(new Runnable() {
+                                    public void run() {
+                                        Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
+                                        Gdx.graphics.requestRendering();
+                                    }
+                                });
+                            }
+                        }
+
+                        //一般我们都是在这个里面进行我们文本框的输入的判断，上面两个方法用到的很少
+                        public void afterTextChanged(Editable s) {
+                        }
+                    };
+                    editText.addTextChangedListener(editclick);
+
+                    editText.setOnKeyListener(new View.OnKeyListener() {
+                        public boolean onKey(View v, final int keyCode, KeyEvent event) {
+                            if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                                switch (keyCode) {
+                                    case KeyEvent.KEYCODE_DEL://删除键
+                                        Gdx.app.postRunnable(new Runnable() {
+                                            public void run() {
+                                                Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
+                                                Gdx.graphics.requestRendering();
+                                            }
+                                        });
+                                        break;
+                                }
+                            }
+                            return false;
+                        }});
+
+                    editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                            Gdx.app.postRunnable(new Runnable() {
+                                public void run() {
+                                    Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.ENTER);
+                                    Gdx.graphics.requestRendering();
+                                }
+                            });
+                          return false;
+                        }
+                    });
+                }
+                setInputType(editText,mTextField.getKeyboardType());
+                setReturnText(editText,mTextField.getReturnKeyType());
+                editText.setText("");
+            }
+        });
+
+
+    }
+
+
+    public void setOnscreenKeyboardVisible(final boolean isvisibe){
+        if(editText==null)return;
+        runOnUiThread(new Runnable() {
+            public void run() {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(isvisibe){
+                    editText.setText("");
+                    editText.setFocusable(true);
+                    editText.setFocusableInTouchMode(true);
+                    editText.requestFocus();
+                    imm.showSoftInput(editText, 0);// 显示输入法
+                }else{
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(),0);//关闭输入法
+                    editText.setFocusable(false);
+                    editText.setFocusableInTouchMode(false);
+                }
+            }
+        });
+    }
+
+/**
+    //输入类型为没有指定明确的类型的特殊内容类型
+    editText.setInputType(InputType.TYPE_NULL);
+
+//输入类型为普通文本
+    editText.setInputType(InputType.TYPE_CLASS_TEXT);
+
+//输入类型为数字文本
+    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+//输入类型为电话号码
+    editText.setInputType(InputType.TYPE_CLASS_PHONE);
+
+//输入类型为日期和时间
+    editText.setInputType(InputType.TYPE_CLASS_DATETIME);
+
+//输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，允许输入日期和时间。
+    editText.setInputType(InputType.TYPE_DATETIME_VARIATION_NORMAL);
+
+//输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，只允许输入一个日期。
+    editText.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
+
+//输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，只允许输入一个时间。
+    editText.setInputType(InputType.TYPE_DATETIME_VARIATION_TIME);
+
+//输入类型为决定所给文本整体类的位掩码
+    editText.setInputType(InputType.TYPE_MASK_CLASS);
+
+//输入类型为提供附加标志位选项的位掩码
+    editText.setInputType(InputType.TYPE_MASK_FLAGS);
+
+//输入类型为决定基类内容变化的位掩码
+    editText.setInputType(InputType.TYPE_MASK_VARIATION);
+
+//输入类型为小数数字，允许十进制小数点提供分数值。
+    editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+//输入类型为数字是带符号的，允许在开头带正号或者负号
+    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+
+//输入类型为{@link#TYPE_CLASS_NUMBER}的缺省变化值：为纯普通数字文本
+    editText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
+
+//输入类型为{@link#TYPE_CLASS_NUMBER}的缺省变化值：为数字密码
+    editText.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+
+//输入类型为自动完成文本类型
+    editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+
+//输入类型为自动纠正文本类型
+    editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+
+//输入类型为所有字符大写
+    editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+
+//输入类型为每句的第一个字符大写
+    editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
+//输入类型为每个单词的第一个字母大写
+    editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+
+//输入多行文本
+    editText.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+
+//进行输入时，输入法无提示
+    editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
+//输入一个短的，可能是非正式的消息，如即时消息或短信。
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
+
+//输入长内容，可能是正式的消息内容，比如电子邮件的主体
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE);
+
+//输入文本以过滤列表等内容
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
+
+//输入一个电子邮件地址
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
+//输入电子邮件主题行
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT);
+
+//输入一个密码
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+//输入老式的普通文本
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_NORMAL);
+
+//输入人名
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+
+//输入邮寄地址
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+
+//输入语音发音输入文本，如联系人拼音名称字段
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_PHONETIC);
+
+//输入URI
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+
+//输入对用户可见的密码
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+//输入网页表单中的文本
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT);
+
+//输入网页表单中的邮件地址
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
+
+//输入网页表单中的密码
+    editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
+
+ **/
+
+    private void setInputType(EditText textfield,KeyboardType type){
+        switch (type) {
+            case Default:
+                textfield.setInputType(InputType.TYPE_NULL);//普通文本
+                break;
+            case ASCIICapable://字母数字
+                textfield.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                break;
+            case NumbersAndPunctuation://数字和标点符号
+                textfield.setInputType(InputType.TYPE_CLASS_PHONE);
+                break;
+            case URL:
+                textfield.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+                break;
+            case NumberPad://纯数字
+                textfield.setInputType(InputType.TYPE_CLASS_NUMBER);
+                break;
+            case PhonePad:
+                textfield.setInputType(InputType.TYPE_CLASS_PHONE);
+                break;
+            case NamePhonePad:
+                textfield.setInputType(InputType.TYPE_CLASS_TEXT);
+                break;
+            case EmailAddress:
+                textfield.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                break;
+            case DecimalPad:
+                textfield.setInputType(InputType.TYPE_NULL);
+                break;
+            case Twitter:
+                textfield.setInputType(InputType.TYPE_NULL);
+                break;
+            case WebSearch:
+                textfield.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT);
+                break;
+            case ASCIICapableNumberPad:
+                textfield.setInputType(InputType.TYPE_CLASS_PHONE);
+                break;
+            case Alphabet:
+                textfield.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                break;
+        }
+    }
+
+    private void setReturnText(EditText textfield,ReturnKeyType type){
+        switch (type) {
+            case Default:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
+                break;
+            case Go:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_GO);
+                break;
+            case Google:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEARCH);
+                break;
+            case Join:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_GO);
+                break;
+            case Next:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_NEXT);
+                break;
+            case Route:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
+                break;
+            case Search:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEARCH);
+                break;
+            case Send:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_SEND);
+                break;
+            case Yahoo:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
+                break;
+            case Done:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
+                break;
+            case EmergencyCall:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
+                break;
+            case Continue:
+                textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_NEXT);
+                break;
+        }
     }
 }

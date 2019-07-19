@@ -2516,4 +2516,21 @@ public abstract class VGame implements ApplicationListener {
             Colors.put(colorName.substring(0, 2) + "色", color);
         }
     }
+
+
+    /**
+     * 延迟执行
+     * @param time
+     * @param runnable
+     */
+    public void delayRun(final float time, final Runnable runnable){
+        new Thread(){
+            public void run(){
+                try {
+                    Thread.sleep((int)(time*1000));
+                    Gdx.app.postRunnable(runnable);
+                } catch (InterruptedException e) { }
+            }
+        }.start();
+    }
 }
