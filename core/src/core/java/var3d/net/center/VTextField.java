@@ -1,13 +1,15 @@
 package var3d.net.center;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 
@@ -76,10 +78,8 @@ public class VTextField extends TextField {
 			public void show(boolean visible) {
 				//将父类此接口重置，可实现在显示键盘之前对本地输入框控件键盘进行属性设置
 				game.var3dListener.linkVTextField(VTextField.this);
-				if(Gdx.app.getType()== Application.ApplicationType.Android){
-					game.var3dListener.setOnscreenKeyboardVisible(visible);
-				}else Gdx.input.setOnscreenKeyboardVisible(visible);
 				//Gdx.input.setOnscreenKeyboardVisible(visible);
+				game.var3dListener.setOnscreenKeyboardVisible(visible);
 			}
 		});
 		ClickListener appendListener = new ClickListener() {
@@ -278,4 +278,5 @@ public class VTextField extends TextField {
 	public ReturnKeyType getReturnKeyType(){
 		return returnKeyType;
 	}
+
 }

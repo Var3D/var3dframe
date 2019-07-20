@@ -2204,6 +2204,5 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     public void setOnscreenKeyboardVisible(boolean isvisibe){
-
     }
 }

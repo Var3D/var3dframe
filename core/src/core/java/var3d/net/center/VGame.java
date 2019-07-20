@@ -851,6 +851,7 @@ public abstract class VGame implements ApplicationListener {
      * 移除dialog并恢复下层响应
      */
     public void removeDialog(final VDialog dialog) {
+        var3dListener.setOnscreenKeyboardVisible(false);//如果有虚拟键盘则移出虚拟键盘
         dialog.addReBackgroundAcition();
         dialog.playHideActions(new Runnable() {
             public void run() {
@@ -986,6 +987,10 @@ public abstract class VGame implements ApplicationListener {
             prefStage = stage.getClass();
             //将当前的原生输入框隐藏掉
             setNativeTextFieldsHidden(stage.getRoot(), true);
+            //将当前的 stage 回归原位
+            stage.getRoot().clearActions();
+            stage.getRoot().setPosition(stage.getStartX(),stage.getStartY());
+            var3dListener.setOnscreenKeyboardVisible(false);//如果有虚拟键盘则移出虚拟键盘
         } else {
             multiplexer.addProcessor(stageTop);
         }
@@ -2533,4 +2538,5 @@ public abstract class VGame implements ApplicationListener {
             }
         }.start();
     }
+
 }

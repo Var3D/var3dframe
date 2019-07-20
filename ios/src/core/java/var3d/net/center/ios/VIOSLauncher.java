@@ -977,6 +977,6 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     public void setOnscreenKeyboardVisible(boolean isvisibe){
-
+        Gdx.input.setOnscreenKeyboardVisible(isvisibe);
     }
 }
