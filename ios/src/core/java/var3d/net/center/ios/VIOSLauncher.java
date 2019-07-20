@@ -1,6 +1,8 @@
 package var3d.net.center.ios;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSInput;
 import com.badlogic.gdx.graphics.Color;
@@ -60,6 +62,7 @@ import org.robovm.apple.uikit.UITextAutocorrectionType;
 import org.robovm.apple.uikit.UITextBorderStyle;
 import org.robovm.apple.uikit.UITextField;
 import org.robovm.apple.uikit.UITextFieldDelegate;
+import org.robovm.apple.uikit.UITextFieldDelegateAdapter;
 import org.robovm.apple.uikit.UITextFieldDidEndEditingReason;
 import org.robovm.apple.uikit.UITextSpellCheckingType;
 import org.robovm.apple.uikit.UIUserInterfaceIdiom;
@@ -85,6 +88,7 @@ import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
+import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
 import var3d.net.center.freefont.TTFParser;
 
@@ -918,6 +922,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     private float keyboardHeight;
     private NSNotificationCenter center;
     private UITextField uiTextField;
+    private VTextField vTextField;
 
     public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
         this.listeners = listener;
@@ -934,6 +939,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     public void removeListenerOnKeyboardChange(){
         this.listeners=null;
         this.stage=null;
+        this.vTextField=null;
         //center.removeObserver(this);
     }
 
@@ -964,19 +970,70 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     private UITextField getDefaultUiTextField(){
         if(uiTextField==null){
             IOSInput iosInput= (IOSInput) Gdx.input;
-            iosInput.setKeyboardCloseOnReturnKey(false);
+            //iosInput.setKeyboardCloseOnReturnKey(false);
             uiTextField=iosInput.getKeyboardTextField();
         }
         return uiTextField;
     }
 
     public void linkVTextField(final VTextField vTextField){
+        this.vTextField=vTextField;
         UITextField uiTextField=getDefaultUiTextField();
         uiTextField.setKeyboardType(UIKeyboardType.valueOf(vTextField.getKeyboardType().value()));
         uiTextField.setReturnKeyType(UIReturnKeyType.valueOf(vTextField.getReturnKeyType().value()));
     }
 
+    private final UITextFieldDelegate textDelegate = new UITextFieldDelegateAdapter() {
+
+        public boolean shouldChangeCharacters (UITextField textField, NSRange range, String string) {
+            for (int i = 0; i < range.getLength(); i++) {
+                Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE );
+            }
+
+            if (string.isEmpty()||string.equals("")) {
+                if (range.getLength() > 0) Gdx.graphics.requestRendering();
+                return false;
+            }
+
+            if(vTextField!=null){
+                FreeBitmapFont font= (FreeBitmapFont) vTextField.getStyle().font;
+                string=font.appendTextPro(string);
+            }
+
+            for (int i = 0, len = string.length(); i < len; i++) {
+                char newchar = string.charAt(i);
+                Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
+            }
+
+            Gdx.graphics.requestRendering();
+
+            return true;
+        }
+
+        @Override
+        public boolean shouldEndEditing (UITextField textField) {
+            textField.setText("x");
+            Gdx.graphics.requestRendering();
+
+            return true;
+        }
+
+        @Override
+        public boolean shouldReturn (UITextField textField) {
+            Gdx.app.getInput().getInputProcessor().keyDown(Input.Keys.ENTER);
+            Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.ENTER);
+            Gdx.graphics.requestRendering();
+            return false;
+        }
+    };
+
     public void setOnscreenKeyboardVisible(boolean isvisibe){
-        Gdx.input.setOnscreenKeyboardVisible(isvisibe);
+        uiTextField=getDefaultUiTextField();
+        if (isvisibe) {
+            uiTextField.becomeFirstResponder();
+            uiTextField.setDelegate(textDelegate);
+        } else {
+            uiTextField.resignFirstResponder();
+        }
     }
 }

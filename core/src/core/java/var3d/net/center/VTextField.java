@@ -112,7 +112,7 @@ public class VTextField extends TextField {
 					boolean enter = character == ENTER_DESKTOP || character == ENTER_ANDROID;
 					boolean add = enter ? writeEnters : true;
 					if (add) {
-						if(Gdx.app.getType()!= Application.ApplicationType.Android) {
+						if(Gdx.app.getType()== Application.ApplicationType.Desktop) {
 							append(VTextField.super.text, getStyle());
 							updateDisplay();
 						}

@@ -1158,17 +1158,13 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                                 public void run() {
                                     FreeBitmapFont font= (FreeBitmapFont) vTextField.getStyle().font;
                                     String newString=font.appendTextPro(string.subSequence(start,start+count).toString());
-                                    for(int i=0;i<newString.length();i++){
+
+                                    for(int i=0, len=newString.length();i<len;i++){
                                         char newchar = newString.charAt(i);
                                         Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
-                                        Gdx.graphics.requestRendering();
                                     }
+                                    Gdx.graphics.requestRendering();
 
-//                                    for(int i=0;i<count;i++) {
-//                                        char newchar = string.charAt(start+i);
-//                                        Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
-//                                        Gdx.graphics.requestRendering();
-//                                    }
                                 }
                             });
                         }
