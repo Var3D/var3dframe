@@ -1,15 +1,11 @@
 package var3d.net.center;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 
@@ -22,7 +18,6 @@ public class VTextField extends TextField {
 
 	VTextField field;
 	private VTextFieldListener listener;
-	//private ReturnListener returnListener;
 	private KeyboardType keyboardType=KeyboardType.Default;
 	private ReturnKeyType returnKeyType=ReturnKeyType.Default;
 	private AdaptKeyboardType adaptKeyboardType= AdaptKeyboardType.Default;
@@ -62,13 +57,6 @@ public class VTextField extends TextField {
 		return listener;
 	}
 
-//	public void setReturnListener(ReturnListener listener){
-//		this.returnListener=listener;
-//	}
-//
-//	public ReturnListener getReturnListener() {
-//		return returnListener;
-//	}
 
 	public VTextField(String text, TextFieldStyle style) {
 		super(append(text, style), style);
@@ -112,16 +100,7 @@ public class VTextField extends TextField {
 							stage.getRoot().getActions();
 							stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
 						}
-					}
-//					else if(returnListener!=null){
-//						boolean isHideKeybord=returnListener.shouldReturn(VTextField.this);
-//						if(isHideKeybord){
-//							getOnscreenKeyboard().show(false);
-//							stage.getRoot().getActions();
-//							stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
-//						}
-//					}
-					else {
+					} else {
 						getOnscreenKeyboard().show(false);
 						stage.getRoot().getActions();
 						stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
@@ -147,9 +126,7 @@ public class VTextField extends TextField {
 		addListener(appendListener);
 		getListeners().insert(0,new ClickListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				//Gdx.app.log("aaaaaa","点击了输入框");
 				if(listener!=null)listener.didBeginEditing(VTextField.this);
-				//Gdx.input.setOnscreenKeyboardVisible(false);
 				getOnscreenKeyboard().show(false);
 				becomeFirstResponder();
 				return true;
@@ -248,7 +225,6 @@ public class VTextField extends TextField {
 	public void resignFirstResponder(){
 		if(getStage()!=null)getStage().setKeyboardFocus(null);
 		game.var3dListener.removeListenerOnKeyboardChange();
-		//Gdx.input.setOnscreenKeyboardVisible(false);
 		getOnscreenKeyboard().show(false);
 	}
 

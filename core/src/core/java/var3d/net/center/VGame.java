@@ -852,6 +852,7 @@ public abstract class VGame implements ApplicationListener {
      */
     public void removeDialog(final VDialog dialog) {
         var3dListener.setOnscreenKeyboardVisible(false);//如果有虚拟键盘则移出虚拟键盘
+        stageTop.addAction(Actions.moveTo(stageTop.getStartX(),stageTop.getStartY(),0.2f));
         dialog.addReBackgroundAcition();
         dialog.playHideActions(new Runnable() {
             public void run() {

@@ -46,6 +46,15 @@ public class DialogLoginGdx extends VDialog {
             }
         });
 
+        Button btn_close2 = game.getTextButton("X", Color.BLACK, Color.valueOf("ff2266"))
+                .setSize(40, 40).addClicAction().setPosition(getWidth()-2, getHeight()-2, Align.topRight).show();
+        btn_close2.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                //game.removeDialog(DialogRatio.this);
+                game.removeDialog();//新的移除当前dialog方法,可以不带this参数
+            }
+        });
+
         //登录
         Button btn_login = game.getTextButton("登录", Color.WHITE, Color.valueOf("ff2266"))
                 .setSize(100, 40).addClicAction().setPosition(getWidth()*0.75f, 30, Align.bottom).show();
