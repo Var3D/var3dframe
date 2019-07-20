@@ -74,6 +74,7 @@ import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
+import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -1133,7 +1134,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     private FrameLayout frameLayout;
     private VTextField mTextField;
 
-    public void linkVTextField(VTextField vTextField){
+    public void linkVTextField(final VTextField vTextField){
         mTextField=vTextField;
         runOnUiThread(new Runnable() {
             public void run() {
@@ -1146,29 +1147,35 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
                     activity.addContentView(frameLayout, layoutParams);
 
-                    TextWatcher editclick = new TextWatcher() {
+                    editText.addTextChangedListener(new TextWatcher() {
 
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                         }
 
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            if(s.length()==0||start>s.length()-1)return;
-                            for(int i=0;i<count;i++) {
-                                final char newchar = s.charAt(start+i);
-                                Gdx.app.postRunnable(new Runnable() {
-                                    public void run() {
+                        public void onTextChanged(final CharSequence string, final int start, int before, final int count) {
+                            if(string.length()==0||start>string.length()-1)return;
+                            Gdx.app.postRunnable(new Runnable() {
+                                public void run() {
+                                    FreeBitmapFont font= (FreeBitmapFont) vTextField.getStyle().font;
+                                    String newString=font.appendTextPro(string.subSequence(start,start+count).toString());
+                                    for(int i=0;i<newString.length();i++){
+                                        char newchar = newString.charAt(i);
                                         Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
                                         Gdx.graphics.requestRendering();
                                     }
-                                });
-                            }
+
+//                                    for(int i=0;i<count;i++) {
+//                                        char newchar = string.charAt(start+i);
+//                                        Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
+//                                        Gdx.graphics.requestRendering();
+//                                    }
+                                }
+                            });
                         }
 
-                        //一般我们都是在这个里面进行我们文本框的输入的判断，上面两个方法用到的很少
                         public void afterTextChanged(Editable s) {
                         }
-                    };
-                    editText.addTextChangedListener(editclick);
+                    });
 
                     editText.setOnKeyListener(new View.OnKeyListener() {
                         public boolean onKey(View v, final int keyCode, KeyEvent event) {

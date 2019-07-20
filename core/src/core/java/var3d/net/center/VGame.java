@@ -2146,6 +2146,7 @@ public abstract class VGame implements ApplicationListener {
         return getUI(new VTextField(text, style));
     }
 
+
     // 创建钜形线条Drawable
     public Drawable getRectLineDrawable(Color color, Color out, int w, int h) {
         Pixmap pixmap = new Pixmap(w, h, Format.RGBA8888);

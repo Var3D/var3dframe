@@ -57,9 +57,10 @@ public class StageTextFeild extends VStage {
         field4.setKeyboardType(KeyboardType.URL);//网址
         field4.setReturnKeyType(ReturnKeyType.Continue);
 
-        VTextField field2=game.getTextField("").setSize(400,50).setPosition(getWidth()/2
-                ,getTop(),Align.top).show();
-        field2.setColor(Color.WHITE);//设置输入框背景色
+        VTextField field2=game.getTextField("",game.getTextFieldStyle(game.getFont(),Color.CYAN,Color.YELLOW,Color.BLACK))
+                .setSize(400,50).setPosition(getWidth()/2,getTop(),Align.top).show();
+        //field2.setColor(Color.BLACK);//设置输入框背景色
+        field2.setFontColor(Color.WHITE);
         field2.setMessageText("输入任意字符");//设置消息文本
         field2.setAlignment(Align.left);//设置文本对齐方式
         field2.setKeyboardType(KeyboardType.Default);//设置为可输入任意字符

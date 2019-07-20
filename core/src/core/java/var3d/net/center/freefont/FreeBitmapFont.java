@@ -143,8 +143,7 @@ public class FreeBitmapFont extends BitmapFont {
         }
     }
 
-    public FreeBitmapFont addEmojiPath(final String emojiKey, String imgPath,
-                                       int size) {
+    public FreeBitmapFont addEmojiPath(final String emojiKey, String imgPath, int size) {
         emojiSet.put(emojiKey, new EmojiDate(imgPath, size));
         return this;
     }
@@ -203,15 +202,37 @@ public class FreeBitmapFont extends BitmapFont {
     }
 
     public String appendTextPro(String string) {
-        if (string == null || string.length() == 0)
-            return "";
+        if (string == null || string.length() == 0) return "";
         create(string, false);
+        string=emojiToEmojiKey(string);
+        return string;
+    }
+
+    /**
+     * 将 emoji 转换为 emoji 的 key 值
+     */
+    public String emojiToEmojiKey(String string){
         if (isEmoji) {
             for (Emoji emoji2 : emojis2) {
                 string = string.replaceAll(emoji2.text, emoji2.key);
             }
             for (Emoji emoji4 : emojis4) {
                 string = string.replaceAll(emoji4.text, emoji4.key);
+            }
+        }
+        return string;
+    }
+
+    /**
+     * 将 emoji key 还原成 emoji
+     */
+    public String emojiKeyToEmoji(String string){
+        if (isEmoji) {
+            for (Emoji emoji2 : emojis2) {
+                string = string.replaceAll(emoji2.key,emoji2.text);
+            }
+            for (Emoji emoji4 : emojis4) {
+                string = string.replaceAll(emoji4.key,emoji4.text);
             }
         }
         return string;

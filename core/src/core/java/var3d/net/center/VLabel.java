@@ -46,6 +46,10 @@ public class VLabel extends Label {
         }
     }
 
+    public StringBuilder getText() {
+        return text;
+    }
+
     private static CharSequence append(CharSequence text, LabelStyle style) {
         return ((FreeBitmapFont) style.font).appendTextPro(text.toString());
     }
@@ -53,10 +57,6 @@ public class VLabel extends Label {
     public void setText(CharSequence newText) {
         super.setText(append(newText, getStyle()));
         addText(newText);
-    }
-
-    public StringBuilder getText() {
-        return text;
     }
 
 

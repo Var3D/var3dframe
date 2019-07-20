@@ -1,5 +1,8 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,7 +19,7 @@ public class VTextField extends TextField {
 	public static  final char BACKSPACE = 8;//libgdx的删除键值
 	public static  final char ENTER = 13;
 
-	VTextField field;
+	//VTextField field;
 	private VTextFieldListener listener;
 	private KeyboardType keyboardType=KeyboardType.Default;
 	private ReturnKeyType returnKeyType=ReturnKeyType.Default;
@@ -61,7 +64,7 @@ public class VTextField extends TextField {
 	public VTextField(String text, TextFieldStyle style) {
 		super(append(text, style), style);
 		setOnlyFontChars(false);
-		field = this;
+		//field = this;
 		setOnscreenKeyboard(new OnscreenKeyboard() {
 			public void show(boolean visible) {
 				//将父类此接口重置，可实现在显示键盘之前对本地输入框控件键盘进行属性设置
@@ -109,8 +112,11 @@ public class VTextField extends TextField {
 					boolean enter = character == ENTER_DESKTOP || character == ENTER_ANDROID;
 					boolean add = enter ? writeEnters : true;
 					if (add) {
-						append(getText(), getStyle());
-						updateDisplay();
+						if(Gdx.app.getType()!= Application.ApplicationType.Android) {
+							append(VTextField.super.text, getStyle());
+							updateDisplay();
+						}
+
 						if(listener!=null){
 							String newText=listener.onEditingChanged(VTextField.this);
 							if(newText!=null){
@@ -134,8 +140,14 @@ public class VTextField extends TextField {
 		});//保证内置的这个监听早于父类内置的监听先执行
 	}
 
+	//设置输入框文本颜色
+	public void setFontColor(Color color){
+		getStyle().fontColor.set(color.r,color.g,color.b,color.a);
+	}
+
+
 	public void updateDisplay(){
-		super.setPasswordMode(field.isPasswordMode());
+		super.setPasswordMode(super.isPasswordMode());
 	}
 
 	public void setPasswordCharacter(String passwordCharacter) {
@@ -155,8 +167,7 @@ public class VTextField extends TextField {
 
 	private static String append(String text, TextFieldStyle style) {
 		if (text.equals("")) return "";
-		String newText=((FreeBitmapFont) style.font).appendTextPro(text);
-		return newText;
+		return ((FreeBitmapFont) style.font).appendTextPro(text);
 	}
 
 	public void appendText(String str) {
@@ -165,6 +176,14 @@ public class VTextField extends TextField {
 
 	public void setText(String str) {
 		super.setText(append(str, getStyle()));
+	}
+
+	/**
+	 * 只有用这个方法才能返回真正的原始文本(还原后的 emoji)
+	 * @return
+     */
+	public String getText(){
+		return ((FreeBitmapFont)getStyle().font).emojiKeyToEmoji(super.text);
 	}
 
 	//成为焦点
