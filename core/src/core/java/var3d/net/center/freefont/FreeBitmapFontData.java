@@ -35,8 +35,45 @@ public class FreeBitmapFontData extends BitmapFont.BitmapFontData {
         return false;
     }
 
-    public void getGlyphs (GlyphLayout.GlyphRun run, CharSequence str, int start, int end, boolean tightBounds) {
-        //Gdx.app.log("aaaaaa","告诉我，你执行了"+str.subSequence(start,end));
-       super.getGlyphs(run,str,start,end,tightBounds);
+//    public void getGlyphs (GlyphLayout.GlyphRun run, CharSequence str, int start, int end, boolean tightBounds) {
+//       super.getGlyphs(run,str,start,end,tightBounds);
+//    }
+
+    public void getGlyphsForVTexField (GlyphLayout.GlyphRun run, CharSequence str, int start, int end, boolean tightBounds) {
+        boolean markupEnabled = this.markupEnabled;
+        float scaleX = this.scaleX;
+        BitmapFont.Glyph missingGlyph = this.missingGlyph;
+        Array<BitmapFont.Glyph> glyphs = run.glyphs;
+        FloatArray xAdvances = run.xAdvances;
+
+        // Guess at number of glyphs needed.
+        glyphs.ensureCapacity(end - start);
+        xAdvances.ensureCapacity(end - start + 1);
+
+        BitmapFont.Glyph lastGlyph = null;
+        while (start < end) {
+            char ch = str.charAt(start++);
+            BitmapFont.Glyph glyph = getGlyph(ch);
+            if (glyph == null) {
+                if (missingGlyph == null) continue;
+                glyph = missingGlyph;
+            }
+
+            glyphs.add(glyph);
+
+            if (lastGlyph == null) // First glyph.
+                xAdvances.add((!tightBounds || glyph.fixedWidth) ? 0 : -glyph.xoffset * scaleX - padLeft);
+            else
+                xAdvances.add((lastGlyph.xadvance + lastGlyph.getKerning(ch)) * scaleX);
+            lastGlyph = glyph;
+
+            // "[[" is an escaped left square bracket, skip second character.
+            //if (markupEnabled && ch == '[' && start < end && str.charAt(start) == '[') start++;
+        }
+        if (lastGlyph != null) {
+            float lastGlyphWidth = (!tightBounds || lastGlyph.fixedWidth) ? lastGlyph.xadvance
+                    : lastGlyph.xoffset + lastGlyph.width - padRight;
+            xAdvances.add(lastGlyphWidth * scaleX);
+        }
     }
 }
