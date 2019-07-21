@@ -13,11 +13,14 @@ import com.badlogic.gdx.graphics.Pixmap.Filter;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker.Page;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
 
 /**
  * 自由文本类1.1版本 此自由文本方案基于libgdx 1.6编写，需libgdx 1.6或以上版本支持
@@ -395,6 +398,14 @@ public class FreeBitmapFont extends BitmapFont {
         return false;
     }
 
+    public boolean isCreateEmojiWithKey(String key){
+        if(!isEmoji)return false;
+        if(isCreatedEmoji4WithKey(key))return true;
+        if(isCreatedEmoji2WithKey(key))return true;
+        return false;
+    }
+
+
     public boolean isEmojiCharacter(char codePoint) {
         return !((codePoint == 0x0) || (codePoint == 0x9) || (codePoint == 0xA)
                 || (codePoint == 0xD)
@@ -473,5 +484,9 @@ public class FreeBitmapFont extends BitmapFont {
     public void dispose() {
         end();
         super.dispose();
+    }
+
+    public BitmapFontCache newFontCache () {
+        return new FreeBitmapFontCache(this, usesIntegerPositions());
     }
 }

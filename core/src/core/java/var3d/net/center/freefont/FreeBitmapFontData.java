@@ -1,6 +1,10 @@
 package var3d.net.center.freefont;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,5 +33,10 @@ public class FreeBitmapFontData extends BitmapFont.BitmapFontData {
             return true;
         }
         return false;
+    }
+
+    public void getGlyphs (GlyphLayout.GlyphRun run, CharSequence str, int start, int end, boolean tightBounds) {
+        //Gdx.app.log("aaaaaa","告诉我，你执行了"+str.subSequence(start,end));
+       super.getGlyphs(run,str,start,end,tightBounds);
     }
 }

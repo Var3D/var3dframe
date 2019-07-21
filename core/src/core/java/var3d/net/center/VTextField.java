@@ -2,13 +2,27 @@ package var3d.net.center;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Clipboard;
+import com.badlogic.gdx.utils.FloatArray;
+import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 
@@ -17,10 +31,23 @@ import static var3d.net.center.VGame.game;
 public class VTextField extends TextField {
 	static private final char TAB = '\t';
 	public static  final char BACKSPACE = 8;//libgdx的删除键值
+	static private final char DELETE = 127;
 	public static  final char ENTER = 13;
+	private char passwordCharacter = 149;
+	boolean focusTraversal = true,onlyFontChars=true;
+	String undoText = "";
+	Clipboard clipboard;
+	private float blinkTime = 0.32f;
+	boolean cursorOn = true;
+	long lastBlink;
+	long lastChangeTime;
+	float renderOffset;
+	TextFieldListener listener;
+	//private int textHAlign = Align.left;
+	//private float selectionX, selectionWidth;
 
 	//VTextField field;
-	private VTextFieldListener listener;
+	private VTextFieldListener vlistener;
 	private KeyboardType keyboardType=KeyboardType.Default;
 	private ReturnKeyType returnKeyType=ReturnKeyType.Default;
 	private AdaptKeyboardType adaptKeyboardType= AdaptKeyboardType.Default;
@@ -53,11 +80,11 @@ public class VTextField extends TextField {
 
 
 	public void setVTextFieldListener(VTextFieldListener listener) {
-		this.listener =listener;
+		this.vlistener =listener;
 	}
 
 	public VTextFieldListener getVTextFieldListener(){
-		return listener;
+		return vlistener;
 	}
 
 
@@ -96,8 +123,8 @@ public class VTextField extends TextField {
 								}
 							});
 						}
-					}else if(listener!=null){
-						boolean isHideKeybord=listener.shouldReturn(VTextField.this);
+					}else if(vlistener !=null){
+						boolean isHideKeybord= vlistener.shouldReturn(VTextField.this);
 						if(isHideKeybord){
 							getOnscreenKeyboard().show(false);
 							stage.getRoot().getActions();
@@ -112,13 +139,13 @@ public class VTextField extends TextField {
 					boolean enter = character == ENTER_DESKTOP || character == ENTER_ANDROID;
 					boolean add = enter ? writeEnters : true;
 					if (add) {
-						if(Gdx.app.getType()== Application.ApplicationType.Desktop) {
-							append(VTextField.super.text, getStyle());
-							updateDisplay();
-						}
-
-						if(listener!=null){
-							String newText=listener.onEditingChanged(VTextField.this);
+//						if(Gdx.app.getType()== Application.ApplicationType.Desktop) {
+//							append(VTextField.super.text, getStyle());
+//							updateDisplay();
+//						}
+						//updateDisplayText();
+						if(vlistener !=null){
+							String newText= vlistener.onEditingChanged(VTextField.this);
 							if(newText!=null){
 								setText(newText);
 								setCursorPosition(newText.length());
@@ -132,7 +159,7 @@ public class VTextField extends TextField {
 		addListener(appendListener);
 		getListeners().insert(0,new ClickListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if(listener!=null)listener.didBeginEditing(VTextField.this);
+				if(vlistener !=null) vlistener.didBeginEditing(VTextField.this);
 				getOnscreenKeyboard().show(false);
 				becomeFirstResponder();
 				return true;
@@ -152,7 +179,8 @@ public class VTextField extends TextField {
 
 	public void setPasswordCharacter(String passwordCharacter) {
 		append(passwordCharacter, getStyle());
-		super.setPasswordCharacter(passwordCharacter.charAt(0));
+		this.passwordCharacter=passwordCharacter.charAt(0);
+		super.setPasswordCharacter(this.passwordCharacter);
 		super.setPasswordMode(true);
 	}
 
@@ -201,9 +229,9 @@ public class VTextField extends TextField {
 						stage.getRoot().addAction(Actions.moveTo(stage.getStartX(), stage.getStartY(), 0.2f));
 						game.var3dListener.removeListenerOnKeyboardChange();
 						stage.setKeyboardFocus(null);
-						if(listener!=null){
-							listener.keyboardWillShow(VTextField.this,false,0);
-							listener.didEndEditing(VTextField.this);
+						if(vlistener !=null){
+							vlistener.keyboardWillShow(VTextField.this,false,0);
+							vlistener.didEndEditing(VTextField.this);
 						}
 					}else {
 						Actor focus=stage.getKeyboardFocus();
@@ -223,8 +251,8 @@ public class VTextField extends TextField {
 								case None:
 									break;
 							}
-							if (listener != null)
-								listener.keyboardWillShow(VTextField.this, true, keyboardHeight);
+							if (vlistener != null)
+								vlistener.keyboardWillShow(VTextField.this, true, keyboardHeight);
 						}
 					}
 
@@ -274,4 +302,454 @@ public class VTextField extends TextField {
 		return returnKeyType;
 	}
 
+	private int visibleTextStart, visibleTextEnd;
+
+	protected void drawText (Batch batch, BitmapFont font, float x, float y) {
+//		FreeBitmapFont freefont= (FreeBitmapFont) getStyle().font;
+//		if(freefont.isEmoji()){
+//			if(buffer==null)buffer=new StringBuffer();
+//			buffer.setLength(0);
+//			Gdx.app.log("aaaa","start="+start);
+//
+//			for(int i=0;i<str.length();i++){
+//				char c=str.charAt(i);
+//				if(freefont.isCreatedEmoji4WithKey(""+c)||freefont.isCreatedEmoji2WithKey(""+c)){
+//					buffer.append("[白]");
+//					buffer.append(c);
+//					end+=3;
+//				}else buffer.append(c);
+//			}
+//			str=buffer.toString();
+//		}
+
+		//font.draw(batch, displayText, x + textOffset, y, 0, text.length(), 0, Align.left, false);
+		super.drawText( batch, font,x,y);
+	}
+
+
+	private StringBuilder passwordBuffer;
+
+	void updateDisplayText () {
+		FreeBitmapFont font = (FreeBitmapFont) getStyle().font;
+		BitmapFont.BitmapFontData data = font.getData();
+
+		String text = this.text;
+		int textLength = text.length();
+		StringBuilder buffer = new StringBuilder();
+		for (int i = 0; i < textLength; i++) {
+			char c = text.charAt(i);
+			buffer.append(data.hasGlyph(c) ? c : ' ');
+		}
+		String newDisplayText = buffer.toString();
+
+		if (isPasswordMode()) {
+			if (passwordBuffer == null) passwordBuffer = new StringBuilder(newDisplayText.length());
+			if (passwordBuffer.length() > textLength)
+				passwordBuffer.setLength(textLength);
+			else {
+				for (int i = passwordBuffer.length(); i < textLength; i++)
+					passwordBuffer.append(passwordCharacter);
+			}
+			displayText = passwordBuffer;
+		} else displayText = newDisplayText;
+
+		layout.setText(font, displayText);
+		glyphPositions.clear();
+		float x = 0;
+		if (layout.runs.size > 0) {
+			GlyphLayout.GlyphRun run = layout.runs.first();
+			FloatArray xAdvances = run.xAdvances;
+			fontOffset = xAdvances.first();
+			for (int i = 1, n = xAdvances.size; i < n; i++) {
+				glyphPositions.add(x);
+				x += xAdvances.get(i);
+			}
+		} else fontOffset = 0;
+		glyphPositions.add(x);
+
+		if (selectionStart > newDisplayText.length()) selectionStart = textLength;
+	}
+
+	public void setFocusTraversal (boolean focusTraversal) {
+		this.focusTraversal = focusTraversal;
+		super.setFocusTraversal(focusTraversal);
+	}
+
+	public void setOnlyFontChars (boolean onlyFontChars) {
+		this.onlyFontChars = onlyFontChars;
+		super.setOnlyFontChars(onlyFontChars);
+	}
+
+	protected InputListener createInputListener () {
+		return new FreeTextFieldClickListener();
+	}
+
+	public class FreeTextFieldClickListener extends TextField.TextFieldClickListener {
+		public boolean keyDown (InputEvent event, int keycode) {
+			if (isDisabled()) return false;
+
+			lastBlink = 0;
+			cursorOn = false;
+
+			Stage stage = getStage();
+			if (stage == null || stage.getKeyboardFocus() != VTextField.this) return false;
+
+			boolean repeat = false;
+			boolean ctrl = UIUtils.ctrl();
+			boolean jump = ctrl && !isPasswordMode();
+			boolean handled = true;
+
+			if (ctrl) {
+				switch (keycode) {
+					case Input.Keys.V:
+						paste(clipboard.getContents(), true);
+						repeat = true;
+						break;
+					case Input.Keys.C:
+					case Input.Keys.INSERT:
+						copy();
+						return true;
+					case Input.Keys.X:
+						cut(true);
+						return true;
+					case Input.Keys.A:
+						selectAll();
+						return true;
+					case Input.Keys.Z:
+						String oldText = text;
+						setText(undoText);
+						undoText = oldText;
+						updateDisplayText();
+						return true;
+					default:
+						handled = false;
+				}
+			}
+
+			if (UIUtils.shift()) {
+				switch (keycode) {
+					case Input.Keys.INSERT:
+						paste(clipboard.getContents(), true);
+						break;
+					case Input.Keys.FORWARD_DEL:
+						cut(true);
+						break;
+				}
+
+				selection:
+				{
+					int temp = cursor;
+					keys:
+					{
+						switch (keycode) {
+							case Input.Keys.LEFT:
+								moveCursor(false, jump);
+								repeat = true;
+								handled = true;
+								break keys;
+							case Input.Keys.RIGHT:
+								moveCursor(true, jump);
+								repeat = true;
+								handled = true;
+								break keys;
+							case Input.Keys.HOME:
+								goHome(jump);
+								handled = true;
+								break keys;
+							case Input.Keys.END:
+								goEnd(jump);
+								handled = true;
+								break keys;
+						}
+						break selection;
+					}
+					if (!hasSelection) {
+						selectionStart = temp;
+						hasSelection = true;
+					}
+				}
+			} else {
+				// Cursor movement or other keys (kills selection).
+				switch (keycode) {
+					case Input.Keys.LEFT:
+						moveCursor(false, jump);
+						clearSelection();
+						repeat = true;
+						handled = true;
+						break;
+					case Input.Keys.RIGHT:
+						moveCursor(true, jump);
+						clearSelection();
+						repeat = true;
+						handled = true;
+						break;
+					case Input.Keys.HOME:
+						goHome(jump);
+						clearSelection();
+						handled = true;
+						break;
+					case Input.Keys.END:
+						goEnd(jump);
+						clearSelection();
+						handled = true;
+						break;
+				}
+			}
+
+			cursor = MathUtils.clamp(cursor, 0, text.length());
+
+			if (repeat) scheduleKeyRepeatTask(keycode);
+			return handled;
+		}
+
+
+		public boolean keyTyped (InputEvent event, char character) {
+			//super.keyTyped(event,character);
+			if (isDisabled()) return false;
+
+			// Disallow "typing" most ASCII control characters, which would show up as a space when onlyFontChars is true.
+			switch (character) {
+				case BACKSPACE:
+				case TAB:
+				case ENTER_ANDROID:
+				case ENTER_DESKTOP:
+					break;
+				default:
+					if (character < 32) return false;
+			}
+
+			Stage stage = getStage();
+			if (stage == null || stage.getKeyboardFocus() != VTextField.this) return false;
+
+			if (UIUtils.isMac && Gdx.input.isKeyPressed(Input.Keys.SYM)) return true;
+
+			if ((character == TAB || character == ENTER_ANDROID) && focusTraversal) {
+				next(UIUtils.shift());
+			} else {
+				boolean delete = character == DELETE;
+				boolean backspace = character == BACKSPACE;
+				boolean enter = character == ENTER_DESKTOP || character == ENTER_ANDROID;
+
+				boolean add = enter ? writeEnters : (!onlyFontChars|| getStyle().font.getData().hasGlyph(character));
+				boolean remove = backspace || delete;
+				if (add || remove) {
+					String oldText = text;
+					int oldCursor = cursor;
+					if (hasSelection)
+						cursor = delete(false);
+					else {
+						if (backspace && cursor > 0) {
+							text = text.substring(0, cursor - 1) + text.substring(cursor--);
+							renderOffset = 0;
+						}
+						if (delete && cursor < text.length()) {
+							text = text.substring(0, cursor) + text.substring(cursor + 1);
+						}
+					}
+					if (add && !remove) {
+						// Character may be added to the text.
+						if (!enter && getTextFieldFilter() != null && !getTextFieldFilter().acceptChar(VTextField.this, character)) return true;
+						if (!withinMaxLength(text.length())) return true;
+						String insertion = enter ? "\n" : String.valueOf(character);
+						text = insert(cursor++, insertion, text);
+						if(Gdx.app.getType()== Application.ApplicationType.Desktop) {
+							append(text, getStyle());
+						}
+					}
+					String tempUndoText = undoText;
+					if (changeText(oldText, text)) {
+						long time = System.currentTimeMillis();
+						if (time - 750 > lastChangeTime) undoText = oldText;
+						lastChangeTime = time;
+					} else cursor = oldCursor;
+					updateDisplayText();
+				}
+			}
+			if (listener != null) listener.keyTyped(VTextField.this, character);
+			return true;
+		}
+	}
+
+	String insert (int position, CharSequence text, String to) {
+		if (to.length() == 0) return text.toString();
+		return to.substring(0, position) + text + to.substring(position, to.length());
+	}
+
+	int delete (boolean fireChangeEvent) {
+		int from = selectionStart;
+		int to = cursor;
+		int minIndex = Math.min(from, to);
+		int maxIndex = Math.max(from, to);
+		String newText = (minIndex > 0 ? text.substring(0, minIndex) : "")
+				+ (maxIndex < text.length() ? text.substring(maxIndex, text.length()) : "");
+		if (fireChangeEvent)
+			changeText(text, newText);
+		else
+			text = newText;
+		clearSelection();
+		return minIndex;
+	}
+
+	boolean changeText (String oldText, String newText) {
+		if (newText.equals(oldText)) return false;
+		text = newText;
+		ChangeListener.ChangeEvent changeEvent = Pools.obtain(ChangeListener.ChangeEvent.class);
+		boolean cancelled = fire(changeEvent);
+		text = cancelled ? oldText : newText;
+		Pools.free(changeEvent);
+		return !cancelled;
+	}
+
+	boolean withinMaxLength (int size) {
+		return getMaxLength() <= 0 || size <getMaxLength();
+	}
+
+	void paste (String content, boolean fireChangeEvent) {
+		if (content == null) return;
+		StringBuilder buffer = new StringBuilder();
+		int textLength = text.length();
+		if (hasSelection) textLength -= Math.abs(cursor - selectionStart);
+		BitmapFont.BitmapFontData data = getStyle().font.getData();
+		for (int i = 0, n = content.length(); i < n; i++) {
+			if (!withinMaxLength(textLength + buffer.length())) break;
+			char c = content.charAt(i);
+			if (!(writeEnters && (c == ENTER_ANDROID || c == ENTER_DESKTOP))) {
+				if (c == '\r' || c == '\n') continue;
+				if (onlyFontChars && !data.hasGlyph(c)) continue;
+				if (getTextFieldFilter() != null && !getTextFieldFilter().acceptChar(this, c)) continue;
+			}
+			buffer.append(c);
+		}
+		content = buffer.toString();
+
+		if (hasSelection) cursor = delete(fireChangeEvent);
+		if (fireChangeEvent)
+			changeText(text, insert(cursor, content, text));
+		else
+			text = insert(cursor, content, text);
+		updateDisplayText();
+		cursor += content.length();
+	}
+
+	void cut (boolean fireChangeEvent) {
+		if (hasSelection && !isPasswordMode()) {
+			copy();
+			cursor = delete(fireChangeEvent);
+			updateDisplayText();
+		}
+	}
+
+	public void setClipboard (Clipboard clipboard) {
+		super.setClipboard(clipboard);
+		this.clipboard = clipboard;
+	}
+
+	private void blink () {
+		if (!Gdx.graphics.isContinuousRendering()) {
+			cursorOn = true;
+			return;
+		}
+		long time = TimeUtils.nanoTime();
+		if ((time - lastBlink) / 1000000000.0f > blinkTime) {
+			cursorOn = !cursorOn;
+			lastBlink = time;
+		}
+	}
+
+	public void draw (Batch batch, float parentAlpha) {
+		super.draw(batch,parentAlpha);
+		Stage stage = getStage();
+		boolean focused = stage != null && stage.getKeyboardFocus() == this;
+		if (focused && !isDisabled()) {
+			blink();
+		}
+	}
+
+
+	public void setBlinkTime (float blinkTime) {
+		this.blinkTime = blinkTime;
+		super.setBlinkTime(blinkTime);
+	}
+
+	public void setTextFieldListener (TextFieldListener listener) {
+		super.setTextFieldListener(listener);
+		this.listener = listener;
+	}
+
+	protected void setCursorPosition (float x, float y) {
+		lastBlink = 0;
+		cursorOn = false;
+		cursor = letterUnderCursor(x);
+	}
+
+//	protected void calculateOffsets () {
+//		super.calculateOffsets();
+//		float visibleWidth = getWidth();
+//		Drawable background = getStyle().background;
+//		if (background != null) visibleWidth -= background.getLeftWidth() + background.getRightWidth();
+//
+//		int glyphCount = glyphPositions.size;
+//		float[] glyphPositions = this.glyphPositions.items;
+//
+//		// Check if the cursor has gone out the left or right side of the visible area and adjust renderOffset.
+//		float distance = glyphPositions[Math.max(0, cursor - 1)] + renderOffset;
+//		if (distance <= 0)
+//			renderOffset -= distance;
+//		else {
+//			int index = Math.min(glyphCount - 1, cursor + 1);
+//			float minX = glyphPositions[index] - visibleWidth;
+//			if (-renderOffset < minX) renderOffset = -minX;
+//		}
+//
+//		// Prevent renderOffset from starting too close to the end, eg after text was deleted.
+//		float maxOffset = 0;
+//		float width = glyphPositions[glyphCount - 1];
+//		for (int i = glyphCount - 2; i >= 0; i--) {
+//			float x = glyphPositions[i];
+//			if (width - x > visibleWidth) break;
+//			maxOffset = x;
+//		}
+//		if (-renderOffset > maxOffset) renderOffset = -maxOffset;
+//
+//		// calculate first visible char based on render offset
+//		visibleTextStart = 0;
+//		float startX = 0;
+//		for (int i = 0; i < glyphCount; i++) {
+//			if (glyphPositions[i] >= -renderOffset) {
+//				visibleTextStart = Math.max(0, i);
+//				startX = glyphPositions[i];
+//				break;
+//			}
+//		}
+//
+//		// calculate last visible char based on visible width and render offset
+//		int length = Math.min(displayText.length(), glyphPositions.length - 1);
+//		visibleTextEnd = Math.min(length, cursor + 1);
+//		for (; visibleTextEnd <= length; visibleTextEnd++)
+//			if (glyphPositions[visibleTextEnd] > startX + visibleWidth) break;
+//		visibleTextEnd = Math.max(0, visibleTextEnd - 1);
+//
+//
+//
+//		if ((textHAlign & Align.left) == 0) {
+//			textOffset = visibleWidth - (glyphPositions[visibleTextEnd] - startX);
+//			if ((textHAlign & Align.center) != 0) textOffset = Math.round(textOffset * 0.5f);
+//		} else
+//			textOffset = startX + renderOffset;
+//
+//		// calculate selection x position and width
+//		if (hasSelection) {
+//			int minIndex = Math.min(cursor, selectionStart);
+//			int maxIndex = Math.max(cursor, selectionStart);
+//			float minX = Math.max(glyphPositions[minIndex] - glyphPositions[visibleTextStart], -textOffset);
+//			float maxX = Math.min(glyphPositions[maxIndex] - glyphPositions[visibleTextStart], visibleWidth - textOffset);
+//			selectionX = minX;
+//			selectionWidth = maxX - minX -getStyle().font.getData().cursorX;
+//		}
+//	}
+
+//	public void setAlignment (int alignment) {
+//		super.setAlignment(alignment);
+//		this.textHAlign = alignment;
+//	}
 }
