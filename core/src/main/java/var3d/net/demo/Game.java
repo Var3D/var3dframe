@@ -40,17 +40,5 @@ public class Game extends VGame {
         </array>
         */
         setStage(StageMain.class);//设置入口界面
-
-        Gdx.input.getTextInput(new Input.TextInputListener() {
-            @Override
-            public void input(String text) {
-
-            }
-
-            @Override
-            public void canceled() {
-
-            }
-        },"","","");
     }
 }
