@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import var3d.net.center.freefont.FreeBitmapFont;
-import var3d.net.center.tool.Reflection;
 
 public class VLabel extends Label {
     private boolean isStroke = false;// 是否描边

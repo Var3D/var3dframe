@@ -1,5 +1,8 @@
 package var3d.net.demo;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.freefont.FreeBitmapFont;
@@ -37,5 +40,17 @@ public class Game extends VGame {
         </array>
         */
         setStage(StageMain.class);//设置入口界面
+
+        Gdx.input.getTextInput(new Input.TextInputListener() {
+            @Override
+            public void input(String text) {
+
+            }
+
+            @Override
+            public void canceled() {
+
+            }
+        },"","","");
     }
 }
