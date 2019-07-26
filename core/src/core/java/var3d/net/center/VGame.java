@@ -677,6 +677,7 @@ public abstract class VGame implements ApplicationListener {
         if (dStage != null) {
             stage = dStage;
             dStage.reStart();
+            dStage.getRoot().setTouchable(Touchable.enabled);
             return dStage;
         }
         try {
