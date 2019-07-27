@@ -16,9 +16,7 @@ public class DesktopLauncher extends VDesktopLauncher {
 
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config=getConfig(Size.iphoneX_w);
-        config.title="我是中文";
         new LwjglApplication(new Game(new DesktopLauncher()), config);
-
     }
 
 }

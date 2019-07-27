@@ -1722,6 +1722,10 @@ public abstract class VGame implements ApplicationListener {
         fonts.put(key, font);
     }
 
+    public void setFont(String key,FreePaint paint){
+        fonts.put(key,new FreeBitmapFont(this,paint));
+    }
+
     /**
      * tieldMap
      */
