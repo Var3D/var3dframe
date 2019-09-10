@@ -2253,7 +2253,16 @@ public abstract class VDesktopLauncher implements VListener {
             }).start();
 
             process.waitFor();
-            fbxPath.getAbsoluteFile().delete();
+            //文件备份
+            boolean isMac = System.getProperty("os.name").startsWith("Mac");
+            String root =(new File("").getAbsolutePath()).replaceAll(
+                    isMac ? "android/assets" : "android\\\\assets", "");
+            String path =root+File.separator + "srcCopy";
+            File copys=new File(path);
+            copys.mkdirs();
+            File copy=new File(path+File.separator+fbxPath.getParentFile().getName());
+            copy.mkdirs();
+            fbxPath.renameTo(new File(copy+File.separator+fbxPath.getName()));
             System.err.println("Var3DFrame消息: " + fbxPath.getName() + "转换成功!");
         } catch (IOException e) {
             System.out.println(e.toString());
