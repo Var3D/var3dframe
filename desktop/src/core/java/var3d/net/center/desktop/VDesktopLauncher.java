@@ -2103,13 +2103,11 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     private void autoFbx2G3db(String homePath) {
-        //if(Gdx.app.getType()!= Application.ApplicationType.Desktop)return;
         if (homePath == null)
             homePath = System.getProperty("java.home") + File.separator + "fbx-conv";
         autoFbx2G3db2(homePath);
     }
 
-    //pathΪ
     private void autoFbx2G3db2(String convPath) {
         String assetsPath = System.getProperty("user.dir");
         if (new File(convPath).exists()) fbxToG3dbs(new File(assetsPath), convPath);
@@ -2120,7 +2118,6 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     private void fbxToG3dbs(File group, String toolPath) {
-        //���� assets���� fbx ��׺���ļ�תΪ g3db
         File[] list = group.listFiles();
         for (File file : list) {
             if (file.isDirectory()) {

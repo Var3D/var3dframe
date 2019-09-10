@@ -22,7 +22,7 @@ public class Game extends VGame {
 
     @Override
     public void init() {
-        setIsCloseShortcut(true);//关闭 desktop 测试期间框架的快捷键（截图，进入编辑模式等）
+       setIsCloseShortcut(true);//关闭 desktop 测试期间框架的快捷键（截图，进入编辑模式等）
         setResources(R.class);
         // openAutoScreenshots(5,StageTest.class);//开启自动截图
         //openProtect("image");//加密image文件夹资源
