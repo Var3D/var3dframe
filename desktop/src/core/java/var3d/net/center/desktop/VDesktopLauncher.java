@@ -3,6 +3,7 @@ package var3d.net.center.desktop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.LifecycleListener;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -52,6 +53,7 @@ import java.awt.font.TextAttribute;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -62,6 +64,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +73,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -993,19 +998,19 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    //������ȡactor�ľֲ�������������Ϊ��������
+
     private String getPartialVariable(VStage stage, Actor actor) {
         FileHandle fileHandle = getStageJavaFile(stage);
         if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
         if (fileHandle == null) return null;
         String javaStr = fileHandle.readString();
-        String[] javaStrLines = javaStr.split("\n");//�Ѵ��밴�кŴ�Ž�������
+        String[] javaStrLines = javaStr.split("\n");
         Data data = allDatas.get(actor);
         StackTraceElement[] elements = allStacks.get(actor);
-        if (elements == null) return null;//Ϊnull��ʾ���Ƿ�UI�ഴ���Ŀؼ����Ժ���ʵ�ַ�UI�ഴ���Ŀؼ�
-        String str_class = elements[2].getClassName();//�������ڵ���ȫ��
-        if (str_class.equals(stage.getClass().getName())) {//������ڵ�����Ǵ�������Stage
-            int linNumber = elements[2].getLineNumber();//��ȡ�ñ������ó�ʼ�����ڵ��к�
+        if (elements == null) return null;
+        String str_class = elements[2].getClassName();
+        if (str_class.equals(stage.getClass().getName())) {
+            int linNumber = elements[2].getLineNumber();
             Array<String> javaStrArr = new Array<>();
             int partNumber = 0;
             for (int i = linNumber - 1; i > 1; i--) {
@@ -1051,7 +1056,7 @@ public abstract class VDesktopLauncher implements VListener {
                 }
                 return name.trim();
             } else {
-                return "?";//��������
+                return "?";
             }
         }
 
@@ -1059,16 +1064,16 @@ public abstract class VDesktopLauncher implements VListener {
         return null;
     }
 
-    //����༭����Actor
+
     private final static String replace = "�U";
 
     public void saveUI(VStage stage) {
-        //����stage�е�actor�����ҳ���actor��stage��ʼ��ʱ���к�λ��
+
         FileHandle fileHandle = getStageJavaFile(stage);
         if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
         if (fileHandle == null) return;
         String javaStr = fileHandle.readString();
-        String[] javaStrLines = javaStr.split("\n");//�Ѵ��밴�кŴ�Ž�������
+        String[] javaStrLines = javaStr.split("\n");
         for (final Actor actor : stage.getRoot().getChildren()) {
             Data data = allDatas.get(actor);
             if (data == null) return;
@@ -1124,15 +1129,15 @@ public abstract class VDesktopLauncher implements VListener {
                         floatNumberSuffix = "f";
                     int idex;
                     if ((idex = codeStr.lastIndexOf("setPosition(")) != -1) {
-                        //˵��ӵ��setPosition����
+
                         String s1 = codeStr.substring(idex);
                         s1 = s1.substring(0, s1.indexOf(")") + 1);
                         codeStr = codeStr.replace(s1, "setPosition(" + (int) actor.getX() + floatNumberSuffix + "," + (int) actor.getY() + floatNumberSuffix + ")");
                     } else {
-                        //���û��setPosition����,��ôȥ��λshow,getActor()
+
                         idex = codeStr.lastIndexOf(".show(");
                         if (idex == -1) idex = codeStr.lastIndexOf(".getActor(");
-                        //���Ű��ַ���Ϊ����
+
                         String s1 = codeStr.substring(0, idex);
                         String s2 = codeStr.substring(idex);
                         codeStr = s1 + ".setPosition(" + (int) actor.getX() + floatNumberSuffix + "," + (int) actor.getY() + floatNumberSuffix + ")" + s2;
@@ -1172,7 +1177,7 @@ public abstract class VDesktopLauncher implements VListener {
                 }
             }
         }
-        //������װjava����
+
         StringBuilder out = new StringBuilder();
         boolean prefLineIsNull = false;
         for (int i = 0; i < javaStrLines.length; i++) {
@@ -1187,13 +1192,13 @@ public abstract class VDesktopLauncher implements VListener {
             out.append(javaStrLines[i]);
             out.append("\n");
         }
-        //����java����
+
         fileHandle.writeString(out.toString(), false);
-        //�رմ���
+
         Gdx.app.exit();
     }
 
-    //��ȡStage java�ļ�
+
     private HashMap<VStage, FileHandle> stageFiles = new HashMap<VStage, FileHandle>();
 
     private FileType fileType;
@@ -1235,7 +1240,7 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    //��ȡ�кŽӿ�ʵ��
+
     private HashMap<Actor, StackTraceElement[]> allStacks = new HashMap<>();
 
     public void getLineNumber(Actor actor) {
@@ -1244,7 +1249,7 @@ public abstract class VDesktopLauncher implements VListener {
         allStacks.put(actor, elements);
     }
 
-    //���ذ�ȫ����(landLeft[132.0,63.0,132.0,0.0]/port[0.0,102.0,0.0,132.0])
+
     private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
@@ -1556,8 +1561,8 @@ public abstract class VDesktopLauncher implements VListener {
             super(pref);
             setAlwaysOnTop(true);
             setLayout(null);
-            setUndecorated(true);//���û����ô���װ�Σ����Ϊtrue,��Ϊû����������װ�Σ�ֻ���ڴ��ڲ��ɼ�ʱ���ܵ��ã�������׳��쳣
-            getRootPane().setWindowDecorationStyle(JRootPane.NONE);//���ò�ʹ�ô���װ��
+            setUndecorated(true);
+            getRootPane().setWindowDecorationStyle(JRootPane.NONE);
             AWTUtilities.setWindowOpaque(this, false);
             pref = this;
             setName("root");
@@ -1639,7 +1644,7 @@ public abstract class VDesktopLauncher implements VListener {
                     });
                 }
 
-                public void focusGained(FocusEvent e) {//��ý���ʱ
+                public void focusGained(FocusEvent e) {
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
                             NativeTextField.TextFieldListener textFieldListener = nativeTextField.getTextFieldListener();
@@ -1654,7 +1659,6 @@ public abstract class VDesktopLauncher implements VListener {
             textField.addKeyListener(keyListener = new KeyListener() {
                 @Override
                 public void keyTyped(KeyEvent event) {
-                    //System.out.println("ɾ����");
                 }
 
                 @Override
@@ -1739,7 +1743,6 @@ public abstract class VDesktopLauncher implements VListener {
             setFocusable(true);
         }
 
-        //��ý���
         public void becomeFirstResponder() {
             textField.setVisible(true);
             textMessage.setVisible(false);
@@ -2103,19 +2106,103 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     private void autoFbx2G3db(String homePath) {
-        if (homePath == null)
-            homePath = System.getProperty("java.home") + File.separator + "fbx-conv";
-        autoFbx2G3db2(homePath);
+//        if (homePath == null)
+//            homePath = System.getProperty("java.home") + File.separator + "fbx-conv";
+//        autoFbx2G3db2(homePath);
+
+        boolean isMac =System.getProperty("os.name").startsWith("Mac");
+        String root =(new File("").getAbsolutePath()).replaceAll(
+                isMac ? "android/assets" : "android\\\\assets", "");
+        String path = root+ ".fbx-conv";
+        autoFbx2G3db2(path);
     }
 
     private void autoFbx2G3db2(String convPath) {
+//        String assetsPath = System.getProperty("user.dir");
+//        if (new File(convPath).exists()) fbxToG3dbs(new File(assetsPath), convPath);
+//        else {
+//            System.err.println("问题缺少fbx-conv: 请将fbx-conv放入这个路径" + convPath);
+//            System.err.println("fbx-conv下载地址 : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
+//        }
+
         String assetsPath = System.getProperty("user.dir");
-        if (new File(convPath).exists()) fbxToG3dbs(new File(assetsPath), convPath);
-        else {
-            System.err.println("问题缺少fbx-conv: 请将fbx-conv放入这个路径" + convPath);
-            System.err.println("fbx-conv下载地址 : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
+        if (new File(convPath).exists()) {
+            File filein=new File(convPath+File.separator +"conv.zip");
+            filein.getAbsoluteFile().delete();
+            fbxToG3dbs(new File(assetsPath), convPath);
+        } else {
+            System.err.println("问题缺少fbx-conv");
+            System.err.println("开始下载地址fbx-conv : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
+            File file=new File(convPath);
+            file.mkdirs();
+            System.err.println("创建"+file.getAbsolutePath()+"文件夹");
+            FileOutputStream fileOut = null;
+            HttpURLConnection conn = null;
+            InputStream inputStream = null;
+            try {
+                URL httpUrl=new URL("https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
+                conn=(HttpURLConnection) httpUrl.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setUseCaches(false);
+                conn.connect();
+                inputStream=conn.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(inputStream);
+                //写入到文件（注意文件保存路径的后面一定要加上文件的名称）
+                fileOut = new FileOutputStream(convPath+File.separator +"conv.zip");
+                BufferedOutputStream bos = new BufferedOutputStream(fileOut);
+
+                byte[] buf = new byte[4096];
+                int length = bis.read(buf);
+                //保存文件
+                while(length != -1)
+                {
+                    bos.write(buf, 0, length);
+                    length = bis.read(buf);
+                }
+                bos.close();
+                bis.close();
+                conn.disconnect();
+                System.err.println("下载成功！开始解压！");
+
+                //解压
+                try {
+                    File filein=new File(convPath+File.separator +"conv.zip");
+                    JarInputStream jarIn = new JarInputStream(new BufferedInputStream(new FileInputStream(filein)));
+                    byte[] bytes = new byte[1024];
+                    while (true) {
+                        ZipEntry entry = jarIn.getNextJarEntry();
+                        if (entry == null) break;
+                        String fileName=entry.getName();
+                        System.err.println(fileName);
+                        File desTemp = new File(convPath + File.separator + fileName);
+                        if (entry.isDirectory()) {    //jar条目是空目录
+                        } else {    //jar条目是文件
+                            desTemp.getParentFile().mkdirs();
+                            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(desTemp));
+                            int len = jarIn.read(bytes, 0, bytes.length);
+                            while (len != -1) {
+                                out.write(bytes, 0, len);
+                                len = jarIn.read(bytes, 0, bytes.length);
+                            }
+                            out.flush();
+                            out.close();
+                        }
+                        jarIn.closeEntry();
+                    }
+                    System.out.println("解压完成！");
+                    fbxToG3dbs(new File(assetsPath), convPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("抛出异常！！");
+            }
         }
     }
+
 
     private void fbxToG3dbs(File group, String toolPath) {
         File[] list = group.listFiles();
@@ -2133,17 +2220,14 @@ public abstract class VDesktopLauncher implements VListener {
         try {
             switch (LWJGLUtil.getPlatform()) {
                 case LWJGLUtil.PLATFORM_LINUX:
-                    System.err.println("linux");
                     String[] convPath = new String[]{toolPath + File.separator + "fbx-conv-lin64", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
                 case LWJGLUtil.PLATFORM_WINDOWS:
-                    System.err.println("win");
                     convPath = new String[]{toolPath + File.separator + "fbx-conv-win32.exe", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
                 case LWJGLUtil.PLATFORM_MACOSX:
-                    System.err.println("mac");
                     convPath = new String[]{toolPath + File.separator + "fbx-conv-mac", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
