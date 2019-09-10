@@ -1208,7 +1208,6 @@ public abstract class VDesktopLauncher implements VListener {
         String tryPath = proName + "/core/src/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
         FileHandle fileHandle = Gdx.files.absolute(tryPath);
         if (!fileHandle.exists()) {
-            //��������ڣ�������һ��·��
             tryPath = proName + "/core/src/main/java/" + pack + "/" + stage.getClass().getSimpleName() + ".java";
             fileHandle = Gdx.files.absolute(tryPath);
         }
@@ -1226,7 +1225,6 @@ public abstract class VDesktopLauncher implements VListener {
         String tryPath = proName + "/core/src/" + pack + "/" + stage.getClass().getSimpleName() + ".kt";
         FileHandle fileHandle = Gdx.files.absolute(tryPath);
         if (!fileHandle.exists()) {
-            //��������ڣ�������һ��·��
             tryPath = proName + "/core/src/main/java/" + pack + "/" + stage.getClass().getSimpleName() + ".kt";
             fileHandle = Gdx.files.absolute(tryPath);
         }
@@ -1436,11 +1434,7 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
-    /**
-     * ʹ��zip���н�ѹ��
-     *
-     * @return ��ѹ����ַ���
-     */
+
     public static final String unzip(String compressedStr) {
         if (compressedStr == null) {
             return null;
@@ -1487,12 +1481,7 @@ public abstract class VDesktopLauncher implements VListener {
         return decompressed;
     }
 
-    /**
-     * ʹ��zip����ѹ��
-     *
-     * @param str ѹ��ǰ���ı�
-     * @return ����ѹ������ı�
-     */
+
     public static final String zip(String str) {
         if (str == null)
             return null;
@@ -1527,7 +1516,7 @@ public abstract class VDesktopLauncher implements VListener {
         return compressedStr;
     }
 
-    //ԭ�������
+
     private HashMap<NativeTextField, VJTextField> textFieldHashMap;
 
     private Pool<VJTextField> pool_textFields = new Pool<VJTextField>() {
@@ -1538,7 +1527,7 @@ public abstract class VDesktopLauncher implements VListener {
         }
     };
 
-    //��ȡ���ڱ߿�ߴ�
+
     private Insets insets;
 
     public Insets getInset() {
@@ -1937,7 +1926,6 @@ public abstract class VDesktopLauncher implements VListener {
         }
 
 
-        //���������ͬ��Ϊ libgdx ������
         private int sysX, sysY;
 
         public void synchronousPosition() {
@@ -2148,14 +2136,17 @@ public abstract class VDesktopLauncher implements VListener {
         try {
             switch (LWJGLUtil.getPlatform()) {
                 case LWJGLUtil.PLATFORM_LINUX:
+                    System.err.println("linux");
                     String[] convPath = new String[]{toolPath + File.separator + "fbx-conv-lin64", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
-                case LWJGLUtil.PLATFORM_WINDOWS://windwos10����ͨ��
+                case LWJGLUtil.PLATFORM_WINDOWS:
+                    System.err.println("win");
                     convPath = new String[]{toolPath + File.separator + "fbx-conv-win32.exe", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
-                case LWJGLUtil.PLATFORM_MACOSX://Ŀǰ�� mac ���Թ�
+                case LWJGLUtil.PLATFORM_MACOSX:
+                    System.err.println("mac");
                     convPath = new String[]{toolPath + File.separator + "fbx-conv-mac", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
@@ -2178,12 +2169,11 @@ public abstract class VDesktopLauncher implements VListener {
                         }
                     }
                 }
-            }).start(); // �����������߳������p.getInputStream()�Ļ�����
+            }).start();
 
             process.waitFor();
-            fbxPath.getAbsoluteFile().delete();//ɾ�� fbx
-            System.err.println("Var3DFrame�����Ϣ : " + fbxPath.getName() + "ת����g3dbģ�ͳɹ�");
-            //System.err.println("Var3DFrame�����Ϣ : ���ڽ���ر�,�������������ܼ�������");
+            fbxPath.getAbsoluteFile().delete();
+            System.err.println("Var3DFrame消息: " + fbxPath.getName() + "转换成功!");
         } catch (IOException e) {
             System.out.println(e.toString());
         } catch (InterruptedException e) {
