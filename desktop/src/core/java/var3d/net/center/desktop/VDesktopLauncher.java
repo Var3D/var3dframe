@@ -2262,7 +2262,11 @@ public abstract class VDesktopLauncher implements VListener {
             copys.mkdirs();
             File copy=new File(path+File.separator+fbxPath.getParentFile().getName());
             copy.mkdirs();
-            fbxPath.renameTo(new File(copy+File.separator+fbxPath.getName()));
+            File copyTo=new File(copy+File.separator+fbxPath.getName());
+            if(copyTo.exists()){
+                copyTo.getAbsoluteFile().delete();
+            }
+            fbxPath.renameTo(copyTo);
             System.err.println("Var3DFrame消息: " + fbxPath.getName() + "转换成功!");
         } catch (IOException e) {
             System.out.println(e.toString());
