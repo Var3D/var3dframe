@@ -93,41 +93,36 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         }
     }
 
-    protected void onPause () {
+    public void onPause () {
         super.onPause();
         if(isShare){
             shareStartTime=System.currentTimeMillis();
         }
     }
 
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         AndroidGraphics graphics = (AndroidGraphics) getGraphics();
         graphics.getView().requestFocus();
-        runOnUiThread(new Runnable() {
-            public void run() {
-                if(isShare){
-                    isShare=false;
-                    long delayTime=System.currentTimeMillis()-shareStartTime;
-                    if(delayTime<10000){
-                        System.out.print("Gdx为null="+(Gdx.app==null));
-                        //分享失败
-                        Gdx.app.postRunnable(new Runnable() {
-                            public void run() {
-                                failureRun.run();
-                            }
-                        });
-                    }else{
-                        //分享成功
-                        Gdx.app.postRunnable(new Runnable() {
-                            public void run() {
-                                successRun.run();
-                            }
-                        });
+        if(isShare){
+            isShare=false;
+            long delayTime=System.currentTimeMillis()-shareStartTime;
+            if(delayTime<10000){
+                //分享失败
+                Gdx.app.postRunnable(new Runnable() {
+                    public void run() {
+                        failureRun.run();
                     }
-                }
+                });
+            }else{
+                //分享成功
+                Gdx.app.postRunnable(new Runnable() {
+                    public void run() {
+                        successRun.run();
+                    }
+                });
             }
-        });
+        }
     }
 
     public void setGame(VGame game) {
