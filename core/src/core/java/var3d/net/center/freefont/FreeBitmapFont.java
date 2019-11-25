@@ -261,8 +261,8 @@ public class FreeBitmapFont extends BitmapFont {
                 packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 4, false);
             }
             for (int i = 0; i < cs.size; i++) {
-                String txt = cs.get(i);
-                char c = txt.charAt(0);
+                final String txt = cs.get(i);
+                final char c = txt.charAt(0);
                 // 如果该字符存在于emoji地址库里，则创建这个emoji的纹理
                 String css = c + "";
                 if (emojiSet.get(css) != null) {
@@ -271,8 +271,11 @@ public class FreeBitmapFont extends BitmapFont {
                     appendEmoji("" + c, date.path, date.size);
                     continue;
                 }
-                Pixmap pixmap = listener.getFontPixmap(txt, paint);
-                putGlyph(c, pixmap);
+                Gdx.app.postRunnable(new Runnable() {
+                    public void run() {
+                        putGlyph(c, listener.getFontPixmap(txt, paint));
+                    }
+                });
             }
             // updataSize(size);
             upData();
@@ -312,8 +315,8 @@ public class FreeBitmapFont extends BitmapFont {
             packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 4, false);
         }
         for (int i = 0; i < cs.size; i++) {
-            String txt = cs.get(i);
-            char c;
+            final String txt = cs.get(i);
+            final char c;
             if (txt.length() == 1) {
                 // 判断该符号是否在key库中
                 boolean isNotKey = emojiKey.indexOf(txt) < 0;
@@ -347,8 +350,11 @@ public class FreeBitmapFont extends BitmapFont {
                 emojis4.add(emoj);
             }
             if (data.getGlyph(c) != null) continue;
-            Pixmap pixmap = listener.getFontPixmap(txt, paint);
-            putGlyph(c, pixmap);
+            Gdx.app.postRunnable(new Runnable() {
+                public void run() {
+                    putGlyph(c, listener.getFontPixmap(txt, paint));
+                }
+            });
         }
         upData();
         // 如果只有一张纹理，则设置使用一张纹理，提高运行速度
