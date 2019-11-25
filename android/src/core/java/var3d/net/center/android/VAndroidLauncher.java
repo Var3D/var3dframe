@@ -110,18 +110,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
             long delayTime=System.currentTimeMillis()-shareStartTime;
             if(delayTime<10000){
                 //分享失败
-                Gdx.app.postRunnable(new Runnable() {
-                    public void run() {
-                        if(failureRun!=null)failureRun.run();
-                    }
-                });
+                if(failureRun!=null)failureRun.run();
             }else{
                 //分享成功
-                Gdx.app.postRunnable(new Runnable() {
-                    public void run() {
-                        if(successRun!=null)successRun.run();
-                    }
-                });
+                if(successRun!=null)successRun.run();
             }
         }
     }
