@@ -1,5 +1,6 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -48,38 +49,42 @@ public class DialogMessge extends VDialog {
 
     @Override
     public void show() {
-        img_bg.clearActions();
-        Object obj = game.getUserData(MODEL);
-        float time = 3;
-        if (obj != null) {
-            Model model = (Model) obj;
-            lab_msg.setColor(model.labColor);
-            if (model.labStrokeColor != null) lab_msg.setStroke(model.labStrokeColor);
-            lab_msg.setText(model.messge);
+        Gdx.app.postRunnable(new Runnable() {
+            public void run() {
+                img_bg.clearActions();
+                Object obj = game.getUserData(MODEL);
+                float time = 3;
+                if (obj != null) {
+                    Model model = (Model) obj;
+                    lab_msg.setColor(model.labColor);
+                    if (model.labStrokeColor != null) lab_msg.setStroke(model.labStrokeColor);
+                    lab_msg.setText(model.messge);
 
-            float height = lab_msg.getPrefHeight() + game.getDefaultFontSize();
-            img_bg.setHeight(height);
-            img_bg.setPosition(getWidth() / 2, getHeight() / 2, Align.center);
-            img_bg.setColor(model.bgColor);
+                    float height = lab_msg.getPrefHeight() + game.getDefaultFontSize();
+                    img_bg.setHeight(height);
+                    img_bg.setPosition(getWidth() / 2, getHeight() / 2, Align.center);
+                    img_bg.setColor(model.bgColor);
 
-            time = model.time;
+                    time = model.time;
 
-            if ((int) time != -1) {
-                img_bg.addAction(Actions.delay(time, Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        game.removeDialog(DialogMessge.this);
+                    if ((int) time != -1) {
+                        img_bg.addAction(Actions.delay(time, Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                game.removeDialog(DialogMessge.this);
+                            }
+                        })));
                     }
-                })));
-            }
-        } else {
-            img_bg.addAction(Actions.delay(time, Actions.run(new Runnable() {
-                @Override
-                public void run() {
-                    game.removeDialog(DialogMessge.this);
+                } else {
+                    img_bg.addAction(Actions.delay(time, Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            game.removeDialog(DialogMessge.this);
+                        }
+                    })));
                 }
-            })));
-        }
+            }
+        });
     }
 
     @Override

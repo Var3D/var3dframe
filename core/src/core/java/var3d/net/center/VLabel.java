@@ -55,12 +55,8 @@ public class VLabel extends Label {
     }
 
     public void setText(final CharSequence newText) {
-        Gdx.app.postRunnable(new Runnable() {
-            public void run() {
-                VLabel.super.setText(append(newText, getStyle()));
-                addText(newText);
-            }
-        });
+        super.setText(append(newText, getStyle()));
+        addText(newText);
     }
 
 
