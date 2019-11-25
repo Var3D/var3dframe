@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -138,8 +139,8 @@ public class StageMain extends VStage {
         msg.setWrap(true);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
 
-    }
 
+    }
     public void start() {
     }
 
