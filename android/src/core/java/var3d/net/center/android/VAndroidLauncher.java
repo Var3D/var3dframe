@@ -104,6 +104,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         super.onResume();
         AndroidGraphics graphics = (AndroidGraphics) getGraphics();
         graphics.getView().requestFocus();
+        if(shareStartTime==-1)return;
         if(isShare){
             isShare=false;
             long delayTime=System.currentTimeMillis()-shareStartTime;
@@ -111,14 +112,14 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                 //分享失败
                 Gdx.app.postRunnable(new Runnable() {
                     public void run() {
-                        failureRun.run();
+                        if(failureRun!=null)failureRun.run();
                     }
                 });
             }else{
                 //分享成功
                 Gdx.app.postRunnable(new Runnable() {
                     public void run() {
-                        successRun.run();
+                        if(successRun!=null)successRun.run();
                     }
                 });
             }
@@ -143,7 +144,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
 
     private boolean isShare=false;
-    private long shareStartTime;
+    private long shareStartTime=-1;
     private Runnable successRun,failureRun;
 
     @Override
