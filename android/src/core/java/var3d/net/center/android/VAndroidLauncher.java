@@ -93,10 +93,36 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         }
     }
 
+    protected void onPause () {
+        super.onPause();
+        if(isShare){
+            shareStartTime=System.currentTimeMillis();
+        }
+    }
+
     protected void onResume() {
         super.onResume();
         AndroidGraphics graphics = (AndroidGraphics) getGraphics();
         graphics.getView().requestFocus();
+        if(isShare){
+            isShare=false;
+            long delayTime=System.currentTimeMillis()-shareStartTime;
+            if(delayTime<10000){
+                //分享失败
+                Gdx.app.postRunnable(new Runnable() {
+                    public void run() {
+                        failureRun.run();
+                    }
+                });
+            }else{
+                //分享成功
+                Gdx.app.postRunnable(new Runnable() {
+                    public void run() {
+                        successRun.run();
+                    }
+                });
+            }
+        }
     }
 
     public void setGame(VGame game) {
@@ -115,6 +141,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
+
+    private boolean isShare=false;
+    private long shareStartTime;
+    private Runnable successRun,failureRun;
+
     @Override
     public void goToShare(String title, String context, String url, byte[] imgByte, final Runnable success
             , final Runnable failure) {
@@ -125,7 +156,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         }
         intent.putExtra(Intent.EXTRA_TEXT, context + url);
         startActivity(Intent.createChooser(intent, title));
+        isShare=true;
+        this.successRun=success;
+        this.failureRun=failure;
     }
+
 
     @Override
     public void sayGood() {
