@@ -120,9 +120,21 @@ public class StageMain extends VStage {
             }
         });
 
+
+        //跳跃杆示例
+        Button btn_jump = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_jump.add(game.getLabel("跳跃示例").setFontScale(0.6f).getActor());
+        btn_jump.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                //stage跳转
+                game.setNewStage(StageJump.class);
+            }
+        });
+
         //等待添加
         Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(pref())
-                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+                .setPosition(pref().getRight()+5, btn_dialog.getTop(), Align.topLeft).addClicAction().show();
         btn_more.add(game.getLabel("等待添加...").setFontScale(0.6f).getActor());
         btn_more.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
