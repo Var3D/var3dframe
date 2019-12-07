@@ -1,6 +1,5 @@
 package var3d.net.center;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
@@ -58,6 +57,14 @@ public class VLabel extends Label {
         super.setText(append(newText, getStyle()));
         addText(newText);
     }
+
+
+    public void setEllipsis (String ellipsis) {
+        append(ellipsis,getStyle());
+        super.setEllipsis(ellipsis);
+    }
+
+
 
 
     public void setColor(Color color) {
