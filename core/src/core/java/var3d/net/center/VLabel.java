@@ -64,8 +64,10 @@ public class VLabel extends Label {
         super.setEllipsis(ellipsis);
     }
 
-
-
+    public void setEllipsis (boolean ellipsis) {
+        if(ellipsis)append(".",getStyle());
+        super.setEllipsis(ellipsis);
+    }
 
     public void setColor(Color color) {
         setColor(color.r, color.g, color.b, color.a);
