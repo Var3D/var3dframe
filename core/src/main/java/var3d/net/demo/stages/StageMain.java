@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
+import var3d.net.center.component.DialogLoad;
 import var3d.net.demo.R;
 
 /**
@@ -150,8 +151,6 @@ public class StageMain extends VStage {
         msg.setWidth(getWidth()*0.4f);
         msg.setWrap(true);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
-
-
     }
     public void start() {
     }
