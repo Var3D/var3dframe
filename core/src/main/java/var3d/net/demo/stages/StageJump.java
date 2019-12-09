@@ -1,5 +1,6 @@
 package var3d.net.demo.stages;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -51,7 +52,7 @@ public class StageJump extends VStage {
                 .setSize(40, 40).addClicAction().setPosition(btn_close.getRight()+50, btn_close.getY()).show();
         btn_jump.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                 vy=12f;
+                 vy=15f;
             }
         });
 

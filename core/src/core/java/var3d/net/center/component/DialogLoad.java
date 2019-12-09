@@ -6,7 +6,6 @@ package var3d.net.center.component;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -20,25 +19,8 @@ import var3d.net.center.VGame;
 
 public class DialogLoad extends VDialog {
 
-    private DialogLoadData data=new DialogLoadData();
     private Array<Image> lines=new Array<>();
     private Group group;
-
-    public static class DialogLoadData{
-        public Color color=Color.WHITE;
-        public float size=50;
-        public float speed=1f;
-
-        public DialogLoadData(){
-
-        }
-
-        public DialogLoadData(Color color,float size,float speed){
-            this.color=color;
-            this.size=size;
-            this.speed=speed;
-        }
-    }
 
     public DialogLoad(VGame game) {
         super(game);
@@ -65,13 +47,6 @@ public class DialogLoad extends VDialog {
 
     @Override
     public void show() {
-        if(game.getData() ==null ||game.getData(0)==null )return;
-        this.data=game.getData(0);
-        for(Image img:lines){
-            img.setColor(data.color.r,data.color.g,data.color.b,img.getColor().a);
-            img.setWidth(data.size);
-        }
-        group.addAction(Actions.forever(Actions.rotateBy(360, 2/data.speed)));
     }
 
     @Override
