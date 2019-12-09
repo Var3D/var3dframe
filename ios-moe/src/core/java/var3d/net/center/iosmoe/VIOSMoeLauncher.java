@@ -308,6 +308,10 @@ public abstract class VIOSMoeLauncher extends IOSApplication.Delegate implements
 
     }
 
+    public void updataScores(Object... objects){
+
+    }
+
     @Override
     public void universalMethod(Object... obj) {
 

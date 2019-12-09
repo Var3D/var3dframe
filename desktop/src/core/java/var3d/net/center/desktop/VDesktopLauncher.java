@@ -271,6 +271,10 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
+    public void updataScores(Object... objects){
+
+    }
+
     @Override
     public void universalMethod(Object... obj) {
         // TODO Auto-generated method stub

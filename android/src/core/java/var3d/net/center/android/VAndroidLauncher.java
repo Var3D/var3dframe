@@ -272,6 +272,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     }
 
+    public void updataScores(Object... objects){
+
+    }
+
     @Override
     public void universalMethod(Object... obj) {
 
