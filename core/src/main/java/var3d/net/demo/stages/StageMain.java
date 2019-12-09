@@ -151,6 +151,8 @@ public class StageMain extends VStage {
         msg.setWidth(getWidth()*0.4f);
         msg.setWrap(true);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
+
+        game.showDialog(DialogLoad.class);
     }
     public void start() {
     }
