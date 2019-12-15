@@ -46,7 +46,7 @@ public class DialogLoad extends VDialog {
         }
         group.addAction(Actions.forever(Actions.rotateBy(-360,2)));
 
-        int size=Math.max(game.WIDTH,game.HEIGHT) / 14;
+        int size=Math.max(game.WIDTH,game.HEIGHT) / 20;
         Button img_close=game.getUI(new Button(new TextureRegionDrawable(new TextureRegion(game
                 .getCircleColorTexture(size,Color.valueOf("d70015")))))).addClicAction()
                 .setSize(size,size).setPosition(getWidth()-20,getHeight()-20,Align.topRight).show();
