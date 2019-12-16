@@ -33,11 +33,14 @@ import android.text.SpannedString;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.DisplayCutout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -148,6 +151,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         VAndroidLauncher.this.finish();
         System.exit(0);
     }
+
 
     @Override
     public void getDiaolog(String msg) {
@@ -501,9 +505,21 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
     //返回安全区域
     private Rectangle rectangle = new Rectangle();
 
+    @TargetApi(28)
     public Rectangle getSafeAreaInsets() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ){
+            final View decorView = getWindow().getDecorView();
+            WindowInsets rootWindowInsets = decorView.getRootWindowInsets();
+            if (rootWindowInsets == null) {
+                return rectangle;
+            }
+            DisplayCutout displayCutout = rootWindowInsets.getDisplayCutout();
+            rectangle.set(displayCutout.getSafeInsetLeft(), displayCutout.getSafeInsetBottom()
+                    , displayCutout.getSafeInsetRight(), displayCutout.getSafeInsetTop());
+        }
         return rectangle;
     }
+
 
     public Pixmap getIphoneXPixmap(String name) {
         return null;
