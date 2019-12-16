@@ -133,6 +133,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
         }
     }
 
+    public void onWindowFocusChanged (boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        makeWindowFullScreen();
+    }
+
     public void setGame(VGame game) {
         this.game = game;
     }
@@ -251,7 +256,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     @Override
     public void onIOSResume() {
-        makeWindowFullScreen();
+
     }
 
     @Override
