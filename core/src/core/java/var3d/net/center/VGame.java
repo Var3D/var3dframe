@@ -2456,7 +2456,7 @@ public abstract class VGame implements ApplicationListener {
 
     //ping网络,返回此时连接需要的时间(毫秒),返回-1表示网络不通
     public int ping(int timeOut) {
-        return ping("http://www.baidu.com", timeOut);
+        return ping("https://www.baidu.com", timeOut);
     }
 
     public int ping(String url, int timeOut) {
