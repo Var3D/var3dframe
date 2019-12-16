@@ -251,7 +251,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     @Override
     public void onIOSResume() {
-
+        makeWindowFullScreen();
     }
 
     @Override
