@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="23" />
+        android:targetSdkVersion="28" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--修复刘海黑边bug-->
+        <meta-data android:name="android.notch_support" android:value="true"/>
+        <!--修复刘海黑边bug-->
     </application>
 
 </manifest>

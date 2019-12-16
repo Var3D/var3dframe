@@ -88,28 +88,30 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
-        }
         makeWindowFullScreen();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void makeWindowFullScreen() {
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
+//        }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
     }
+
 
     public void onPause () {
         super.onPause();
-        makeWindowFullScreen();
         if(isShare){
             shareStartTime=System.currentTimeMillis();
         }
@@ -117,6 +119,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
 
     public void onResume() {
         super.onResume();
+        makeWindowFullScreen();
         AndroidGraphics graphics = (AndroidGraphics) getGraphics();
         graphics.getView().requestFocus();
         if(shareStartTime==-1)return;
@@ -131,11 +134,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements
                 if(successRun!=null)successRun.run();
             }
         }
-    }
-
-    public void onWindowFocusChanged (boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        makeWindowFullScreen();
     }
 
     public void setGame(VGame game) {
