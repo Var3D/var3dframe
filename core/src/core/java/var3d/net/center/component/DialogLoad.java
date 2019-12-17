@@ -59,7 +59,7 @@ public class DialogLoad extends VDialog {
         img_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 if(run!=null)run.run();
-                game.removeDialog();
+                game.removeDialog(DialogLoad.this);
             }
         });
     }
