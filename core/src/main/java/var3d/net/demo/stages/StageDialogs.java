@@ -10,7 +10,6 @@ import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
 import var3d.net.demo.dialogs.DialogAD;
-import var3d.net.demo.dialogs.DialogLogin;
 import var3d.net.demo.dialogs.DialogLoginGdx;
 import var3d.net.demo.dialogs.DialogRatio;
 import var3d.net.demo.dialogs.DialogTestFull;
@@ -71,15 +70,6 @@ public class StageDialogs extends VStage {
         btn_full.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.showDialog(DialogTestFull.class);
-            }
-        });
-        //登录对话框(原生输入框)
-        Button btn_login = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
-                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
-        btn_login.add(game.getLabel("登录(原生输入)").setFontScale(0.6f).getActor());
-        btn_login.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogLogin.class);
             }
         });
 

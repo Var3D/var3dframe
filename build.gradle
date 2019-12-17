@@ -9,7 +9,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5' // Add this line
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.7'
-        classpath 'org.multi-os-engine:moe-gradle:1.4.3'
     }
 }
 
@@ -87,19 +86,6 @@ project(":ios") {
     }
 }
 
-project(":ios-moe") {
-    apply plugin: "moe"
-
-    configurations { natives }
-
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-moe:$gdxVersion"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
-
-    }
-}
-
 project(":core") {
     apply plugin: "java"
 
@@ -130,7 +116,7 @@ subprojects {
 
 
 
-    def preCompile = [":core:coreClasses", ":desktop:coreClasses", ":ios:coreClasses",":ios-moe:coreClasses", ":android:compileCoreReleaseJavaWithJavac"];
+    def preCompile = [":core:coreClasses", ":desktop:coreClasses", ":ios:coreClasses", ":android:compileCoreReleaseJavaWithJavac"];
 
     packJar.dependsOn preCompile
 

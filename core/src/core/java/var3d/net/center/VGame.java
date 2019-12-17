@@ -801,19 +801,16 @@ public abstract class VGame implements ApplicationListener {
         for (VDialog dia : poolDialog.values()) {
             dia.pause();
             dia.setTouchable(Touchable.disabled);
-            setNativeTextFieldsHidden(dia, true);
         }
         // 禁止底层stage响应
         if (stage != null) {
             stage.pause();
             stage.cancelTouchFocus();
             stage.getRoot().setTouchable(Touchable.disabled);
-            setNativeTextFieldsHidden(stage.getRoot(), true);
         }
         VDialog dia = getDialog(dialog);
         dia.setTouchable(Touchable.enabled);
         stageTop.addActor(dia);
-        setNativeTextFieldsHidden(dia, false);
         dia.playShowActions();
         dia.show();
         return dia;
@@ -867,15 +864,12 @@ public abstract class VGame implements ApplicationListener {
                     VDialog nowDialog = dialogs.peek();
                     nowDialog.setTouchable(Touchable.enabled);
                     nowDialog.resume();
-                    setNativeTextFieldsHidden(nowDialog, false);
                 } else {
                     stage.getRoot().setTouchable(Touchable.enabled);
                     stage.resume();
-                    setNativeTextFieldsHidden(stage.getRoot(), false);
                 }
             }
         });
-        setNativeTextFieldsHidden(dialog, true);
     }
 
     /**
@@ -914,7 +908,6 @@ public abstract class VGame implements ApplicationListener {
         Array<VDialog> dialogs = new Array<VDialog>();
         for (Actor actor : stageTop.getActors()) {
             if (actor instanceof VDialog) {
-                setNativeTextFieldsHidden((VDialog) actor, true);
                 dialogs.add((VDialog) actor);
             }
         }
@@ -985,8 +978,6 @@ public abstract class VGame implements ApplicationListener {
             }
             multiplexer.addProcessor(stageTop);
             prefStage = stage.getClass();
-            //将当前的原生输入框隐藏掉
-            setNativeTextFieldsHidden(stage.getRoot(), true);
             //将当前的 stage 回归原位
             stage.getRoot().clearActions();
             stage.getRoot().setPosition(stage.getStartX(),stage.getStartY());
@@ -1010,9 +1001,6 @@ public abstract class VGame implements ApplicationListener {
                 } else {
                     gesture = null;
                 }
-                //将当前的原生输入框显示出来
-                setNativeTextFieldsHidden(stage.getRoot(), false);
-
             }
         } while (stage == null);
     }
@@ -1055,16 +1043,6 @@ public abstract class VGame implements ApplicationListener {
 
     public Stack<Class> getStageStack() {
         return stageStack;
-    }
-
-    //隐藏或显示原生输入框
-    public void setNativeTextFieldsHidden(Group father, boolean isHidden) {
-        SnapshotArray<Actor> children = father.getChildren();
-        for (Actor actor : children) {
-            if (actor instanceof NativeTextField) {
-                ((NativeTextField) actor).setHidden(isHidden);
-            }
-        }
     }
 
     public void pause() {
