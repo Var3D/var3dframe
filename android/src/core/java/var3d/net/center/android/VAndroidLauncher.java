@@ -1,6 +1,5 @@
 package var3d.net.center.android;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -481,7 +480,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     //返回安全区域
     private Rectangle rectangle = new Rectangle();
 
-    @TargetApi(28)
     public Rectangle getSafeAreaInsets() {
 //        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.P ){
 //            final View decorView = getWindow().getDecorView();
