@@ -483,17 +483,23 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     //返回安全区域
     private Rectangle rectangle = new Rectangle();
 
-    @TargetApi(28)
+
     public Rectangle getSafeAreaInsets() {
         if(Build.VERSION.SDK_INT >Build.VERSION_CODES.P ){
             final View decorView = getWindow().getDecorView();
-            WindowInsets rootWindowInsets = decorView.getRootWindowInsets();
+            WindowInsets rootWindowInsets = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                rootWindowInsets = decorView.getRootWindowInsets();
+            }
             if (rootWindowInsets == null) {
                 return rectangle;
             }
-            DisplayCutout displayCutout = rootWindowInsets.getDisplayCutout();
-            rectangle.set(displayCutout.getSafeInsetLeft(), displayCutout.getSafeInsetBottom()
-                    , displayCutout.getSafeInsetRight(), displayCutout.getSafeInsetTop());
+            DisplayCutout displayCutout = null;
+            if (android.os.Build.VERSION.SDK_INT >= 28) {
+                displayCutout = rootWindowInsets.getDisplayCutout();
+                rectangle.set(displayCutout.getSafeInsetLeft(), displayCutout.getSafeInsetBottom()
+                        , displayCutout.getSafeInsetRight(), displayCutout.getSafeInsetTop());
+            }
         }
         return rectangle;
     }
