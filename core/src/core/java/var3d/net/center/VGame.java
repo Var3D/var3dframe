@@ -2522,4 +2522,20 @@ public abstract class VGame implements ApplicationListener {
         }.start();
     }
 
+
+    /**
+     * 字符加解密
+     * @param value
+     * @param secret
+     * @return
+     */
+    public  String encryptAndDencrypt(String value, char secret) {
+        byte[] bt=value.getBytes();
+        for(int i=0;i<bt.length;i++)
+        {
+            bt[i]=(byte)(bt[i]^(int)secret);
+        }
+        String newresult=new String(bt,0,bt.length);
+        return newresult;
+    }
 }
