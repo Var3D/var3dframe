@@ -5,8 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.StringBuilder;
 
-import var3d.net.center.freefont.FreeBitmapFont;
-
 /**
  * Created by feng on 2018/6/1.
  * 可缩放文字控件类
@@ -40,6 +38,38 @@ public class SLabel extends Group {
         label.setColor(r, g, b, a);
     }
 
+    public float getShadowOffsetX() {
+        return label.getShadowOffsetX();
+    }
+
+    public void setShadowOffsetX(float shadowOffsetX) {
+        label.setShadowOffsetX(shadowOffsetX);
+    }
+
+    public float getShadowOffsetY() {
+        return label.getShadowOffsetY();
+    }
+
+    public void setShadowOffsetY(float shadowOffsetY) {
+        label.setShadowOffsetY(shadowOffsetY);
+    }
+
+    public VLabel.ShadowOption getShadowOption() {
+        return label.getShadowOption();
+    }
+
+    public void setShadowOption(VLabel.ShadowOption shadowOption) {
+        label.setShadowOption(shadowOption);
+    }
+
+    public Color getShadowColor() {
+        return label.getShadowColor();
+    }
+
+    public void setShadowColor(Color shadowColor) {
+        label.setShadowColor(shadowColor);
+    }
+
     /**
      * 设置描边
      */
@@ -53,6 +83,8 @@ public class SLabel extends Group {
     public void setStroke(Color strokeColor, float strokeWidth) {
         label.setStroke(strokeColor, strokeWidth);
     }
+
+
 
     public void setFontScale(float fontScale) {
         this.setFontScale(fontScale, fontScale);

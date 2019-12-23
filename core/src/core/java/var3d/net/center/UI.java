@@ -359,11 +359,7 @@ public class UI<T extends Actor> {
     }
 
     public UI<T> setStroke(Color strokeColor) {
-        if (t instanceof VLabel) {
-            ((VLabel) t).setStroke(strokeColor);
-        } else if (t instanceof SLabel) {
-            ((SLabel) t).setStroke(strokeColor);
-        } else Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor)方法仅在类型VLabel/SLabel上有效");
+        setStroke(strokeColor,1);
         return this;
     }
 
@@ -374,6 +370,29 @@ public class UI<T extends Actor> {
             ((SLabel) t).setStroke(strokeColor, strokeWidth);
         } else
             Gdx.app.error("Var3D框架消息", "setStroke(Color strokeColor, float strokeWidth)方法仅在类型VLabel/SLabel上有效");
+        return this;
+    }
+
+    public UI<T> setShadow(Color shadowColor){
+        setShadow(shadowColor,1,-1);
+        return this;
+    }
+
+    public UI<T> setShadow(Color shadowColor,float offx,float offy){
+        if (t instanceof VLabel) {
+            VLabel l= (VLabel) t;
+            l.setShadowOption(VLabel.ShadowOption.Projection);
+            l.setShadowColor(shadowColor);
+            l.setShadowOffsetX(offx);
+            l.setShadowOffsetY(offy);
+        } else if (t instanceof SLabel) {
+            SLabel l= (SLabel) t;
+            l.setShadowOption(VLabel.ShadowOption.Projection);
+            l.setShadowColor(shadowColor);
+            l.setShadowOffsetX(offx);
+            l.setShadowOffsetY(offy);
+        } else
+            Gdx.app.error("Var3D框架消息", "setShadow(Color shadowColor,float offx,float offy)方法仅在类型VLabel/SLabel上有效");
         return this;
     }
 

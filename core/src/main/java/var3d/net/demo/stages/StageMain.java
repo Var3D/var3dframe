@@ -16,6 +16,7 @@ import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
 import var3d.net.center.component.DialogLoad;
+import var3d.net.center.freefont.FreePaint;
 import var3d.net.demo.R;
 
 /**
@@ -153,7 +154,6 @@ public class StageMain extends VStage {
         msg.setWrap(true);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
 
-        //game.showDialog(DialogLoad.class);
     }
     public void start() {
     }
