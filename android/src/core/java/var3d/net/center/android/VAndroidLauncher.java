@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -863,39 +864,9 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     public void openNetSetting(){
         runOnUiThread(new Runnable() {
             public void run() {
-                String title="网络设置",wifi="打开wifi",move="打开移动网络";
-//                if(false==isZh(VAndroidLauncher.this)){
-//                    title="Network settings";
-//                    wifi="Open wifi";
-//                    move="Open mobile network";
-//                }
-                AlertDialog.Builder b = new AlertDialog.Builder(VAndroidLauncher.this);
-
-                b.setTitle(title);
-                b.setNegativeButton(wifi, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent =  new Intent(ACTION_WIFI_SETTINGS);
-                        startActivity(intent);
-                    }
-                });
-                b.setPositiveButton(move, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent=new Intent(ACTION_DATA_ROAMING_SETTINGS);
-                        startActivity(intent);
-                    }
-                });
-                b.create();
-                b.show();
+                Intent intent=new Intent(ACTION_DATA_ROAMING_SETTINGS);
+                startActivity(intent);
             }
         });
     }
-
-//    public static boolean isZh(Context context) {
-//        Locale locale = context.getResources().getConfiguration().locale;
-//        String language = locale.getLanguage();
-//        if (language.endsWith("zh"))
-//            return true;
-//        else
-//            return false;
-//    }
 }
