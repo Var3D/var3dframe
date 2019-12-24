@@ -1,6 +1,5 @@
 package var3d.net.center.android;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -60,8 +59,6 @@ import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
-import var3d.net.demo.android.AndroidLauncher;
-import var3d.net.demo.android.R;
 
 import static android.provider.Settings.ACTION_DATA_ROAMING_SETTINGS;
 import static android.provider.Settings.ACTION_WIFI_SETTINGS;
@@ -874,7 +871,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                 }
                 AlertDialog.Builder b = new AlertDialog.Builder(VAndroidLauncher.this);
                 b.setTitle(title);
-                b.setIcon(R.drawable.ic_launcher);
                 b.setNegativeButton(wifi, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent =  new Intent(ACTION_WIFI_SETTINGS);
