@@ -870,6 +870,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                     move="Open mobile network";
                 }
                 AlertDialog.Builder b = new AlertDialog.Builder(VAndroidLauncher.this);
+
                 b.setTitle(title);
                 b.setNegativeButton(wifi, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
