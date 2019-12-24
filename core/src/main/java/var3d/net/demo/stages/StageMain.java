@@ -123,7 +123,7 @@ public class StageMain extends VStage {
         });
 
 
-        //跳跃杆示例
+        //跳跃示例
         Button btn_jump = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
                 .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_jump.add(game.getLabel("跳跃示例").setFontScale(0.6f).getActor());
@@ -134,9 +134,23 @@ public class StageMain extends VStage {
             }
         });
 
+        //跳转到网络设置界面（电脑版无效）
+        Button btn_netbutton = game.getButton().setColor(Color.valueOf("0075ed")).setSize(pref())
+                .setPosition(pref().getRight()+5, btn_dialog.getTop(), Align.topLeft).addClicAction().show();
+        btn_netbutton.add(game.getLabel("网络设置").setFontScale(0.6f).getActor());
+        btn_netbutton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
+                    game.showMessege("网络设置功能仅支持 ios 端和 android 端");
+                } else {
+                    game.var3dListener.openNetSetting();
+                }
+            }
+        });
+
         //等待添加
         Button btn_more = game.getButton().setColor(Color.ORANGE).setSize(pref())
-                .setPosition(pref().getRight()+5, btn_dialog.getTop(), Align.topLeft).addClicAction().show();
+                .setPosition(pref().getX(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_more.add(game.getLabel("等待添加...").setFontScale(0.6f).getActor());
         btn_more.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {

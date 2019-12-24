@@ -605,4 +605,8 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
             uiTextField.resignFirstResponder();
         }
     }
+
+    public void openNetSetting(){
+        Gdx.net.openURI(UIApplication.getOpenSettingsURLString());
+    }
 }

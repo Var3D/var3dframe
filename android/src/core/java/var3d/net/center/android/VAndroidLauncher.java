@@ -60,6 +60,11 @@ import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
+import var3d.net.demo.android.AndroidLauncher;
+import var3d.net.demo.android.R;
+
+import static android.provider.Settings.ACTION_DATA_ROAMING_SETTINGS;
+import static android.provider.Settings.ACTION_WIFI_SETTINGS;
 
 public abstract class VAndroidLauncher extends AndroidApplication implements VListener {
     @SuppressWarnings("unused")
@@ -856,5 +861,44 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                 textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_NEXT);
                 break;
         }
+    }
+
+    public void openNetSetting(){
+        runOnUiThread(new Runnable() {
+            public void run() {
+                String title="网络设置",wifi="打开wifi",move="打开移动网络";
+                if(false==isZh(VAndroidLauncher.this)){
+                    title="Network settings";
+                    wifi="Open wifi";
+                    move="Open mobile network";
+                }
+                AlertDialog.Builder b = new AlertDialog.Builder(VAndroidLauncher.this);
+                b.setTitle(title);
+                b.setIcon(R.drawable.ic_launcher);
+                b.setNegativeButton(wifi, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent =  new Intent(ACTION_WIFI_SETTINGS);
+                        startActivity(intent);
+                    }
+                });
+                b.setPositiveButton(move, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent=new Intent(ACTION_DATA_ROAMING_SETTINGS);
+                        startActivity(intent);
+                    }
+                });
+                b.create();
+                b.show();
+            }
+        });
+    }
+
+    public static boolean isZh(Context context) {
+        Locale locale = context.getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        if (language.endsWith("zh"))
+            return true;
+        else
+            return false;
     }
 }
