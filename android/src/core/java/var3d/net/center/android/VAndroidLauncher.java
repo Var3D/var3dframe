@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -62,7 +61,6 @@ import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
 
 import static android.provider.Settings.ACTION_DATA_ROAMING_SETTINGS;
-import static android.provider.Settings.ACTION_WIFI_SETTINGS;
 
 public abstract class VAndroidLauncher extends AndroidApplication implements VListener {
     @SuppressWarnings("unused")
@@ -862,11 +860,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     }
 
     public void openNetSetting(){
-        runOnUiThread(new Runnable() {
-            public void run() {
-                Intent intent=new Intent(ACTION_DATA_ROAMING_SETTINGS);
-                startActivity(intent);
-            }
-        });
+        Intent intent=new Intent(ACTION_DATA_ROAMING_SETTINGS);
+        startActivity(intent);
     }
 }
