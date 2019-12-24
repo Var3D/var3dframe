@@ -864,11 +864,11 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         runOnUiThread(new Runnable() {
             public void run() {
                 String title="网络设置",wifi="打开wifi",move="打开移动网络";
-                if(false==isZh(VAndroidLauncher.this)){
-                    title="Network settings";
-                    wifi="Open wifi";
-                    move="Open mobile network";
-                }
+//                if(false==isZh(VAndroidLauncher.this)){
+//                    title="Network settings";
+//                    wifi="Open wifi";
+//                    move="Open mobile network";
+//                }
                 AlertDialog.Builder b = new AlertDialog.Builder(VAndroidLauncher.this);
 
                 b.setTitle(title);
@@ -890,12 +890,12 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         });
     }
 
-    public static boolean isZh(Context context) {
-        Locale locale = context.getResources().getConfiguration().locale;
-        String language = locale.getLanguage();
-        if (language.endsWith("zh"))
-            return true;
-        else
-            return false;
-    }
+//    public static boolean isZh(Context context) {
+//        Locale locale = context.getResources().getConfiguration().locale;
+//        String language = locale.getLanguage();
+//        if (language.endsWith("zh"))
+//            return true;
+//        else
+//            return false;
+//    }
 }
