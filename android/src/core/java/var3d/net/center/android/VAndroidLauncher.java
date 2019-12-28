@@ -110,7 +110,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         if(isShare){
             isShare=false;
             long delayTime=System.currentTimeMillis()-shareStartTime;
-            if(delayTime<10000){
+            if(delayTime<5000){
                 //分享失败
                 if(failureRun!=null)failureRun.run();
             }else{

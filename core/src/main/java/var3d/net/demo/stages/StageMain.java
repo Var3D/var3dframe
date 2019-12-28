@@ -160,12 +160,7 @@ public class StageMain extends VStage {
 
 
         //文本测试
-        VLabel msg = game.getLabel("我是😯一个粉刷😊匠，粉刷️本领强").show(this);
-        msg.setText("[黑]我是😯一个粉刷😊匠，粉刷️本领强");
-        msg.setDebug(true);
-        msg.setAlignment(Align.center, Align.center);
-        msg.setWidth(getWidth()*0.4f);
-        msg.setWrap(true);
+        VLabel msg = game.getLabel("我是一个粉刷匠，粉刷️本领强").show(this);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
 
     }
