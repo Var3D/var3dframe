@@ -498,8 +498,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
             DisplayCutout displayCutout = null;
             if (android.os.Build.VERSION.SDK_INT >= 28) {
                 displayCutout = rootWindowInsets.getDisplayCutout();
-                rectangle.set(displayCutout.getSafeInsetLeft(), displayCutout.getSafeInsetBottom()
-                        , displayCutout.getSafeInsetRight(), displayCutout.getSafeInsetTop());
+                if(displayCutout!=null) {
+                    rectangle.set(displayCutout.getSafeInsetLeft(), displayCutout.getSafeInsetBottom()
+                            , displayCutout.getSafeInsetRight(), displayCutout.getSafeInsetTop());
+                }
             }
         }
         return rectangle;
