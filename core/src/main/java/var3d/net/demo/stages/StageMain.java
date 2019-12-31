@@ -162,7 +162,6 @@ public class StageMain extends VStage {
         //文本测试
         VLabel msg = game.getLabel("我是一个粉刷匠，粉刷️本领强").show(this);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
-
     }
     public void start() {
     }

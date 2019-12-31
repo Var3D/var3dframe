@@ -83,6 +83,20 @@ class JSON {
         return null;
     }
 
+    static Float toFloat(Object value) {
+        if (value instanceof Float) {
+            return (Float) value;
+        } else if (value instanceof Number) {
+            return ((Number) value).floatValue();
+        } else if (value instanceof String) {
+            try {
+                return (float) Double.parseDouble((String) value);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return null;
+    }
+
     static String toString(Object value) {
         if (value instanceof String) {
             return (String) value;

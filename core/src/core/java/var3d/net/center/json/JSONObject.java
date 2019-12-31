@@ -505,6 +505,47 @@ public class JSONObject {
         return result != null ? result : fallback;
     }
 
+
+
+    /**
+     * Returns the value mapped by {@code name} if it exists and is a long or
+     * can be coerced to a long. Note that JSON represents numbers as doubles,
+     * so this is <a href="#lossy">lossy</a>; use strings to transfer numbers via JSON.
+     *
+     * @throws JSONException if the mapping doesn't exist or cannot be coerced
+     *     to a long.
+     */
+    public float getFloat(String name) throws JSONException {
+        Object object = get(name);
+        Float result = JSON.toFloat(object);
+        if (result == null) {
+            throw JSON.typeMismatch(name, object, "float");
+        }
+        return result;
+    }
+
+    /**
+     * Returns the value mapped by {@code name} if it exists and is a long or
+     * can be coerced to a long. Returns 0 otherwise. Note that JSON represents numbers as doubles,
+     * so this is <a href="#lossy">lossy</a>; use strings to transfer numbers via JSON.
+     */
+    public float optFloat(String name) {
+        return optFloat(name, 0L);
+    }
+
+    /**
+     * Returns the value mapped by {@code name} if it exists and is a long or
+     * can be coerced to a long. Returns {@code fallback} otherwise. Note that JSON represents
+     * numbers as doubles, so this is <a href="#lossy">lossy</a>; use strings to transfer
+     * numbers via JSON.
+     */
+    public float optFloat(String name, float fallback) {
+        Object object = opt(name);
+        Float result = JSON.toFloat(object);
+        return result != null ? result : fallback;
+    }
+
+
     /**
      * Returns the value mapped by {@code name} if it exists, coercing it if
      * necessary.

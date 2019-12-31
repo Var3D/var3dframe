@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -62,7 +61,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.SnapshotArray;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -116,7 +114,7 @@ public abstract class VGame implements ApplicationListener {
     public int fontSize = 30;
     private FreePaint paint;
     public VBundle bundle;// 文本国际化
-    public Preferences save;// 数据保存
+    public VPreferences save;// 数据保存
 
     private boolean isMusic = true;// 是否播放背景音乐
     private boolean isSound = true;// 是否播放音效
@@ -222,7 +220,7 @@ public abstract class VGame implements ApplicationListener {
 
     public void create() {
         game=this;
-        save = Gdx.app.getPreferences(getProjectName());// 数据存储实例化
+        save = new VPreferences(getProjectName());// 数据存储实例化
         Gdx.input.setCatchBackKey(true);// 劫持系统返回键
         multiplexer = new InputMultiplexer();// 触控实例化
         Gdx.input.setInputProcessor(multiplexer);//
