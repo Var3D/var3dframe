@@ -21,7 +21,7 @@ public class VPreferences {
 
     public VPreferences(String name){
         this.packName =name;
-        save = Gdx.app.getPreferences(name);// 数据存储实例化
+        save = Gdx.app.getPreferences(name+".new");// 数据存储实例化
     }
 
     private DesUtils getKeyStore(String key){

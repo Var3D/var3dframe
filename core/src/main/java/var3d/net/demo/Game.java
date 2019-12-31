@@ -1,5 +1,10 @@
 package var3d.net.demo;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+
+import java.util.Map;
+
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.freefont.FreeBitmapFont;
