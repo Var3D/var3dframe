@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -74,6 +75,7 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -221,6 +223,20 @@ public abstract class VGame implements ApplicationListener {
     public void create() {
         game=this;
         save = new VPreferences(getProjectName());// 数据存储实例化
+        //数据迁移开始
+        Preferences old_save=Gdx.app.getPreferences(getProjectName());
+        Map<String, ?> map=old_save.get();
+        if(map.size()>0){//拥有旧数据
+            for(Map.Entry<String, ?> entry : map.entrySet()){
+                String key=entry.getKey();
+                Object value=entry.getValue();
+                save.putString(key, ""+value);
+            }
+            save.flush();
+            old_save.clear();
+            old_save.flush();
+        }
+        //数据迁移结束
         Gdx.input.setCatchBackKey(true);// 劫持系统返回键
         multiplexer = new InputMultiplexer();// 触控实例化
         Gdx.input.setInputProcessor(multiplexer);//
