@@ -226,13 +226,15 @@ public abstract class VGame implements ApplicationListener {
         //数据迁移开始
         Preferences old_save=Gdx.app.getPreferences(getProjectName());
         Map<String, ?> map=old_save.get();
-        if(map.size()>0){//拥有旧数据
-            for(Map.Entry<String, ?> entry : map.entrySet()){
-                String key=entry.getKey();
-                Object value=entry.getValue();
-                save.putString(key, ""+value);
+        if(map.size()>0){//拥有旧数据并且没有新数据
+            if(save.get().size()==0) {
+                for (Map.Entry<String, ?> entry : map.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    save.putString(key, "" + value);
+                }
+                save.flush();
             }
-            save.flush();
             old_save.clear();
             old_save.flush();
         }
