@@ -19,6 +19,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -863,6 +864,18 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
     public void openNetSetting(){
         Intent intent=new Intent(ACTION_DATA_ROAMING_SETTINGS);
-        startActivity(intent);
+        if(intent.resolveActivity(getPackageManager())!=null) {
+            startActivity(intent);
+        }else {
+            intent=new Intent(Settings.ACTION_WIFI_SETTINGS);
+            if(intent.resolveActivity(getPackageManager())!=null) {
+                startActivity(intent);
+            }else{
+                intent = new Intent(Settings.ACTION_SETTINGS);
+                if(intent.resolveActivity(getPackageManager())!=null) {
+                    startActivity(intent);
+                }
+            }
+        }
     }
 }
