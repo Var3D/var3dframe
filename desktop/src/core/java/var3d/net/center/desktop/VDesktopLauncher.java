@@ -1516,12 +1516,6 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     private void autoFbx2G3db2(String convPath) {
-//        String assetsPath = System.getProperty("user.dir");
-//        if (new File(convPath).exists()) fbxToG3dbs(new File(assetsPath), convPath);
-//        else {
-//            System.err.println("问题缺少fbx-conv: 请将fbx-conv放入这个路径" + convPath);
-//            System.err.println("fbx-conv下载地址 : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
-//        }
 
         String assetsPath = System.getProperty("user.dir");
         if (new File(convPath).exists()) {
@@ -1529,11 +1523,12 @@ public abstract class VDesktopLauncher implements VListener {
             filein.getAbsoluteFile().delete();
             fbxToG3dbs(new File(assetsPath), convPath);
         } else {
-            System.err.println("问题缺少fbx-conv");
-            System.err.println("开始下载地址fbx-conv : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
+            System.err.println("缺少fbx-conv");
             File file=new File(convPath);
             file.mkdirs();
+            getAuthority(file.getAbsolutePath());
             System.err.println("创建"+file.getAbsolutePath()+"文件夹");
+            System.err.println("开始下载fbx-conv : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
             FileOutputStream fileOut = null;
             HttpURLConnection conn = null;
             InputStream inputStream = null;
@@ -1554,10 +1549,17 @@ public abstract class VDesktopLauncher implements VListener {
                 byte[] buf = new byte[4096];
                 int length = bis.read(buf);
                 //保存文件
+                System.err.print("下载中");
+                int step=0;
                 while(length != -1)
                 {
                     bos.write(buf, 0, length);
                     length = bis.read(buf);
+                    step++;
+                    if(step>10){
+                        step=0;
+                        System.err.print(".");
+                    }
                 }
                 bos.close();
                 bis.close();
@@ -1567,6 +1569,7 @@ public abstract class VDesktopLauncher implements VListener {
                 //解压
                 try {
                     File filein=new File(convPath+File.separator +"conv.zip");
+                    getAuthority(filein.getAbsolutePath());
                     JarInputStream jarIn = new JarInputStream(new BufferedInputStream(new FileInputStream(filein)));
                     byte[] bytes = new byte[1024];
                     while (true) {
@@ -1601,6 +1604,18 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
+    private void getAuthority(String path){
+        if(LWJGLUtil.getPlatform()==LWJGLUtil.PLATFORM_MACOSX ){//如果是mac系统，记得开权限
+            try {
+                Runtime.getRuntime().exec("chmod 777 "+path).waitFor();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private void fbxToG3dbs(File group, String toolPath) {
         File[] list = group.listFiles();
@@ -1626,6 +1641,7 @@ public abstract class VDesktopLauncher implements VListener {
                     process = Runtime.getRuntime().exec(convPath);
                     break;
                 case LWJGLUtil.PLATFORM_MACOSX:
+                    getAuthority(toolPath + File.separator + "fbx-conv-mac");
                     convPath = new String[]{toolPath + File.separator + "fbx-conv-mac", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
                     break;
