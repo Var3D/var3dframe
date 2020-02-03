@@ -1885,8 +1885,7 @@ public abstract class VGame implements ApplicationListener {
         return new TextureRegionDrawable(tex);
     }
 
-    public TextureRegionDrawable getRectColorDrawable(float width,
-                                                      float height, Color color) {
+    public TextureRegionDrawable getRectColorDrawable(float width, float height, Color color) {
         TextureRegion tex = new TextureRegion(getColorPointTexture(color));
         tex.setRegion(0, 0, width, height);
         return new TextureRegionDrawable(tex);
@@ -2231,6 +2230,17 @@ public abstract class VGame implements ApplicationListener {
      */
     public UI<Button> getButton(String up, String down, String checked) {
         return getUI(new Button(getDrawable(up), getDrawable(down), getDrawable(checked)));
+    }
+
+    /**
+     * 创建圆角Button
+     */
+    public UI<Button> getButton(float width,float height,int radius) {
+        NinePatch patch=new NinePatch(game.getCircleRectTexture((int)(width*2),(int)(height*2),radius));
+        NinePatchDrawable drawable=new NinePatchDrawable(patch);
+        Button button=new Button(drawable);
+        button.setSize(width,height);
+        return getUI(button);
     }
 
     /**
