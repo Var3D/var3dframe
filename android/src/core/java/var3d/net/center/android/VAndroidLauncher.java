@@ -646,8 +646,14 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
             editText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);//关掉横屏模式下的键盘全屏
             frameLayout.addView(editText);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
-            activity.addContentView(frameLayout, layoutParams);
+            final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.addContentView(frameLayout, layoutParams);
+                }
+            });
 
             editText.addTextChangedListener(new TextWatcher() {
 
@@ -706,7 +712,12 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         }
         setInputType(editText,mTextField.getKeyboardType());
         setReturnText(editText,mTextField.getReturnKeyType());
-        editText.setText("");
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                editText.setText("");
+            }
+        });
     }
 
 
