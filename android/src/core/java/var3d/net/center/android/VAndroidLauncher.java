@@ -568,79 +568,82 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
     public void linkVTextField(final VTextField vTextField){
         mTextField=vTextField;
-        runOnUiThread(new Runnable() {
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
             public void run() {
-                if(editText==null) {
-                    frameLayout = new FrameLayout(activity);
-                    editText = new EditText(activity);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        if(editText==null) {
+                            frameLayout = new FrameLayout(activity);
+                            editText = new EditText(activity);
 
-                    editText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);//关掉横屏模式下的键盘全屏
-                    frameLayout.addView(editText);
-                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
-                    activity.addContentView(frameLayout, layoutParams);
+                            editText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);//关掉横屏模式下的键盘全屏
+                            frameLayout.addView(editText);
+                            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
+                            activity.addContentView(frameLayout, layoutParams);
 
-                    editText.addTextChangedListener(new TextWatcher() {
+                            editText.addTextChangedListener(new TextWatcher() {
 
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        public void onTextChanged(final CharSequence string, final int start, int before, final int count) {
-                            if(string.length()==0||start>string.length()-1)return;
-                            Gdx.app.postRunnable(new Runnable() {
-                                public void run() {
-                                    FreeBitmapFont font= (FreeBitmapFont) vTextField.getStyle().font;
-                                    String newString=font.appendTextPro(string.subSequence(start,start+count).toString());
-
-                                    for(int i=0, len=newString.length();i<len;i++){
-                                        char newchar = newString.charAt(i);
-                                        Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
-                                    }
-                                    Gdx.graphics.requestRendering();
-
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                                 }
-                            });
-                        }
 
-                        public void afterTextChanged(Editable s) {
-                        }
-                    });
+                                public void onTextChanged(final CharSequence string, final int start, int before, final int count) {
+                                    if(string.length()==0||start>string.length()-1)return;
+                                    Gdx.app.postRunnable(new Runnable() {
+                                        public void run() {
+                                            FreeBitmapFont font= (FreeBitmapFont) vTextField.getStyle().font;
+                                            String newString=font.appendTextPro(string.subSequence(start,start+count).toString());
 
-                    editText.setOnKeyListener(new View.OnKeyListener() {
-                        public boolean onKey(View v, final int keyCode, KeyEvent event) {
-                            if(event.getAction() == KeyEvent.ACTION_DOWN) {
-                                switch (keyCode) {
-                                    case KeyEvent.KEYCODE_DEL://删除键
-                                        Gdx.app.postRunnable(new Runnable() {
-                                            public void run() {
-                                                Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
-                                                Gdx.graphics.requestRendering();
+                                            for(int i=0, len=newString.length();i<len;i++){
+                                                char newchar = newString.charAt(i);
+                                                Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
                                             }
-                                        });
-                                        break;
-                                }
-                            }
-                            return false;
-                        }});
+                                            Gdx.graphics.requestRendering();
 
-                    editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                            Gdx.app.postRunnable(new Runnable() {
-                                public void run() {
-                                    Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.ENTER);
-                                    Gdx.graphics.requestRendering();
+                                        }
+                                    });
+                                }
+
+                                public void afterTextChanged(Editable s) {
                                 }
                             });
-                          return false;
+
+                            editText.setOnKeyListener(new View.OnKeyListener() {
+                                public boolean onKey(View v, final int keyCode, KeyEvent event) {
+                                    if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                                        switch (keyCode) {
+                                            case KeyEvent.KEYCODE_DEL://删除键
+                                                Gdx.app.postRunnable(new Runnable() {
+                                                    public void run() {
+                                                        Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
+                                                        Gdx.graphics.requestRendering();
+                                                    }
+                                                });
+                                                break;
+                                        }
+                                    }
+                                    return false;
+                                }});
+
+                            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                    Gdx.app.postRunnable(new Runnable() {
+                                        public void run() {
+                                            Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.ENTER);
+                                            Gdx.graphics.requestRendering();
+                                        }
+                                    });
+                                    return false;
+                                }
+                            });
                         }
-                    });
-                }
-                setInputType(editText,mTextField.getKeyboardType());
-                setReturnText(editText,mTextField.getReturnKeyType());
-                editText.setText("");
+                        setInputType(editText,mTextField.getKeyboardType());
+                        setReturnText(editText,mTextField.getReturnKeyType());
+                        editText.setText("");
+                    }
+                });
             }
         });
-
-
     }
 
 

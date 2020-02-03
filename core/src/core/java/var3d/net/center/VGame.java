@@ -2239,7 +2239,6 @@ public abstract class VGame implements ApplicationListener {
         NinePatch patch=new NinePatch(game.getCircleRectTexture((int)(width*2),(int)(height*2),radius));
         NinePatchDrawable drawable=new NinePatchDrawable(patch);
         Button button=new Button(drawable);
-        button.pack();
         button.setSize(width,height);
         return getUI(button);
     }
