@@ -2240,6 +2240,7 @@ public abstract class VGame implements ApplicationListener {
         NinePatchDrawable drawable=new NinePatchDrawable(patch);
         Button button=new Button(drawable);
         button.setSize(width,height);
+        button.pack();
         return getUI(button);
     }
 
