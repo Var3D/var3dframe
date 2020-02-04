@@ -19,6 +19,11 @@ public class StageTop extends VStage {
 	}
 
 	@Override
+	public void show() {
+
+	}
+
+	@Override
 	public void changing(float width, float height) {
 		// TODO Auto-generated method stub
 

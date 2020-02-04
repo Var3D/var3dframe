@@ -1010,6 +1010,7 @@ public abstract class VGame implements ApplicationListener {
                     stageNames.add(name);
                     stage.start();
                 }
+                stage.show();
                 multiplexer.addProcessor(input = stage);
                 if (stage instanceof GestureDetector.GestureListener) {
                     gesture = new GestureDetector((GestureDetector.GestureListener) stage);

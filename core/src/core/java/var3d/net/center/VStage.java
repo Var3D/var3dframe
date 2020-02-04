@@ -80,6 +80,9 @@ public abstract class VStage extends Stage {
         resize(0, 0);
     }
 
+    /**
+     * 进入新创建的stage时执行
+     */
     public abstract void init();
 
     /**
@@ -87,7 +90,15 @@ public abstract class VStage extends Stage {
      */
     public abstract void start();
 
+    /**
+     * 进入创建过的stage时执行
+     */
     public abstract void reStart();
+
+    /**
+     * 进入stage时执行，无论是否创建过
+     */
+    public abstract void show();
 
     public abstract void back();
 

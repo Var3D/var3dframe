@@ -104,6 +104,11 @@ public class StageLoad extends VStage {
     }
 
     @Override
+    public void show() {
+
+    }
+
+    @Override
     public void back() {
         // TODO Auto-generated method stub
 
