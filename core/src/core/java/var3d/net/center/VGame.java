@@ -550,6 +550,7 @@ public abstract class VGame implements ApplicationListener {
                 }
                 if (stage != null) {
                     stage.init();
+                    stage.show();
                     stageStartTime = System.currentTimeMillis();
                 }
             }
@@ -693,6 +694,7 @@ public abstract class VGame implements ApplicationListener {
         if (dStage != null) {
             stage = dStage;
             dStage.reStart();
+            dStage.show();
             dStage.getRoot().setTouchable(Touchable.enabled);
             return dStage;
         }
@@ -1010,7 +1012,6 @@ public abstract class VGame implements ApplicationListener {
                     stageNames.add(name);
                     stage.start();
                 }
-                stage.show();
                 multiplexer.addProcessor(input = stage);
                 if (stage instanceof GestureDetector.GestureListener) {
                     gesture = new GestureDetector((GestureDetector.GestureListener) stage);
