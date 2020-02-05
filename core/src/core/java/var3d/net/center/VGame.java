@@ -826,15 +826,11 @@ public abstract class VGame implements ApplicationListener {
             stage.cancelTouchFocus();
             stage.getRoot().setTouchable(Touchable.disabled);
         }
-        final VDialog dia = getDialog(dialog);
-        Gdx.app.postRunnable(new Runnable() {
-            public void run() {
-                dia.setTouchable(Touchable.enabled);
-                stageTop.addActor(dia);
-                dia.playShowActions();
-                dia.show();
-            }
-        });
+        VDialog dia = getDialog(dialog);
+        dia.setTouchable(Touchable.enabled);
+        stageTop.addActor(dia);
+        dia.playShowActions();
+        dia.show();
         return dia;
     }
 
