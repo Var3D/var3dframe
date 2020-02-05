@@ -694,7 +694,6 @@ public abstract class VGame implements ApplicationListener {
         if (dStage != null) {
             stage = dStage;
             dStage.reStart();
-            dStage.show();
             dStage.getRoot().setTouchable(Touchable.enabled);
             return dStage;
         }
@@ -1019,6 +1018,7 @@ public abstract class VGame implements ApplicationListener {
                 } else {
                     gesture = null;
                 }
+                stage.show();
             }
         } while (stage == null);
     }
