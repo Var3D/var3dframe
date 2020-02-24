@@ -48,6 +48,7 @@ public class StageMain extends VStage {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
                 game.setStage(StageStages.class);
+                game.playSound(R.sound.bear_body);
             }
         });
 

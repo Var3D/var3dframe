@@ -1529,44 +1529,73 @@ public abstract class VGame implements ApplicationListener {
         return eff;
     }
 
+
+//    public Sound getSound(String soundName) {
+//        if (assets.isLoaded(soundName, Sound.class) == true) {
+//            return assets.get(soundName, Sound.class);
+//        } else {
+//            assets.load(soundName, Sound.class);
+//            assets.finishLoading();
+//            return assets.get(soundName, Sound.class);
+//        }
+//    }
+
     /**
-     * 播放音效 音效必须在Game中设置预先加载，否则将出现第一次播放无法出现声音的情况
+     * 播放音效 无须再提前加载
      */
     private Array<Runnable> soundRuns = new Array<>();
 
     public void playSound(final String musicName) {
         if (isSound == false) return;
-        if(Gdx.app.getType()==Application.ApplicationType.Android) getSound(musicName);
-        if (soundRuns.size > 5) {
-            soundRuns.add(new Runnable() {
-                public void run() {
-                    getSound(musicName).play();
+        if(Gdx.app.getType()!=Application.ApplicationType.Android) {
+            getSound(musicName).play();
+        }else{
+            if (assets.isLoaded(musicName, Sound.class) == true) {
+                soundRuns.add(new Runnable() {
+                    public void run() {
+                        Sound sound=assets.get(musicName, Sound.class);
+                        while(true){
+                            long id=sound.play();
+                            if(id!=-1)break;
+                        }
+                    }
+                });
+            }else {
+                assets.load(musicName, Sound.class);
+                assets.finishLoading();
+                Sound sound=assets.get(musicName, Sound.class);
+                while(true){
+                    long id=sound.play();
+                    if(id!=-1)break;
                 }
-            });
-        } else {
-            Gdx.app.postRunnable(new Runnable() {
-                public void run() {
-                    getSound(musicName).play();
-                }
-            });
+            }
         }
     }
 
     public void playSound(final String musicName, final float vol) {
         if (isSound == false) return;
-        if(Gdx.app.getType()==Application.ApplicationType.Android) getSound(musicName);
-        if (soundRuns.size > 5) {
-            soundRuns.add(new Runnable() {
-                public void run() {
-                    getSound(musicName).play(vol);
+        if(Gdx.app.getType()!=Application.ApplicationType.Android) {
+            getSound(musicName).play(vol);
+        }else{
+            if (assets.isLoaded(musicName, Sound.class) == true) {
+                soundRuns.add(new Runnable() {
+                    public void run() {
+                        Sound sound=assets.get(musicName, Sound.class);
+                        while(true){
+                            long id=sound.play(vol);
+                            if(id!=-1)break;
+                        }
+                    }
+                });
+            }else {
+                assets.load(musicName, Sound.class);
+                assets.finishLoading();
+                Sound sound=assets.get(musicName, Sound.class);
+                while(true){
+                    long id=sound.play(vol);
+                    if(id!=-1)break;
                 }
-            });
-        } else {
-            Gdx.app.postRunnable(new Runnable() {
-                public void run() {
-                    getSound(musicName).play(vol);
-                }
-            });
+            }
         }
     }
 
@@ -1575,37 +1604,55 @@ public abstract class VGame implements ApplicationListener {
      */
     public void playSoundLoop(final String musicName) {
         if (isSound == false) return;
-        if(Gdx.app.getType()==Application.ApplicationType.Android) getSound(musicName);
-        if (soundRuns.size > 5) {
-            soundRuns.add(new Runnable() {
-                public void run() {
-                    getSound(musicName).loop();
+        if(Gdx.app.getType()!=Application.ApplicationType.Android) {
+            getSound(musicName).loop();
+        }else{
+            if (assets.isLoaded(musicName, Sound.class) == true) {
+                soundRuns.add(new Runnable() {
+                    public void run() {
+                        Sound sound=assets.get(musicName, Sound.class);
+                        while(true){
+                            long id=sound.loop();
+                            if(id!=-1)break;
+                        }
+                    }
+                });
+            }else {
+                assets.load(musicName, Sound.class);
+                assets.finishLoading();
+                Sound sound=assets.get(musicName, Sound.class);
+                while(true){
+                    long id=sound.loop();
+                    if(id!=-1)break;
                 }
-            });
-        } else {
-            Gdx.app.postRunnable(new Runnable() {
-                public void run() {
-                    getSound(musicName).loop();
-                }
-            });
+            }
         }
     }
 
     public void playSoundLoop(final String musicName, final float vol) {
         if (isSound == false) return;
-        if(Gdx.app.getType()==Application.ApplicationType.Android) getSound(musicName);
-        if (soundRuns.size > 5) {
-            soundRuns.add(new Runnable() {
-                public void run() {
-                    getSound(musicName).loop(vol);
+        if(Gdx.app.getType()!=Application.ApplicationType.Android) {
+            getSound(musicName).loop(vol);
+        }else{
+            if (assets.isLoaded(musicName, Sound.class) == true) {
+                soundRuns.add(new Runnable() {
+                    public void run() {
+                        Sound sound=assets.get(musicName, Sound.class);
+                        while(true){
+                            long id=sound.loop(vol);
+                            if(id!=-1)break;
+                        }
+                    }
+                });
+            }else {
+                assets.load(musicName, Sound.class);
+                assets.finishLoading();
+                Sound sound=assets.get(musicName, Sound.class);
+                while(true){
+                    long id=sound.loop(vol);
+                    if(id!=-1)break;
                 }
-            });
-        } else {
-            Gdx.app.postRunnable(new Runnable() {
-                public void run() {
-                    getSound(musicName).loop(vol);
-                }
-            });
+            }
         }
     }
 

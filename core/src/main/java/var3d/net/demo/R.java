@@ -46,6 +46,7 @@ public class R {
 
 
    public static class sound {
+      public static String bear_body = "sound/bear_body.mp3";
       public static String click = "sound/click.mp3";
    }
 
