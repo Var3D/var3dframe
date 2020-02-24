@@ -3,23 +3,14 @@ package var3d.net.demo.stages;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Colors;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
-import var3d.net.center.component.DialogLoad;
-import var3d.net.center.freefont.FreePaint;
 import var3d.net.demo.R;
 
 /**
@@ -45,6 +36,7 @@ public class StageMain extends VStage {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
                 game.setStage(StageDialogs.class);
+                game.playSound(R.sound.click);
             }
         });
 

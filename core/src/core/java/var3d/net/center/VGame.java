@@ -1536,24 +1536,38 @@ public abstract class VGame implements ApplicationListener {
 
     public void playSound(final String musicName) {
         if (isSound == false) return;
+        if(Gdx.app.getType()==Application.ApplicationType.Android) getSound(musicName);
         if (soundRuns.size > 5) {
             soundRuns.add(new Runnable() {
                 public void run() {
                     getSound(musicName).play();
                 }
             });
-        } else getSound(musicName).play();
+        } else {
+            Gdx.app.postRunnable(new Runnable() {
+                public void run() {
+                    getSound(musicName).play();
+                }
+            });
+        }
     }
 
     public void playSound(final String musicName, final float vol) {
         if (isSound == false) return;
+        if(Gdx.app.getType()==Application.ApplicationType.Android) getSound(musicName);
         if (soundRuns.size > 5) {
             soundRuns.add(new Runnable() {
                 public void run() {
                     getSound(musicName).play(vol);
                 }
             });
-        } else getSound(musicName).play(vol);
+        } else {
+            Gdx.app.postRunnable(new Runnable() {
+                public void run() {
+                    getSound(musicName).play(vol);
+                }
+            });
+        }
     }
 
     /**
@@ -1561,24 +1575,38 @@ public abstract class VGame implements ApplicationListener {
      */
     public void playSoundLoop(final String musicName) {
         if (isSound == false) return;
+        if(Gdx.app.getType()==Application.ApplicationType.Android) getSound(musicName);
         if (soundRuns.size > 5) {
             soundRuns.add(new Runnable() {
                 public void run() {
                     getSound(musicName).loop();
                 }
             });
-        } else getSound(musicName).loop();
+        } else {
+            Gdx.app.postRunnable(new Runnable() {
+                public void run() {
+                    getSound(musicName).loop();
+                }
+            });
+        }
     }
 
     public void playSoundLoop(final String musicName, final float vol) {
         if (isSound == false) return;
+        if(Gdx.app.getType()==Application.ApplicationType.Android) getSound(musicName);
         if (soundRuns.size > 5) {
             soundRuns.add(new Runnable() {
                 public void run() {
                     getSound(musicName).loop(vol);
                 }
             });
-        } else getSound(musicName).loop(vol);
+        } else {
+            Gdx.app.postRunnable(new Runnable() {
+                public void run() {
+                    getSound(musicName).loop(vol);
+                }
+            });
+        }
     }
 
     /**

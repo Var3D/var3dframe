@@ -12,9 +12,9 @@ import var3d.net.center.DialogMessge;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
+import var3d.net.demo.R;
 import var3d.net.demo.dialogs.DialogRatio;
 import var3d.net.demo.dialogs.DialogTestFull;
-import var3d.net.demo.R;
 
 /**
  * Created by fengyu on 16/4/8.
