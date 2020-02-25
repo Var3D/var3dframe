@@ -1550,25 +1550,19 @@ public abstract class VGame implements ApplicationListener {
         if(Gdx.app.getType()!=Application.ApplicationType.Android) {
             getSound(musicName).play();
         }else{
-            if (assets.isLoaded(musicName, Sound.class) == true) {
-                soundRuns.add(new Runnable() {
-                    public void run() {
-                        Sound sound=assets.get(musicName, Sound.class);
-                        while(true){
-                            long id=sound.play();
-                            if(id!=-1)break;
-                        }
-                    }
-                });
-            }else {
+            if (!assets.isLoaded(musicName, Sound.class)) {
                 assets.load(musicName, Sound.class);
                 assets.finishLoading();
-                Sound sound=assets.get(musicName, Sound.class);
-                while(true){
-                    long id=sound.play();
-                    if(id!=-1)break;
-                }
             }
+            soundRuns.add(new Runnable() {
+                public void run() {
+                    Sound sound=assets.get(musicName, Sound.class);
+                    while(true){
+                        long id=sound.play();
+                        if(id!=-1)break;
+                    }
+                }
+            });
         }
     }
 
@@ -1577,24 +1571,14 @@ public abstract class VGame implements ApplicationListener {
         if(Gdx.app.getType()!=Application.ApplicationType.Android) {
             getSound(musicName).play(vol);
         }else{
-            if (assets.isLoaded(musicName, Sound.class) == true) {
-                soundRuns.add(new Runnable() {
-                    public void run() {
-                        Sound sound=assets.get(musicName, Sound.class);
-                        while(true){
-                            long id=sound.play(vol);
-                            if(id!=-1)break;
-                        }
-                    }
-                });
-            }else {
+            if (!assets.isLoaded(musicName, Sound.class)) {
                 assets.load(musicName, Sound.class);
                 assets.finishLoading();
-                Sound sound=assets.get(musicName, Sound.class);
-                while(true){
-                    long id=sound.play(vol);
-                    if(id!=-1)break;
-                }
+            }
+            Sound sound=assets.get(musicName, Sound.class);
+            while(true){
+                long id=sound.play(vol);
+                if(id!=-1)break;
             }
         }
     }
@@ -1607,24 +1591,14 @@ public abstract class VGame implements ApplicationListener {
         if(Gdx.app.getType()!=Application.ApplicationType.Android) {
             getSound(musicName).loop();
         }else{
-            if (assets.isLoaded(musicName, Sound.class) == true) {
-                soundRuns.add(new Runnable() {
-                    public void run() {
-                        Sound sound=assets.get(musicName, Sound.class);
-                        while(true){
-                            long id=sound.loop();
-                            if(id!=-1)break;
-                        }
-                    }
-                });
-            }else {
+            if (!assets.isLoaded(musicName, Sound.class)) {
                 assets.load(musicName, Sound.class);
                 assets.finishLoading();
-                Sound sound=assets.get(musicName, Sound.class);
-                while(true){
-                    long id=sound.loop();
-                    if(id!=-1)break;
-                }
+            }
+            Sound sound=assets.get(musicName, Sound.class);
+            while(true){
+                long id=sound.loop();
+                if(id!=-1)break;
             }
         }
     }
@@ -1634,24 +1608,14 @@ public abstract class VGame implements ApplicationListener {
         if(Gdx.app.getType()!=Application.ApplicationType.Android) {
             getSound(musicName).loop(vol);
         }else{
-            if (assets.isLoaded(musicName, Sound.class) == true) {
-                soundRuns.add(new Runnable() {
-                    public void run() {
-                        Sound sound=assets.get(musicName, Sound.class);
-                        while(true){
-                            long id=sound.loop(vol);
-                            if(id!=-1)break;
-                        }
-                    }
-                });
-            }else {
+            if (!assets.isLoaded(musicName, Sound.class)) {
                 assets.load(musicName, Sound.class);
                 assets.finishLoading();
-                Sound sound=assets.get(musicName, Sound.class);
-                while(true){
-                    long id=sound.loop(vol);
-                    if(id!=-1)break;
-                }
+            }
+            Sound sound=assets.get(musicName, Sound.class);
+            while(true){
+                long id=sound.loop(vol);
+                if(id!=-1)break;
             }
         }
     }
