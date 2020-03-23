@@ -223,6 +223,16 @@ public class UI<T extends Actor> {
         return this;
     }
 
+    public UI<T> setRate(float rateX,float rateY){
+        t.setSize(t.getWidth()*rateX,t.getHeight()*rateY);
+        return this;
+    }
+
+    public UI<T> setRate(float rate){
+        t.setSize(t.getWidth()*rate,t.getHeight()*rate);
+        return this;
+    }
+
     public UI<T> setBounds(float x, float y, float width, float height) {
         t.setBounds(x, y, width, height);
         return this;
@@ -270,6 +280,11 @@ public class UI<T extends Actor> {
 
     public UI<T> setScale(float scaleX, float scaleY) {
         t.setScale(scaleX, scaleY);
+        return this;
+    }
+
+    public UI<T> setRotation(float degrees){
+        t.setRotation(degrees);
         return this;
     }
 
@@ -421,7 +436,7 @@ public class UI<T extends Actor> {
             ((Label) t).setAlignment(alignment);
         }else if (t instanceof TextField) {
             ((TextField) t).setAlignment(alignment);
-        } else Gdx.app.error("Var3D框架消息", "setFontScale(float scale)方法仅在类型VLabel/SLabel/Label上有效");
+        } else Gdx.app.error("Var3D框架消息", "setAlignment(int alignment)方法仅在类型VLabel/SLabel/Label上有效");
         return this;
     }
 }
