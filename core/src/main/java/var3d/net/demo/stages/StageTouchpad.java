@@ -42,12 +42,13 @@ public class StageTouchpad extends VStage {
         //创建标题
         VLabel lab_title = game.getLabel("摇杆示例").setPosition(getWidth() / 2, getTop() - 10, Align.top)
                 .touchOff().show();
-        //关闭按钮
-        Button btn_close = game.getTextButton("关闭", Color.WHITE, Color.valueOf("ff2266"))
-                .setSize(100, 40).addClicAction().setPosition(getWidth() / 2, 50, Align.bottom).show();
+        //返回
+        Button btn_close = game.getButton().setColor(Color.valueOf("ff2266")).setSize(120, 40)
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_close.add(game.getLabel("返回").setFontScale(0.6f).getActor());
         btn_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                //舞台其实不能关闭,只能跳转
+                //stage跳转
                 game.setStage(StageMain.class);
             }
         });

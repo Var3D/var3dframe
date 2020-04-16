@@ -38,10 +38,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
@@ -124,7 +126,7 @@ public abstract class VGame implements ApplicationListener {
     private boolean isShowFps = false;// 是否显示fps
     private boolean isProtect = false;// 是否保护图片资源
     private boolean isReProtect = false;// 是否关闭保护图片资源
-    private boolean isCloseShortcut=false;//是否关闭框架的快捷键（截图等）
+    private boolean isCloseShortcut = false;//是否关闭框架的快捷键（截图等）
 
     private Object userData;// 场景切换时用于数据中转
     private final HashMap<String, Object> userDatas = new HashMap<String, Object>();// 用于数据中转
@@ -212,22 +214,22 @@ public abstract class VGame implements ApplicationListener {
         return paint;
     }
 
-    public void setIsCloseShortcut(boolean isCloseShortcut){
-        this.isCloseShortcut=isCloseShortcut;
+    public void setIsCloseShortcut(boolean isCloseShortcut) {
+        this.isCloseShortcut = isCloseShortcut;
     }
 
-    public boolean isCloseShortcut(){
+    public boolean isCloseShortcut() {
         return isCloseShortcut;
     }
 
     public void create() {
-        game=this;
+        game = this;
         save = new VPreferences(getProjectName());// 数据存储实例化
         //数据迁移开始
-        Preferences old_save=Gdx.app.getPreferences(getProjectName());
-        Map<String, ?> map=old_save.get();
-        if(map.size()>0){//拥有旧数据并且没有新数据
-            if(save.get().size()==0) {
+        Preferences old_save = Gdx.app.getPreferences(getProjectName());
+        Map<String, ?> map = old_save.get();
+        if (map.size() > 0) {//拥有旧数据并且没有新数据
+            if (save.get().size() == 0) {
                 for (Map.Entry<String, ?> entry : map.entrySet()) {
                     String key = entry.getKey();
                     Object value = entry.getValue();
@@ -866,7 +868,7 @@ public abstract class VGame implements ApplicationListener {
      */
     public void removeDialog(final VDialog dialog) {
         var3dListener.setOnscreenKeyboardVisible(false);//如果有虚拟键盘则移出虚拟键盘
-        stageTop.addAction(Actions.moveTo(stageTop.getStartX(),stageTop.getStartY(),0.2f));
+        stageTop.addAction(Actions.moveTo(stageTop.getStartX(), stageTop.getStartY(), 0.2f));
         dialog.addReBackgroundAcition();
         dialog.playHideActions(new Runnable() {
             public void run() {
@@ -998,7 +1000,7 @@ public abstract class VGame implements ApplicationListener {
             prefStage = stage.getClass();
             //将当前的 stage 回归原位
             stage.getRoot().clearActions();
-            stage.getRoot().setPosition(stage.getStartX(),stage.getStartY());
+            stage.getRoot().setPosition(stage.getStartX(), stage.getStartY());
             var3dListener.setOnscreenKeyboardVisible(false);//如果有虚拟键盘则移出虚拟键盘
         } else {
             multiplexer.addProcessor(stageTop);
@@ -1547,19 +1549,19 @@ public abstract class VGame implements ApplicationListener {
 
     public void playSound(final String musicName) {
         if (isSound == false) return;
-        if(Gdx.app.getType()!=Application.ApplicationType.Android) {
+        if (Gdx.app.getType() != Application.ApplicationType.Android) {
             getSound(musicName).play();
-        }else{
+        } else {
             if (!assets.isLoaded(musicName, Sound.class)) {
                 assets.load(musicName, Sound.class);
                 assets.finishLoading();
             }
             soundRuns.add(new Runnable() {
                 public void run() {
-                    Sound sound=assets.get(musicName, Sound.class);
-                    while(true){
-                        long id=sound.play();
-                        if(id!=-1)break;
+                    Sound sound = assets.get(musicName, Sound.class);
+                    while (true) {
+                        long id = sound.play();
+                        if (id != -1) break;
                     }
                 }
             });
@@ -1568,17 +1570,17 @@ public abstract class VGame implements ApplicationListener {
 
     public void playSound(final String musicName, final float vol) {
         if (isSound == false) return;
-        if(Gdx.app.getType()!=Application.ApplicationType.Android) {
+        if (Gdx.app.getType() != Application.ApplicationType.Android) {
             getSound(musicName).play(vol);
-        }else{
+        } else {
             if (!assets.isLoaded(musicName, Sound.class)) {
                 assets.load(musicName, Sound.class);
                 assets.finishLoading();
             }
-            Sound sound=assets.get(musicName, Sound.class);
-            while(true){
-                long id=sound.play(vol);
-                if(id!=-1)break;
+            Sound sound = assets.get(musicName, Sound.class);
+            while (true) {
+                long id = sound.play(vol);
+                if (id != -1) break;
             }
         }
     }
@@ -1588,34 +1590,34 @@ public abstract class VGame implements ApplicationListener {
      */
     public void playSoundLoop(final String musicName) {
         if (isSound == false) return;
-        if(Gdx.app.getType()!=Application.ApplicationType.Android) {
+        if (Gdx.app.getType() != Application.ApplicationType.Android) {
             getSound(musicName).loop();
-        }else{
+        } else {
             if (!assets.isLoaded(musicName, Sound.class)) {
                 assets.load(musicName, Sound.class);
                 assets.finishLoading();
             }
-            Sound sound=assets.get(musicName, Sound.class);
-            while(true){
-                long id=sound.loop();
-                if(id!=-1)break;
+            Sound sound = assets.get(musicName, Sound.class);
+            while (true) {
+                long id = sound.loop();
+                if (id != -1) break;
             }
         }
     }
 
     public void playSoundLoop(final String musicName, final float vol) {
         if (isSound == false) return;
-        if(Gdx.app.getType()!=Application.ApplicationType.Android) {
+        if (Gdx.app.getType() != Application.ApplicationType.Android) {
             getSound(musicName).loop(vol);
-        }else{
+        } else {
             if (!assets.isLoaded(musicName, Sound.class)) {
                 assets.load(musicName, Sound.class);
                 assets.finishLoading();
             }
-            Sound sound=assets.get(musicName, Sound.class);
-            while(true){
-                long id=sound.loop(vol);
-                if(id!=-1)break;
+            Sound sound = assets.get(musicName, Sound.class);
+            while (true) {
+                long id = sound.loop(vol);
+                if (id != -1) break;
             }
         }
     }
@@ -1757,8 +1759,8 @@ public abstract class VGame implements ApplicationListener {
         fonts.put(key, font);
     }
 
-    public void setFont(String key,FreePaint paint){
-        fonts.put(key,new FreeBitmapFont(this,paint));
+    public void setFont(String key, FreePaint paint) {
+        fonts.put(key, new FreeBitmapFont(this, paint));
     }
 
     /**
@@ -2201,7 +2203,7 @@ public abstract class VGame implements ApplicationListener {
     public TextFieldStyle getTextFieldStyle(BitmapFont font, Color cursor, Color selection, Color background) {
         Drawable drawable_background = getRectColorDrawable(1, 1, background);
         Drawable drawable_cursor = getRectColorDrawable(1, 1, cursor);
-        Drawable drawable_selection = getRectColorDrawable(1, 1,selection);
+        Drawable drawable_selection = getRectColorDrawable(1, 1, selection);
         TextField.TextFieldStyle style = new TextField.TextFieldStyle(font, Color.WHITE, drawable_cursor
                 , drawable_selection, drawable_background);
         return style;
@@ -2276,11 +2278,11 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 创建圆角Button
      */
-    public UI<Button> getButton(float width,float height,int radius) {
-        NinePatch patch=new NinePatch(game.getCircleRectTexture((int)(width*2),(int)(height*2),radius));
-        NinePatchDrawable drawable=new NinePatchDrawable(patch);
-        Button button=new Button(drawable);
-        button.setSize(width,height);
+    public UI<Button> getButton(float width, float height, int radius) {
+        NinePatch patch = new NinePatch(game.getCircleRectTexture((int) (width * 2), (int) (height * 2), radius));
+        NinePatchDrawable drawable = new NinePatchDrawable(patch);
+        Button button = new Button(drawable);
+        button.setSize(width, height);
         return getUI(button);
     }
 
@@ -2575,34 +2577,62 @@ public abstract class VGame implements ApplicationListener {
 
     /**
      * 延迟执行
+     *
      * @param time
      * @param runnable
      */
-    public void delayRun(final float time, final Runnable runnable){
-        new Thread(){
-            public void run(){
+    public void delayRun(final float time, final Runnable runnable) {
+        new Thread() {
+            public void run() {
                 try {
-                    Thread.sleep((int)(time*1000));
+                    Thread.sleep((int) (time * 1000));
                     Gdx.app.postRunnable(runnable);
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                }
             }
         }.start();
     }
 
 
+    //用带key的方式往stage里添加actions，方便用key的方式移除相应的aciton
+    static HashMap<String, Action> actionHashMap = new HashMap<>();
+
+    public void addActions(String key, Action action) {
+        Action pref = actionHashMap.get(key);
+        if (pref != null) {
+            if (pref.getActor() == null) {
+                actionHashMap.remove(key);
+            } else
+                throw new IllegalArgumentException("This key is already occupied, please change to a different key");
+        }
+        if (actionHashMap.containsKey(key))
+            throw new IllegalArgumentException("This key is already occupied, please change to a different key");
+        actionHashMap.put(key, action);
+        stage.addAction(action);
+    }
+
+    public void removeActions(String key) {
+        if(actionHashMap.containsKey(key)) {
+            Action action = actionHashMap.get(key);
+            stage.getRoot().removeAction(action);
+            actionHashMap.remove(key);
+        }
+    }
+
+
     /**
      * 字符加解密
+     *
      * @param value
      * @param secret
      * @return
      */
-    public  String encryptAndDencrypt(String value, char secret) {
-        byte[] bt=value.getBytes();
-        for(int i=0;i<bt.length;i++)
-        {
-            bt[i]=(byte)(bt[i]^(int)secret);
+    public String encryptAndDencrypt(String value, char secret) {
+        byte[] bt = value.getBytes();
+        for (int i = 0; i < bt.length; i++) {
+            bt[i] = (byte) (bt[i] ^ (int) secret);
         }
-        String newresult=new String(bt,0,bt.length);
+        String newresult = new String(bt, 0, bt.length);
         return newresult;
     }
 }
