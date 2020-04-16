@@ -24,17 +24,17 @@ public class Game extends VGame {
         setIsCloseShortcut(true);//关闭 desktop 测试期间框架的快捷键（截图，进入编辑模式等）
         setResources(R.class);
         // openAutoScreenshots(5,StageTest.class);//开启自动截图
-       // openProtect("image");//加密image文件夹资源
-       // unProtect("image");
+        // openProtect("image");//加密image文件夹资源
+        // unProtect("image");
         //showFps();//显示fps
         setFont("test", new FreePaint(R.font.DroidSans));//添加自定义字体(可由用户自己提供 ttf)
         /**对于 ios 版本，需要在 Info.plist.xml文件里定义 ttf 的路径,可定义多个 ttf 文件,例如
-        <key>UIAppFonts</key>
-        <array>
-        <string>font/mainfont.ttf</string>
-        <string>font/DroidSans.ttf</string>
-        </array>
-        */
+         <key>UIAppFonts</key>
+         <array>
+         <string>font/mainfont.ttf</string>
+         <string>font/DroidSans.ttf</string>
+         </array>
+         */
         setStage(StageMain.class);//设置入口界面
     }
 }
