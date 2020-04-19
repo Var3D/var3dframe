@@ -14,6 +14,10 @@ import var3d.net.demo.Game;
 
 public class DesktopLauncher extends VDesktopLauncher {
 
+    public DesktopLauncher(){
+        super(true);
+    }
+
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config=getConfig(Size.iphoneX_w);
         new LwjglApplication(new Game(new DesktopLauncher()), config);

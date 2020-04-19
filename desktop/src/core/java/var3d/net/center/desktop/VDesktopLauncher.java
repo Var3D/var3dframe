@@ -78,7 +78,6 @@ public abstract class VDesktopLauncher implements VListener {
     private VGame game;
 
     public VDesktopLauncher() {
-        autoFbx2G3db(null);
     }
 
     public VDesktopLauncher(boolean isOpenAutoFbx2G3db) {
@@ -113,7 +112,7 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
-    public void showFiveStarDialog(){
+    public void showFiveStarDialog() {
 
     }
 
@@ -247,7 +246,7 @@ public abstract class VDesktopLauncher implements VListener {
 
     }
 
-    public void updataScores(Object... objects){
+    public void updataScores(Object... objects) {
 
     }
 
@@ -350,7 +349,7 @@ public abstract class VDesktopLauncher implements VListener {
                 try {
                     ByteArrayInputStream in = new ByteArrayInputStream(
                             Gdx.files.internal(vpaint.getTTFName() + (vpaint.getTTFName().endsWith(
-                                            ".ttf") ? "" : ".ttf")).readBytes());
+                                    ".ttf") ? "" : ".ttf")).readBytes());
                     BufferedInputStream fb = new BufferedInputStream(in);
                     font = Font.createFont(Font.TRUETYPE_FONT, fb).deriveFont(
                             Font.BOLD, vpaint.getTextSize());
@@ -501,8 +500,8 @@ public abstract class VDesktopLauncher implements VListener {
         String root = Gdx.files.getLocalStoragePath().replaceAll(
                 isMac ? "android/assets/" : "android\\\\assets\\\\", "");
         String path = root + "srcCopy";
-        FileHandle input=new FileHandle(load);
-        FileHandle copys=Gdx.files.absolute(path+"/"+input.parent().name());
+        FileHandle input = new FileHandle(load);
+        FileHandle copys = Gdx.files.absolute(path + "/" + input.parent().name());
         copys.mkdirs();
         input.copyTo(copys);
 
@@ -532,7 +531,7 @@ public abstract class VDesktopLauncher implements VListener {
         config.resizable = false;
         config.width = (int) (width * scale);
         config.height = (int) (height * scale);
-        config.title="Var3dFrame框架";
+        config.title = "Var3dFrame框架";
         config.samples = 4;
         return config;
     }
@@ -978,7 +977,6 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-
     private String getPartialVariable(VStage stage, Actor actor) {
         FileHandle fileHandle = getStageJavaFile(stage);
         if (fileHandle == null) fileHandle = getStageKotlinFile(stage);
@@ -1218,7 +1216,6 @@ public abstract class VDesktopLauncher implements VListener {
         fileType = FileType.Kotlin;
         return fileHandle;
     }
-
 
 
     private HashMap<Actor, StackTraceElement[]> allStacks = new HashMap<>();
@@ -1502,16 +1499,14 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-
     private void autoFbx2G3db(String homePath) {
 //        if (homePath == null)
 //            homePath = System.getProperty("java.home") + File.separator + "fbx-conv";
 //        autoFbx2G3db2(homePath);
 
-        boolean isMac =System.getProperty("os.name").startsWith("Mac");
-        String root =(new File("").getAbsolutePath()).replaceAll(
-                isMac ? "android/assets" : "android\\\\assets", "");
-        String path = root+ ".fbx-conv";
+        boolean isMac = System.getProperty("os.name").startsWith("Mac");
+        String root = (new File("").getAbsolutePath()).replaceAll(isMac ? "android/assets" : "android\\\\assets", "");
+        String path = root + File.separator + ".fbx-conv";
         autoFbx2G3db2(path);
     }
 
@@ -1519,45 +1514,44 @@ public abstract class VDesktopLauncher implements VListener {
 
         String assetsPath = System.getProperty("user.dir");
         if (new File(convPath).exists()) {
-            File filein=new File(convPath+File.separator +"conv.zip");
+            File filein = new File(convPath + File.separator + "conv.zip");
             filein.getAbsoluteFile().delete();
             fbxToG3dbs(new File(assetsPath), convPath);
         } else {
             System.err.println("缺少fbx-conv");
-            File file=new File(convPath);
+            File file = new File(convPath);
             file.mkdirs();
             getAuthority(file.getAbsolutePath());
-            System.err.println("创建"+file.getAbsolutePath()+"文件夹");
+            System.err.println("创建" + file.getAbsolutePath() + "文件夹");
             System.err.println("开始下载fbx-conv : https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
             FileOutputStream fileOut = null;
             HttpURLConnection conn = null;
             InputStream inputStream = null;
             try {
-                URL httpUrl=new URL("https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
-                conn=(HttpURLConnection) httpUrl.openConnection();
+                URL httpUrl = new URL("https://libgdx.badlogicgames.com/old-site/fbx-conv/fbx-conv.zip");
+                conn = (HttpURLConnection) httpUrl.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
                 conn.setUseCaches(false);
                 conn.connect();
-                inputStream=conn.getInputStream();
+                inputStream = conn.getInputStream();
                 BufferedInputStream bis = new BufferedInputStream(inputStream);
                 //写入到文件（注意文件保存路径的后面一定要加上文件的名称）
-                fileOut = new FileOutputStream(convPath+File.separator +"conv.zip");
+                fileOut = new FileOutputStream(convPath + File.separator + "conv.zip");
                 BufferedOutputStream bos = new BufferedOutputStream(fileOut);
 
                 byte[] buf = new byte[4096];
                 int length = bis.read(buf);
                 //保存文件
                 System.err.print("下载中");
-                int step=0;
-                while(length != -1)
-                {
+                int step = 0;
+                while (length != -1) {
                     bos.write(buf, 0, length);
                     length = bis.read(buf);
                     step++;
-                    if(step>10){
-                        step=0;
+                    if (step > 10) {
+                        step = 0;
                         System.err.print(".");
                     }
                 }
@@ -1568,14 +1562,14 @@ public abstract class VDesktopLauncher implements VListener {
 
                 //解压
                 try {
-                    File filein=new File(convPath+File.separator +"conv.zip");
+                    File filein = new File(convPath + File.separator + "conv.zip");
                     getAuthority(filein.getAbsolutePath());
                     JarInputStream jarIn = new JarInputStream(new BufferedInputStream(new FileInputStream(filein)));
                     byte[] bytes = new byte[1024];
                     while (true) {
                         ZipEntry entry = jarIn.getNextJarEntry();
                         if (entry == null) break;
-                        String fileName=entry.getName();
+                        String fileName = entry.getName();
                         System.err.println(fileName);
                         File desTemp = new File(convPath + File.separator + fileName);
                         if (entry.isDirectory()) {    //jar条目是空目录
@@ -1604,10 +1598,10 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
-    private void getAuthority(String path){
-        if(LWJGLUtil.getPlatform()==LWJGLUtil.PLATFORM_MACOSX ){//如果是mac系统，记得开权限
+    private void getAuthority(String path) {
+        if (LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {//如果是mac系统，记得开权限
             try {
-                Runtime.getRuntime().exec("chmod 777 "+path).waitFor();
+                Runtime.getRuntime().exec("chmod 777 " + path).waitFor();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -1669,15 +1663,15 @@ public abstract class VDesktopLauncher implements VListener {
             process.waitFor();
             //文件备份
             boolean isMac = System.getProperty("os.name").startsWith("Mac");
-            String root =(new File("").getAbsolutePath()).replaceAll(
+            String root = (new File("").getAbsolutePath()).replaceAll(
                     isMac ? "android/assets" : "android\\\\assets", "");
-            String path =root+File.separator + "srcCopy";
-            File copys=new File(path);
+            String path = root + File.separator + "srcCopy";
+            File copys = new File(path);
             copys.mkdirs();
-            File copy=new File(path+File.separator+fbxPath.getParentFile().getName());
+            File copy = new File(path + File.separator + fbxPath.getParentFile().getName());
             copy.mkdirs();
-            File copyTo=new File(copy+File.separator+fbxPath.getName());
-            if(copyTo.exists()){
+            File copyTo = new File(copy + File.separator + fbxPath.getName());
+            if (copyTo.exists()) {
                 copyTo.getAbsoluteFile().delete();
             }
             fbxPath.renameTo(copyTo);
@@ -1690,20 +1684,20 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
+    public void setListenerOnKeyboardChange(VStage stage, VListenerOnKeyboardChange listener) {
     }
 
-    public void removeListenerOnKeyboardChange(){
+    public void removeListenerOnKeyboardChange() {
     }
 
 
-    public void linkVTextField(VTextField vTextField){
+    public void linkVTextField(VTextField vTextField) {
     }
 
-    public void setOnscreenKeyboardVisible(boolean isvisibe){
+    public void setOnscreenKeyboardVisible(boolean isvisibe) {
     }
 
-    public void openNetSetting(){
+    public void openNetSetting() {
 
     }
 }
