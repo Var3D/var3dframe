@@ -7,6 +7,7 @@ import java.util.Set;
 import var3d.net.center.VGame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Version;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Filter;
@@ -438,8 +439,8 @@ public class FreeBitmapFont extends BitmapFont {
             spaceGlyph.id = (int) ' ';
             data.setGlyph(' ', spaceGlyph);
         }
-        data.spaceWidth= spaceGlyph != null ? spaceGlyph.xadvance
-                + spaceGlyph.width : 1;
+        data.spaceXadvance= spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
+
         Array<Page> pages = packer.getPages();
         Array<TextureRegion> regions = getRegions();
         for (int i = 0, regSize = regions.size - 1; i < pages.size; i++) {

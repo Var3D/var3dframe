@@ -17,16 +17,16 @@ public class FreeGlyphLayout extends GlyphLayout {
     private final Array<Color> colorStack = new Array(4);
     private Color inColor;
 
-    public void setText (BitmapFont font, CharSequence str, int start, int end, Color color, float targetWidth, int halign,
-                         boolean wrap, String truncate) {
-        FreeBitmapFont freefont= (FreeBitmapFont) font;
+    public void setText(BitmapFont font, CharSequence str, int start, int end, Color color, float targetWidth, int halign,
+                        boolean wrap, String truncate) {
+        FreeBitmapFont freefont = (FreeBitmapFont) font;
 
-        inColor=color;
-        int intStart=start;
+        inColor = color;
+        int intStart = start;
 
         BitmapFont.BitmapFontData fontData = font.getData();
         //boolean markupEnabled = fontData.markupEnabled;
-        FreeBitmapFontData freeData= (FreeBitmapFontData) fontData;
+        FreeBitmapFontData freeData = (FreeBitmapFontData) fontData;
 
         Pool<GlyphRun> glyphRunPool = Pools.get(GlyphRun.class);
         Array<GlyphRun> runs = this.runs;
@@ -48,22 +48,22 @@ public class FreeGlyphLayout extends GlyphLayout {
         while (true) {
             // Each run is delimited by newline or left square bracket.
             int runEnd = -1;
-            boolean  colorRun = false;
+            boolean colorRun = false;
             if (start == end) {
                 if (runStart == end) break; // End of string with no run to process, we're done.
                 runEnd = end; // End of string, process last run.
             } else {
-                char nowC=str.charAt(start++);
+                char nowC = str.charAt(start++);
                 char nextC = 0;
-                if(start<str.length())nextC=str.charAt(start);
+                if (start < str.length()) nextC = str.charAt(start);
 
-                if(nextC!=0&&freefont.isCreateEmojiWithKey(""+nextC)){
-                    if(intStart+1==start){
+                if (nextC != 0 && freefont.isCreateEmojiWithKey("" + nextC)) {
+                    if (intStart + 1 == start) {
                         GlyphRun run = glyphRunPool.obtain();
                         run.color.set(Color.WHITE);
                         run.x = x;
                         run.y = y;
-                        fontData.getGlyphs(run, str, start-1, start, true);
+                        fontData.getGlyphs(run, str, start - 1, start, null);
                         if (run.glyphs.size == 0)
                             glyphRunPool.free(run);
                         else {
@@ -77,18 +77,18 @@ public class FreeGlyphLayout extends GlyphLayout {
                                 run.width += xAdvance;
                             }
                         }
-                        runStart=start;
+                        runStart = start;
                     }
                     runEnd = start;
-                    nextColor=Color.WHITE;
+                    nextColor = Color.WHITE;
                     colorRun = true;
-                }else if(freefont.isCreateEmojiWithKey(""+nowC)){
-                    if(intStart+1==start){
+                } else if (freefont.isCreateEmojiWithKey("" + nowC)) {
+                    if (intStart + 1 == start) {
                         GlyphRun run = glyphRunPool.obtain();
                         run.color.set(Color.WHITE);
                         run.x = x;
                         run.y = y;
-                        fontData.getGlyphs(run, str, start-1, start, true);
+                        fontData.getGlyphs(run, str, start - 1, start, null);
                         if (run.glyphs.size == 0)
                             glyphRunPool.free(run);
                         else {
@@ -102,15 +102,15 @@ public class FreeGlyphLayout extends GlyphLayout {
                                 run.width += xAdvance;
                             }
                         }
-                        runStart=start;
+                        runStart = start;
                     }
-                    if(nextC!=0&&freefont.isCreateEmojiWithKey(""+nextC)){
-                        nextColor=Color.WHITE;
-                    }else nextColor=inColor;
+                    if (nextC != 0 && freefont.isCreateEmojiWithKey("" + nextC)) {
+                        nextColor = Color.WHITE;
+                    } else nextColor = inColor;
                     runEnd = start;
                     colorRun = true;
                     //Gdx.app.log("aaaaa","now");
-                }else {
+                } else {
                     switch (nowC) {
                         case '\n':
                             // End of line.
@@ -198,16 +198,16 @@ public class FreeGlyphLayout extends GlyphLayout {
     }
 
 
-    public void setText (BitmapFont font, CharSequence str) {
+    public void setText(BitmapFont font, CharSequence str) {
         setText2(font, str, 0, str.length(), font.getColor(), 0, Align.left, false, null);
     }
 
 
-    public void setText2 (BitmapFont font, CharSequence str, int start, int end, Color color
+    public void setText2(BitmapFont font, CharSequence str, int start, int end, Color color
             , float targetWidth, int halign, boolean wrap, String truncate) {
         if (truncate != null)
             wrap = true; // Causes truncate code to run, doesn't actually cause wrapping.
-        else if (targetWidth <= font.getSpaceWidth()) //
+        else if (targetWidth <= font.getSpaceXadvance()) //
             wrap = false; // Avoid one line per character, which is very inefficient.
 
         BitmapFont.BitmapFontData fontData = font.getData();
@@ -266,7 +266,7 @@ public class FreeGlyphLayout extends GlyphLayout {
                     run.color.set(color);
                     run.x = x;
                     run.y = y;
-                    fontData.getGlyphs(run, str, runStart, runEnd, colorRun);
+                    fontData.getGlyphs(run, str, runStart, runEnd, null);
                     if (run.glyphs.size == 0)
                         glyphRunPool.free(run);
                     else {
@@ -370,12 +370,12 @@ public class FreeGlyphLayout extends GlyphLayout {
         this.height = fontData.capHeight + lines * fontData.lineHeight + blankLines * fontData.lineHeight * fontData.blankLineScale;
     }
 
-    private void truncate (BitmapFont.BitmapFontData fontData, GlyphRun run, float targetWidth, String truncate, int widthIndex,
-                           Pool<GlyphRun> glyphRunPool) {
+    private void truncate(BitmapFont.BitmapFontData fontData, GlyphRun run, float targetWidth, String truncate, int widthIndex,
+                          Pool<GlyphRun> glyphRunPool) {
 
         // Determine truncate string size.
         GlyphRun truncateRun = glyphRunPool.obtain();
-        fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), true);
+        fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), null);
         float truncateWidth = 0;
         for (int i = 1, n = truncateRun.xAdvances.size; i < n; i++)
             truncateWidth += truncateRun.xAdvances.get(i);
@@ -399,7 +399,8 @@ public class FreeGlyphLayout extends GlyphLayout {
             run.glyphs.truncate(count - 1);
             run.xAdvances.truncate(count);
             adjustLastGlyph(fontData, run);
-            if (truncateRun.xAdvances.size > 0) run.xAdvances.addAll(truncateRun.xAdvances, 1, truncateRun.xAdvances.size - 1);
+            if (truncateRun.xAdvances.size > 0)
+                run.xAdvances.addAll(truncateRun.xAdvances, 1, truncateRun.xAdvances.size - 1);
         } else {
             // No run glyphs fit, use only truncate glyphs.
             run.glyphs.clear();
@@ -413,7 +414,7 @@ public class FreeGlyphLayout extends GlyphLayout {
         glyphRunPool.free(truncateRun);
     }
 
-    private GlyphRun wrap (BitmapFont.BitmapFontData fontData, GlyphRun first, Pool<GlyphRun> glyphRunPool, int wrapIndex, int widthIndex) {
+    private GlyphRun wrap(BitmapFont.BitmapFontData fontData, GlyphRun first, Pool<GlyphRun> glyphRunPool, int wrapIndex, int widthIndex) {
         GlyphRun second = glyphRunPool.obtain();
         second.color.set(first.color);
         int glyphCount = first.glyphs.size;
@@ -462,10 +463,12 @@ public class FreeGlyphLayout extends GlyphLayout {
         return second;
     }
 
-    /** Adjusts the xadvance of the last glyph to use its width instead of xadvance. */
-    private void adjustLastGlyph (BitmapFont.BitmapFontData fontData, GlyphRun run) {
+    /**
+     * Adjusts the xadvance of the last glyph to use its width instead of xadvance.
+     */
+    private void adjustLastGlyph(BitmapFont.BitmapFontData fontData, GlyphRun run) {
         BitmapFont.Glyph last = run.glyphs.peek();
-        if (fontData.isWhitespace((char)last.id)) return; // Can happen when doing truncate.
+        if (fontData.isWhitespace((char) last.id)) return; // Can happen when doing truncate.
         float width = (last.xoffset + last.width) * fontData.scaleX - fontData.padRight;
         run.width += width - run.xAdvances.peek(); // Can cause the run width to be > targetWidth, but the problem is minimal.
         run.xAdvances.set(run.xAdvances.size - 1, width);
