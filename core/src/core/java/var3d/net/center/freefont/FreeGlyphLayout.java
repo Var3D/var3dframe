@@ -207,7 +207,7 @@ public class FreeGlyphLayout extends GlyphLayout {
             , float targetWidth, int halign, boolean wrap, String truncate) {
         if (truncate != null)
             wrap = true; // Causes truncate code to run, doesn't actually cause wrapping.
-        else if (targetWidth <= font.getData().spaceWidth) //
+        else if (targetWidth <= font.getSpaceWidth()) //
             wrap = false; // Avoid one line per character, which is very inefficient.
 
         BitmapFont.BitmapFontData fontData = font.getData();
