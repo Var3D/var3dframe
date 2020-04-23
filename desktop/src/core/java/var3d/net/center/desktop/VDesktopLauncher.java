@@ -1506,7 +1506,7 @@ public abstract class VDesktopLauncher implements VListener {
 
         boolean isMac = System.getProperty("os.name").startsWith("Mac");
         String root = (new File("").getAbsolutePath()).replaceAll(isMac ? "android/assets" : "android\\\\assets", "");
-        String path = root + File.separator + ".fbx-conv";
+        String path = root + ".fbx-conv";
         autoFbx2G3db2(path);
     }
 
@@ -1638,6 +1638,7 @@ public abstract class VDesktopLauncher implements VListener {
                     getAuthority(toolPath + File.separator + "fbx-conv-mac");
                     convPath = new String[]{toolPath + File.separator + "fbx-conv-mac", "-f", fbxPath.getAbsolutePath()};
                     process = Runtime.getRuntime().exec(convPath);
+                    System.out.println("toolPath=" + toolPath + "\nfbxPath=" + fbxPath + "\nconvPath=" + convPath[0]);
                     break;
             }
 
@@ -1663,8 +1664,7 @@ public abstract class VDesktopLauncher implements VListener {
             process.waitFor();
             //文件备份
             boolean isMac = System.getProperty("os.name").startsWith("Mac");
-            String root = (new File("").getAbsolutePath()).replaceAll(
-                    isMac ? "android/assets" : "android\\\\assets", "");
+            String root = (new File("").getAbsolutePath()).replaceAll(isMac ? "android/assets" : "android\\\\assets", "");
             String path = root + File.separator + "srcCopy";
             File copys = new File(path);
             copys.mkdirs();
@@ -1679,7 +1679,7 @@ public abstract class VDesktopLauncher implements VListener {
         } catch (IOException e) {
             System.out.println(e.toString());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println(e.toString());
         }
     }
 
