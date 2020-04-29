@@ -439,7 +439,8 @@ public class FreeBitmapFont extends BitmapFont {
             spaceGlyph.id = (int) ' ';
             data.setGlyph(' ', spaceGlyph);
         }
-        data.spaceXadvance= spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
+        //data.spaceXadvance= spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
+        data.spaceWidth= spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
 
         Array<Page> pages = packer.getPages();
         Array<TextureRegion> regions = getRegions();
