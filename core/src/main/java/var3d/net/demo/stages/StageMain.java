@@ -22,6 +22,7 @@ import var3d.net.demo.R;
 public class StageMain extends VStage {
     public StageMain(VGame game) {
         super(game, false);
+        game.loadToPack();
     }
 
     @Override
@@ -173,7 +174,7 @@ public class StageMain extends VStage {
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
 
 
-
+       // game.getModel()
 
     }
 

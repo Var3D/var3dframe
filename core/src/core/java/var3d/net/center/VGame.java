@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -31,7 +32,9 @@ import com.badlogic.gdx.graphics.g2d.PixmapPacker.Page;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -43,7 +46,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
@@ -105,10 +107,12 @@ public abstract class VGame implements ApplicationListener {
     private boolean isLoading = false;// 是否加载中
     private PixmapPacker packer = null;// 用于将单个字符合成到大纹理的packer
     public int pageWidth = 1024;// 大纹理尺寸
+    public int pageWidthModel=4096;//用来合成模型的纹理
     public final TextureFilter filter = TextureFilter.Linear;// 纹理缩放形式
 
     private final HashMap<String, Texture> textures = new HashMap<String, Texture>();// 保存new出来得资源或者网络资源
     private TextureAtlas atlas;
+    private Model model;//模型库
     private final HashMap<String, VStage> pool = new HashMap<String, VStage>();// stage列表
     private final HashMap<Class<?>, VDialog> poolDialog = new HashMap<Class<?>, VDialog>();// dialog列表
     private final HashMap<String, FreeBitmapFont> fonts = new HashMap<String, FreeBitmapFont>();// 字体列表
@@ -525,7 +529,7 @@ public abstract class VGame implements ApplicationListener {
                         }
                     }
                 }
-                if (inpacks.size > 0) {
+                if (inpacks.size > 0) {//将散图打包到大图
                     if (packer == null)
                         packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 2, true);
                     if (atlas == null) atlas = new TextureAtlas();
@@ -549,6 +553,25 @@ public abstract class VGame implements ApplicationListener {
                     packer.dispose();
                     packer = null;
                     inpacks.clear();
+                }
+                if (inModels.size > 0) {//将散模型打包到模型库
+                    if(packer==null) packer = new PixmapPacker(pageWidthModel, pageWidthModel, Format.RGBA8888, 1, true);
+                    for (String path : inModels) {
+                        Model addModel = assets.get(path, Model.class);
+                        if (model == null) {
+                            model = addModel;
+                            packRegion(model.materials.first(), path);
+                        }else{
+                            packRegion(addModel.materials.first(), path);
+                            model.nodes.addAll(addModel.nodes);
+                            model.animations.addAll(addModel.animations);
+                            model.materials.addAll(addModel.materials);
+                            model.meshes.addAll(addModel.meshes);
+                            model.meshParts.addAll(addModel.meshParts);
+                        }
+                        assets.unload(path);
+                    }
+                    inModels.clear();
                 }
                 if (stage != null) {
                     stage.init();
@@ -586,6 +609,28 @@ public abstract class VGame implements ApplicationListener {
                 soundRuns.removeIndex(0).run();
             }
         }
+    }
+
+    //将模型的纹理打包到大图
+    private void packRegion(Material material, String modelPath) {
+        TextureAttribute attribute = (TextureAttribute) material.get(TextureAttribute.Diffuse);
+        if (attribute != null) {
+            Texture texture = attribute.textureDescription.texture;
+            TextureData data = texture.getTextureData();
+            data.prepare();
+            Pixmap pixmap = data.consumePixmap();
+            packer.pack(modelPath, pixmap);
+            packer.updateTextureAtlas(atlas,filter, filter, false);
+            TextureRegion region = atlas.findRegion(modelPath);
+            material.set(TextureAttribute.createDiffuse(region));
+            pixmap.dispose();
+            texture.dispose();
+        }
+    }
+
+    //获取模型库
+    public Model getModel(){
+        return model;
     }
 
     public AssetManager getAssetManager() {
@@ -1126,7 +1171,6 @@ public abstract class VGame implements ApplicationListener {
             }
             inpacks.add(name);
         } catch (Exception e) {
-            // TODO: handle exception
         }
     }
 
@@ -1143,6 +1187,16 @@ public abstract class VGame implements ApplicationListener {
         for (int i = 0; i < names.length; i++) {
             load(type, names[i]);
         }
+    }
+
+    /**
+     * 加载模型到模型库
+     */
+    private Array<String> inModels = new Array<String>();
+
+    public void loadToModel(String name) {
+        assets.load(name, Model.class);
+        inModels.add(name);
     }
 
     /**
@@ -2612,7 +2666,7 @@ public abstract class VGame implements ApplicationListener {
     }
 
     public void removeActions(String key) {
-        if(actionHashMap.containsKey(key)) {
+        if (actionHashMap.containsKey(key)) {
             Action action = actionHashMap.get(key);
             stage.getRoot().removeAction(action);
             actionHashMap.remove(key);
