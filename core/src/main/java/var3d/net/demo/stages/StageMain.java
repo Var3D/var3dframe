@@ -22,7 +22,6 @@ import var3d.net.demo.R;
 public class StageMain extends VStage {
     public StageMain(VGame game) {
         super(game, false);
-        game.loadToPack();
     }
 
     @Override
