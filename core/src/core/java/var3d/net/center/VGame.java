@@ -561,9 +561,9 @@ public abstract class VGame implements ApplicationListener {
                         Model addModel = assets.get(path, Model.class);
                         if (model == null) {
                             model = addModel;
-                            packRegion(model.materials, path);
+                            //packRegion(model.materials, path);
                         } else {
-                            packRegion(addModel.materials, path);
+                            //packRegion(addModel.materials, path);
                             model.nodes.addAll(addModel.nodes);
                             model.animations.addAll(addModel.animations);
                             model.materials.addAll(addModel.materials);
