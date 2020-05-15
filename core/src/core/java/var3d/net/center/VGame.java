@@ -570,7 +570,7 @@ public abstract class VGame implements ApplicationListener {
                             model.meshes.addAll(addModel.meshes);
                             model.meshParts.addAll(addModel.meshParts);
                         }
-                        assets.unload(path);
+                        //assets.unload(path);
                     }
                     inModels.clear();
                 }
