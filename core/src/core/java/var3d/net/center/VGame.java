@@ -107,7 +107,7 @@ public abstract class VGame implements ApplicationListener {
     private boolean isLoading = false;// 是否加载中
     private PixmapPacker packer = null;// 用于将单个字符合成到大纹理的packer
     public int pageWidth = 1024;// 大纹理尺寸
-    public int pageWidthModel=4096;//用来合成模型的纹理
+    public int pageWidthModel = 4096;//用来合成模型的纹理
     public final TextureFilter filter = TextureFilter.Linear;// 纹理缩放形式
 
     private final HashMap<String, Texture> textures = new HashMap<String, Texture>();// 保存new出来得资源或者网络资源
@@ -555,14 +555,15 @@ public abstract class VGame implements ApplicationListener {
                     inpacks.clear();
                 }
                 if (inModels.size > 0) {//将散模型打包到模型库
-                    if(packer==null) packer = new PixmapPacker(pageWidthModel, pageWidthModel, Format.RGBA8888, 1, true);
+                    if (packer == null)
+                        packer = new PixmapPacker(pageWidthModel, pageWidthModel, Format.RGBA8888, 1, true);
                     for (String path : inModels) {
                         Model addModel = assets.get(path, Model.class);
                         if (model == null) {
                             model = addModel;
-                            packRegion(model.materials.first(), path);
-                        }else{
-                            packRegion(addModel.materials.first(), path);
+                            packRegion(model.materials, path);
+                        } else {
+                            packRegion(addModel.materials, path);
                             model.nodes.addAll(addModel.nodes);
                             model.animations.addAll(addModel.animations);
                             model.materials.addAll(addModel.materials);
@@ -612,7 +613,9 @@ public abstract class VGame implements ApplicationListener {
     }
 
     //将模型的纹理打包到大图
-    private void packRegion(Material material, String modelPath) {
+    private void packRegion(Array<Material> materials, String modelPath) {
+        if (materials == null || materials.size == 0) return;
+        Material material = materials.first();
         TextureAttribute attribute = (TextureAttribute) material.get(TextureAttribute.Diffuse);
         if (attribute != null) {
             Texture texture = attribute.textureDescription.texture;
@@ -620,7 +623,7 @@ public abstract class VGame implements ApplicationListener {
             data.prepare();
             Pixmap pixmap = data.consumePixmap();
             packer.pack(modelPath, pixmap);
-            packer.updateTextureAtlas(atlas,filter, filter, false);
+            packer.updateTextureAtlas(atlas, filter, filter, false);
             TextureRegion region = atlas.findRegion(modelPath);
             material.set(TextureAttribute.createDiffuse(region));
             pixmap.dispose();
@@ -629,7 +632,7 @@ public abstract class VGame implements ApplicationListener {
     }
 
     //获取模型库
-    public Model getModel(){
+    public Model getModel() {
         return model;
     }
 
