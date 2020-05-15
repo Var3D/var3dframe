@@ -1202,6 +1202,12 @@ public abstract class VGame implements ApplicationListener {
         inModels.add(name);
     }
 
+    public void loadToModelAll(String... names) {
+        for (int i = 0; i < names.length; i++) {
+            loadToModel(names[i]);
+        }
+    }
+
     /**
      * 截图
      */
