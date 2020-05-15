@@ -3,6 +3,7 @@ package var3d.net.demo.stages;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -22,6 +23,8 @@ import var3d.net.demo.R;
 public class StageMain extends VStage {
     public StageMain(VGame game) {
         super(game, false);
+        //预加载散模型到模型库
+        game.loadToModelAll(R.model.man_g3db, R.model.yellowbox, R.model.line, R.model.key_g3db, R.model.map0, R.model.greensky);
     }
 
     @Override
@@ -148,7 +151,7 @@ public class StageMain extends VStage {
         });
 
         //计时器例子
-        Button btn_time= game.getButton(120, 40, 10).setColor(Color.valueOf("0075ed")).setSize(pref())
+        Button btn_time = game.getButton(120, 40, 10).setColor(Color.valueOf("0075ed")).setSize(pref())
                 .setPosition(pref().getX(), pref().getY() - 10, Align.topLeft).addClicAction().show();
         btn_time.add(game.getLabel("计时器例子").setFontScale(0.6f).getActor());
         btn_time.addListener(new ClickListener() {
@@ -173,8 +176,8 @@ public class StageMain extends VStage {
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
 
 
-       // game.getModel()
-
+        new ModelInstance(game.getModel(), "land");
+        new ModelInstance(game.getModel(),"yellowbox");
     }
 
     public void start() {

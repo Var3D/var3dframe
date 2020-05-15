@@ -558,7 +558,7 @@ public abstract class VGame implements ApplicationListener {
                     if (packer == null)
                         packer = new PixmapPacker(pageWidthModel, pageWidthModel, Format.RGBA8888, 1, true);
                     for (String path : inModels) {
-                        Model addModel = assets.get(path, Model.class);
+                        Model addModel = getModel(path);
                         if (model == null) {
                             model = addModel;
                             //packRegion(model.materials, path);

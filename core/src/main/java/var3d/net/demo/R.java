@@ -34,7 +34,18 @@ public class R {
 
 
    public static class model {
-      public static String obj0 = "model/obj0.g3db";
+      public static String yellowbox = "model/yellowbox.g3db";
+      public static String key = "model/key.jpg";
+      public static String line = "model/line.g3db";
+      public static String key_g3db = "model/key.g3db";
+      public static String man = "model/man.jpg";
+      public static String map0 = "model/map0.g3db";
+      public static String sky = "model/sky.jpg";
+      public static String greensky = "model/greensky.g3db";
+      public static String man_g3db = "model/man.g3db";
+      public static String line_jpg = "model/line.jpg";
+      public static String greensky_jpg = "model/greensky.jpg";
+      public static String box = "model/box.jpg";
    }
 
 
