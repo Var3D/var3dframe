@@ -3,11 +3,7 @@ package var3d.net.demo.stages;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -176,10 +172,6 @@ public class StageMain extends VStage {
         VLabel msg = game.getLabel("我是一个粉刷匠，粉刷本领强").show(this);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
 
-
-        new ModelInstance(game.getModel(), "land");
-        ModelInstance box=new ModelInstance(game.getModel(),"yellowbox");
-        box.calculateBoundingBox(new BoundingBox());
     }
 
     public void start() {
