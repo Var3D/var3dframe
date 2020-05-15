@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -177,7 +178,8 @@ public class StageMain extends VStage {
 
 
         new ModelInstance(game.getModel(), "land");
-        new ModelInstance(game.getModel(),"yellowbox");
+        ModelInstance box=new ModelInstance(game.getModel(),"yellowbox");
+        box.calculateBoundingBox(new BoundingBox());
     }
 
     public void start() {
