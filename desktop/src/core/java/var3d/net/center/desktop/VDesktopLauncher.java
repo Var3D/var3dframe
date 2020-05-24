@@ -568,12 +568,7 @@ public abstract class VDesktopLauncher implements VListener {
             frame = new JFrame();
             frame.setResizable(false);
             canvas.setSize(config.width, config.height-22);
-
-            JPanel canvasPanel = new JPanel();
-            int top = config.height - canvas.getHeight();
-            canvasPanel.setBounds(0, -6, canvas.getWidth(), canvas.getHeight());
-            canvasPanel.add(canvas);
-            frame.add(canvasPanel);
+            frame.add(canvas);
 
             frame.setTitle(config.title);
             frame.setSize(config.width, config.height);
@@ -581,11 +576,8 @@ public abstract class VDesktopLauncher implements VListener {
 
             textPanel = new JPanel();
             textPanel.setLayout(new FlowLayout());
-            textPanel.setBounds(0, 0, config.width, top);
-            textField = new JTextField(top);
+            textField = new JTextField(30);
             textField.setText("");
-            textField.setAlignmentX(0.0F);
-            textField.setSize(config.width, top);
             textPanel.add(textField);
             textField.addFocusListener(new FocusListener() {
                 public void focusLost(FocusEvent e) {
