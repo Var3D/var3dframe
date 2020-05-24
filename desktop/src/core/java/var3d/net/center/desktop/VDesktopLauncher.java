@@ -3,6 +3,7 @@ package var3d.net.center.desktop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -21,20 +22,32 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.SharedLibraryLoader;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.opengl.Display;
 
 import java.awt.BasicStroke;
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.font.GlyphVector;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
@@ -63,7 +76,17 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.OverlayLayout;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
@@ -72,6 +95,7 @@ import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
+import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
 
 public abstract class VDesktopLauncher implements VListener {
@@ -83,6 +107,7 @@ public abstract class VDesktopLauncher implements VListener {
     public VDesktopLauncher(boolean isOpenAutoFbx2G3db) {
         if (isOpenAutoFbx2G3db) autoFbx2G3db(null);
     }
+
 
     public void setGame(VGame game) {
         this.game = game;
@@ -525,6 +550,10 @@ public abstract class VDesktopLauncher implements VListener {
 
 
     private static LwjglApplicationConfiguration config;
+    public static Canvas canvas;
+    private static JFrame frame;
+    private static JTextField textField;
+    private static JPanel textPanel;
 
     public static LwjglApplicationConfiguration getConfig(int width, int height, float scale) {
         config = new LwjglApplicationConfiguration();
@@ -533,8 +562,115 @@ public abstract class VDesktopLauncher implements VListener {
         config.height = (int) (height * scale);
         config.title = "Var3dFrame框架";
         config.samples = 4;
+        if (System.getProperty("os.name").startsWith("Mac")) {
+            canvas = new Canvas();
+            frame = new JFrame();
+            frame.setResizable(false);
+            canvas.setSize(config.width, config.height - 22);
+
+            JPanel canvasPanel = new JPanel();
+            int top = config.height - canvas.getHeight();
+            canvasPanel.setBounds(0, top, canvas.getWidth(), canvas.getHeight());
+            canvasPanel.add(canvas);
+            frame.add(canvasPanel);
+
+            frame.setTitle(config.title);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(config.width, config.height);
+            frame.setLocationRelativeTo(null);
+
+            textPanel = new JPanel();
+            textPanel.setLayout(new FlowLayout());
+            textPanel.setBounds(0, 0, config.width, top);
+            textField = new JTextField(top);
+            textField.setText("");
+            textField.setAlignmentX(0.0F);
+            textField.setSize(config.width, top);
+            textPanel.add(textField);
+            textField.addFocusListener(new FocusListener() {
+                public void focusLost(FocusEvent e) {
+                    //失去焦点执行的代码
+                    textField.requestFocus();
+                }
+
+                public void focusGained(FocusEvent e) {
+                }
+            });
+            textField.addKeyListener(new KeyListener() {
+                public void keyTyped(KeyEvent event) {
+                    switch (event.getExtendedKeyCode()) {
+                        case KeyEvent.VK_BACK_SPACE://删除键
+                            Gdx.app.postRunnable(new Runnable() {
+                                public void run() {
+                                    Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
+                                    Gdx.graphics.requestRendering();
+                                }
+                            });
+                            break;
+                    }
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
+                public void keyReleased(KeyEvent e) {
+                }
+            });
+
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                private int prefLen = 0;
+
+                public void changedUpdate(DocumentEvent e) {
+                }
+
+                public void removeUpdate(DocumentEvent e) {
+                }
+
+                public void insertUpdate(DocumentEvent e) {
+                    if (mTextField == null) return;
+                    Document doc = e.getDocument();
+                    int nowLen = e.getLength();
+                    try {
+                        if (nowLen == 1) {
+                            if (nowLen != prefLen) {
+                                Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
+                            }
+                            final String newText = doc.getText(0, doc.getLength()).substring(doc.getLength() - 1); //返回文本框输入的内容
+                            Gdx.app.postRunnable(new Runnable() {
+                                public void run() {
+                                    FreeBitmapFont font = (FreeBitmapFont) mTextField.getStyle().font;
+                                    String newString = font.appendTextPro(newText);
+                                    for (int i = 0, len = newString.length(); i < len; i++) {
+                                        char newchar = newString.charAt(i);
+                                        Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
+                                    }
+                                    Gdx.graphics.requestRendering();
+                                }
+                            });
+                        }
+                        prefLen = nowLen;
+                    } catch (BadLocationException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            frame.add(textPanel);
+            frame.setVisible(true);
+
+           // textPanel.setLocation(0, 300);
+        }
         return config;
     }
+
+
+    private static VTextField mTextField;
+
+    public void linkVTextField(VTextField mTextField) {
+        this.mTextField = mTextField;
+        textPanel.setLocation(0, Gdx.input.getY()+textField.getHeight());
+    }
+
 
     public static LwjglApplicationConfiguration getConfig(int width, int height) {
         return getConfig(width, height, 1);
@@ -1499,7 +1635,7 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    private void autoFbx2G3db(String homePath) {
+    public static void autoFbx2G3db(String homePath) {
 //        if (homePath == null)
 //            homePath = System.getProperty("java.home") + File.separator + "fbx-conv";
 //        autoFbx2G3db2(homePath);
@@ -1510,7 +1646,7 @@ public abstract class VDesktopLauncher implements VListener {
         autoFbx2G3db2(path);
     }
 
-    private void autoFbx2G3db2(String convPath) {
+    private static void autoFbx2G3db2(String convPath) {
 
         String assetsPath = System.getProperty("user.dir");
         if (new File(convPath).exists()) {
@@ -1598,7 +1734,7 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
-    private void getAuthority(String path) {
+    private static void getAuthority(String path) {
         if (LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {//如果是mac系统，记得开权限
             try {
                 Runtime.getRuntime().exec("chmod 777 " + path).waitFor();
@@ -1611,7 +1747,7 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    private void fbxToG3dbs(File group, String toolPath) {
+    private static void fbxToG3dbs(File group, String toolPath) {
         File[] list = group.listFiles();
         for (File file : list) {
             if (file.isDirectory()) {
@@ -1622,7 +1758,7 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
-    private void fbxToG3db(File fbxPath, String toolPath) {
+    private static void fbxToG3db(File fbxPath, String toolPath) {
         Process process = null;
         try {
             switch (LWJGLUtil.getPlatform()) {
@@ -1690,9 +1826,6 @@ public abstract class VDesktopLauncher implements VListener {
     public void removeListenerOnKeyboardChange() {
     }
 
-
-    public void linkVTextField(VTextField vTextField) {
-    }
 
     public void setOnscreenKeyboardVisible(boolean isvisibe) {
     }

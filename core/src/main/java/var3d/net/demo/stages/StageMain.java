@@ -20,8 +20,6 @@ import var3d.net.demo.R;
 public class StageMain extends VStage {
     public StageMain(VGame game) {
         super(game, false);
-        //预加载散模型到模型库
-        game.loadToModelAll(R.model.man_g3db, R.model.yellowbox, R.model.line, R.model.key_g3db, R.model.map0, R.model.greensky);
     }
 
     @Override
