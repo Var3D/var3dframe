@@ -584,7 +584,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
             });
 
             editText.addTextChangedListener(new TextWatcher() {
-
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
 

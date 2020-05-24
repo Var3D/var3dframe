@@ -66,6 +66,7 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.AttributedString;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -566,16 +567,15 @@ public abstract class VDesktopLauncher implements VListener {
             canvas = new Canvas();
             frame = new JFrame();
             frame.setResizable(false);
-            canvas.setSize(config.width, config.height - 22);
+            canvas.setSize(config.width, config.height-22);
 
             JPanel canvasPanel = new JPanel();
             int top = config.height - canvas.getHeight();
-            canvasPanel.setBounds(0, top, canvas.getWidth(), canvas.getHeight());
+            canvasPanel.setBounds(0, -6, canvas.getWidth(), canvas.getHeight());
             canvasPanel.add(canvas);
             frame.add(canvasPanel);
 
             frame.setTitle(config.title);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(config.width, config.height);
             frame.setLocationRelativeTo(null);
 
@@ -589,7 +589,6 @@ public abstract class VDesktopLauncher implements VListener {
             textPanel.add(textField);
             textField.addFocusListener(new FocusListener() {
                 public void focusLost(FocusEvent e) {
-                    //失去焦点执行的代码
                     textField.requestFocus();
                 }
 
@@ -633,7 +632,12 @@ public abstract class VDesktopLauncher implements VListener {
                     try {
                         if (nowLen == 1) {
                             if (nowLen != prefLen) {
-                                Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
+                                Gdx.app.postRunnable(new Runnable() {
+                                    public void run() {
+                                        Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
+                                        Gdx.graphics.requestRendering();
+                                    }
+                                });
                             }
                             final String newText = doc.getText(0, doc.getLength()).substring(doc.getLength() - 1); //返回文本框输入的内容
                             Gdx.app.postRunnable(new Runnable() {
@@ -657,8 +661,6 @@ public abstract class VDesktopLauncher implements VListener {
 
             frame.add(textPanel);
             frame.setVisible(true);
-
-           // textPanel.setLocation(0, 300);
         }
         return config;
     }
