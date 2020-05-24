@@ -93,9 +93,9 @@ public class StageJump extends VStage {
         if (img_box.getY() <= img_line.getY()) img_box.setY(img_line.getY());
     }
 
-    public boolean keyDown(int arg0) {
-        if (arg0 == Input.Keys.NUM_1) vy = 12;
-        return super.keyDown(arg0);
+    public boolean keyDown(int keyCode) {
+        if (keyCode == Input.Keys.NUM_1) vy = 12;
+        return super.keyDown(keyCode);
     }
 
     @Override

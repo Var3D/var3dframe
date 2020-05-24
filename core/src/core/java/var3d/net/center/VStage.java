@@ -280,46 +280,47 @@ public abstract class VStage extends Stage {
         isOff = true;
     }
 
-    public boolean keyDown(int arg0) {
-        if (isOff == true||game.isCloseShortcut()) return false;
-
+    public boolean keyDown(int keyCode) {
+        if (isOff == true) return false;
         if (Gdx.app.getType() == ApplicationType.Desktop) {
-            game.var3dListener.keyDown(arg0);
-            if (arg0 == Input.Keys.DEL) {
+            if(game.isCloseShortcut())return super.keyDown(keyCode);
+            game.var3dListener.keyDown(keyCode);
+            if (keyCode == Input.Keys.DEL) {
                 back();
-            } else if (arg0 == Input.Keys.F) {
+            } else if (keyCode == Input.Keys.F) {
                 // 截图
                 game.Screenshot(game.getLanguage(), null, null);
-            } else if (arg0 == Input.Keys.G) {
+            } else if (keyCode == Input.Keys.G) {
                 // 多语言截图
                 game.ScreenshotMultiLanguage();
-            } else if (arg0 == Input.Keys.valueOf("-")) {
+            } else if (keyCode == Input.Keys.valueOf("-")) {
                 // 多语言截图
                 game.switchLanguage(false);
-            } else if (arg0 == Input.Keys.valueOf("=")) {
+            } else if (keyCode == Input.Keys.valueOf("=")) {
                 // 多语言截图
                 game.switchLanguage(true);
-            } else if (arg0 == Input.Keys.E) {
+            } else if (keyCode == Input.Keys.E) {
                 // 编辑UI
                 game.var3dListener.edit(this);
-            } else if (arg0 == Input.Keys.P) {
+            } else if (keyCode == Input.Keys.P) {
                 // 保存UI
                 game.var3dListener.saveUI(this);
             }
-        } else if (arg0 == Input.Keys.BACK) {
+        } else if (keyCode == Input.Keys.BACK) {
             if (getRoot().getTouchable() == Touchable.enabled) {
                 back();
             }
         }
-        return false;
+        return super.keyDown(keyCode);
     }
 
-    public boolean keyUp(int arg0) {
-        if (isOff == true||game.isCloseShortcut()) return false;
+    public boolean keyUp(int keyCode) {
+        if (isOff == true) return false;
         if (Gdx.app.getType() == ApplicationType.Desktop) {
-            game.var3dListener.keyUp(arg0);
+            if(game.isCloseShortcut())return super.keyUp(keyCode);
+            game.var3dListener.keyUp(keyCode);
         }
-        return false;
+        return super.keyUp(keyCode);
     }
 
     //单独绘制背景

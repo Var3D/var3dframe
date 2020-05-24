@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
@@ -566,7 +567,7 @@ public abstract class VDesktopLauncher implements VListener {
         config.height = (int) (height * scale);
         config.title = "Var3dFrame框架";
         config.samples = 4;
-        if (System.getProperty("os.name").startsWith("Mac")) {
+        if (UIUtils.isMac) {
             canvas = new Canvas();
             frame = new JFrame();
             frame.setResizable(false);
@@ -603,6 +604,7 @@ public abstract class VDesktopLauncher implements VListener {
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
                             int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getExtendedKeyCode());
+                            //Gdx.app.log("aaaaa","down="+transCode);
                             Gdx.app.getInput().getInputProcessor().keyDown(transCode);
                             Gdx.graphics.requestRendering();
                         }
@@ -613,6 +615,7 @@ public abstract class VDesktopLauncher implements VListener {
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
                             int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getExtendedKeyCode());
+                           // Gdx.app.log("aaaaa","up="+event.getKeyChar());
                             Gdx.app.getInput().getInputProcessor().keyUp(transCode);
                             Gdx.graphics.requestRendering();
                         }

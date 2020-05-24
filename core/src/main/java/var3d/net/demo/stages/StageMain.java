@@ -173,18 +173,18 @@ public class StageMain extends VStage {
 
     }
 
-    public boolean keyDown(int keycode) {
-        Gdx.app.log("aaaaa","keycode="+keycode);
-        switch (keycode) {
-            case Input.Keys.ENTER:
-                game.showMessege("回车测试");
-                break;
-            case Input.Keys.NUM_1:
-                game.showMessege("1");
-                break;
-        }
-        return true;
-    }
+//    public boolean keyDown(int keycode) {
+//        Gdx.app.log("aaaaa","keycode="+keycode);
+//        switch (keycode) {
+//            case Input.Keys.ENTER:
+//                game.showMessege("回车测试");
+//                break;
+//            case Input.Keys.NUM_1:
+//                game.showMessege("1");
+//                break;
+//        }
+//        return true;
+//    }
 
     public void start() {
     }
