@@ -567,7 +567,8 @@ public abstract class VDesktopLauncher implements VListener {
             canvas = new Canvas();
             frame = new JFrame();
             frame.setResizable(false);
-            canvas.setSize(config.width, config.height-22);
+            frame.setUndecorated(true);
+            canvas.setSize(config.width, config.height);
             frame.add(canvas);
 
             frame.setTitle(config.title);
@@ -662,7 +663,7 @@ public abstract class VDesktopLauncher implements VListener {
 
     public void linkVTextField(VTextField mTextField) {
         this.mTextField = mTextField;
-        textPanel.setLocation(0, Gdx.input.getY()+textField.getHeight());
+        textPanel.setLocation(0, Gdx.input.getY() + textField.getHeight());
     }
 
 
