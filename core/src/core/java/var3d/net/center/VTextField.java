@@ -21,7 +21,7 @@ import var3d.net.center.freefont.FreeGlyphLayout;
 import static var3d.net.center.VGame.game;
 
 public class VTextField extends TextField {
-	static private final char TAB = '\t';
+	public static  final char TAB = '\t';
 	public static  final char BACKSPACE = 8;//libgdx的删除键值
 	static private final char DELETE = 127;
 	public static  final char ENTER = 13;

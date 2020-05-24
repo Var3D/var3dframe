@@ -577,7 +577,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
             final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
 
             activity.runOnUiThread(new Runnable() {
-                @Override
                 public void run() {
                     activity.addContentView(frameLayout, layoutParams);
                 }

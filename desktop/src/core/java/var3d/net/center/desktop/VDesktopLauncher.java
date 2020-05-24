@@ -2,8 +2,10 @@ package var3d.net.center.desktop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.backends.lwjgl.LwjglAWTInput;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.badlogic.gdx.backends.lwjgl.LwjglInput;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -98,6 +100,7 @@ import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
+import var3d.net.center.tool.Reflex;
 
 public abstract class VDesktopLauncher implements VListener {
     private VGame game;
@@ -567,8 +570,7 @@ public abstract class VDesktopLauncher implements VListener {
             canvas = new Canvas();
             frame = new JFrame();
             frame.setResizable(false);
-            frame.setUndecorated(true);
-            canvas.setSize(config.width, config.height);
+            canvas.setSize(config.width, config.height - 22);
             frame.add(canvas);
 
             frame.setTitle(config.title);
@@ -578,7 +580,6 @@ public abstract class VDesktopLauncher implements VListener {
             textPanel = new JPanel();
             textPanel.setLayout(new FlowLayout());
             textField = new JTextField(30);
-            textField.setText("");
             textPanel.add(textField);
             textField.addFocusListener(new FocusListener() {
                 public void focusLost(FocusEvent e) {
@@ -589,66 +590,33 @@ public abstract class VDesktopLauncher implements VListener {
                 }
             });
             textField.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent event) {
-                    switch (event.getExtendedKeyCode()) {
-                        case KeyEvent.VK_BACK_SPACE://删除键
-                            Gdx.app.postRunnable(new Runnable() {
-                                public void run() {
-                                    Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
-                                    Gdx.graphics.requestRendering();
-                                }
-                            });
-                            break;
-                    }
-                }
-
-                public void keyPressed(KeyEvent e) {
-                }
-
-                public void keyReleased(KeyEvent e) {
-                }
-            });
-
-            textField.getDocument().addDocumentListener(new DocumentListener() {
-                private int prefLen = 0;
-
-                public void changedUpdate(DocumentEvent e) {
-                }
-
-                public void removeUpdate(DocumentEvent e) {
-                }
-
-                public void insertUpdate(DocumentEvent e) {
-                    if (mTextField == null) return;
-                    Document doc = e.getDocument();
-                    int nowLen = e.getLength();
-                    try {
-                        if (nowLen == 1) {
-                            if (nowLen != prefLen) {
-                                Gdx.app.postRunnable(new Runnable() {
-                                    public void run() {
-                                        Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
-                                        Gdx.graphics.requestRendering();
-                                    }
-                                });
-                            }
-                            final String newText = doc.getText(0, doc.getLength()).substring(doc.getLength() - 1); //返回文本框输入的内容
-                            Gdx.app.postRunnable(new Runnable() {
-                                public void run() {
-                                    FreeBitmapFont font = (FreeBitmapFont) mTextField.getStyle().font;
-                                    String newString = font.appendTextPro(newText);
-                                    for (int i = 0, len = newString.length(); i < len; i++) {
-                                        char newchar = newString.charAt(i);
-                                        Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
-                                    }
-                                    Gdx.graphics.requestRendering();
-                                }
-                            });
+                public void keyTyped(final KeyEvent event) {
+                    Gdx.app.postRunnable(new Runnable() {
+                        public void run() {
+                            Gdx.app.getInput().getInputProcessor().keyTyped(event.getKeyChar());
+                            Gdx.graphics.requestRendering();
                         }
-                        prefLen = nowLen;
-                    } catch (BadLocationException ex) {
-                        ex.printStackTrace();
-                    }
+                    });
+                }
+
+                public void keyPressed(final KeyEvent event) {
+                    Gdx.app.postRunnable(new Runnable() {
+                        public void run() {
+                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getExtendedKeyCode());
+                            Gdx.app.getInput().getInputProcessor().keyDown(transCode);
+                            Gdx.graphics.requestRendering();
+                        }
+                    });
+                }
+
+                public void keyReleased(final KeyEvent event) {
+                    Gdx.app.postRunnable(new Runnable() {
+                        public void run() {
+                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getExtendedKeyCode());
+                            Gdx.app.getInput().getInputProcessor().keyUp(transCode);
+                            Gdx.graphics.requestRendering();
+                        }
+                    });
                 }
             });
 
@@ -659,10 +627,7 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
 
-    private static VTextField mTextField;
-
     public void linkVTextField(VTextField mTextField) {
-        this.mTextField = mTextField;
         textPanel.setLocation(0, Gdx.input.getY() + textField.getHeight());
     }
 

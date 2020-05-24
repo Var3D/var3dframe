@@ -2,6 +2,7 @@ package var3d.net.demo.stages;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -170,6 +171,19 @@ public class StageMain extends VStage {
         VLabel msg = game.getLabel("我是一个粉刷匠，粉刷本领强").show(this);
         msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
 
+    }
+
+    public boolean keyDown(int keycode) {
+        Gdx.app.log("aaaaa","keycode="+keycode);
+        switch (keycode) {
+            case Input.Keys.ENTER:
+                game.showMessege("回车测试");
+                break;
+            case Input.Keys.NUM_1:
+                game.showMessege("1");
+                break;
+        }
+        return true;
     }
 
     public void start() {
