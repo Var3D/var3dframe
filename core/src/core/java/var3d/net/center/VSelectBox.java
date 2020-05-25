@@ -1,6 +1,8 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import var3d.net.center.freefont.FreeBitmapFont;
@@ -12,9 +14,11 @@ import var3d.net.center.freefont.FreeBitmapFont;
 
 public class VSelectBox<T> extends SelectBox<T> {
 	private static FreeBitmapFont font;
+	private ScrollPane selectBoxList;
 
 	public VSelectBox(SelectBoxStyle style) {
 		super(reStyle(style));
+		selectBoxList=getScrollPane();
 	}
 
 	private static SelectBoxStyle reStyle(SelectBoxStyle style) {
@@ -34,5 +38,13 @@ public class VSelectBox<T> extends SelectBox<T> {
 		for (T t : newItems) {
 			font.appendText(t.toString());
 		}
+	}
+
+
+	public void showList() {
+		toFront();
+		super.showList();
+		selectBoxList.setPosition(getX(), getY(), Align.topLeft);
+		getParent().addActor(selectBoxList);
 	}
 }

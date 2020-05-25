@@ -51,6 +51,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
@@ -1813,6 +1814,7 @@ public abstract class VGame implements ApplicationListener {
      * font
      */
     public FreeBitmapFont getFont(String key) {
+        if (key == null || key.equals("")) return getFont();
         return fonts.get(key);
     }
 
@@ -2422,16 +2424,21 @@ public abstract class VGame implements ApplicationListener {
         return getUI(new CheckBox("", getCheckBoxStyle(downimgname, upimgname, Color.WHITE)));
     }
 
-    @SuppressWarnings("rawtypes")
-    public <T> UI<VSelectBox> getSelectBox(String titlebg) {
+    public UI<VSelectBox> getSelectBox(String titlebg, String fontName) {
         SelectBoxStyle style = new SelectBoxStyle();
         style.fontColor = Color.BLACK;
         style.background = getDrawable(titlebg);
-        style.font = getFont();
-        style.scrollStyle = new ScrollPaneStyle(getRectColorDrawable(1, 1, new Color(0.4f, 0.4f, 0.4f, 0.6f)), null, null, null, null);
-        style.listStyle = new ListStyle(getFont(), Color.BROWN, Color.WHITE, getRectColorDrawable(1, 1, new Color(1, 1, 0, 0.3f)));
+        style.font = getFont(fontName);
+        style.scrollStyle = new ScrollPane.ScrollPaneStyle(game.getRectColorDrawable(1, 1, Color.BLACK), null, null, null, null);
+        style.listStyle = new List.ListStyle(style.font, Color.BLACK, Color.WHITE, game.getRectColorDrawable(1, 1, Color.valueOf("729bdd")));
         VSelectBox select = new VSelectBox(style);
+        TextureRegion bg = game.getTextureRegion(titlebg);
+        select.setSize(bg.getRegionWidth(), bg.getRegionHeight());
         return getUI(select);
+    }
+
+    public UI<VSelectBox> getSelectBox(String titlebg) {
+        return getSelectBox(titlebg, "font");
     }
 
     /**
