@@ -603,9 +603,9 @@ public abstract class VDesktopLauncher implements VListener {
                 public void keyPressed(final KeyEvent event) {
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
-                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getExtendedKeyCode());
-                            //Gdx.app.log("aaaaa","down="+transCode);
-                            Gdx.app.getInput().getInputProcessor().keyDown(transCode);
+                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getKeyCode());
+                            Gdx.app.log("aaaaa", "downfirst=" + event.getKeyCode() + "down=" + transCode);
+                            Gdx.app.getInput().getInputProcessor().keyDown(event.getKeyCode() == 157 ? 55 : transCode);
                             Gdx.graphics.requestRendering();
                         }
                     });
@@ -614,9 +614,9 @@ public abstract class VDesktopLauncher implements VListener {
                 public void keyReleased(final KeyEvent event) {
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
-                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getExtendedKeyCode());
-                           // Gdx.app.log("aaaaa","up="+event.getKeyChar());
-                            Gdx.app.getInput().getInputProcessor().keyUp(transCode);
+                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getKeyCode());
+                            // Gdx.app.log("aaaaa","up="+event.getKeyChar());
+                            Gdx.app.getInput().getInputProcessor().keyUp(event.getKeyCode() == 157 ? 55 : transCode);
                             Gdx.graphics.requestRendering();
                         }
                     });

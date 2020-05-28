@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
+import com.badlogic.gdx.utils.Array;
 
 import java.lang.reflect.Field;
 
@@ -85,11 +86,9 @@ public class VTextField extends TextField {
             }
         });
         ClickListener appendListener = new ClickListener() {
-
             public boolean keyTyped(InputEvent event, char character) {
                 //if(isDisabled()||character<32||character == TAB) return false;
                 if (isDisabled() || character == TAB) return false;
-
                 Stage stage1 = getStage();
                 if (!(stage1 instanceof VStage) || stage1 == null || stage1.getKeyboardFocus() != VTextField.this)
                     return false;
@@ -140,20 +139,38 @@ public class VTextField extends TextField {
             }
 
 
-//            public boolean keyDown(InputEvent event, int keycode) {
-//                Gdx.app.log("aaaaaa", "keycode=" + keycode);
-//                boolean ctrl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)|Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
-//                if (ctrl) {
-//                    Gdx.app.log("aaaaaa", "ctrl");
-//                    switch (keycode) {
-//                        case Input.Keys.A:
-//                            Gdx.app.log("aaaaaa", "全选");
-//                            selectAll();
-//                            return true;
-//                    }
-//                }
-//                return true;
-//            }
+            private int prefKey = -1;
+
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (!UIUtils.isMac) return super.keyDown(event, keycode);
+                boolean ctrl = prefKey == Input.Keys.CONTROL_LEFT || prefKey == Input.Keys.CONTROL_RIGHT || prefKey == Input.Keys.COMMA;
+                if (ctrl) {//control或者command
+                    switch (keycode) {
+                        case Input.Keys.A://全选
+                            selectAll();
+                            break;
+                        case Input.Keys.V://粘贴
+                            String copyText = Gdx.app.getClipboard().getContents();
+                            if (!copyText.equals(""))
+                                ((FreeBitmapFont) getStyle().font).appendTextPro(copyText);
+                            Reflex.invokeMethod("paste", VTextField.this, copyText, true);
+                            break;
+                        case Input.Keys.X:
+                            Reflex.invokeMethod("cut", VTextField.this);
+                            return true;
+                        case Input.Keys.Z:
+                            String oldText = Reflex.getFieldValue("text", VTextField.this);
+                            String undoText = Reflex.getFieldValue("undoText", VTextField.this);
+                            setText(undoText);
+                            Reflex.setFieldValue("undoText", VTextField.this, oldText);
+                            Reflex.invokeMethod("updateDisplayText", VTextField.this);
+                            return true;
+                    }
+                }
+                prefKey = keycode;
+                return super.keyDown(event, keycode);
+            }
+
         };
         addListener(appendListener);
         getListeners().insert(0, new ClickListener() {
