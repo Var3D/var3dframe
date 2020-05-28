@@ -604,7 +604,7 @@ public abstract class VDesktopLauncher implements VListener {
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
                             int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getKeyCode());
-                            Gdx.app.log("aaaaa", "downfirst=" + event.getKeyCode() + "down=" + transCode);
+                            //Gdx.app.log("aaaaa", "downfirst=" + event.getKeyCode() + "down=" + transCode);
                             Gdx.app.getInput().getInputProcessor().keyDown(event.getKeyCode() == 157 ? 55 : transCode);
                             Gdx.graphics.requestRendering();
                         }
