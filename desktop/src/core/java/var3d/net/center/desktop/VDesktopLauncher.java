@@ -566,11 +566,10 @@ public abstract class VDesktopLauncher implements VListener {
         config.width = (int) (width * scale);
         config.height = (int) (height * scale);
         config.title = "Var3dFrame框架";
-        config.samples = 4;
+        config.samples = 1024;
         if (UIUtils.isMac) {
             canvas = new Canvas();
             frame = new JFrame();
-            frame.setAlwaysOnTop(true);
             frame.setResizable(false);
             canvas.setSize(config.width, config.height - 22);
             frame.add(canvas);
