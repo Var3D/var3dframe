@@ -570,6 +570,7 @@ public abstract class VDesktopLauncher implements VListener {
         if (UIUtils.isMac) {
             canvas = new Canvas();
             frame = new JFrame();
+            frame.setAlwaysOnTop(true);
             frame.setResizable(false);
             canvas.setSize(config.width, config.height - 22);
             frame.add(canvas);
