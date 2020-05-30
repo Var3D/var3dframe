@@ -35,6 +35,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -571,6 +572,11 @@ public abstract class VGame implements ApplicationListener {
                             model.meshes.addAll(addModel.meshes);
                             model.meshParts.addAll(addModel.meshParts);
                         }
+                    }
+                    //移除所有动画里面的所属前缀
+                    Array<Animation> animations = model.animations;
+                    for (Animation animation : animations) {
+                        animation.id = animation.id.substring(animation.id.lastIndexOf("|")+1);
                     }
                     packer.dispose();
                     packer = null;
