@@ -21,13 +21,16 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import var3d.net.center.freefont.FreeBitmapFont;
+import var3d.net.center.tool.Reflex;
+
 public abstract class VStage extends Stage {
     public VGame game;
     private String name = "";
     public ArrayList<Actor> bgList;
     private float cutWidth, cutHeight, cutAndWidth, cutAndHeight, fullWidth, fullHeight;
     private float safeLeft, safeRight, safeTop, safeBottom;
-    private float startX,startY;
+    private float startX, startY;
     private boolean isStretching = false;//是否拉伸比例适配
     public Rectangle safeAreaInsets = new Rectangle();//安全区域边距
 
@@ -122,8 +125,8 @@ public abstract class VStage extends Stage {
             cutHeight = 0;
             getRoot().setScale(bl, 1);
             getRoot().setPosition(cutWidth, 0);
-            startX=cutWidth;
-            startY=0;
+            startX = cutWidth;
+            startY = 0;
             cutWidth = cutWidth / getRoot().getScaleX();
             calculationAafeArea(bl, 1);
         } else if (bl >= 1) {
@@ -131,24 +134,24 @@ public abstract class VStage extends Stage {
             cutHeight = (1 - 1 / bl) * getHeight() / 2f;
             getRoot().setScale(1, 1 / bl);
             getRoot().setPosition(0, cutHeight);
-            startX=0;
-            startY=cutHeight;
+            startX = 0;
+            startY = cutHeight;
             cutHeight = cutHeight / getRoot().getScaleY();
             calculationAafeArea(1, bl);
         }
         calculationCuts();
     }
 
-    public float getStartX(){
+    public float getStartX() {
         return startX;
     }
 
-    public float getStartY(){
+    public float getStartY() {
         return startY;
     }
 
-    public void resetStage(){
-        getRoot().setPosition(startX,startY);
+    public void resetStage() {
+        getRoot().setPosition(startX, startY);
     }
 
     private void calculationAafeArea(float blx, float bly) {
@@ -280,31 +283,41 @@ public abstract class VStage extends Stage {
         isOff = true;
     }
 
+    private int prefKey = -1;
+
     public boolean keyDown(int keyCode) {
         if (isOff == true) return false;
         if (Gdx.app.getType() == ApplicationType.Desktop) {
-            if(game.isCloseShortcut())return super.keyDown(keyCode);
+            if (game.isCloseShortcut()) return super.keyDown(keyCode);
             game.var3dListener.keyDown(keyCode);
-            if (keyCode == Input.Keys.DEL) {
-                back();
-            } else if (keyCode == Input.Keys.F) {
-                // 截图
-                game.Screenshot(game.getLanguage(), null, null);
-            } else if (keyCode == Input.Keys.G) {
-                // 多语言截图
-                game.ScreenshotMultiLanguage();
-            } else if (keyCode == Input.Keys.valueOf("-")) {
-                // 多语言截图
-                game.switchLanguage(false);
-            } else if (keyCode == Input.Keys.valueOf("=")) {
-                // 多语言截图
-                game.switchLanguage(true);
-            } else if (keyCode == Input.Keys.E) {
-                // 编辑UI
-                game.var3dListener.edit(this);
-            } else if (keyCode == Input.Keys.P) {
-                // 保存UI
-                game.var3dListener.saveUI(this);
+            boolean ctrl = prefKey == Input.Keys.CONTROL_LEFT || prefKey == Input.Keys.CONTROL_RIGHT || prefKey == Input.Keys.COMMA;
+            prefKey = keyCode;
+            if (ctrl) {//control或者command
+                switch (keyCode) {
+                    case Input.Keys.BACKSPACE://后退
+                        if (getRoot().getTouchable() == Touchable.enabled) {
+                            back();
+                        }
+                        break;
+                    case Input.Keys.F: // 截图
+                        game.Screenshot(game.getLanguage(), null, null);
+                        break;
+                    case Input.Keys.G:// 多语言截图
+                        game.ScreenshotMultiLanguage();
+                        break;
+                    case Input.Keys.MINUS://语言切换
+                        game.switchLanguage(false);
+                        break;
+                    case Input.Keys.EQUALS://语言切换
+                        game.switchLanguage(true);
+                        break;
+                    case Input.Keys.E://编辑UI
+                        game.var3dListener.edit(this);
+                        break;
+                    case Input.Keys.P://保存UI
+                        game.var3dListener.saveUI(this);
+                        break;
+                }
             }
         } else if (keyCode == Input.Keys.BACK) {
             if (getRoot().getTouchable() == Touchable.enabled) {
@@ -317,7 +330,7 @@ public abstract class VStage extends Stage {
     public boolean keyUp(int keyCode) {
         if (isOff == true) return false;
         if (Gdx.app.getType() == ApplicationType.Desktop) {
-            if(game.isCloseShortcut())return super.keyUp(keyCode);
+            if (game.isCloseShortcut()) return super.keyDown(keyCode);
             game.var3dListener.keyUp(keyCode);
         }
         return super.keyUp(keyCode);

@@ -132,7 +132,7 @@ public abstract class VGame implements ApplicationListener {
     private boolean isShowFps = false;// 是否显示fps
     private boolean isProtect = false;// 是否保护图片资源
     private boolean isReProtect = false;// 是否关闭保护图片资源
-    private boolean isCloseShortcut = false;//是否关闭框架的快捷键（截图等）
+    private boolean isCloseShortcut = true;//是否关闭框架的快捷键（截图等）
 
     private Object userData;// 场景切换时用于数据中转
     private final HashMap<String, Object> userDatas = new HashMap<String, Object>();// 用于数据中转

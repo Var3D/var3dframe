@@ -78,7 +78,7 @@ public class StageActors extends VStage {
 
     @Override
     public void back() {
-
+        game.setStage(StageMain.class);
     }
 
     @Override
