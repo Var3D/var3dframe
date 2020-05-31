@@ -59,13 +59,13 @@ public class VLabel extends Label {
     }
 
 
-    public void setEllipsis (String ellipsis) {
-        append(ellipsis,getStyle());
+    public void setEllipsis(String ellipsis) {
+        append(ellipsis, getStyle());
         super.setEllipsis(ellipsis);
     }
 
-    public void setEllipsis (boolean ellipsis) {
-        if(ellipsis)append(".",getStyle());
+    public void setEllipsis(boolean ellipsis) {
+        if (ellipsis) append(".", getStyle());
         super.setEllipsis(ellipsis);
     }
 
@@ -214,6 +214,8 @@ public class VLabel extends Label {
     }
 
 
+    private Color def_tint = new Color();
+
     public void drawLabel(Batch batch, float parentAlpha) {
         validate();
         if (getStyle().background != null) {
@@ -224,18 +226,22 @@ public class VLabel extends Label {
             getStyle().background.draw(batch, getX() - paddingX, getY(), getWidth() + paddingX * 2, getHeight() + padding);
         }
         if (isStroke) {
-            strokeColor.a = getColor().a;
+            strokeColor.a = getColor().a * parentAlpha;
             fontCache.tint(strokeColor);
             for (int i = 0; i < dxs.length; i++) {
                 fontCache.setPosition(getX() + dxs[i] * strokeWidth, getY() + dys[i] * strokeWidth + strokeWidth);
                 fontCache.draw(batch);
             }
             fontCache.setPosition(getX(), getY() + strokeWidth);
-            fontCache.tint(getColor());
+            def_tint.set(getColor());
+            def_tint.a = getColor().a * parentAlpha;
+            fontCache.tint(def_tint);
             fontCache.draw(batch);
         } else {
             fontCache.setPosition(getX(), getY() + strokeWidth);
-            fontCache.tint(getColor());
+            def_tint.set(getColor());
+            def_tint.a = getColor().a * parentAlpha;
+            fontCache.tint(def_tint);
             fontCache.draw(batch);
         }
     }
