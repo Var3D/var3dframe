@@ -512,7 +512,6 @@ public abstract class VGame implements ApplicationListener {
     public void render() {
         if (isLoading) {
             if (assets.update()) {
-                isLoading = false;
                 Array<Texture> out = new Array<Texture>();
                 assets.getAll(Texture.class, out);
                 for (Texture tex : out) {
@@ -585,8 +584,11 @@ public abstract class VGame implements ApplicationListener {
                 if (stage != null) {
                     stage.init();
                     stage.show();
+                    stage.act();
+                    stage.draw();
                     stageStartTime = System.currentTimeMillis();
                 }
+                isLoading = false;
             }
             if (stageLoad != null) {
                 stageLoad.act(assets.getProgress());

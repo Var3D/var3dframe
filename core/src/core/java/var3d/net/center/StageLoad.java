@@ -11,89 +11,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  * @author Administrator
  */
 public class StageLoad extends VStage {
-    private Label label;
-    private ShapeRenderer rend;
-    private Color color1, color2, color3, color4, color5, color6;
-    private float load = 0;
-    private float height;
 
     public StageLoad(VGame game) {
         super(game);
-        height = getCutAndHeight();
-        rend = new ShapeRenderer();
-        color1 = Color.valueOf("b9b51a");
-        color2 = Color.valueOf("30883f");
-        color3 = Color.valueOf("fafd01");
-        color4 = Color.valueOf("01fd30");
-        color5 = Color.valueOf("89fc00");
-        color6 = Color.valueOf("ff2f00");
-        label = game.getLabel("Loading...").getActor();
-        label.setPosition(game.getCenterX() - label.getPrefWidth() / 2,   height * 0.33f);
-        addActor(label);
+        setBackground(Color.DARK_GRAY);
     }
 
-    private void drawBg() {
-        rend.setColor(Color.BLACK);
-        rend.rect(0, 0, getWidth(), getHeight());
-        float h = 0.025f;
-        rend.setColor(Color.WHITE);
-        rend.rect(game.WIDTH * 0.1f, height * 0.3f, game.WIDTH * 0.8f,
-                height * h, color3, color4, color4, color3);
-        rend.setColor(color4);
-        rend.arc(game.WIDTH * 0.9f, height * (0.3f + h * 0.5f),
-                height * h * 0.5f, 270, 180);
-        rend.setColor(color3);
-        rend.arc(game.WIDTH * 0.1f, height * (0.3f + h * 0.5f),
-                height * h * 0.5f, 90, 180);
-    }
-
-    private void drawBgTop() {
-        float d = height * 0.004f;
-        float h = 0.025f;
-        rend.rect(game.WIDTH * 0.1f + d, height * 0.3f + d, game.WIDTH
-                        * 0.8f - d * 2, height * h - d * 2, color1, color2,
-                color2, color1);
-        rend.setColor(color2);
-        rend.arc(game.WIDTH * 0.9f - d, height * (0.3f + h * 0.5f),
-                height * h * 0.5f - d, 270, 180);
-        rend.setColor(color1);
-        rend.arc(game.WIDTH * 0.1f + d, height * (0.3f + h * 0.5f),
-                height * h * 0.5f - d, 90, 180);
-    }
-
-    private void drawLoad() {
-        float d = height * 0.004f;
-        float h = 0.025f;
-        rend.rect(game.WIDTH * 0.1f + d, height * 0.3f + d,
-                (game.WIDTH * 0.8f - d * 2) * load, height * h - d * 2,
-                color5, color6, color6, color5);
-        rend.setColor(color6);
-        rend.arc(game.WIDTH * 0.1f + d + (game.WIDTH * 0.8f - d * 2) * load,
-                height * (0.3f + h * 0.5f), height * h * 0.5f - d,
-                270, 180);
-        rend.setColor(color5);
-        rend.arc(game.WIDTH * 0.1f + d, height * (0.3f + h * 0.5f),
-                height * h * 0.5f - d, 90, 180);
-    }
 
     public void init() {
-        // 控件创建(如果使用异步加载资源策略，控件实例化请勿放到构造函数里)
+
     }
 
     public void act(float delta) {
-        load = delta;
     }
 
-    public void draw() {
-        rend.setProjectionMatrix(getBatch().getProjectionMatrix());
-        rend.setTransformMatrix(getBatch().getTransformMatrix());
-        rend.begin(ShapeType.Filled);
-        drawBg();
-        drawBgTop();
-        drawLoad();
-        rend.end();
-        super.draw();
-    }
 
     public void start() {
 
