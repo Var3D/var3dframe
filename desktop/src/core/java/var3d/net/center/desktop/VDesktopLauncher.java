@@ -2,10 +2,7 @@ package var3d.net.center.desktop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.backends.lwjgl.LwjglAWTInput;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
-import com.badlogic.gdx.backends.lwjgl.LwjglInput;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -19,38 +16,25 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.SharedLibraryLoader;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.opengl.Display;
 
 import java.awt.BasicStroke;
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.font.GlyphVector;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
@@ -69,7 +53,6 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.AttributedString;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,17 +63,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.OverlayLayout;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
+
 
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
@@ -99,9 +73,7 @@ import var3d.net.center.VPayListener;
 import var3d.net.center.VShopListener;
 import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
-import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
-import var3d.net.center.tool.Reflex;
 
 public abstract class VDesktopLauncher implements VListener {
     private VGame game;
@@ -555,10 +527,10 @@ public abstract class VDesktopLauncher implements VListener {
 
 
     private static LwjglApplicationConfiguration config;
-    public static Canvas canvas;
-    private static JFrame frame;
-    private static JTextField textField;
-    private static JPanel textPanel;
+//    public static Canvas canvas;
+//    private static JFrame frame;
+//    private static JTextField textField;
+//    private static JPanel textPanel;
 
     public static LwjglApplicationConfiguration getConfig(int width, int height, float scale) {
         config = new LwjglApplicationConfiguration();
@@ -567,71 +539,71 @@ public abstract class VDesktopLauncher implements VListener {
         config.height = (int) (height * scale);
         config.title = "Var3dFrame框架";
         config.samples = 1024;
-        if (UIUtils.isMac) {
-            canvas = new Canvas();
-            frame = new JFrame();
-            frame.setResizable(false);
-            canvas.setSize(config.width, config.height - 22);
-            frame.add(canvas);
-
-            frame.setTitle(config.title);
-            frame.setSize(config.width, config.height);
-            frame.setLocationRelativeTo(null);
-
-            textPanel = new JPanel();
-            textPanel.setLayout(new FlowLayout());
-            textField = new JTextField(30);
-            textPanel.add(textField);
-            textField.addFocusListener(new FocusListener() {
-                public void focusLost(FocusEvent e) {
-                    textField.requestFocus();
-                }
-
-                public void focusGained(FocusEvent e) {
-                }
-            });
-            textField.addKeyListener(new KeyListener() {
-                public void keyTyped(final KeyEvent event) {
-                    Gdx.app.postRunnable(new Runnable() {
-                        public void run() {
-                            Gdx.app.getInput().getInputProcessor().keyTyped(event.getKeyChar());
-                            Gdx.graphics.requestRendering();
-                        }
-                    });
-                }
-
-                public void keyPressed(final KeyEvent event) {
-                    Gdx.app.postRunnable(new Runnable() {
-                        public void run() {
-                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getKeyCode());
-                            //Gdx.app.log("aaaaa", "downfirst=" + event.getKeyCode() + "down=" + transCode);
-                            Gdx.app.getInput().getInputProcessor().keyDown(event.getKeyCode() == 157 ? 55 : transCode);
-                            Gdx.graphics.requestRendering();
-                        }
-                    });
-                }
-
-                public void keyReleased(final KeyEvent event) {
-                    Gdx.app.postRunnable(new Runnable() {
-                        public void run() {
-                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getKeyCode());
-                            // Gdx.app.log("aaaaa","up="+event.getKeyChar());
-                            Gdx.app.getInput().getInputProcessor().keyUp(event.getKeyCode() == 157 ? 55 : transCode);
-                            Gdx.graphics.requestRendering();
-                        }
-                    });
-                }
-            });
-
-            frame.add(textPanel);
-            frame.setVisible(true);
-        }
+//        if (UIUtils.isMac) {
+//            canvas = new Canvas();
+//            frame = new JFrame();
+//            frame.setResizable(false);
+//            canvas.setSize(config.width, config.height - 22);
+//            frame.add(canvas);
+//
+//            frame.setTitle(config.title);
+//            frame.setSize(config.width, config.height);
+//            frame.setLocationRelativeTo(null);
+//
+//            textPanel = new JPanel();
+//            textPanel.setLayout(new FlowLayout());
+//            textField = new JTextField(30);
+//            textPanel.add(textField);
+//            textField.addFocusListener(new FocusListener() {
+//                public void focusLost(FocusEvent e) {
+//                    textField.requestFocus();
+//                }
+//
+//                public void focusGained(FocusEvent e) {
+//                }
+//            });
+//            textField.addKeyListener(new KeyListener() {
+//                public void keyTyped(final KeyEvent event) {
+//                    Gdx.app.postRunnable(new Runnable() {
+//                        public void run() {
+//                            Gdx.app.getInput().getInputProcessor().keyTyped(event.getKeyChar());
+//                            Gdx.graphics.requestRendering();
+//                        }
+//                    });
+//                }
+//
+//                public void keyPressed(final KeyEvent event) {
+//                    Gdx.app.postRunnable(new Runnable() {
+//                        public void run() {
+//                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getKeyCode());
+//                            //Gdx.app.log("aaaaa", "downfirst=" + event.getKeyCode() + "down=" + transCode);
+//                            Gdx.app.getInput().getInputProcessor().keyDown(event.getKeyCode() == 157 ? 55 : transCode);
+//                            Gdx.graphics.requestRendering();
+//                        }
+//                    });
+//                }
+//
+//                public void keyReleased(final KeyEvent event) {
+//                    Gdx.app.postRunnable(new Runnable() {
+//                        public void run() {
+//                            int transCode = (int) Reflex.invokeStaticMethod("translateKeyCode", LwjglAWTInput.class, event.getKeyCode());
+//                            // Gdx.app.log("aaaaa","up="+event.getKeyChar());
+//                            Gdx.app.getInput().getInputProcessor().keyUp(event.getKeyCode() == 157 ? 55 : transCode);
+//                            Gdx.graphics.requestRendering();
+//                        }
+//                    });
+//                }
+//            });
+//
+//            frame.add(textPanel);
+//            frame.setVisible(true);
+//        }
         return config;
     }
 
 
     public void linkVTextField(VTextField mTextField) {
-        textPanel.setLocation(0, Gdx.input.getY() + textField.getHeight());
+        //textPanel.setLocation(0, Gdx.input.getY() + textField.getHeight());
     }
 
 
@@ -740,6 +712,11 @@ public abstract class VDesktopLauncher implements VListener {
     }
 
     public void create() {
+//        if(UIUtils.isMac){
+//            if(Display.getParent()==null){
+//                frame.setVisible(false);
+//            }
+//        }
     }
 
     private boolean isEdit = false;
