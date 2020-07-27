@@ -1467,7 +1467,7 @@ public abstract class VGame implements ApplicationListener {
     Rectangle rect1 = new Rectangle(), rect2 = new Rectangle();
 
     /**
-     * r1是否在r2内
+     * r1是否和r2相交
      */
     public boolean isOverlaps(Actor r1, Actor r2) {
         rect1.set(r1.getX(), r1.getY(), r1.getWidth(), r1.getHeight());
@@ -1484,7 +1484,7 @@ public abstract class VGame implements ApplicationListener {
     }
 
     /**
-     * r1是否和r2相交
+     * r2是否在r1内
      */
     public boolean isContains(Actor r1, Actor r2) {
         rect1.set(r1.getX(), r1.getY(), r1.getWidth(), r1.getHeight());
