@@ -74,8 +74,8 @@ public class FreeBitmapFont extends BitmapFont {
 
     public FreeBitmapFont(VGame game, FreePaint paint) {
         super(new FreeBitmapFontData(), new TextureRegion(), false);
-        data= (FreeBitmapFontData) getData();
-        pageWidth=paint.getPageWidth();
+        data = (FreeBitmapFontData) getData();
+        pageWidth = paint.getPageWidth();
         updataSize(paint.getTextSize());
         this.game = game;
         this.listener = game.var3dListener;
@@ -208,14 +208,14 @@ public class FreeBitmapFont extends BitmapFont {
     public String appendTextPro(String string) {
         if (string == null || string.length() == 0) return "";
         create(string, false);
-        string=emojiToEmojiKey(string);
+        string = emojiToEmojiKey(string);
         return string;
     }
 
     /**
      * 将 emoji 转换为 emoji 的 key 值
      */
-    public String emojiToEmojiKey(String string){
+    public String emojiToEmojiKey(String string) {
         if (isEmoji) {
             for (Emoji emoji2 : emojis2) {
                 string = string.replaceAll(emoji2.text, emoji2.key);
@@ -230,13 +230,13 @@ public class FreeBitmapFont extends BitmapFont {
     /**
      * 将 emoji key 还原成 emoji
      */
-    public String emojiKeyToEmoji(String string){
+    public String emojiKeyToEmoji(String string) {
         if (isEmoji) {
             for (Emoji emoji2 : emojis2) {
-                string = string.replaceAll(emoji2.key,emoji2.text);
+                string = string.replaceAll(emoji2.key, emoji2.text);
             }
             for (Emoji emoji4 : emojis4) {
-                string = string.replaceAll(emoji4.key,emoji4.text);
+                string = string.replaceAll(emoji4.key, emoji4.text);
             }
         }
         return string;
@@ -367,6 +367,7 @@ public class FreeBitmapFont extends BitmapFont {
         }
         return false;
     }
+
     // 是否为创建过的emoji
     public boolean isCreatedEmoji4WithKey(String key) {
         for (Emoji emj : emojis4) {
@@ -397,10 +398,10 @@ public class FreeBitmapFont extends BitmapFont {
         return false;
     }
 
-    public boolean isCreateEmojiWithKey(String key){
-        if(!isEmoji)return false;
-        if(isCreatedEmoji4WithKey(key))return true;
-        if(isCreatedEmoji2WithKey(key))return true;
+    public boolean isCreateEmojiWithKey(String key) {
+        if (!isEmoji) return false;
+        if (isCreatedEmoji4WithKey(key)) return true;
+        if (isCreatedEmoji2WithKey(key)) return true;
         return false;
     }
 
@@ -414,6 +415,7 @@ public class FreeBitmapFont extends BitmapFont {
     }
 
     private void putGlyph(int id, Pixmap pixmap) {
+        if (packer.getRect(id + "") != null) return;
         Rectangle rect = packer.pack(id + "", pixmap);
         pixmap.dispose();
         int pIndex = packer.getPageIndex(id + "");
@@ -424,7 +426,7 @@ public class FreeBitmapFont extends BitmapFont {
         glyph.srcY = (int) rect.y;
         glyph.width = (int) rect.width;
         glyph.height = (int) rect.height;
-        glyph.xadvance = (int)rect.width;
+        glyph.xadvance = (int) rect.width;
         data.setGlyph(id, glyph);
     }
 
@@ -440,7 +442,7 @@ public class FreeBitmapFont extends BitmapFont {
             data.setGlyph(' ', spaceGlyph);
         }
         //data.spaceXadvance= spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
-        data.spaceWidth= spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
+        data.spaceWidth = spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
 
         Array<Page> pages = packer.getPages();
         Array<TextureRegion> regions = getRegions();
@@ -486,7 +488,7 @@ public class FreeBitmapFont extends BitmapFont {
         super.dispose();
     }
 
-    public BitmapFontCache newFontCache () {
+    public BitmapFontCache newFontCache() {
         return new FreeBitmapFontCache(this, usesIntegerPositions());
     }
 }
