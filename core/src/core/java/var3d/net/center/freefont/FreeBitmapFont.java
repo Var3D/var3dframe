@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import var3d.net.center.VGame;
+import var3d.net.center.tool.Reflex;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Version;
@@ -442,7 +443,10 @@ public class FreeBitmapFont extends BitmapFont {
             data.setGlyph(' ', spaceGlyph);
         }
         //data.spaceXadvance= spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
-        data.spaceWidth = spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
+        //data.spaceWidth = spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1;
+        if (Reflex.setFieldValue("spaceWidth", data, spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1) == false) {
+            Reflex.setFieldValue("spaceXadvance", data, spaceGlyph != null ? spaceGlyph.xadvance + spaceGlyph.width : 1);
+        }
 
         Array<Page> pages = packer.getPages();
         Array<TextureRegion> regions = getRegions();

@@ -118,12 +118,14 @@ public class Reflex {
         }
     }
 
-    public static void setFieldValue(String name, Object obj, Object value) {
+    public static boolean setFieldValue(String name, Object obj, Object value) {
         try {
             Field field = getField(name, obj.getClass());
             field.set(obj, value);
+            return true;
         } catch (Exception e) {
-            throw new GdxRuntimeException(e);
+            //throw new GdxRuntimeException(e);
+            return false;
         }
     }
 
