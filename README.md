@@ -6,7 +6,7 @@ A game framework base on LibGDX 1.9.8
 一个基于Libgdx的轻量级游戏框架，使Libgdx非常方便的支持中文以及任意字符，更方便使用的UI控件以及界面对话框的管理，低耦合的特性使你可以混合使用原生Libgdx的API
 当前支持的Libgdx版本为1.9.8
 
-[加入QQ群获得技术支持](https://jq.qq.com/?_wv=1027&k=51c4s6D)
+[加入QQ群获得技术支持](https://jq.qq.com/?_wv=1027&k=6X7zdNt8)
 
 # Getting Started
 Include var3dframe via Gradle
