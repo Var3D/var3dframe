@@ -4,13 +4,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import var3d.net.center.SLabel;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
+import var3d.net.center.VProgressBar;
 import var3d.net.center.VStage;
+import var3d.net.demo.R;
 
 /**
  * Created by fengyu on 2018/8/23.
@@ -60,6 +63,7 @@ public class StageActors extends VStage {
         lab_test1.addAction(Actions.forever(Actions.sequence(Actions.scaleTo(0.5f, 0.5f, 1), Actions.color(Color.WHITE, 1), Actions.scaleTo(1f, 1f, 1), Actions.color(Color.RED, 1))));
         SLabel lab_test2 = game.getSLabel("测试可缩放字体控件").setOrigin(Align.center).setColor(Color.YELLOW).setPosition(getRateX(0.5f), getRateY(0.4f), Align.center).show();
         lab_test2.addAction(Actions.forever(Actions.sequence(Actions.scaleTo(0.5f, 0.5f, 1), Actions.color(Color.CYAN, 1), Actions.scaleTo(1f, 1f, 1), Actions.color(Color.RED, 1))));
+
     }
 
     public void start() {

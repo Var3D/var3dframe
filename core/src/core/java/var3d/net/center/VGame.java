@@ -87,6 +87,7 @@ import java.util.Stack;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
+import var3d.net.demo.R;
 
 /**
  * Var3D核心框架
@@ -576,7 +577,7 @@ public abstract class VGame implements ApplicationListener {
                     //移除所有动画里面的所属前缀
                     Array<Animation> animations = model.animations;
                     for (Animation animation : animations) {
-                        animation.id = animation.id.substring(animation.id.lastIndexOf("|")+1);
+                        animation.id = animation.id.substring(animation.id.lastIndexOf("|") + 1);
                     }
                     packer.dispose();
                     packer = null;
@@ -2489,6 +2490,13 @@ public abstract class VGame implements ApplicationListener {
      */
     public UI<Touchpad> getTouchpad(float deadzoneRadius, TouchpadStyle style) {
         return getUI(new Touchpad(deadzoneRadius, style));
+    }
+
+    /**
+     * 创建ProgressBar
+     */
+    public UI<VProgressBar> getProgressBar(String bg, String top) {
+        return getUI(new VProgressBar(game.getTextureRegion(bg), game.getTextureRegion(top)));
     }
 
     /**
