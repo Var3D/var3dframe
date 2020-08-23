@@ -2500,6 +2500,13 @@ public abstract class VGame implements ApplicationListener {
     }
 
     /**
+     * 创建ProgressBar
+     */
+    public UI<VProgressBar> getProgressBar(String top) {
+        return getUI(new VProgressBar(null, game.getTextureRegion(top)));
+    }
+
+    /**
      * 创建网络图片
      */
 
