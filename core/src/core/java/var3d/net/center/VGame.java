@@ -87,6 +87,7 @@ import java.util.Stack;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
+import var3d.net.center.tool.Reflex;
 
 /**
  * Var3D核心框架
@@ -614,11 +615,49 @@ public abstract class VGame implements ApplicationListener {
                 batch.end();
             }
             if (isShowFps) {
-                var3dListener.showFpsText(getHeap());
+                //var3dListener.showFpsText(getHeap());
+                refushFps();
             }
             if (soundRuns.size > 0) {//从音效池里拖一个音效出来播放,该构造避免同一帧播放过多音效导致播放失败
                 soundRuns.removeIndex(0).run();
             }
+        }
+    }
+
+
+    private Object objectTextView;
+
+    private void createFps() {
+        try {
+            final Class<?> classContext = Class.forName("android.content.Context");
+            Class<?> classFrameLayout = Class.forName("android.widget.FrameLayout");
+            final Object objectFrameLayout = classFrameLayout.getConstructor(classContext).newInstance(var3dListener);
+            Class<?> classLayoutParams = Class.forName("android.widget.FrameLayout$LayoutParams");
+            final Object objectParams = classLayoutParams.getConstructor(int.class, int.class).newInstance(Gdx.graphics.getWidth() / 2, 50);
+
+            final Class<?> classTextView = Class.forName("android.widget.TextView");
+            Reflex.invokeMethod("runOnUiThread", var3dListener, new Runnable() {
+                public void run() {
+                    Reflex.invokeMethod("addContentView", var3dListener, objectFrameLayout, objectParams);
+                    try {
+                        objectTextView = classTextView.getConstructor(classContext).newInstance(var3dListener);
+                        Reflex.invokeMethod("addView", objectFrameLayout, objectTextView);
+                        Reflex.invokeMethod("setText", objectTextView, "测试测试啊");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void refushFps() {
+        if (objectTextView != null) {
+            Reflex.invokeMethod("setText", objectTextView, getHeap());
+        } else {
+            createFps();
         }
     }
 
