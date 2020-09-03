@@ -654,39 +654,39 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     private Runnable runnable;
     private String messege;
 
-    public void showFpsText(String msg) {
+    public void showFpsText(final String msg) {
         messege = msg;
-//        if (runnable != null) {
-//            runOnUiThread(runnable);
-//        } else {
-//            runnable=new Runnable() {
-//                public void run() {
-//                    if (textView != null) {
-//                        textView.setText(messege);
-//                    } else {
-//                        frameLayout2 = new FrameLayout(activity);
-//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
-//                        addContentView(frameLayout2, layoutParams);
-//                        textView = new TextView(activity);
-//                        frameLayout2.addView(textView);
-//                    }
-//                }
-//            };
-//            runOnUiThread(runnable);
-//        }
-        runOnUiThread(new Runnable() {
-            public void run() {
-                if (textView != null) {
-                    textView.setText(messege);
-                } else {
-                    frameLayout2 = new FrameLayout(activity);
-                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
-                    addContentView(frameLayout2, layoutParams);
-                    textView = new TextView(activity);
-                    frameLayout2.addView(textView);
+        if (runnable != null) {
+            activity.runOnUiThread(runnable);
+        } else {
+            runnable=new Runnable() {
+                public void run() {
+                    if (textView != null) {
+                        textView.setText(messege);
+                    } else {
+                        frameLayout2 = new FrameLayout(activity);
+                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
+                        activity.addContentView(frameLayout2, layoutParams);
+                        textView = new TextView(activity);
+                        frameLayout2.addView(textView);
+                    }
                 }
-            }
-        });
+            };
+           activity.runOnUiThread(runnable);
+        }
+//        runOnUiThread(new Runnable() {
+//            public void run() {
+//                if (textView != null) {
+//                    textView.setText(msg);
+//                } else {
+//                    FrameLayout frameLayout2 = new FrameLayout(activity);
+//                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
+//                    addContentView(frameLayout2, layoutParams);
+//                    textView = new TextView(activity);
+//                    frameLayout2.addView(textView);
+//                }
+//            }
+//        });
     }
 
     public void setOnscreenKeyboardVisible(final boolean isvisibe) {
