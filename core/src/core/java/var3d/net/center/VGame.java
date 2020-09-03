@@ -614,7 +614,12 @@ public abstract class VGame implements ApplicationListener {
                 batch.end();
             }
             if (isShowFps) {
-                var3dListener.showFpsText(getHeap());
+                Gdx.app.postRunnable(new Runnable() {
+                    public void run() {
+                        var3dListener.showFpsText(getHeap());
+                    }
+                });
+
             }
             if (soundRuns.size > 0) {//从音效池里拖一个音效出来播放,该构造避免同一帧播放过多音效导致播放失败
                 soundRuns.removeIndex(0).run();
