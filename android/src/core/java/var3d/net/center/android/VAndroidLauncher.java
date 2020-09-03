@@ -648,9 +648,9 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         });
     }
 
-    class MRunnable implements Runnable{
+    public final class MRunnable implements Runnable{
         public void run() {
-            FrameLayout frameLayout2 = new FrameLayout(activity);
+                FrameLayout frameLayout2 = new FrameLayout(activity);
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
                 activity.addContentView(frameLayout2, layoutParams);
                 textView = new TextView(activity);
