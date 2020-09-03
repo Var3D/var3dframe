@@ -1,5 +1,7 @@
 package var3d.net.demo;
 
+import com.badlogic.gdx.Gdx;
+
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
 import var3d.net.center.freefont.FreePaint;
@@ -35,5 +37,8 @@ public class Game extends VGame {
          </array>
          */
         setStage(StageMain.class);//设置入口界面
+
+        game.var3dListener.createFps();
+        game.var3dListener.showFpsText("测试啊测试啊");
     }
 }
