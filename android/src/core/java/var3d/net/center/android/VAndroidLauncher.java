@@ -661,15 +661,15 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         } else {
             runOnUiThread(runnable = new Runnable() {
                 public void run() {
-                    if (textView != null) {
-                        textView.setText(messege);
-                    } else {
-                        frameLayout2 = new FrameLayout(activity);
-                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
-                        addContentView(frameLayout2, layoutParams);
-                        textView = new TextView(activity);
-                        frameLayout2.addView(textView);
-                    }
+//                    if (textView != null) {
+//                        textView.setText(messege);
+//                    } else {
+//                        frameLayout2 = new FrameLayout(activity);
+//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
+//                        addContentView(frameLayout2, layoutParams);
+//                        textView = new TextView(activity);
+//                        frameLayout2.addView(textView);
+//                    }
                 }
             });
         }
