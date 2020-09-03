@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
+import org.lwjgl.opengl.Display;
 import org.robovm.apple.coregraphics.CGRect;
 import org.robovm.apple.coregraphics.CGSize;
 import org.robovm.apple.foundation.Foundation;
@@ -608,5 +609,11 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     public void openNetSetting(){
         Gdx.net.openURI(UIApplication.getOpenSettingsURLString());
+    }
+
+
+    //ios端的本地fps显示暂未实现
+    public void showFpsText(String msg) {
+
     }
 }

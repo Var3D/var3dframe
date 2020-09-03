@@ -87,7 +87,6 @@ import java.util.Stack;
 
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
-import var3d.net.demo.R;
 
 /**
  * Var3D核心框架
@@ -475,8 +474,11 @@ public abstract class VGame implements ApplicationListener {
             stageTop.resize(width, height);
     }
 
+    private VLabel lab_fps;
+
     public void showFps() {
         this.isShowFps = true;
+        lab_fps = getLabel("").setFontScale(0.5f).getActor();
     }
 
     /**
@@ -612,17 +614,14 @@ public abstract class VGame implements ApplicationListener {
                 batch.end();
             }
             if (isShowFps) {
-                batch.begin();
-                FreeBitmapFont font = getFont();
-                font.setColor(Color.WHITE);
-                font.draw(batch, getHeap(), 0, font.getCapHeight());
-                batch.end();
+                var3dListener.showFpsText(getHeap());
             }
             if (soundRuns.size > 0) {//从音效池里拖一个音效出来播放,该构造避免同一帧播放过多音效导致播放失败
                 soundRuns.removeIndex(0).run();
             }
         }
     }
+
 
     //将模型的纹理打包到大图
     private void packRegion(Array<Material> materials, String modelPath) {
@@ -659,10 +658,13 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 获取当前程序开销
      */
+    private String heap;
+
     public String getHeap() {
-        return "F:" + Gdx.graphics.getFramesPerSecond() + "-J:"
+        heap = "F:" + Gdx.graphics.getFramesPerSecond() + "-J:"
                 + ((Gdx.app.getNativeHeap() * 10) >> 20) / 10f + "m" + "/"
                 + ((Gdx.app.getJavaHeap() * 10) >> 20) / 10f + "m";
+        return heap;
     }
 
     /**

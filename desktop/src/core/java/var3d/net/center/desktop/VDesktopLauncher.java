@@ -30,6 +30,7 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -604,6 +605,15 @@ public abstract class VDesktopLauncher implements VListener {
 
     public void linkVTextField(VTextField mTextField) {
         //textPanel.setLocation(0, Gdx.input.getY() + textField.getHeight());
+    }
+
+    private String title_text;
+    public void showFpsText(String msg) {
+        if(title_text!=null) {
+            Display.setTitle(title_text + msg);
+        }else{
+            title_text=Display.getTitle();
+        }
     }
 
 

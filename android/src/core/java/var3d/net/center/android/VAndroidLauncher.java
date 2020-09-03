@@ -1,5 +1,6 @@
 package var3d.net.center.android;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -95,10 +96,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     }
 
 
-    public void onPause () {
+    public void onPause() {
         super.onPause();
-        if(isShare){
-            shareStartTime=System.currentTimeMillis();
+        if (isShare) {
+            shareStartTime = System.currentTimeMillis();
         }
     }
 
@@ -107,16 +108,16 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         makeWindowFullScreen();
         AndroidGraphics graphics = (AndroidGraphics) getGraphics();
         graphics.getView().requestFocus();
-        if(shareStartTime==-1)return;
-        if(isShare){
-            isShare=false;
-            long delayTime=System.currentTimeMillis()-shareStartTime;
-            if(delayTime<5000){
+        if (shareStartTime == -1) return;
+        if (isShare) {
+            isShare = false;
+            long delayTime = System.currentTimeMillis() - shareStartTime;
+            if (delayTime < 5000) {
                 //分享失败
-                if(failureRun!=null)failureRun.run();
-            }else{
+                if (failureRun != null) failureRun.run();
+            } else {
                 //分享成功
-                if(successRun!=null)successRun.run();
+                if (successRun != null) successRun.run();
             }
         }
     }
@@ -139,9 +140,9 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     }
 
 
-    private boolean isShare=false;
-    private long shareStartTime=-1;
-    private Runnable successRun,failureRun;
+    private boolean isShare = false;
+    private long shareStartTime = -1;
+    private Runnable successRun, failureRun;
 
     @Override
     public void goToShare(String title, String context, String url, byte[] imgByte, final Runnable success
@@ -153,9 +154,9 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         }
         intent.putExtra(Intent.EXTRA_TEXT, context + url);
         startActivity(Intent.createChooser(intent, title));
-        isShare=true;
-        this.successRun=success;
-        this.failureRun=failure;
+        isShare = true;
+        this.successRun = success;
+        this.failureRun = failure;
     }
 
 
@@ -164,7 +165,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
     }
 
-    public void showFiveStarDialog(){
+    public void showFiveStarDialog() {
 
     }
 
@@ -276,7 +277,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
     }
 
-    public void updataScores(Object... objects){
+    public void updataScores(Object... objects) {
 
     }
 
@@ -487,7 +488,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
 
     public Rectangle getSafeAreaInsets() {
-        if(Build.VERSION.SDK_INT >Build.VERSION_CODES.P ){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
             final View decorView = getWindow().getDecorView();
             WindowInsets rootWindowInsets = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -499,7 +500,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
             DisplayCutout displayCutout = null;
             if (android.os.Build.VERSION.SDK_INT >= 28) {
                 displayCutout = rootWindowInsets.getDisplayCutout();
-                if(displayCutout!=null) {
+                if (displayCutout != null) {
                     rectangle.set(displayCutout.getSafeInsetLeft(), displayCutout.getSafeInsetBottom()
                             , displayCutout.getSafeInsetRight(), displayCutout.getSafeInsetTop());
                 }
@@ -517,14 +518,14 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     private Activity activity = this;
     private VListenerOnKeyboardChange listener;
     private boolean isKeyboardShow;
-    private float gameKeyboardHeight,screenKeyboardHeight;
-    private int visibleWidth,visibleHeight;
+    private float gameKeyboardHeight, screenKeyboardHeight;
+    private int visibleWidth, visibleHeight;
     private View rootView;
 
 
-    public void setListenerOnKeyboardChange(final VStage stage,VListenerOnKeyboardChange listener){
-        this.listener=listener;
-        if(rootView==null) {
+    public void setListenerOnKeyboardChange(final VStage stage, VListenerOnKeyboardChange listener) {
+        this.listener = listener;
+        if (rootView == null) {
             rootView = this.getWindow().getDecorView().getRootView();
             Rect rect = new Rect();
             rootView.getWindowVisibleDisplayFrame(rect);
@@ -540,7 +541,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                         if (!(visibleWidth == rect.width() && visibleHeight == rect.height())) {
                             visibleWidth = rect.width();
                             visibleHeight = rect.height();
-                            float bly=(1f/Gdx.graphics.getHeight() * stage.getFullHeight());
+                            float bly = (1f / Gdx.graphics.getHeight() * stage.getFullHeight());
 
                             screenKeyboardHeight = Gdx.graphics.getHeight() - visibleHeight;
                             gameKeyboardHeight = (int) (screenKeyboardHeight * bly);
@@ -557,8 +558,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     }
 
 
-    public void removeListenerOnKeyboardChange(){
-        this.listener=null;
+    public void removeListenerOnKeyboardChange() {
+        this.listener = null;
     }
 
 
@@ -566,9 +567,9 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     private FrameLayout frameLayout;
     private VTextField mTextField;
 
-    public void linkVTextField(final VTextField vTextField){
-        mTextField=vTextField;
-        if(editText==null) {
+    public void linkVTextField(final VTextField vTextField) {
+        mTextField = vTextField;
+        if (editText == null) {
             frameLayout = new FrameLayout(activity);
             editText = new EditText(activity);
 
@@ -587,13 +588,13 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                 }
 
                 public void onTextChanged(final CharSequence string, final int start, int before, final int count) {
-                    if(string.length()==0||start>string.length()-1)return;
+                    if (string.length() == 0 || start > string.length() - 1) return;
                     Gdx.app.postRunnable(new Runnable() {
                         public void run() {
-                            FreeBitmapFont font= (FreeBitmapFont) vTextField.getStyle().font;
-                            String newString=font.appendTextPro(string.subSequence(start,start+count).toString());
+                            FreeBitmapFont font = (FreeBitmapFont) vTextField.getStyle().font;
+                            String newString = font.appendTextPro(string.subSequence(start, start + count).toString());
 
-                            for(int i=0, len=newString.length();i<len;i++){
+                            for (int i = 0, len = newString.length(); i < len; i++) {
                                 char newchar = newString.charAt(i);
                                 Gdx.app.getInput().getInputProcessor().keyTyped(newchar);
                             }
@@ -609,7 +610,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
             editText.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, final int keyCode, KeyEvent event) {
-                    if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
                         switch (keyCode) {
                             case KeyEvent.KEYCODE_DEL://删除键
                                 Gdx.app.postRunnable(new Runnable() {
@@ -622,7 +623,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                         }
                     }
                     return false;
-                }});
+                }
+            });
 
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -636,8 +638,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                 }
             });
         }
-        setInputType(editText,mTextField.getKeyboardType());
-        setReturnText(editText,mTextField.getReturnKeyType());
+        setInputType(editText, mTextField.getKeyboardType());
+        setReturnText(editText, mTextField.getReturnKeyType());
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -647,19 +649,45 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     }
 
 
-    public void setOnscreenKeyboardVisible(final boolean isvisibe){
-        if(editText==null)return;
+    private TextView textView;
+    private FrameLayout frameLayout2;
+    private Runnable runnable;
+    private String messege;
+
+    public void showFpsText(String msg) {
+        messege = msg;
+        if (runnable != null) {
+            runOnUiThread(runnable);
+        } else {
+            runOnUiThread(runnable = new Runnable() {
+                public void run() {
+                    if (textView != null) {
+                        textView.setText(messege);
+                    } else {
+                        frameLayout2 = new FrameLayout(activity);
+                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
+                        activity.addContentView(frameLayout2, layoutParams);
+                        textView = new TextView(activity);
+                        frameLayout2.addView(textView);
+                    }
+                }
+            });
+        }
+    }
+
+    public void setOnscreenKeyboardVisible(final boolean isvisibe) {
+        if (editText == null) return;
         runOnUiThread(new Runnable() {
             public void run() {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(isvisibe){
+                if (isvisibe) {
                     editText.setText("");
                     editText.setFocusable(true);
                     editText.setFocusableInTouchMode(true);
                     editText.requestFocus();
                     imm.showSoftInput(editText, 0);// 显示输入法
-                }else{
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(),0);//关闭输入法
+                } else {
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//关闭输入法
                     editText.setFocusable(false);
                     editText.setFocusableInTouchMode(false);
                 }
@@ -667,120 +695,119 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         });
     }
 
-/**
-    //输入类型为没有指定明确的类型的特殊内容类型
-    editText.setInputType(InputType.TYPE_NULL);
+    /**
+     * //输入类型为没有指定明确的类型的特殊内容类型
+     * editText.setInputType(InputType.TYPE_NULL);
+     * <p>
+     * //输入类型为普通文本
+     * editText.setInputType(InputType.TYPE_CLASS_TEXT);
+     * <p>
+     * //输入类型为数字文本
+     * editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+     * <p>
+     * //输入类型为电话号码
+     * editText.setInputType(InputType.TYPE_CLASS_PHONE);
+     * <p>
+     * //输入类型为日期和时间
+     * editText.setInputType(InputType.TYPE_CLASS_DATETIME);
+     * <p>
+     * //输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，允许输入日期和时间。
+     * editText.setInputType(InputType.TYPE_DATETIME_VARIATION_NORMAL);
+     * <p>
+     * //输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，只允许输入一个日期。
+     * editText.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
+     * <p>
+     * //输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，只允许输入一个时间。
+     * editText.setInputType(InputType.TYPE_DATETIME_VARIATION_TIME);
+     * <p>
+     * //输入类型为决定所给文本整体类的位掩码
+     * editText.setInputType(InputType.TYPE_MASK_CLASS);
+     * <p>
+     * //输入类型为提供附加标志位选项的位掩码
+     * editText.setInputType(InputType.TYPE_MASK_FLAGS);
+     * <p>
+     * //输入类型为决定基类内容变化的位掩码
+     * editText.setInputType(InputType.TYPE_MASK_VARIATION);
+     * <p>
+     * //输入类型为小数数字，允许十进制小数点提供分数值。
+     * editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+     * //输入类型为数字是带符号的，允许在开头带正号或者负号
+     * editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+     * <p>
+     * //输入类型为{@link#TYPE_CLASS_NUMBER}的缺省变化值：为纯普通数字文本
+     * editText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
+     * <p>
+     * //输入类型为{@link#TYPE_CLASS_NUMBER}的缺省变化值：为数字密码
+     * editText.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+     * <p>
+     * //输入类型为自动完成文本类型
+     * editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+     * <p>
+     * //输入类型为自动纠正文本类型
+     * editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+     * <p>
+     * //输入类型为所有字符大写
+     * editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+     * <p>
+     * //输入类型为每句的第一个字符大写
+     * editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+     * <p>
+     * //输入类型为每个单词的第一个字母大写
+     * editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+     * <p>
+     * //输入多行文本
+     * editText.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+     * <p>
+     * //进行输入时，输入法无提示
+     * editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+     * <p>
+     * //输入一个短的，可能是非正式的消息，如即时消息或短信。
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
+     * <p>
+     * //输入长内容，可能是正式的消息内容，比如电子邮件的主体
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE);
+     * <p>
+     * //输入文本以过滤列表等内容
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
+     * <p>
+     * //输入一个电子邮件地址
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+     * <p>
+     * //输入电子邮件主题行
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT);
+     * <p>
+     * //输入一个密码
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+     * <p>
+     * //输入老式的普通文本
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_NORMAL);
+     * <p>
+     * //输入人名
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+     * <p>
+     * //输入邮寄地址
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+     * <p>
+     * //输入语音发音输入文本，如联系人拼音名称字段
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_PHONETIC);
+     * <p>
+     * //输入URI
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+     * <p>
+     * //输入对用户可见的密码
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+     * <p>
+     * //输入网页表单中的文本
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT);
+     * <p>
+     * //输入网页表单中的邮件地址
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
+     * <p>
+     * //输入网页表单中的密码
+     * editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
+     **/
 
-//输入类型为普通文本
-    editText.setInputType(InputType.TYPE_CLASS_TEXT);
-
-//输入类型为数字文本
-    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-//输入类型为电话号码
-    editText.setInputType(InputType.TYPE_CLASS_PHONE);
-
-//输入类型为日期和时间
-    editText.setInputType(InputType.TYPE_CLASS_DATETIME);
-
-//输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，允许输入日期和时间。
-    editText.setInputType(InputType.TYPE_DATETIME_VARIATION_NORMAL);
-
-//输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，只允许输入一个日期。
-    editText.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
-
-//输入类型为{@link#TYPE_CLASS_DATETIME}的缺省变化值，只允许输入一个时间。
-    editText.setInputType(InputType.TYPE_DATETIME_VARIATION_TIME);
-
-//输入类型为决定所给文本整体类的位掩码
-    editText.setInputType(InputType.TYPE_MASK_CLASS);
-
-//输入类型为提供附加标志位选项的位掩码
-    editText.setInputType(InputType.TYPE_MASK_FLAGS);
-
-//输入类型为决定基类内容变化的位掩码
-    editText.setInputType(InputType.TYPE_MASK_VARIATION);
-
-//输入类型为小数数字，允许十进制小数点提供分数值。
-    editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-//输入类型为数字是带符号的，允许在开头带正号或者负号
-    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
-
-//输入类型为{@link#TYPE_CLASS_NUMBER}的缺省变化值：为纯普通数字文本
-    editText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
-
-//输入类型为{@link#TYPE_CLASS_NUMBER}的缺省变化值：为数字密码
-    editText.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-
-//输入类型为自动完成文本类型
-    editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
-
-//输入类型为自动纠正文本类型
-    editText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-
-//输入类型为所有字符大写
-    editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-
-//输入类型为每句的第一个字符大写
-    editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-
-//输入类型为每个单词的第一个字母大写
-    editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-
-//输入多行文本
-    editText.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
-
-//进行输入时，输入法无提示
-    editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-
-//输入一个短的，可能是非正式的消息，如即时消息或短信。
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
-
-//输入长内容，可能是正式的消息内容，比如电子邮件的主体
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE);
-
-//输入文本以过滤列表等内容
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
-
-//输入一个电子邮件地址
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-
-//输入电子邮件主题行
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT);
-
-//输入一个密码
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-
-//输入老式的普通文本
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_NORMAL);
-
-//输入人名
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
-
-//输入邮寄地址
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
-
-//输入语音发音输入文本，如联系人拼音名称字段
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_PHONETIC);
-
-//输入URI
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
-
-//输入对用户可见的密码
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-
-//输入网页表单中的文本
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT);
-
-//输入网页表单中的邮件地址
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
-
-//输入网页表单中的密码
-    editText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
-
- **/
-
-    private void setInputType(EditText textfield,KeyboardType type){
+    private void setInputType(EditText textfield, KeyboardType type) {
         switch (type) {
             case Default:
                 textfield.setInputType(InputType.TYPE_NULL);//普通文本
@@ -824,7 +851,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         }
     }
 
-    private void setReturnText(EditText textfield,ReturnKeyType type){
+    private void setReturnText(EditText textfield, ReturnKeyType type) {
         switch (type) {
             case Default:
                 textfield.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE);
@@ -865,17 +892,17 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         }
     }
 
-    public void openNetSetting(){
-        Intent intent=new Intent(ACTION_DATA_ROAMING_SETTINGS);
-        if(intent.resolveActivity(getPackageManager())!=null) {
+    public void openNetSetting() {
+        Intent intent = new Intent(ACTION_DATA_ROAMING_SETTINGS);
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
-        }else {
-            intent=new Intent(Settings.ACTION_WIFI_SETTINGS);
-            if(intent.resolveActivity(getPackageManager())!=null) {
+        } else {
+            intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
-            }else{
+            } else {
                 intent = new Intent(Settings.ACTION_SETTINGS);
-                if(intent.resolveActivity(getPackageManager())!=null) {
+                if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
                 }
             }
