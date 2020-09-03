@@ -607,19 +607,6 @@ public abstract class VDesktopLauncher implements VListener {
         //textPanel.setLocation(0, Gdx.input.getY() + textField.getHeight());
     }
 
-    public void createFps(){
-
-    }
-
-    private String title_text;
-    public void showFpsText(String msg) {
-        if(title_text!=null) {
-            Display.setTitle(title_text + msg);
-        }else{
-            title_text=Display.getTitle();
-        }
-    }
-
 
     public static LwjglApplicationConfiguration getConfig(int width, int height) {
         return getConfig(width, height, 1);

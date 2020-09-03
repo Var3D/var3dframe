@@ -610,13 +610,4 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     public void openNetSetting(){
         Gdx.net.openURI(UIApplication.getOpenSettingsURLString());
     }
-
-    public void createFps(){
-
-    }
-
-    //ios端的本地fps显示暂未实现
-    public void showFpsText(String msg) {
-
-    }
 }

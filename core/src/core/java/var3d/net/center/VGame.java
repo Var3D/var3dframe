@@ -69,12 +69,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import org.lwjgl.opengl.Display;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -272,6 +275,8 @@ public abstract class VGame implements ApplicationListener {
             if ((width == 1242 && height == 2688) || (width == 2688 && height == 1242)) {
                 iphoneX = new TextureRegion(new Texture(var3dListener.getIphoneXPixmap("")));
             }
+        } else if (Gdx.app.getType() == Application.ApplicationType.Android && isShowFps) {
+            createFps();
         }
         //autoSetResources();//自动设置R类
     }
@@ -615,8 +620,16 @@ public abstract class VGame implements ApplicationListener {
                 batch.end();
             }
             if (isShowFps) {
-                //var3dListener.showFpsText(getHeap());
-                refushFps();
+                switch (Gdx.app.getType()){
+                    case Android:
+                        refushFps();
+                        break;
+                    case Desktop:
+                        Display.setTitle(getHeap());
+                        break;
+                    case iOS:
+                        break;
+                }
             }
             if (soundRuns.size > 0) {//从音效池里拖一个音效出来播放,该构造避免同一帧播放过多音效导致播放失败
                 soundRuns.removeIndex(0).run();
@@ -626,6 +639,7 @@ public abstract class VGame implements ApplicationListener {
 
 
     private Object objectTextView;
+    private Method textVeiwMethod;
 
     private void createFps() {
         try {
@@ -642,7 +656,7 @@ public abstract class VGame implements ApplicationListener {
                     try {
                         objectTextView = classTextView.getConstructor(classContext).newInstance(var3dListener);
                         Reflex.invokeMethod("addView", objectFrameLayout, objectTextView);
-                        Reflex.invokeMethod("setText", objectTextView, "测试测试啊");
+                        textVeiwMethod = Reflex.getMethod("setText", classTextView, getHeap());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -654,10 +668,10 @@ public abstract class VGame implements ApplicationListener {
     }
 
     private void refushFps() {
-        if (objectTextView != null) {
-            Reflex.invokeMethod("setText", objectTextView, getHeap());
-        } else {
-            createFps();
+        try {
+            textVeiwMethod.invoke(objectTextView, getHeap());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

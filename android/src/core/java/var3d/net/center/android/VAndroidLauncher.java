@@ -648,31 +648,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         });
     }
 
-    public class MRunnable implements Runnable{
-        public void run() {
-                FrameLayout frameLayout2 = new FrameLayout(activity);
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
-                activity.addContentView(frameLayout2, layoutParams);
-                textView = new TextView(activity);
-                textView.setText("测试来了");
-                frameLayout2.addView(textView);
-        }
-    }
-
-    private TextView textView;
-
-    public void createFps() {
-       activity.runOnUiThread(new MRunnable());
-    }
-
-    public void showFpsText(final String msg) {
-//        final Activity activity1 = (Activity) game.var3dListener;
-//        activity1.runOnUiThread(new Runnable() {
-//            public void run() {
-//                textView.setText(msg);
-//            }
-//        });
-    }
 
     public void setOnscreenKeyboardVisible(final boolean isvisibe) {
         if (editText == null) return;
