@@ -25,7 +25,7 @@ public class Game extends VGame {
         // openAutoScreenshots(5,StageTest.class);//开启自动截图
         // openProtect("image");//加密image文件夹资源
         // unProtect("image");
-        showFps();//显示fps
+        //showFps();//显示fps
         setFont("test", new FreePaint(R.font.DroidSans));//添加自定义字体(可由用户自己提供 ttf)
         /**对于 ios 版本，需要在 Info.plist.xml文件里定义 ttf 的路径,可定义多个 ttf 文件,例如
          <key>UIAppFonts</key>
