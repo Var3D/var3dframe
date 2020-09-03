@@ -652,24 +652,24 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     private TextView textView;
 
     public void createFps(){
-//        Gdx.app.postRunnable(new Runnable() {
-//            public void run() {
-//                activity.runOnUiThread(new Runnable() {
-//                    public void run() {
-//                        FrameLayout frameLayout2 = new FrameLayout(activity);
-//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
-//                        activity.addContentView(frameLayout2, layoutParams);
-//                        textView = new TextView(activity);
-//                        frameLayout2.addView(textView);
-//                    }
-//                });
-//            }
-//        });
-        FrameLayout frameLayout2 = new FrameLayout(activity);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
-        activity.addContentView(frameLayout2, layoutParams);
-        textView = new TextView(activity);
-        frameLayout2.addView(textView);
+        Gdx.app.postRunnable(new Runnable() {
+            public void run() {
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        FrameLayout frameLayout2 = new FrameLayout(activity);
+                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
+                        activity.addContentView(frameLayout2, layoutParams);
+                        textView = new TextView(activity);
+                        frameLayout2.addView(textView);
+                    }
+                });
+            }
+        });
+//        FrameLayout frameLayout2 = new FrameLayout(activity);
+//        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
+//        activity.addContentView(frameLayout2, layoutParams);
+//        textView = new TextView(activity);
+//        frameLayout2.addView(textView);
     }
 
     public void showFpsText(final String msg) {
