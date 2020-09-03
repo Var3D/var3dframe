@@ -656,24 +656,37 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
     public void showFpsText(String msg) {
         messege = msg;
-        if (runnable != null) {
-            runOnUiThread(runnable);
-        } else {
-            runnable=new Runnable() {
-                public void run() {
-                    if (textView != null) {
-                        textView.setText(messege);
-                    } else {
-                        frameLayout2 = new FrameLayout(activity);
-                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
-                        addContentView(frameLayout2, layoutParams);
-                        textView = new TextView(activity);
-                        frameLayout2.addView(textView);
-                    }
+//        if (runnable != null) {
+//            runOnUiThread(runnable);
+//        } else {
+//            runnable=new Runnable() {
+//                public void run() {
+//                    if (textView != null) {
+//                        textView.setText(messege);
+//                    } else {
+//                        frameLayout2 = new FrameLayout(activity);
+//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
+//                        addContentView(frameLayout2, layoutParams);
+//                        textView = new TextView(activity);
+//                        frameLayout2.addView(textView);
+//                    }
+//                }
+//            };
+//            runOnUiThread(runnable);
+//        }
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if (textView != null) {
+                    textView.setText(messege);
+                } else {
+                    frameLayout2 = new FrameLayout(activity);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
+                    addContentView(frameLayout2, layoutParams);
+                    textView = new TextView(activity);
+                    frameLayout2.addView(textView);
                 }
-            };
-            runOnUiThread(runnable);
-        }
+            }
+        });
     }
 
     public void setOnscreenKeyboardVisible(final boolean isvisibe) {
