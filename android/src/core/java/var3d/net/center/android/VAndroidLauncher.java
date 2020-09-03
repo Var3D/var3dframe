@@ -657,16 +657,16 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     public void showFpsText(String msg) {
         messege = msg;
         if (runnable != null) {
-            activity.runOnUiThread(runnable);
+            runOnUiThread(runnable);
         } else {
-            activity.runOnUiThread(runnable = new Runnable() {
+            runOnUiThread(runnable = new Runnable() {
                 public void run() {
                     if (textView != null) {
                         textView.setText(messege);
                     } else {
                         frameLayout2 = new FrameLayout(activity);
                         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(Gdx.graphics.getWidth() / 2, 50);
-                        activity.addContentView(frameLayout2, layoutParams);
+                        addContentView(frameLayout2, layoutParams);
                         textView = new TextView(activity);
                         frameLayout2.addView(textView);
                     }
