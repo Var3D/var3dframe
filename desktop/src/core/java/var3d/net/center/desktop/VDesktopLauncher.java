@@ -1774,4 +1774,8 @@ public abstract class VDesktopLauncher implements VListener {
     public void openNetSetting() {
 
     }
+
+    public boolean isChinese() {
+        return game.getLanguage() == null ? true : game.getLanguage().startsWith("zh");
+    }
 }

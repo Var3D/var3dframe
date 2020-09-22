@@ -882,4 +882,18 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
             }
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    public boolean isChinese() {
+        Locale locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            locale = getResources().getConfiguration().getLocales().get(0);
+        } else locale = getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        if (language.endsWith("zh"))
+            return true;
+        else
+            return false;
+
+    }
 }

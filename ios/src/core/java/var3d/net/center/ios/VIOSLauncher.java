@@ -85,7 +85,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         this.game = game;
     }
 
-    public VGame getGame(){
+    public VGame getGame() {
         return game;
     }
 
@@ -203,7 +203,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     }
 
-    public void showFiveStarDialog(){
+    public void showFiveStarDialog() {
         SKStoreReviewController.requestReview();
     }
 
@@ -218,17 +218,17 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     //显示成就
-    public void showAchievements(){
+    public void showAchievements() {
 
     }
 
     //上传成就
-    public void updataAchievements(String identifier, double percentComplete){
+    public void updataAchievements(String identifier, double percentComplete) {
 
     }
 
     //显示挑战
-    public void showChallenges(){
+    public void showChallenges() {
 
     }
 
@@ -263,7 +263,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     }
 
-    public void openAd(String str, Object... objects){
+    public void openAd(String str, Object... objects) {
 
     }
 
@@ -321,7 +321,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     }
 
-    public void updataScores(Object... objects){
+    public void updataScores(Object... objects) {
 
     }
 
@@ -410,15 +410,15 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     public void keyUp(int key) {
     }
 
-    public Vector2 getAppScreenSize(){
-        return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+    public Vector2 getAppScreenSize() {
+        return new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     //返回安全区域
     private Rectangle rectangle = new Rectangle();
 
     public Rectangle getSafeAreaInsets() {
-       if (Foundation.getMajorSystemVersion() < 11) {
+        if (Foundation.getMajorSystemVersion() < 11) {
             return rectangle;
         } else {
             UIView view = UIApplication.getSharedApplication().getKeyWindow().getRootViewController().getView();
@@ -438,8 +438,8 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
 
     private CGSize screenSize;
 
-    public CGSize getScreenSize(){
-        if(screenSize==null)screenSize=UIScreen.getMainScreen().getBounds().getSize();
+    public CGSize getScreenSize() {
+        if (screenSize == null) screenSize = UIScreen.getMainScreen().getBounds().getSize();
         return screenSize;
     }
 
@@ -494,9 +494,9 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     private UITextField uiTextField;
     private VTextField vTextField;
 
-    public void setListenerOnKeyboardChange(VStage stage,VListenerOnKeyboardChange listener){
+    public void setListenerOnKeyboardChange(VStage stage, VListenerOnKeyboardChange listener) {
         this.listeners = listener;
-        this.stage=stage;
+        this.stage = stage;
         //在平台接口的初始化代码中调用下面代码
         if (center == null) {
             center = NSNotificationCenter.getDefaultCenter();
@@ -506,68 +506,68 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
 
-    public void removeListenerOnKeyboardChange(){
-        this.listeners=null;
-        this.stage=null;
-        this.vTextField=null;
+    public void removeListenerOnKeyboardChange() {
+        this.listeners = null;
+        this.stage = null;
+        this.vTextField = null;
         //center.removeObserver(this);
     }
 
 
     //对应两个Selector方法实现
-    @Method(selector="keyboardWillShow:")
-    public void keyboardWillShow(NSNotification notification){
+    @Method(selector = "keyboardWillShow:")
+    public void keyboardWillShow(NSNotification notification) {
 
         keyBoardVisible = true;
         //获取键盘的高度
         NSDictionary<NSString, NSObject> userInfo = (NSDictionary<NSString, NSObject>) notification.getUserInfo();
         NSValue value = (NSValue) userInfo.get(UIKeyboardAnimation.Keys.FrameEnd());
         CGRect keyboardRect = NSValueExtensions.getRectValue(value);
-        keyboardHeight= (float) (keyboardRect.getHeight());
-        if(listeners!=null){
-            float bly= (float) (1f/getScreenSize().getHeight() * stage.getFullHeight());
-            listeners.onKeyboardChange(keyBoardVisible, keyboardHeight*bly);
+        keyboardHeight = (float) (keyboardRect.getHeight());
+        if (listeners != null) {
+            float bly = (float) (1f / getScreenSize().getHeight() * stage.getFullHeight());
+            listeners.onKeyboardChange(keyBoardVisible, keyboardHeight * bly);
         }
     }
 
-    @Method(selector="keyboardWillHide:")
-    public void keyboardWillHide(NSNotification notification){
+    @Method(selector = "keyboardWillHide:")
+    public void keyboardWillHide(NSNotification notification) {
         keyBoardVisible = false;
         keyboardHeight = 0;
-        if(listeners!=null)listeners.onKeyboardChange(keyBoardVisible, keyboardHeight);
+        if (listeners != null) listeners.onKeyboardChange(keyBoardVisible, keyboardHeight);
     }
 
-    private UITextField getDefaultUiTextField(){
-        if(uiTextField==null){
-            IOSInput iosInput= (IOSInput) Gdx.input;
+    private UITextField getDefaultUiTextField() {
+        if (uiTextField == null) {
+            IOSInput iosInput = (IOSInput) Gdx.input;
             //iosInput.setKeyboardCloseOnReturnKey(false);
-            uiTextField=iosInput.getKeyboardTextField();
+            uiTextField = iosInput.getKeyboardTextField();
         }
         return uiTextField;
     }
 
-    public void linkVTextField(final VTextField vTextField){
-        this.vTextField=vTextField;
-        UITextField uiTextField=getDefaultUiTextField();
+    public void linkVTextField(final VTextField vTextField) {
+        this.vTextField = vTextField;
+        UITextField uiTextField = getDefaultUiTextField();
         uiTextField.setKeyboardType(UIKeyboardType.valueOf(vTextField.getKeyboardType().value()));
         uiTextField.setReturnKeyType(UIReturnKeyType.valueOf(vTextField.getReturnKeyType().value()));
     }
 
     private final UITextFieldDelegate textDelegate = new UITextFieldDelegateAdapter() {
 
-        public boolean shouldChangeCharacters (UITextField textField, NSRange range, String string) {
+        public boolean shouldChangeCharacters(UITextField textField, NSRange range, String string) {
             for (int i = 0; i < range.getLength(); i++) {
-                Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE );
+                Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.BACKSPACE);
             }
 
-            if (string.isEmpty()||string.equals("")) {
+            if (string.isEmpty() || string.equals("")) {
                 if (range.getLength() > 0) Gdx.graphics.requestRendering();
                 return false;
             }
 
-            if(vTextField!=null){
-                FreeBitmapFont font= (FreeBitmapFont) vTextField.getStyle().font;
-                string=font.appendTextPro(string);
+            if (vTextField != null) {
+                FreeBitmapFont font = (FreeBitmapFont) vTextField.getStyle().font;
+                string = font.appendTextPro(string);
             }
 
             for (int i = 0, len = string.length(); i < len; i++) {
@@ -581,7 +581,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         }
 
         @Override
-        public boolean shouldEndEditing (UITextField textField) {
+        public boolean shouldEndEditing(UITextField textField) {
             textField.setText("x");
             Gdx.graphics.requestRendering();
 
@@ -589,7 +589,7 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         }
 
         @Override
-        public boolean shouldReturn (UITextField textField) {
+        public boolean shouldReturn(UITextField textField) {
             Gdx.app.getInput().getInputProcessor().keyDown(Input.Keys.ENTER);
             Gdx.app.getInput().getInputProcessor().keyTyped(VTextField.ENTER);
             Gdx.graphics.requestRendering();
@@ -597,8 +597,8 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         }
     };
 
-    public void setOnscreenKeyboardVisible(boolean isvisibe){
-        uiTextField=getDefaultUiTextField();
+    public void setOnscreenKeyboardVisible(boolean isvisibe) {
+        uiTextField = getDefaultUiTextField();
         if (isvisibe) {
             uiTextField.becomeFirstResponder();
             uiTextField.setDelegate(textDelegate);
@@ -607,7 +607,13 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         }
     }
 
-    public void openNetSetting(){
+    public void openNetSetting() {
         Gdx.net.openURI(UIApplication.getOpenSettingsURLString());
+    }
+
+    public boolean isChinese() {
+        NSArray languages = (NSArray) NSLocale.getPreferredLanguages();
+        String currentLanguage = languages.getString(0);
+        return currentLanguage.startsWith("zh");
     }
 }
