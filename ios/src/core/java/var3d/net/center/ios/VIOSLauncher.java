@@ -616,4 +616,8 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         String currentLanguage = languages.getString(0);
         return currentLanguage.startsWith("zh");
     }
+
+    public void createSDK(){
+
+    }
 }

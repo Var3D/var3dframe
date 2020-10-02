@@ -67,7 +67,6 @@ public class Stage3DTest extends VStage {
         cam.far = 1000f;
         cam.update();
         camController = new CameraInputController(cam);
-        //game.addProcessor(camController);
 
         ModelInstance test = game.getModelInstance("cube");//从模型库中创建名叫cube的对象
         instances.add(test);

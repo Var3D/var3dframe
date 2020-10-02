@@ -896,4 +896,8 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
             return false;
 
     }
+
+    public void createSDK(){
+
+    }
 }

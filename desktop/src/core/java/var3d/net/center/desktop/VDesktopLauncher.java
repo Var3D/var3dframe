@@ -1778,4 +1778,8 @@ public abstract class VDesktopLauncher implements VListener {
     public boolean isChinese() {
         return game.getLanguage() == null ? true : game.getLanguage().startsWith("zh");
     }
+
+    public void createSDK(){
+
+    }
 }
