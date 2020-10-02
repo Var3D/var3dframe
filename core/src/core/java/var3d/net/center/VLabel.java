@@ -221,8 +221,8 @@ public class VLabel extends Label {
         if (getStyle().background != null) {
             batch.setColor(1, 1, 1, getColor().a);
             float padding = getHeight() * 0.15f;
-            //float paddingX = getStyle().font.getSpaceXadvance() * 0.5f;
-            float paddingX = getStyle().font.getSpaceWidth() * 0.5f;
+            float paddingX = getStyle().font.getSpaceXadvance() * 0.5f;
+            //float paddingX = ((FreeBitmapFont)getStyle().font).getSpaceWidth() * 0.5f;
             getStyle().background.draw(batch, getX() - paddingX, getY(), getWidth() + paddingX * 2, getHeight() + padding);
         }
         if (isStroke) {

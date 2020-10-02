@@ -34,8 +34,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Animation;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -620,7 +622,7 @@ public abstract class VGame implements ApplicationListener {
                 batch.end();
             }
             if (isShowFps) {
-                switch (Gdx.app.getType()){
+                switch (Gdx.app.getType()) {
                     case Android:
                         refushFps();
                         break;
@@ -698,6 +700,10 @@ public abstract class VGame implements ApplicationListener {
     //获取模型库
     public Model getModel() {
         return model;
+    }
+
+    public ModelInstance getModelInstance(String... names) {
+        return new ModelInstance(game.getModel(), names);
     }
 
     public AssetManager getAssetManager() {
@@ -1079,12 +1085,18 @@ public abstract class VGame implements ApplicationListener {
         return false;
     }
 
-    public void addProcessor(InputProcessor stage) {
-        multiplexer.addProcessor(stage);
+    public void addProcessor(InputProcessor processor) {
+        if (!multiplexer.getProcessors().contains(processor, true)) {//避免重复添加
+            multiplexer.addProcessor(processor);
+        }
     }
 
     public void removeProcessor(InputProcessor stage) {
         multiplexer.removeProcessor(stage);
+    }
+
+    public InputMultiplexer getMultiplexer() {
+        return multiplexer;
     }
 
     private GestureDetector gesture;
@@ -1111,14 +1123,14 @@ public abstract class VGame implements ApplicationListener {
             if (gesture != null) {
                 multiplexer.removeProcessor(gesture);
             }
-            multiplexer.addProcessor(stageTop);
+            addProcessor(stageTop);
             prefStage = stage.getClass();
             //将当前的 stage 回归原位
             stage.getRoot().clearActions();
             stage.getRoot().setPosition(stage.getStartX(), stage.getStartY());
             var3dListener.setOnscreenKeyboardVisible(false);//如果有虚拟键盘则移出虚拟键盘
         } else {
-            multiplexer.addProcessor(stageTop);
+            addProcessor(stageTop);
         }
         stage = null;
         stage = getStage(type, name);
@@ -1129,12 +1141,21 @@ public abstract class VGame implements ApplicationListener {
                     stageNames.add(name);
                     stage.start();
                 }
-                multiplexer.addProcessor(input = stage);
+                addProcessor(input = stage);
                 if (stage instanceof GestureDetector.GestureListener) {
                     gesture = new GestureDetector((GestureDetector.GestureListener) stage);
-                    multiplexer.addProcessor(gesture);
+                    addProcessor(gesture);
                 } else {
                     gesture = null;
+                }
+
+                //判断multiplexer里面是否有CameraInputController，如果是，需要将该对象移动到数组最后面，否则会有操控响应异常
+                for (InputProcessor inputProcessor : multiplexer.getProcessors()) {
+                    if (inputProcessor instanceof CameraInputController) {
+                        removeProcessor(inputProcessor);
+                        addProcessor(inputProcessor);
+                        break;
+                    }
                 }
             }
         } while (stage == null);

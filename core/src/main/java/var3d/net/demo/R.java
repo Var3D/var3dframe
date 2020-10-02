@@ -14,11 +14,11 @@ public class R {
 
 
    public static class strings {
-        public static String test = "test";
-        public static String tost = "tost";
-        public static String app_name = "app_name";
-        public static String logo = "logo";
-        public static String dialogTitle = "dialogTitle";
+      public static String test = "test";
+      public static String tost = "tost";
+      public static String app_name = "app_name";
+      public static String logo = "logo";
+      public static String dialogTitle = "dialogTitle";
    }
 
    public static class image {
@@ -34,25 +34,14 @@ public class R {
 
 
    public static class model {
-      public static String yellowbox = "model/yellowbox.g3db";
-      public static String key = "model/key.jpg";
-      public static String line = "model/line.g3db";
-      public static String key_g3db = "model/key.g3db";
-      public static String man = "model/man.jpg";
-      public static String map0 = "model/map0.g3db";
-      public static String sky = "model/sky.jpg";
-      public static String greensky = "model/greensky.g3db";
-      public static String man_g3db = "model/man.g3db";
-      public static String line_jpg = "model/line.jpg";
-      public static String greensky_jpg = "model/greensky.jpg";
-      public static String box = "model/box.jpg";
+      public static String test = "model/test.g3db";
    }
 
 
    public static class font {
       public static String mainfont = "font/mainfont.ttf";
       public static String DroidSans = "font/DroidSans.ttf";
-      public static String test = "font/test.ttf";
+      public static String test_ttf = "font/test.ttf";
    }
 
 

@@ -86,6 +86,7 @@ public class VProgressBar extends Actor {
                 batch.draw(tex_value, getRight() - tex_value.getRegionWidth(), getY());
                 break;
         }
-        batch.setColor(color);
+        //batch.setColor(color);
+        batch.setPackedColor(color);
     }
 }

@@ -298,6 +298,11 @@ public class UI<T extends Actor> {
         return this;
     }
 
+    public UI<T> setColor(Actor pref) {
+        t.setColor(pref.getColor());
+        return this;
+    }
+
     public UI<T> setName(String name) {
         t.setName(name);
         return this;
