@@ -45,10 +45,10 @@ public class StageActors extends VStage {
         VLabel lab_title2 = game.getLabel("描边测试").setColor(Color.YELLOW).setPosition(getWidth() / 2
                 , getTop() - 40, Align.top).touchOff().setStroke(Color.RED).show();
         lab_title2.addAction(Actions.forever(Actions.sequence(Actions.alpha(0,1),Actions.alpha(1,1))));
-        VLabel lab_title3 = game.getLabel("emoji测试◐◐").setColor(Color.YELLOW).setPosition(getWidth() / 2
+        VLabel lab_title3 = game.getLabel("emoji测试😊😊😊").setColor(Color.YELLOW).setPosition(getWidth() / 2
                 , getTop() - 70, Align.top).touchOff().show();
         lab_title3.addAction(Actions.forever(Actions.sequence(Actions.alpha(0,1),Actions.alpha(1,1))));
-        VLabel lab_title4 = game.getLabel("emoji带描边测试◐◐").setColor(Color.CYAN).setPosition(getWidth() / 2
+        VLabel lab_title4 = game.getLabel("emoji带描边测试😭😭😭").setColor(Color.CYAN).setPosition(getWidth() / 2
                 , getTop() - 100, Align.top).touchOff().setStroke(Color.BLUE).show();
         lab_title4.addAction(Actions.forever(Actions.sequence(Actions.alpha(0,1),Actions.alpha(1,1))));
 
