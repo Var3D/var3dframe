@@ -117,6 +117,7 @@ public abstract class VGame implements ApplicationListener {
     public int pageWidth = 1024;// 大纹理尺寸
     public int pageWidthModel = 4096;//用来合成模型的纹理
     public final TextureFilter filter = TextureFilter.Linear;// 纹理缩放形式
+    private Color backgroundColor = Color.BLACK;
 
     private final HashMap<String, Texture> textures = new HashMap<String, Texture>();// 保存new出来得资源或者网络资源
     private TextureAtlas atlas;
@@ -199,6 +200,10 @@ public abstract class VGame implements ApplicationListener {
 
     public VStage getTopStage() {
         return stageTop;
+    }
+
+    public void setBackgroundColor(Color color){
+        this.backgroundColor=color;
     }
 
     /**
@@ -608,7 +613,7 @@ public abstract class VGame implements ApplicationListener {
             }
         } else {
             if (stage != null) {
-                clean(Color.BLACK);
+                if(backgroundColor!=null) clean(backgroundColor);
                 stage.act();
                 stage.draw();
             }

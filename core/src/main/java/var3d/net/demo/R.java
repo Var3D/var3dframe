@@ -14,11 +14,11 @@ public class R {
 
 
    public static class strings {
-      public static String test = "test";
-      public static String tost = "tost";
-      public static String app_name = "app_name";
-      public static String logo = "logo";
-      public static String dialogTitle = "dialogTitle";
+        public static String test = "test";
+        public static String tost = "tost";
+        public static String app_name = "app_name";
+        public static String logo = "logo";
+        public static String dialogTitle = "dialogTitle";
    }
 
    public static class image {
@@ -35,6 +35,9 @@ public class R {
 
    public static class model {
       public static String test = "model/test.g3db";
+      public static String model = "model/model.g3db";
+      public static String model_png = "model/model.png";
+      public static String cubetex = "model/cubetex.jpg";
    }
 
 
