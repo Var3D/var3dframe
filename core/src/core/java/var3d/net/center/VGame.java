@@ -527,6 +527,7 @@ public abstract class VGame implements ApplicationListener {
 
     public void render() {
         if (isLoading) {
+            if(backgroundColor!=null) clean(backgroundColor);
             if (assets.update()) {
                 Array<Texture> out = new Array<Texture>();
                 assets.getAll(Texture.class, out);

@@ -612,12 +612,12 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
     }
 
     public boolean isChinese() {
-        NSArray languages = (NSArray) NSLocale.getPreferredLanguages();
-        String currentLanguage = languages.getString(0);
+        List<String> languages = NSLocale.getPreferredLanguages();
+        String currentLanguage = languages.get(0);
         return currentLanguage.startsWith("zh");
     }
 
-    public void createSDK(){
+    public void createSDK() {
 
     }
 }

@@ -1,6 +1,6 @@
 package var3d.net.demo;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 
 import var3d.net.center.VGame;
 import var3d.net.center.VListener;
@@ -19,6 +19,7 @@ public class Game extends VGame {
         setDefaultFont(new FreePaint(28).setIsEmoji());//设置默认字号28，并开启支持 emoji
         // (是否完全支持emoji 视运行平台而定，目前测试的结果是 windows10，ios，android 都支持的)
         setLanguage(Languages.zh);//设置语言(仅对Desktop版有效,本地版根据系统自动设置语言)
+        setBackgroundColor(Color.DARK_GRAY);
     }
 
     @Override

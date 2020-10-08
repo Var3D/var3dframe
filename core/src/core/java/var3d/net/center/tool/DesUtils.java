@@ -29,7 +29,6 @@ public class DesUtils {
             decryptCipher = Cipher.getInstance("DES");
             decryptCipher.init(Cipher.DECRYPT_MODE, key);
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
