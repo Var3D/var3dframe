@@ -3,6 +3,8 @@ package var3d.net.center.tool;
 import java.security.Key;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 
 /**
  * Created by yufeng on 2019/12/31.
@@ -80,7 +82,7 @@ public class DesUtils {
         for (int i = 0; i < arrBTmp.length && i < arrB.length; i++) {
             arrB[i] = arrBTmp[i];
         }
-        Key key = new javax.crypto.spec.SecretKeySpec(arrB, "DES");
+        Key key = new SecretKeySpec(arrB, "DES");
         return key;
     }
 }
