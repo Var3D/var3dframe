@@ -294,6 +294,7 @@ public abstract class VDialog extends Group {
     public void playShowActions() {
         switch (showActionType) {
             case NOEFFECTE:// 无效果
+                setVisible(true);
                 break;
             case FADE://淡入
                 addAction(Actions.sequence(Actions.hide(), Actions.scaleTo(1, 1), Actions.moveTo(showX, showY),
