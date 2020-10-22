@@ -549,7 +549,7 @@ public abstract class VGame implements ApplicationListener {
                 }
                 if (inpacks.size > 0) {//将散图打包到大图
                     if (packer == null)
-                        packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 2, true);
+                        packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 1, true);
                     if (atlas == null) atlas = new TextureAtlas();
                     for (String path : inpacks) {
                         try {
@@ -956,6 +956,7 @@ public abstract class VGame implements ApplicationListener {
             stage.getRoot().setTouchable(Touchable.disabled);
         }
         VDialog dia = getDialog(dialog);
+        dia.setVisible(false);
         dia.setTouchable(Touchable.enabled);
         dia.playShowActions();
         stageTop.addActor(dia);
