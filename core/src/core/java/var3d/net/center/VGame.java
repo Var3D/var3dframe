@@ -957,8 +957,8 @@ public abstract class VGame implements ApplicationListener {
         }
         VDialog dia = getDialog(dialog);
         dia.setTouchable(Touchable.enabled);
-        stageTop.addActor(dia);
         dia.playShowActions();
+        stageTop.addActor(dia);
         dia.show();
         return dia;
     }
