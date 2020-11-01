@@ -46,16 +46,7 @@ public class DialogLoad extends VDialog {
         }
         group.addAction(Actions.forever(Actions.rotateBy(-360,2)));
 
-        int size=Math.max(game.WIDTH,game.HEIGHT) / 20;
-        Button img_close=game.getUI(new Button(new TextureRegionDrawable(new TextureRegion(game
-                .getCircleColorTexture(size,Color.valueOf("d70015")))))).addClicAction()
-                .setSize(size,size).setPosition(getWidth()-20,getHeight()-20,Align.topRight).show();
-        Image line_x=game.getImage(size*0.7f,6).setOrigin(Align.center).touchOff().setPosition(size*0.5f
-                ,size*0.5f,Align.center).show(img_close);
-        line_x.setRotation(45);
-        Image line_Y=game.getImage(6,size*0.7f).setOrigin(Align.center).touchOff().setPosition(size*0.5f
-                ,size*0.5f,Align.center).show(img_close);
-        line_Y.setRotation(45);
+        Button img_close=game.getCloseButton().show();
         img_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 if(run!=null)run.run();

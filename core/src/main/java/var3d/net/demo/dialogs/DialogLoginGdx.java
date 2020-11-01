@@ -46,8 +46,7 @@ public class DialogLoginGdx extends VDialog {
             }
         });
 
-        Button btn_close2 = game.getTextButton("X", Color.BLACK, Color.valueOf("ff2266"))
-                .setSize(40, 40).addClicAction().setPosition(getWidth()-2, getHeight()-2, Align.topRight).show();
+        Button btn_close2 = game.getCloseButton().setPosition(getWidth()-2, getHeight()-2, Align.topRight).show();
         btn_close2.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //game.removeDialog(DialogRatio.this);

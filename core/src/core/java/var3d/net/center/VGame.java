@@ -38,15 +38,19 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.ShapeCache;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -64,9 +68,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -202,8 +208,8 @@ public abstract class VGame implements ApplicationListener {
         return stageTop;
     }
 
-    public void setBackgroundColor(Color color){
-        this.backgroundColor=color;
+    public void setBackgroundColor(Color color) {
+        this.backgroundColor = color;
     }
 
     /**
@@ -527,7 +533,7 @@ public abstract class VGame implements ApplicationListener {
 
     public void render() {
         if (isLoading) {
-            if(backgroundColor!=null) clean(backgroundColor);
+            if (backgroundColor != null) clean(backgroundColor);
             if (assets.update()) {
                 Array<Texture> out = new Array<Texture>();
                 assets.getAll(Texture.class, out);
@@ -614,7 +620,7 @@ public abstract class VGame implements ApplicationListener {
             }
         } else {
             if (stage != null) {
-                if(backgroundColor!=null) clean(backgroundColor);
+                if (backgroundColor != null) clean(backgroundColor);
                 stage.act();
                 stage.draw();
             }
@@ -2500,6 +2506,28 @@ public abstract class VGame implements ApplicationListener {
      */
     public UI<VTextButton> getTextButton(String text, TextButtonStyle style) {
         return getUI(new VTextButton(text, style));
+    }
+
+    /**
+     * 创建关闭按钮
+     *
+     * @return
+     */
+
+    public UI<Button> getCloseButton(int size, Color backgroundColor, Color lineColor) {
+        Button img_close = getUI(new Button(new TextureRegionDrawable(new TextureRegion(getCircleColorTexture(size, backgroundColor)))))
+                .addClicAction().setSize(size, size).getActor();
+        Image line_x = getImage(size * 0.7f, 6).setColor(lineColor).setOrigin(Align.center).touchOff().setPosition(size * 0.5f
+                , size * 0.5f, Align.center).setName("line_x").show(img_close);
+        line_x.setRotation(45);
+        Image line_Y = getImage(6, size * 0.7f).setColor(lineColor).setOrigin(Align.center).touchOff().setPosition(size * 0.5f
+                , size * 0.5f, Align.center).setName("line_y").show(img_close);
+        line_Y.setRotation(45);
+        return getUI(img_close);
+    }
+
+    public UI<Button> getCloseButton() {
+        return getCloseButton(Math.max(WIDTH, HEIGHT) / 20, Color.valueOf("d70015"), Color.WHITE);
     }
 
     public CheckBoxStyle getCheckBoxStyle(String downimgname, String upimgname, Color fontColor) {
