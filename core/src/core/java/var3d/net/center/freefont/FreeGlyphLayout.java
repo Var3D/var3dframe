@@ -63,8 +63,8 @@ public class FreeGlyphLayout extends GlyphLayout {
                         run.color.set(Color.WHITE);
                         run.x = x;
                         run.y = y;
-                        fontData.getGlyphs(run, str, start - 1, start, null);
-                        //fontData.getGlyphs(run, str, start - 1, start, true);
+                       // fontData.getGlyphs(run, str, start - 1, start, null);
+                        fontData.getGlyphs(run, str, start - 1, start, true);
                         if (run.glyphs.size == 0)
                             glyphRunPool.free(run);
                         else {
@@ -89,8 +89,8 @@ public class FreeGlyphLayout extends GlyphLayout {
                         run.color.set(Color.WHITE);
                         run.x = x;
                         run.y = y;
-                        fontData.getGlyphs(run, str, start - 1, start, null);
-                        //fontData.getGlyphs(run, str, start - 1, start, true);
+                        //fontData.getGlyphs(run, str, start - 1, start, null);
+                        fontData.getGlyphs(run, str, start - 1, start, true);
                         if (run.glyphs.size == 0)
                             glyphRunPool.free(run);
                         else {
@@ -209,8 +209,8 @@ public class FreeGlyphLayout extends GlyphLayout {
             , float targetWidth, int halign, boolean wrap, String truncate) {
         if (truncate != null)
             wrap = true; // Causes truncate code to run, doesn't actually cause wrapping.
-        else if (targetWidth <= font.getSpaceXadvance()) //
-        //else if (targetWidth <= font.getSpaceWidth()) //
+        //else if (targetWidth <= font.getSpaceXadvance()) //
+        else if (targetWidth <= font.getSpaceWidth()) //
             wrap = false; // Avoid one line per character, which is very inefficient.
 
         BitmapFont.BitmapFontData fontData = font.getData();
@@ -269,8 +269,8 @@ public class FreeGlyphLayout extends GlyphLayout {
                     run.color.set(color);
                     run.x = x;
                     run.y = y;
-                    fontData.getGlyphs(run, str, runStart, runEnd, null);
-                    //fontData.getGlyphs(run, str, runStart, runEnd, true);
+                    //fontData.getGlyphs(run, str, runStart, runEnd, null);
+                    fontData.getGlyphs(run, str, runStart, runEnd, true);
                     if (run.glyphs.size == 0)
                         glyphRunPool.free(run);
                     else {
@@ -379,8 +379,8 @@ public class FreeGlyphLayout extends GlyphLayout {
 
         // Determine truncate string size.
         GlyphRun truncateRun = glyphRunPool.obtain();
-        fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), null);
-        //fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), true);
+        //fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), null);
+        fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), true);
         float truncateWidth = 0;
         for (int i = 1, n = truncateRun.xAdvances.size; i < n; i++)
             truncateWidth += truncateRun.xAdvances.get(i);
