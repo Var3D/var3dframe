@@ -40,7 +40,7 @@ public class VPreferences {
             save.putString(key, desUtils.encrypt(object.toString()));
             object.remove(key);
         } catch (Exception e) {
-            save.putString(key, object.toString());
+            save.putBoolean(key, val);
         }
         return this;
     }
