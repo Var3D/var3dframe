@@ -68,9 +68,9 @@ public class FreeGlyphLayout extends GlyphLayout {
                        // fontData.getGlyphs(run, str, start - 1, start, null);
                        // fontData.getGlyphs(run, str, start - 1, start, true);
                         try{
-                            Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,null);
+                            Reflex.invokeMethod("getGlyphs",fontData,run, str, start - 1, start, null);
                         }catch (Exception e){
-                            Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,true);
+                            Reflex.invokeMethod("getGlyphs",fontData,run, str, start - 1, start, true);
                         }
                         if (run.glyphs.size == 0)
                             glyphRunPool.free(run);
@@ -99,9 +99,9 @@ public class FreeGlyphLayout extends GlyphLayout {
                         //fontData.getGlyphs(run, str, start - 1, start, null);
                         //fontData.getGlyphs(run, str, start - 1, start, true);
                         try{
-                            Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,null);
+                            Reflex.invokeMethod("getGlyphs",fontData,run, str, start - 1, start, null);
                         }catch (Exception e){
-                            Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,true);
+                            Reflex.invokeMethod("getGlyphs",fontData,run, str, start - 1, start, true);
                         }
                         if (run.glyphs.size == 0)
                             glyphRunPool.free(run);
@@ -293,9 +293,9 @@ public class FreeGlyphLayout extends GlyphLayout {
                     //fontData.getGlyphs(run, str, runStart, runEnd, null);
                     //fontData.getGlyphs(run, str, runStart, runEnd, true);
                     try{
-                        Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,null);
+                        Reflex.invokeMethod("getGlyphs",fontData,run,str, runStart, runEnd, null);
                     }catch (Exception e){
-                        Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,true);
+                        Reflex.invokeMethod("getGlyphs",fontData,run, str, runStart, runEnd, true);
                     }
                     if (run.glyphs.size == 0)
                         glyphRunPool.free(run);

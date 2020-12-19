@@ -49,9 +49,12 @@ import org.robovm.apple.uikit.UIPopoverArrowDirection;
 import org.robovm.apple.uikit.UIPopoverController;
 import org.robovm.apple.uikit.UIReturnKeyType;
 import org.robovm.apple.uikit.UIScreen;
+import org.robovm.apple.uikit.UITextAutocapitalizationType;
+import org.robovm.apple.uikit.UITextAutocorrectionType;
 import org.robovm.apple.uikit.UITextField;
 import org.robovm.apple.uikit.UITextFieldDelegate;
 import org.robovm.apple.uikit.UITextFieldDelegateAdapter;
+import org.robovm.apple.uikit.UITextSpellCheckingType;
 import org.robovm.apple.uikit.UIUserInterfaceIdiom;
 import org.robovm.apple.uikit.UIView;
 import org.robovm.apple.uikit.UIWindow;
@@ -537,11 +540,29 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         if (listeners != null) listeners.onKeyboardChange(keyBoardVisible, keyboardHeight);
     }
 
+    private UITextField textfield = null;
+    public UITextField getKeyboardTextField () {
+        if (textfield == null) createDefaultTextField();
+        return textfield;
+    }
+
+    private void createDefaultTextField () {
+        textfield = new UITextField(new CGRect(10, 10, 100, 50));
+        textfield.setKeyboardType(UIKeyboardType.Default);
+        textfield.setReturnKeyType(UIReturnKeyType.Done);
+        textfield.setAutocapitalizationType(UITextAutocapitalizationType.None);
+        textfield.setAutocorrectionType(UITextAutocorrectionType.No);
+        textfield.setSpellCheckingType(UITextSpellCheckingType.No);
+        textfield.setHidden(true);
+        textfield.setText("x");
+        ((IOSApplication)Gdx.app).getUIViewController().getView().addSubview(textfield);
+    }
+
     private UITextField getDefaultUiTextField() {
         if (uiTextField == null) {
-            IOSInput iosInput = (IOSInput) Gdx.input;
+            //IOSInput iosInput = (IOSInput) Gdx.input;
             //iosInput.setKeyboardCloseOnReturnKey(false);
-            uiTextField = iosInput.getKeyboardTextField();
+            uiTextField = getKeyboardTextField();
         }
         return uiTextField;
     }
