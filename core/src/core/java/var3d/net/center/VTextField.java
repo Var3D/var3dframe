@@ -30,6 +30,8 @@ public class VTextField extends TextField {
     public static final char BACKSPACE = 8;//libgdx的删除键值
     static private final char DELETE = 127;
     public static final char ENTER = 13;
+    static protected final char ENTER_DESKTOP = '\r';
+    static protected final char ENTER_ANDROID = '\n';
 
     //VTextField field;
     private VTextFieldListener vlistener;

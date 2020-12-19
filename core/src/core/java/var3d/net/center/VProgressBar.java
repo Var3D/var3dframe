@@ -1,9 +1,12 @@
 package var3d.net.center;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
+
+import var3d.net.center.tool.Reflex;
 
 public class VProgressBar extends Actor {
     private TextureRegion tex_bg, tex_value;
@@ -71,7 +74,7 @@ public class VProgressBar extends Actor {
     }
 
     public void draw(Batch batch, float a) {
-        float color = batch.getPackedColor();
+        Object color = batch.getPackedColor();
         batch.setColor(getColor());
         if (tex_bg != null) batch.draw(tex_bg, getX(), getY());
         switch (alignment) {
@@ -86,7 +89,10 @@ public class VProgressBar extends Actor {
                 batch.draw(tex_value, getRight() - tex_value.getRegionWidth(), getY());
                 break;
         }
-        batch.setColor(color);
-        //batch.setPackedColor(color);
+        try{
+            Reflex.invokeMethod("setPackedColor",batch,(float)color);
+        }catch (Exception e){
+            Reflex.invokeMethod("setColor",batch,(Color)color);
+        }
     }
 }

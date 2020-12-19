@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 
+import var3d.net.center.tool.Reflex;
+
 /**
  * Created by fengyu on 2019/7/20.
  */
@@ -64,7 +66,12 @@ public class FreeGlyphLayout extends GlyphLayout {
                         run.x = x;
                         run.y = y;
                        // fontData.getGlyphs(run, str, start - 1, start, null);
-                        fontData.getGlyphs(run, str, start - 1, start, true);
+                       // fontData.getGlyphs(run, str, start - 1, start, true);
+                        try{
+                            Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,null);
+                        }catch (Exception e){
+                            Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,true);
+                        }
                         if (run.glyphs.size == 0)
                             glyphRunPool.free(run);
                         else {
@@ -90,7 +97,12 @@ public class FreeGlyphLayout extends GlyphLayout {
                         run.x = x;
                         run.y = y;
                         //fontData.getGlyphs(run, str, start - 1, start, null);
-                        fontData.getGlyphs(run, str, start - 1, start, true);
+                        //fontData.getGlyphs(run, str, start - 1, start, true);
+                        try{
+                            Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,null);
+                        }catch (Exception e){
+                            Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,true);
+                        }
                         if (run.glyphs.size == 0)
                             glyphRunPool.free(run);
                         else {
@@ -204,13 +216,22 @@ public class FreeGlyphLayout extends GlyphLayout {
         setText2(font, str, 0, str.length(), font.getColor(), 0, Align.left, false, null);
     }
 
+    private float getSpaceWidth(BitmapFont font){
+        float paddingX;
+        try {
+            paddingX= (float) Reflex.invokeMethod("getSpaceWidth",font);
+        }catch (Exception ex){
+            paddingX= (float) Reflex.invokeMethod("getSpaceXadvance", font);
+        }
+        return paddingX;
+    }
 
     public void setText2(BitmapFont font, CharSequence str, int start, int end, Color color
             , float targetWidth, int halign, boolean wrap, String truncate) {
         if (truncate != null)
             wrap = true; // Causes truncate code to run, doesn't actually cause wrapping.
         //else if (targetWidth <= font.getSpaceXadvance()) //
-        else if (targetWidth <= font.getSpaceWidth()) //
+        else if (targetWidth <= getSpaceWidth(font)) //
             wrap = false; // Avoid one line per character, which is very inefficient.
 
         BitmapFont.BitmapFontData fontData = font.getData();
@@ -270,7 +291,12 @@ public class FreeGlyphLayout extends GlyphLayout {
                     run.x = x;
                     run.y = y;
                     //fontData.getGlyphs(run, str, runStart, runEnd, null);
-                    fontData.getGlyphs(run, str, runStart, runEnd, true);
+                    //fontData.getGlyphs(run, str, runStart, runEnd, true);
+                    try{
+                        Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,null);
+                    }catch (Exception e){
+                        Reflex.invokeMethod("getGlyphs",fontData,run,str,start-1,true);
+                    }
                     if (run.glyphs.size == 0)
                         glyphRunPool.free(run);
                     else {
@@ -380,7 +406,12 @@ public class FreeGlyphLayout extends GlyphLayout {
         // Determine truncate string size.
         GlyphRun truncateRun = glyphRunPool.obtain();
         //fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), null);
-        fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), true);
+        //fontData.getGlyphs(truncateRun, truncate, 0, truncate.length(), true);
+        try{
+            Reflex.invokeMethod("getGlyphs",fontData,truncateRun, truncate, 0, truncate.length(), null);
+        }catch (Exception e){
+            Reflex.invokeMethod("getGlyphs",fontData,truncateRun, truncate, 0, truncate.length(), true);
+        }
         float truncateWidth = 0;
         for (int i = 1, n = truncateRun.xAdvances.size; i < n; i++)
             truncateWidth += truncateRun.xAdvances.get(i);

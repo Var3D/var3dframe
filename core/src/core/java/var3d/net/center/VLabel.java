@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import var3d.net.center.freefont.FreeBitmapFont;
+import var3d.net.center.tool.Reflex;
 
 public class VLabel extends Label {
     private boolean isStroke = false;// 是否描边
@@ -221,8 +222,14 @@ public class VLabel extends Label {
         if (getStyle().background != null) {
             batch.setColor(1, 1, 1, getColor().a);
             float padding = getHeight() * 0.15f;
-            //float paddingX = getStyle().font.getSpaceXadvance() * 0.5f;
-            float paddingX = ((FreeBitmapFont)getStyle().font).getSpaceWidth() * 0.5f;
+           // float paddingX = getStyle().font.getSpaceXadvance() * 0.5f;
+           // float paddingX = ((FreeBitmapFont)getStyle().font).getSpaceWidth() * 0.5f;
+            float paddingX;
+            try {
+                paddingX= (float) Reflex.invokeMethod("getSpaceWidth",getStyle().font);
+            }catch (Exception ex){
+                paddingX= (float) Reflex.invokeMethod("getSpaceXadvance", getStyle().font);
+            }
             getStyle().background.draw(batch, getX() - paddingX, getY(), getWidth() + paddingX * 2, getHeight() + padding);
         }
         if (isStroke) {
