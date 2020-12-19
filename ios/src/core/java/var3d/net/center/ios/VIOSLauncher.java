@@ -424,12 +424,17 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         if (Foundation.getMajorSystemVersion() < 11) {
             return rectangle;
         } else {
-            UIView view = UIApplication.getSharedApplication().getKeyWindow().getRootViewController().getView();
+            //UIView view = UIApplication.getSharedApplication().getKeyWindow().getRootViewController().getView();
+            UIView view = UIApplication.getSharedApplication().getWindows().first().getRootViewController().getView();
             UIEdgeInsets edgeInsets = view.getSafeAreaInsets();
-            double top = edgeInsets.getTop() * view.getContentScaleFactor();
-            double bottom = edgeInsets.getBottom() * view.getContentScaleFactor();
-            double left = edgeInsets.getLeft() * view.getContentScaleFactor();
-            double right = edgeInsets.getRight() * view.getContentScaleFactor();
+//            double top = edgeInsets.getTop() * view.getContentScaleFactor();
+//            double bottom = edgeInsets.getBottom() * view.getContentScaleFactor();
+//            double left = edgeInsets.getLeft() * view.getContentScaleFactor();
+//            double right = edgeInsets.getRight() * view.getContentScaleFactor();
+            double top = edgeInsets.getTop() ;
+            double bottom = edgeInsets.getBottom();
+            double left = edgeInsets.getLeft();
+            double right = edgeInsets.getRight();
             rectangle.set((float) left, (float) bottom, (float) right, (float) top);
             return rectangle;
         }
