@@ -21,6 +21,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.PropertiesUtils;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import org.lwjgl.LWJGLUtil;
@@ -30,7 +32,6 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -42,14 +43,19 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -80,10 +86,6 @@ public abstract class VDesktopLauncher implements VListener {
     private VGame game;
 
     public VDesktopLauncher() {
-    }
-
-    public VDesktopLauncher(boolean isOpenAutoFbx2G3db) {
-        if (isOpenAutoFbx2G3db) autoFbx2G3db(null);
     }
 
 
@@ -1575,20 +1577,17 @@ public abstract class VDesktopLauncher implements VListener {
         return compressedStr;
     }
 
-
-    public static void autoFbx2G3db(String homePath) {
-//        if (homePath == null)
-//            homePath = System.getProperty("java.home") + File.separator + "fbx-conv";
-//        autoFbx2G3db2(homePath);
-
+    //开启工具模式（启动桌面版自动转换fbx为g3db，自动更新R文件）
+    public static void autoTool() {
+        //自动将fbx转换为g3db
         boolean isMac = System.getProperty("os.name").startsWith("Mac");
         String root = (new File("").getAbsolutePath()).replaceAll(isMac ? "android/assets" : "android\\\\assets", "");
         String path = root + ".fbx-conv";
-        autoFbx2G3db2(path);
+        autoFbx2G3db(path);
+        openAutoIndex("R", root);
     }
 
-    private static void autoFbx2G3db2(String convPath) {
-
+    private static void autoFbx2G3db(String convPath) {
         String assetsPath = System.getProperty("user.dir");
         if (new File(convPath).exists()) {
             File filein = new File(convPath + File.separator + "conv.zip");
@@ -1675,6 +1674,7 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
+    //mac系统开权限
     private static void getAuthority(String path) {
         if (LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {//如果是mac系统，记得开权限
             try {
@@ -1760,6 +1760,202 @@ public abstract class VDesktopLauncher implements VListener {
         }
     }
 
+    /**
+     * 更新R文件
+     */
+
+    private static Array<String> useName = new Array<>();
+    private static String pack, packPath;//包名和项目路径
+
+    public static void openAutoIndex(String indexName, String coreSrcPath) {
+        useName.clear();
+        if (pack == null) {
+            pack = getPackagePath(coreSrcPath);
+            String l_pack = pack.replaceAll("\\.", File.separator);
+            packPath = packPath.substring(0, packPath.indexOf(l_pack));
+        }
+        String r_path = packPath + pack.replaceAll("\\.", File.separator) + File.separator + indexName + ".java";
+        StringBuffer rstring = new StringBuffer();
+        rstring.append("package ");
+        rstring.append(pack);
+        rstring.append(";\n\n");
+        rstring.append("public class ");
+        rstring.append(indexName);
+        rstring.append(" {\n\n");
+        File root = new File(coreSrcPath + "/android/assets");
+        File[] roots = root.listFiles();
+        if (roots.length <= 0) return;
+        for (File file : roots) {
+            rstring = getRStringValue(rstring, root, file, 1);
+        }
+        rstring.append("\n}");
+        writeTxt(rstring.toString(), r_path);
+    }
+
+    private static void writeTxt(String s, String path) {
+        File writename = new File(path); // 相对路径，如果没有则要建立一个新的output。txt文件
+        try {
+            if (!writename.exists()) {
+                writename.delete();
+            }
+            writename.createNewFile();
+            BufferedWriter out = new BufferedWriter(new FileWriter(writename, false));
+            out.append(s); //
+            out.flush(); // 把缓存区内容压入文件
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } // 创建新文件
+    }
+
+    private static StringBuffer getRStringValue(StringBuffer rstring, File rootFile, File file, int idx) {
+        if (file.getName().startsWith("."))
+            return rstring;
+        if (file.isDirectory()) {
+            if (file.getName().startsWith("keep")) return rstring;
+            if (file.getName().equals("values") && idx == 1) {
+                rstring.append("\n   public static class strings {\n");
+                @SuppressWarnings("rawtypes")
+                ObjectMap properties = new ObjectMap<String, String>();
+                File values = new File(file.getPath() + "/strings.properties");
+                InputStreamReader read = null;
+                try {
+                    read = new InputStreamReader(
+                            new FileInputStream(values), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                BufferedReader reader = new BufferedReader(read);
+                try {
+                    PropertiesUtils.load(properties, reader);
+                    Array<String> keys = properties.keys().toArray();
+                    for (String key : keys) {
+                        rstring.append("        public static String ");
+                        rstring.append(key);
+                        rstring.append(" = \"");
+                        rstring.append(key);
+                        rstring.append("\";\n");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                rstring.append("   }\n");
+            } else {
+                if (file.listFiles().length <= 0) return rstring;
+                rstring.append("\n");
+                for (int i = 0; i < idx; i++) {
+                    rstring.append("   ");
+                }
+                rstring.append("public static class ");
+                rstring.append(file.getName());
+                for (int i = 0; i < idx; i++) {
+                    rstring.append(" ");
+                }
+                rstring.append("{\n");
+                for (File child : file.listFiles()) {
+                    getRStringValue(rstring, rootFile, child, idx + 1);
+                }
+                for (int i = 0; i < idx; i++) {
+                    rstring.append("   ");
+                }
+                rstring.append("}\n\n");
+            }
+        } else {
+            String nowName;
+            if (file.getName().contains(".")) {
+                nowName = file.getName().substring(0, file.getName().indexOf("."));
+            } else {
+                nowName = file.getName();
+            }
+
+            if (Character.isDigit(nowName.charAt(0))) {
+                nowName = "p" + nowName;
+            }
+            nowName = nowName.replaceAll(",", "_").replaceAll("-", "_");
+
+            if (checkIncludeKeyWord(nowName)) {
+                nowName = file.getName().replaceAll("\\.", "_");
+            }
+
+            for (String name : useName) {
+                if (nowName.equals(name)) {
+                    nowName = file.getName().replaceAll("\\.", "_");
+                    break;
+                }
+            }
+            for (int i = 0; i < idx; i++) {
+                rstring.append("   ");
+            }
+            rstring.append("public static String ");
+            rstring.append(nowName);
+            rstring.append(" = \"");
+            rstring.append(file.getPath().replace(rootFile.getPath() + File.separator, "").replaceAll("\\\\", "/"));
+            rstring.append("\";\n");
+            useName.add(nowName);
+        }
+
+        return rstring;
+    }
+
+    //获取游戏项目的包路径，用来生成R文件
+    private static String getPackagePath(String root) {
+        String path = root + "core" + File.separator + "src";
+        File file = new File(path);
+        pas.clear();
+        getPack(file);
+        for (File f : pas) {
+            String string = readFileString(f.getAbsolutePath());//获取文件内容
+            string = string.replaceAll("\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");//移除注释
+            if (string.indexOf("extends VGame") == -1) continue;
+            string = string.substring(0, string.indexOf(";")).replaceAll("package", "").trim();
+            packPath = f.getAbsolutePath();
+            return string;
+        }
+        return null;
+    }
+
+    //递归返回一个java文件名
+    static Array<File> pas = new Array<>();
+
+    private static void getPack(File file) {
+        for (File child : file.listFiles()) {
+            if (child.isDirectory()) {//如果是一个文件夹就递归
+                getPack(child);
+            } else if (child.isFile()) {//如果是一个文件，就判断一下是不是需要的文件
+                pas.add(child);
+            }
+        }
+    }
+
+    //读取文件内容
+    public static String readFileString(String fileName) {
+        File file = new File(fileName);
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String tempStr;
+            while ((tempStr = reader.readLine()) != null) {
+                sbf.append(tempStr);
+            }
+            reader.close();
+            return sbf.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return sbf.toString();
+    }
+
 
     public void setListenerOnKeyboardChange(VStage stage, VListenerOnKeyboardChange listener) {
     }
@@ -1779,7 +1975,22 @@ public abstract class VDesktopLauncher implements VListener {
         return game.getLanguage() == null ? true : game.getLanguage().startsWith("zh");
     }
 
-    public void createSDK(){
+    public void createSDK() {
 
+    }
+
+    public final static String[] key_words = new String[]{
+            "default", "public", "class", "package", "new", "int", "boolean", "String", "static", "private", "protected",
+            "void", "short", "long", "float", "double", "enum", "throws", "assert", "finally", "throw", "switch", "case",
+            "try", "super", "return", "true", "false", "for", "else", "if", "do", "while", "continue", "break", "null", "byte",
+            "char", "import", "extends", "implements", "abstract", "interface"
+    };
+
+    //    检查字符串中是否包含java关键字
+    public static boolean checkIncludeKeyWord(String msg) {
+        for (String key : key_words) {
+            if (key.equals(msg)) return true;
+        }
+        return false;
     }
 }
