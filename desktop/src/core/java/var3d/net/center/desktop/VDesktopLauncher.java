@@ -61,6 +61,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.AttributedString;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1808,24 +1811,24 @@ public abstract class VDesktopLauncher implements VListener {
         } // 创建新文件
     }
 
+    private static Array<File> files = new Array<>();
+
     private static StringBuffer getRStringValue(StringBuffer rstring, File rootFile, File file, int idx) {
         if (file.getName().startsWith("."))
             return rstring;
-        if (file.isDirectory()) {
+        if (file.isDirectory()) {//如果是文件夹
+            useName.clear();
             if (file.getName().startsWith("keep")) return rstring;
-            if (file.getName().equals("values") && idx == 1) {
+            if (file.getName().equals("values") && idx == 1) {//如果是values文件夹
                 rstring.append("\n   public static class strings {\n");
                 @SuppressWarnings("rawtypes")
                 ObjectMap properties = new ObjectMap<String, String>();
                 File values = new File(file.getPath() + "/strings.properties");
                 InputStreamReader read = null;
                 try {
-                    read = new InputStreamReader(
-                            new FileInputStream(values), "UTF-8");
+                    read = new InputStreamReader(new FileInputStream(values), "UTF-8");
                 } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 }
                 BufferedReader reader = new BufferedReader(read);
                 try {
@@ -1839,10 +1842,9 @@ public abstract class VDesktopLauncher implements VListener {
                         rstring.append("\";\n");
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
                 rstring.append("   }\n");
-            } else {
+            } else {//如果是其他文件夹
                 if (file.listFiles().length <= 0) return rstring;
                 rstring.append("\n");
                 for (int i = 0; i < idx; i++) {
@@ -1854,7 +1856,21 @@ public abstract class VDesktopLauncher implements VListener {
                     rstring.append(" ");
                 }
                 rstring.append("{\n");
-                for (File child : file.listFiles()) {
+                files.clear();
+                files.addAll(file.listFiles());
+                files.sort(new Comparator<File>() {
+                    public int compare(File o1, File o2) {
+                        if (o1.getName().indexOf(".") != -1 && o1.getName().indexOf(".") != -1) {
+                            String ext1 = o1.getName().substring(o1.getName().lastIndexOf(".") + 1);
+                            String ext2 = o2.getName().substring(o2.getName().lastIndexOf(".") + 1);
+                            int d = ext1.compareTo(ext2);
+                            if (d == 0) return o1.getName().compareTo(o2.getName());
+                            else return d;
+                        }
+                        return -1;
+                    }
+                });
+                for (File child : files) {
                     getRStringValue(rstring, rootFile, child, idx + 1);
                 }
                 for (int i = 0; i < idx; i++) {
@@ -1862,7 +1878,7 @@ public abstract class VDesktopLauncher implements VListener {
                 }
                 rstring.append("}\n\n");
             }
-        } else {
+        } else {//如果是文件
             String nowName;
             if (file.getName().contains(".")) {
                 nowName = file.getName().substring(0, file.getName().indexOf("."));
