@@ -555,7 +555,7 @@ public abstract class VGame implements ApplicationListener {
                 }
                 if (inpacks.size > 0) {//将散图打包到大图
                     if (packer == null)
-                        packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 1, true);
+                        packer = new PixmapPacker(pageWidth, pageWidth, Format.RGBA8888, 2, true);
                     if (atlas == null) atlas = new TextureAtlas();
                     for (String path : inpacks) {
                         try {
@@ -580,7 +580,7 @@ public abstract class VGame implements ApplicationListener {
                 }
                 if (inModels.size > 0) {//将散模型打包到模型库
                     if (packer == null)
-                        packer = new PixmapPacker(pageWidthModel, pageWidthModel, Format.RGBA8888, 1, true);
+                        packer = new PixmapPacker(pageWidthModel, pageWidthModel, Format.RGBA8888, 2, true);
                     if (atlas == null) atlas = new TextureAtlas();
                     for (String path : inModels) {
                         Model addModel = assets.get(path);
