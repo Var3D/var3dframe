@@ -292,6 +292,7 @@ public abstract class VDialog extends Group {
     }
 
     public void playShowActions() {
+        clearActions();
         switch (showActionType) {
             case NOEFFECTE:// 无效果
                 setVisible(true);
@@ -340,6 +341,7 @@ public abstract class VDialog extends Group {
 
 
     public void playHideActions(Runnable runnable) {
+        clearActions();
         switch (hideActionType) {
             case NOEFFECTE:// 无效果
                 runnable.run();
