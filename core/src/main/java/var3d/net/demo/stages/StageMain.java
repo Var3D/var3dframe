@@ -2,13 +2,13 @@ package var3d.net.demo.stages;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import var3d.net.center.VButton;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
@@ -184,7 +184,16 @@ public class StageMain extends VStage {
 //        game.save.putBoolean("testInt", true);
 //        game.save.flush();
 
-        game.getLabel("" + game.save.getBoolean("testInt")).show(Align.center);
+        //game.getLabel("" + game.save.getBoolean("testInt")).show(Align.center);
+
+        Button button = game.getButton().setSize(100, 40).addClicAction().setPosition(getWidth() / 2, getHeight() / 2, Align.center).show();
+        button.add(game.getLabel("зарегистрирован или нет или").setColor(Color.BLACK).getActor());
+
+        Button button2 = game.getButton().setSize(100, 30).addClicAction().setPosition(getWidth() / 2, pref().getY()-10, Align.top).show();
+        button2.add(game.getLabel("Forced adaptation").setColor(Color.BLACK).getActor());
+
+        Button button3 = game.getButton().setSize(260, 30).addClicAction().setPosition(getWidth() / 2, pref().getY()-10, Align.top).show();
+        button3.add(game.getLabel("Forced adaptation").setColor(Color.BLACK).getActor());
 
     }
 //    public boolean keyDown(int keycode) {

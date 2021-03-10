@@ -2415,38 +2415,38 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 创建Button
      */
-    public UI<Button> getButton() {
-        return getUI(new Button(getPointDrawable()));
+    public UI<VButton> getButton() {
+        return getUI(new VButton(getPointDrawable()));
     }
 
     /**
      * 创建Button
      */
-    public UI<Button> getButton(String up) {
-        return getUI(new Button(getDrawable(up)));
+    public UI<VButton> getButton(String up) {
+        return getUI(new VButton(getDrawable(up)));
     }
 
     /**
      * 创建Button
      */
-    public UI<Button> getButton(String up, String down) {
-        return getUI(new Button(getDrawable(up), getDrawable(down)));
+    public UI<VButton> getButton(String up, String down) {
+        return getUI(new VButton(getDrawable(up), getDrawable(down)));
     }
 
     /**
      * 创建Button
      */
-    public UI<Button> getButton(String up, String down, String checked) {
-        return getUI(new Button(getDrawable(up), getDrawable(down), getDrawable(checked)));
+    public UI<VButton> getButton(String up, String down, String checked) {
+        return getUI(new VButton(getDrawable(up), getDrawable(down), getDrawable(checked)));
     }
 
     /**
      * 创建圆角Button
      */
-    public UI<Button> getButton(float width, float height, int radius) {
+    public UI<VButton> getButton(float width, float height, int radius) {
         NinePatch patch = new NinePatch(game.getCircleRectTexture((int) (width * 2), (int) (height * 2), radius));
         NinePatchDrawable drawable = new NinePatchDrawable(patch);
-        Button button = new Button(drawable);
+        VButton button = new VButton(drawable);
         button.setSize(width, height);
         return getUI(button);
     }
