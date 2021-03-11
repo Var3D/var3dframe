@@ -186,7 +186,7 @@ public class StageMain extends VStage {
 
         //game.getLabel("" + game.save.getBoolean("testInt")).show(Align.center);
 
-        Button button = game.getButton().setSize(100, 40).addClicAction().setPosition(getWidth() / 2, getHeight() / 2, Align.center).show();
+        Button button = game.getButton().setSize(100, 40).setRate(0.6f).addClicAction().setPosition(getWidth() / 2, getHeight() / 2, Align.center).show();
         button.add(game.getLabel("зарегистрирован или нет или").setColor(Color.BLACK).getActor());
 
         Button button2 = game.getButton().setSize(100, 30).addClicAction().setPosition(getWidth() / 2, pref().getY()-10, Align.top).show();
