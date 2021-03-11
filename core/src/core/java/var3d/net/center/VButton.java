@@ -24,13 +24,13 @@ public class VButton extends Button {
 
     public <T extends Actor> Cell<T> add(@Null T actor) {
         if (actor instanceof Label) {
-            Label label = (Label) actor;
-            float labelWidth = label.getPrefWidth();
-            float prefFontScale = label.getFontScaleX();
-            String string = String.valueOf(label.getText());
+            Label lab_font = (Label) actor;
+            float labelWidth = lab_font.getPrefWidth();
+            float prefFontScale = lab_font.getFontScaleX();
+            String string = String.valueOf(lab_font.getText());
             if (labelWidth > getWidth()) {//如果字符串比按钮宽
                 if (string.indexOf(" ") == -1) {//如果字符串里不含空格
-                    label.setFontScale((getWidth() * 0.95f * prefFontScale) / labelWidth);
+                    lab_font.setFontScale((getWidth() * 0.95f * prefFontScale) / labelWidth);
                 } else {//如果字符串里含有空格，则将空格替换成换行符
                     String[] strings = string.split(" ");
                     int lenthMax = 0;//计算单词最大字符数
@@ -58,20 +58,20 @@ public class VButton extends Button {
                             out += s + " ";
                         }
                     }
-                    label.setAlignment(Align.center);
-                    label.setText(out);
-                    labelWidth = label.getPrefWidth();
-                    float labelHeight = label.getPrefHeight();
+                    lab_font.setAlignment(Align.center);
+                    lab_font.setText(out);
+                    labelWidth = lab_font.getPrefWidth();
+                    float labelHeight = lab_font.getPrefHeight();
                     float sx = (getWidth() * 0.95f * prefFontScale) / labelWidth;
                     float sy = (getHeight() * 0.95f * prefFontScale) / labelHeight;
                     if (sx < sy) {
-                        label.setFontScale(sx);
+                        lab_font.setFontScale(sx);
                     } else {
-                        label.setFontScale(sy);
+                        lab_font.setFontScale(sy);
                     }
                 }
             }
-            return (Cell<T>) super.add(label);
+            return (Cell<T>) super.add(lab_font);
         } else
             return super.add(actor);
     }
