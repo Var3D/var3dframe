@@ -27,6 +27,7 @@ public class VButton extends Button {
         if (actor instanceof Label) {
             Label label = (Label) actor;
             float labelWidth = label.getPrefWidth();
+            float prefFontScale = label.getFontScaleX();
             String string = String.valueOf(label.getText());
             if (labelWidth > getWidth()) {//如果字符串比按钮宽
                 if (string.indexOf(" ") == -1) {//如果字符串里不含空格
@@ -62,8 +63,8 @@ public class VButton extends Button {
                     label.setText(out);
                     labelWidth = label.getPrefWidth();
                     float labelHeight = label.getPrefHeight();
-                    float sx = (getWidth() * 0.95f) / labelWidth;
-                    float sy = (getHeight() * 0.95f) / labelHeight;
+                    float sx = (getWidth() * 0.95f * prefFontScale) / labelWidth;
+                    float sy = (getHeight() * 0.95f * prefFontScale) / labelHeight;
                     if (sx < sy) {
                         label.setFontScale(sx);
                     } else {
