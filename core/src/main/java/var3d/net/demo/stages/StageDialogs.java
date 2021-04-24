@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Align;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
+import var3d.net.center.component.DialogLoad;
 import var3d.net.demo.dialogs.DialogAD;
 import var3d.net.demo.dialogs.DialogLoginGdx;
 import var3d.net.demo.dialogs.DialogRatio;
@@ -100,6 +101,16 @@ public class StageDialogs extends VStage {
         btn_ad.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.showDialog(DialogAD.class);
+            }
+        });
+
+        //默认loading圈
+        Button btn_load = game.getButton().setColor(Color.valueOf("0075ed")).setSize(120, 40)
+                .setPosition(getLeft(), pref().getY() - 10, Align.topLeft).addClicAction().show();
+        btn_load.add(game.getLabel("Loading圈").setFontScale(0.6f).getActor());
+        btn_load.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.showDialog(DialogLoad.class);
             }
         });
 
