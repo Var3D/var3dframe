@@ -2184,16 +2184,14 @@ public abstract class VGame implements ApplicationListener {
      * 获取drawable
      */
     public TextureRegionDrawable getDrawable(String imageName) {
-        if (imageName == null)
-            return null;
+        if (imageName == null) return null;
         return new TextureRegionDrawable(getTextureRegion(imageName));
     }
 
     /**
      * 获取九宫图
      */
-    public NinePatch getNinePatch(String name, int left, int right, int top,
-                                  int bottom) {
+    public NinePatch getNinePatch(String name, int left, int right, int top, int bottom) {
         return new NinePatch(getTextureRegion(name), left, right, top, bottom);
     }
 
@@ -2426,6 +2424,22 @@ public abstract class VGame implements ApplicationListener {
         NinePatchDrawable drawable = new NinePatchDrawable(patch);
         VButton button = new VButton(drawable);
         button.setSize(width, height);
+        return getUI(button);
+    }
+
+    /**
+     * 创建九宫格Button
+     */
+    public UI<VButton> getButton(String up, int edgeDistance) {
+        return getButton(up, edgeDistance, edgeDistance, edgeDistance, edgeDistance);
+    }
+
+    /**
+     * 创建九宫格Button
+     */
+    public UI<VButton> getButton(String up, int left, int right, int top, int bottom) {
+        NinePatchDrawable drawable = new NinePatchDrawable(game.getNinePatch(up, left, right, top, bottom));
+        VButton button = new VButton(drawable);
         return getUI(button);
     }
 
