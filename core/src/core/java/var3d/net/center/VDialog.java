@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
@@ -144,6 +146,11 @@ public abstract class VDialog extends Group {
      * 当该dialog重新恢复到顶层时调用
      */
     public abstract void resume();
+
+    /**
+     * 当按下后退按钮时执行
+     */
+    public abstract void back();
 
     private void setThis(Actor actor) {
         setSize(actor.getWidth(), actor.getHeight());

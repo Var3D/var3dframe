@@ -1,5 +1,6 @@
 package var3d.net.demo.dialogs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -69,6 +70,11 @@ public class DialogRatio extends VDialog {
     @Override
     public void resume() {
         //当该对话框恢复顶层时调用
+    }
+
+    @Override
+    public void back() {
+        game.removeDialog(this);
     }
 
 }

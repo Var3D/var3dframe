@@ -84,4 +84,9 @@ public class DialogLoad extends VDialog {
     public void resume() {
 
     }
+
+    @Override
+    public void back() {
+
+    }
 }

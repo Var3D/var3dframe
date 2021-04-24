@@ -636,8 +636,10 @@ public abstract class VDesktopLauncher implements VListener {
             case iphoneX_w:
 //                height = 1125;
 //                width = 2436;
-                height = 1242;
-                width = 2688;
+//                height = 1242;
+//                width = 2688;
+                height = 1284;
+                width = 2778;
                 break;
             case iphone_w:
                 height = 1242;
@@ -650,8 +652,10 @@ public abstract class VDesktopLauncher implements VListener {
             case iphoneX_h:
 //                height = 2436;
 //                width = 1125;
-                height = 2688;
-                width = 1242;
+//                height = 2688;
+//                width = 1242;
+                height = 2778;
+                width = 1284;
                 break;
         }
         return getConfig(width, height, bl);

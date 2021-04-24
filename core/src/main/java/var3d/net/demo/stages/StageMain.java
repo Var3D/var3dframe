@@ -181,10 +181,10 @@ public class StageMain extends VStage {
 //        VLabel msg = game.getLabel("我是一个粉刷匠，粉刷本领强").show(this);
 //        msg.setPosition(getWidth() * 0.5f, getHeight() * 0.5f, Align.center);
 
-//        game.save.putBoolean("testInt", true);
-//        game.save.flush();
+        game.save.putString("testInt", "");
+        game.save.flush();
 
-        //game.getLabel("" + game.save.getBoolean("testInt")).show(Align.center);
+        game.getLabel(game.save.getString("testInt")).show(Align.center);
 
         Button button = game.getButton().setSize(100, 40).setRate(0.6f).addClicAction().setPosition(getWidth() / 2, getHeight() / 2, Align.center).show();
         button.add(game.getLabel("зарегистрирован или нет или").setColor(Color.BLACK).getActor());

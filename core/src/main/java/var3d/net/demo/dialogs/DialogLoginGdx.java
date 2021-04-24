@@ -139,4 +139,9 @@ public class DialogLoginGdx extends VDialog {
 
     }
 
+    @Override
+    public void back() {
+
+    }
+
 }

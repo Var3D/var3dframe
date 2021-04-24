@@ -101,6 +101,11 @@ public class DialogMessge extends VDialog {
 
     }
 
+    @Override
+    public void back() {
+
+    }
+
     public static class Model {
         public String messge = "";
         public float time = 3;

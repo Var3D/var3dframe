@@ -286,7 +286,7 @@ public abstract class VStage extends Stage {
     private int prefKey = -1;
 
     public boolean keyDown(int keyCode) {
-        if (isOff == true) return false;
+        if (isOff == true) return super.keyDown(keyCode);
         if (Gdx.app.getType() == ApplicationType.Desktop) {
             if (game.isCloseShortcut()) return super.keyDown(keyCode);
             game.var3dListener.keyDown(keyCode);
@@ -320,7 +320,10 @@ public abstract class VStage extends Stage {
                 }
             }
         } else if (keyCode == Input.Keys.BACK) {
-            if (getRoot().getTouchable() == Touchable.enabled) {
+            if (game.isHaveDialog()) {
+                VDialog dialog = game.getDialogArray().peek();
+                dialog.back();
+            } else if (getRoot().getTouchable() == Touchable.enabled) {
                 back();
             }
         }
@@ -328,7 +331,7 @@ public abstract class VStage extends Stage {
     }
 
     public boolean keyUp(int keyCode) {
-        if (isOff == true) return false;
+        if (isOff == true) return super.keyUp(keyCode);
         if (Gdx.app.getType() == ApplicationType.Desktop) {
             if (game.isCloseShortcut()) return super.keyDown(keyCode);
             game.var3dListener.keyUp(keyCode);

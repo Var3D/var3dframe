@@ -68,4 +68,9 @@ public class DialogTestFull extends VDialog {
         //当该对话框恢复顶层时调用
     }
 
+    @Override
+    public void back() {
+
+    }
+
 }

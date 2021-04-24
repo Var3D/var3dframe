@@ -108,4 +108,9 @@ public class DialogAD extends VDialog {
     public void resume() {
         //当该对话框恢复顶层时调用
     }
+
+    @Override
+    public void back() {
+
+    }
 }
