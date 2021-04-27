@@ -20,8 +20,11 @@ public class DialogMessge extends VDialog {
     public VLabel lab_msg;
     public Image img_bg;
 
+    private boolean isHorizontal;//是否横屏
+
     public DialogMessge(VGame game) {
         super(game);
+        isHorizontal = game.WIDTH >= game.HEIGHT;
     }
 
     @Override
@@ -29,11 +32,11 @@ public class DialogMessge extends VDialog {
         setBackground(game.getUI(new Actor()).setSize(getFullWidth(), getFullHeight()).getActor());
         setShowActions(ActionType.POPUP);
         setHideActions(ActionType.POPUP);
-        img_bg = game.getImage(getWidth()*0.5f, 1).touchOff().show(this);
+        img_bg = game.getImage(isHorizontal ? getWidth() * 0.5f : getWidth() * 0.9f, 1).touchOff().show(this);
         lab_msg = game.getLabel("messge").setColor(Color.DARK_GRAY).touchOff().show(this);
         lab_msg.setWrap(true);
         lab_msg.setAlignment(Align.center);
-        lab_msg.setWidth(getWidth() / 2 - game.getDefaultFontSize()*2);
+        lab_msg.setWidth(img_bg.getWidth()*0.9f);
         lab_msg.setPosition(getWidth() / 2, getHeight() / 2, Align.center);
         addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {

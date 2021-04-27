@@ -10,7 +10,7 @@ public class DesktopLauncher extends VDesktopLauncher {
 
     public static void main(String[] arg) {
         autoTool();//开启工具模式
-        LwjglApplicationConfiguration config = getConfig(Size.iphoneX_w);
+        LwjglApplicationConfiguration config = getConfig(Size.iphoneX_h);
         new LwjglApplication(new Game(new DesktopLauncher()), config);
     }
 

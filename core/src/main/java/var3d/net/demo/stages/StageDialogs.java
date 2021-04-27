@@ -90,7 +90,7 @@ public class StageDialogs extends VStage {
         btn_tost.add(game.getLabel("Tost测试").setFontScale(0.6f).getActor());
         btn_tost.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showMessege("这是一个Tost范例");
+                game.showMessege("这是一个Tost范例,字多一些看看效果如何");
             }
         });
 
