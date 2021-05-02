@@ -96,6 +96,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import de.golfgl.gdxgameanalytics.GameAnalytics;
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
 import var3d.net.center.tool.Reflex;
@@ -292,6 +293,33 @@ public abstract class VGame implements ApplicationListener {
             createFps();
         }
         //autoSetResources();//自动设置R类
+        initGameAnalytics();
+    }
+
+    //游戏统计
+    private GameAnalytics gameAnalytics;
+    private static String GA_APP_KEY, GA_SECRET_KEY;
+
+    private void initGameAnalytics() {
+        if (GA_APP_KEY != null && GA_SECRET_KEY != null) {
+            gameAnalytics = new GameAnalytics();
+            gameAnalytics.setPlatformVersionString("1");
+            gameAnalytics.setGameBuildNumber(var3dListener.getVersionName());
+            gameAnalytics.setPrefs(Gdx.app.getPreferences(getProjectName() + "_gameAnalytics"));
+            gameAnalytics.setGameKey(GA_APP_KEY);
+            gameAnalytics.setGameSecretKey(GA_SECRET_KEY);
+            gameAnalytics.startSession();
+        }
+    }
+
+    /**
+     * 设置游戏统计的id
+     * @param appKey
+     * @param secretKey
+     */
+    public void setGameAnalyticsID(String appKey, String secretKey) {
+        GA_APP_KEY = appKey;
+        GA_SECRET_KEY = secretKey;
     }
 
 //    private void autoSetResources() {
@@ -1201,6 +1229,7 @@ public abstract class VGame implements ApplicationListener {
             stage.pause();
             stage.cancelTouchFocus();
         }
+        if (gameAnalytics != null) gameAnalytics.closeSession();
     }
 
     public void resume() {
@@ -1209,6 +1238,7 @@ public abstract class VGame implements ApplicationListener {
             music.play();
         if (stage != null && isLoading)
             stage.resume();
+        if (gameAnalytics != null) gameAnalytics.startSession();
     }
 
     @Override
