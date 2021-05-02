@@ -32,7 +32,7 @@ android {
     }
     defaultConfig {
         applicationId "var3d.net.demo"
-        minSdkVersion 9
+        minSdkVersion 15
         targetSdkVersion 28
     }
 }
