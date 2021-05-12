@@ -236,6 +236,10 @@ public abstract class VDesktopLauncher implements VListener {
         return null;
     }
 
+    public Array<Object> signOut(Object... obj) {
+        return null;
+    }
+
     @Override
     public Locale getLocale() {
         // TODO Auto-generated method stub

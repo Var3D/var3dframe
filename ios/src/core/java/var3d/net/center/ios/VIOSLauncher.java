@@ -309,6 +309,10 @@ public abstract class VIOSLauncher extends IOSApplication.Delegate implements
         return null;
     }
 
+    public Array<Object> signOut(Object... obj) {
+        return null;
+    }
+
     @Override
     public Locale getLocale() {
         return new Locale(NSLocale.getSystemLocale().toString());

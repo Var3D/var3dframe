@@ -344,6 +344,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         return null;
     }
 
+    public Array<Object> signOut(Object... obj) {
+        return null;
+    }
+
     @Override
     public Locale getLocale() {
         return getResources().getConfiguration().locale;
