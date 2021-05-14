@@ -206,22 +206,22 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
             builder.setTitle(isChinese() ? "喜欢" + app_name + "吗?" : "Do you like " + app_name + "?");// 设置标题
             builder.setIcon(android.R.drawable.btn_star_big_on);
             builder.setMessage(isChinese() ? "去评分鼓励一下！" : "Go to rate and encourage?");// 为对话框设置内容
-            builder.setPositiveButton(isChinese() ? "以后" : "Later", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    hideBottomUIMenu();
-                }
-            });
-            builder.setNegativeButton(isChinese() ? "好的" : "Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    isShowFiveStar = true;
-                    gotoMarket();
-                }
-            });
-            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                    hideBottomUIMenu();
-                }
-            });
+//            builder.setPositiveButton(isChinese() ? "以后" : "Later", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface arg0, int arg1) {
+//                    hideBottomUIMenu();
+//                }
+//            });
+//            builder.setNegativeButton(isChinese() ? "好的" : "Ok", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface arg0, int arg1) {
+//                    isShowFiveStar = true;
+//                    gotoMarket();
+//                }
+//            });
+//            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                public void onCancel(DialogInterface dialog) {
+//                    hideBottomUIMenu();
+//                }
+//            });
             builder.create().show();// 使用show()方法显示对话框
         }
     }
