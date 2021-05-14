@@ -13,13 +13,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,7 +62,6 @@ import var3d.net.center.VStage;
 import var3d.net.center.VTextField;
 import var3d.net.center.freefont.FreeBitmapFont;
 import var3d.net.center.freefont.FreePaint;
-import var3d.net.demo.android.R;
 
 import static android.provider.Settings.ACTION_DATA_ROAMING_SETTINGS;
 
@@ -204,32 +201,28 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
     public void showFiveStarDialog() {
         if (game.save.getBoolean("isShowFiveStared", false) == false) {
-            this.runOnUiThread(new Runnable() {
-                public void run() {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(VAndroidLauncher.this);
-                    String app_name = getString("app_name");
-                    builder.setTitle(isChinese() ? "喜欢" + app_name + "吗?" : "Do you like " + app_name + "?");// 设置标题
-                    builder.setIcon(android.R.drawable.btn_star_big_on);
-                    builder.setMessage(isChinese() ? "去评分鼓励一下！" : "Go to rate and encourage?");// 为对话框设置内容
-                    builder.setPositiveButton(isChinese() ? "以后" : "Later", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            hideBottomUIMenu();
-                        }
-                    });
-                    builder.setNegativeButton(isChinese() ? "好的" : "Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            isShowFiveStar = true;
-                            gotoMarket();
-                        }
-                    });
-                    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        public void onCancel(DialogInterface dialog) {
-                            hideBottomUIMenu();
-                        }
-                    });
-                    builder.create().show();// 使用show()方法显示对话框
+            AlertDialog.Builder builder = new AlertDialog.Builder(VAndroidLauncher.this);
+            String app_name = getString("app_name");
+            builder.setTitle(isChinese() ? "喜欢" + app_name + "吗?" : "Do you like " + app_name + "?");// 设置标题
+            builder.setIcon(android.R.drawable.btn_star_big_on);
+            builder.setMessage(isChinese() ? "去评分鼓励一下！" : "Go to rate and encourage?");// 为对话框设置内容
+            builder.setPositiveButton(isChinese() ? "以后" : "Later", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    hideBottomUIMenu();
                 }
             });
+            builder.setNegativeButton(isChinese() ? "好的" : "Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    isShowFiveStar = true;
+                    gotoMarket();
+                }
+            });
+            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                    hideBottomUIMenu();
+                }
+            });
+            builder.create().show();// 使用show()方法显示对话框
         }
     }
 
@@ -452,8 +445,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         return pixmap;
     }
 
-    public void getTextInput(final TextInputListener listener,
-                             final String title, final String text, final String hint) {
+    public void getTextInput(final TextInputListener listener, final String title, final String text, final String hint) {
         final Context context = getContext();
         runOnUiThread(new Runnable() {
             public void run() {
