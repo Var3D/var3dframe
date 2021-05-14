@@ -13,11 +13,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -208,7 +210,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     String app_name = getString("app_name");
                     builder.setTitle(isChinese() ? "喜欢" + app_name + "吗?" : "Do you like " + app_name + "?");// 设置标题
-                    builder.setIcon(R.drawable.ic_launcher);
+                    builder.setIcon(android.R.drawable.btn_star_big_on);
                     builder.setMessage(isChinese() ? "去评分鼓励一下！" : "Go to rate and encourage?");// 为对话框设置内容
                     builder.setPositiveButton(isChinese() ? "以后" : "Later", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
