@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-import var3d.net.center.VButton;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
@@ -219,7 +218,8 @@ public class StageMain extends VStage {
 
     @Override
     public void show() {
-        game.var3dListener.showFiveStarDialog();
+        //game.var3dListener.showFiveStarDialog();
+        game.showDialog(DialogEsc.class);
     }
 
     @Override
