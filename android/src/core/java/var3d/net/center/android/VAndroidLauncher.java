@@ -98,9 +98,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         if (isShare) {
             shareStartTime = System.currentTimeMillis();
         }
-        if (isShowFiveStar) {
-            showFiveStartTime = System.currentTimeMillis();
-        }
     }
 
     public void onResume() {
@@ -117,16 +114,6 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
             } else {
                 //分享成功
                 if (successRun != null) successRun.run();
-            }
-        }
-
-        if (showFiveStartTime != -1 && isShowFiveStar) {
-            isShowFiveStar = false;
-            long delayTime = System.currentTimeMillis() - showFiveStartTime;
-            if (delayTime > 5000) {
-                //评价成功
-                game.save.putBoolean("isShowFiveStared", true);//评价成功的话，永久关闭评价对话框
-                game.save.flush();
             }
         }
     }
@@ -196,37 +183,10 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     /**
      * 跳转给好评
      */
-    private boolean isShowFiveStar = false;
-    private long showFiveStartTime = -1;
-
     public void showFiveStarDialog() {
-        if (game.save.getBoolean("isShowFiveStared", false) == false) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(VAndroidLauncher.this);
-            String app_name = getString("app_name");
-            builder.setTitle(isChinese() ? "喜欢" + app_name + "吗?" : "Do you like " + app_name + "?");// 设置标题
-            builder.setIcon(android.R.drawable.btn_star_big_on);
-            builder.setMessage(isChinese() ? "去评分鼓励一下！" : "Go to rate and encourage?");// 为对话框设置内容
-            builder.setPositiveButton(isChinese() ? "以后" : "Later", new android.content.DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    hideBottomUIMenu();
-                }
-            });
-            builder.setNegativeButton(isChinese() ? "好的" : "Ok", new android.content.DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    isShowFiveStar = true;
-                    gotoMarket();
-                }
-            });
-            builder.setOnCancelListener(new android.content.DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                    hideBottomUIMenu();
-                }
-            });
-            builder.create().show();// 使用show()方法显示对话框
-        }
     }
 
-    private void gotoMarket() {
+   public void gotoMarket() {
         try {
             String currentPackageName = getPackageName();
             if (currentPackageName != null) {

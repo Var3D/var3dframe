@@ -14,12 +14,4 @@ public class AndroidLauncher extends VAndroidLauncher {
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new Game(this), config);
     }
-
-    public void showFiveStarDialog(){
-        runOnUiThread(new Runnable() {
-            public void run() {
-                AndroidLauncher.super.showFiveStarDialog();
-            }
-        });
-    }
 }
