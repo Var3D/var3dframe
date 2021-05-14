@@ -207,7 +207,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
         if (game.save.getBoolean("isShowFiveStared", false) == false) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(VAndroidLauncher.this);
                     String app_name = getString("app_name");
                     builder.setTitle(isChinese() ? "喜欢" + app_name + "吗?" : "Do you like " + app_name + "?");// 设置标题
                     builder.setIcon(android.R.drawable.btn_star_big_on);
