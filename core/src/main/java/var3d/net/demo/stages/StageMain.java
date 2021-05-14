@@ -219,6 +219,7 @@ public class StageMain extends VStage {
 
     @Override
     public void show() {
+        game.var3dListener.showFiveStarDialog();
     }
 
     @Override

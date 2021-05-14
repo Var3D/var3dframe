@@ -157,8 +157,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
     private Runnable successRun, failureRun;
 
     @Override
-    public void goToShare(String title, String context, String url, byte[] imgByte, final Runnable success
-            , final Runnable failure) {
+    public void goToShare(String title, String context, String url, byte[] imgByte, final Runnable success, final Runnable failure) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         if (title != null && !"".equals(title)) {
@@ -205,7 +204,7 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
 
     public void showFiveStarDialog() {
         if (game.save.getBoolean("isShowFiveStared", false) == false) {
-            runOnUiThread(new Runnable() {
+            this.runOnUiThread(new Runnable() {
                 public void run() {
                     AlertDialog.Builder builder = new AlertDialog.Builder(VAndroidLauncher.this);
                     String app_name = getString("app_name");
@@ -230,26 +229,26 @@ public abstract class VAndroidLauncher extends AndroidApplication implements VLi
                     });
                     builder.create().show();// 使用show()方法显示对话框
                 }
-
-                private void gotoMarket() {
-                    try {
-                        String currentPackageName = getPackageName();
-                        if (currentPackageName != null) {
-                            Uri currentPackageUri = Uri.parse("market://details?id=" + getPackageName());
-                            Intent intent = new Intent(Intent.ACTION_VIEW, currentPackageUri);
-                            intent.setPackage("com.android.vending");
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Uri currentPackageUri = Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName());
-                        Intent intent = new Intent(Intent.ACTION_VIEW, currentPackageUri);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-                }
             });
+        }
+    }
+
+    private void gotoMarket() {
+        try {
+            String currentPackageName = getPackageName();
+            if (currentPackageName != null) {
+                Uri currentPackageUri = Uri.parse("market://details?id=" + getPackageName());
+                Intent intent = new Intent(Intent.ACTION_VIEW, currentPackageUri);
+                intent.setPackage("com.android.vending");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Uri currentPackageUri = Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName());
+            Intent intent = new Intent(Intent.ACTION_VIEW, currentPackageUri);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
