@@ -105,8 +105,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getBoolean(key);
         } catch (Exception e) {
-            return save.getBoolean(key);
+            try {
+                return save.getBoolean(key);
+            } catch (Exception e2) {
+            }
         }
+        return false;
     }
 
     public int getInteger(String key) {
@@ -116,8 +120,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getInt(key);
         } catch (Exception e) {
-            return save.getInteger(key);
+            try {
+                return save.getInteger(key);
+            } catch (Exception e2) {
+            }
         }
+        return 0;
     }
 
     public long getLong(String key) {
@@ -127,8 +135,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getLong(key);
         } catch (Exception e) {
-            return save.getLong(key);
+            try {
+                return save.getLong(key);
+            } catch (Exception e2) {
+            }
         }
+        return 0;
     }
 
     public float getFloat(String key) {
@@ -138,8 +150,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getFloat(key);
         } catch (Exception e) {
-            return save.getFloat(key);
+            try {
+                return save.getFloat(key);
+            } catch (Exception e2) {
+            }
         }
+        return 0;
     }
 
     public String getString(String key) {
@@ -160,8 +176,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getBoolean(key);
         } catch (Exception e) {
-            return save.getBoolean(key, defValue);
+            try {
+                return save.getBoolean(key, defValue);
+            } catch (Exception e2) {
+            }
         }
+        return defValue;
     }
 
     public int getInteger(String key, int defValue) {
@@ -171,8 +191,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getInt(key);
         } catch (Exception e) {
-            return save.getInteger(key, defValue);
+            try {
+                return save.getInteger(key, defValue);
+            } catch (Exception e2) {
+            }
         }
+        return defValue;
     }
 
     public long getLong(String key, long defValue) {
@@ -182,8 +206,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getLong(key);
         } catch (Exception e) {
-            return save.getLong(key, defValue);
+            try {
+                return save.getLong(key, defValue);
+            } catch (Exception e2) {
+            }
         }
+        return defValue;
     }
 
     public float getFloat(String key, float defValue) {
@@ -193,8 +221,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getFloat(key);
         } catch (Exception e) {
-            return save.getFloat(key, defValue);
+            try {
+                return save.getFloat(key, defValue);
+            } catch (Exception e2) {
+            }
         }
+        return defValue;
     }
 
     public String getString(String key, String defValue) {
@@ -204,8 +236,12 @@ public class VPreferences {
             JSONObject object = new JSONObject(dec);
             return object.getString(key);
         } catch (Exception e) {
-            return save.getString(key, defValue);
+            try {
+                return save.getString(key, defValue);
+            } catch (Exception e2) {
+            }
         }
+        return defValue;
     }
 
 

@@ -188,10 +188,10 @@ public class StageMain extends VStage {
         Button button = game.getButton().setSize(100, 40).setRate(0.6f).addClicAction().setPosition(getWidth() / 2, getHeight() / 2, Align.center).show();
         button.add(game.getLabel("зарегистрирован или нет или").setColor(Color.BLACK).getActor());
 
-        Button button2 = game.getButton().setSize(100, 30).addClicAction().setPosition(getWidth() / 2, pref().getY()-10, Align.top).show();
+        Button button2 = game.getButton().setSize(100, 30).addClicAction().setPosition(getWidth() / 2, pref().getY() - 10, Align.top).show();
         button2.add(game.getLabel("Forced adaptation").setColor(Color.BLACK).getActor());
 
-        Button button3 = game.getButton().setSize(260, 30).addClicAction().setPosition(getWidth() / 2, pref().getY()-10, Align.top).show();
+        Button button3 = game.getButton().setSize(260, 30).addClicAction().setPosition(getWidth() / 2, pref().getY() - 10, Align.top).show();
         button3.add(game.getLabel("Forced adaptation").setColor(Color.BLACK).getActor());
 
     }
