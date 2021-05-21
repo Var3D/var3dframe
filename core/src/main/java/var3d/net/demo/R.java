@@ -3,6 +3,12 @@ package var3d.net.demo;
 public class R {
 
 
+   public static class maps {
+      public static String test = "maps/test.png";
+      public static String title = "maps/title.png";
+   }
+
+
    public static class var3d {
       public static String iphonex = "var3d/iphonex.png";
       public static String iphonex_angle = "var3d/iphonex_angle.png";

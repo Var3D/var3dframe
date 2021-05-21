@@ -9,8 +9,8 @@ import var3d.net.demo.Game;
 public class DesktopLauncher extends VDesktopLauncher {
 
     public static void main(String[] arg) {
-        autoTool();//开启工具模式
-        LwjglApplicationConfiguration config = getConfig(Size.iphoneX_h);
+        //autoTool();//开启工具模式
+        LwjglApplicationConfiguration config = getConfig(Size.iphoneX_w);
         new LwjglApplication(new Game(new DesktopLauncher()), config);
     }
 
