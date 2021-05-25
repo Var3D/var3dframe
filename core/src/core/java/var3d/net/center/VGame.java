@@ -980,7 +980,7 @@ public abstract class VGame implements ApplicationListener {
         }
         try {
             if(dialogClass!=null) {
-                dDialog = (VDialog) dialogClass.getConstructor(VGame.class).newInstance(this);
+                dDialog = (VDialog) dialogClass.getConstructor().newInstance();
             }else{
                 dDialog = dialogObject;
             }

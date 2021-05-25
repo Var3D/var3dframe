@@ -54,24 +54,24 @@ public abstract class VStage extends Stage {
     protected HashMap<String, Object> intent;
 
     public VStage() {
-        super(new ScalingViewport(Scaling.stretch, Game.game.WIDTH, Game.game.HEIGHT));
-        set(Game.game);
+        super(new ScalingViewport(Scaling.stretch, VGame.game.WIDTH, VGame.game.HEIGHT));
+        set(VGame.game);
     }
 
     public VStage(boolean isStretching) {
-        super(new ScalingViewport(Scaling.stretch, Game.game.WIDTH, Game.game.HEIGHT));
+        super(new ScalingViewport(Scaling.stretch, VGame.game.WIDTH, VGame.game.HEIGHT));
         this.isStretching = isStretching;
-        set(Game.game);
+        set(VGame.game);
     }
 
     public VStage(Batch batch) {
-        super(new ScalingViewport(Scaling.stretch, Game.game.WIDTH, Game.game.HEIGHT), batch);
-        set(Game.game);
+        super(new ScalingViewport(Scaling.stretch, VGame.game.WIDTH, VGame.game.HEIGHT), batch);
+        set(VGame.game);
     }
 
     public VStage(int width, int height) {
         super(new ScalingViewport(Scaling.stretch, width, height));
-        set(Game.game);
+        set(VGame.game);
     }
 
     private void set(VGame game) {
