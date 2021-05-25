@@ -16,9 +16,6 @@ import var3d.net.center.VGame;
  */
 
 public class DialogRatio extends VDialog {
-    public DialogRatio(VGame game) {
-        super(game);
-    }
 
     @Override
     public void init() {

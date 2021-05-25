@@ -26,10 +26,6 @@ import var3d.net.center.VLabel;
 public class DialogAD extends VDialog {
     private Image img_ad;
 
-    public DialogAD(VGame game) {
-        super(game);
-    }
-
     @Override
     public void init() {
         //设置背景

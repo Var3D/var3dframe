@@ -18,9 +18,6 @@ import var3d.net.center.VTextField;
  */
 
 public class StageTextFeild extends VStage {
-    public StageTextFeild(VGame game) {
-        super(game);
-    }
 
     @Override
     public void init() {
@@ -36,7 +33,7 @@ public class StageTextFeild extends VStage {
         btn_back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 
@@ -94,7 +91,7 @@ public class StageTextFeild extends VStage {
 
     @Override
     public void back() {
-        game.setStage(StageMain.class);
+        game.setStage(new StageMain());
     }
 
     @Override

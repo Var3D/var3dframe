@@ -22,8 +22,8 @@ public class DialogMessge extends VDialog {
 
     private boolean isHorizontal;//是否横屏
 
-    public DialogMessge(VGame game) {
-        super(game);
+    public DialogMessge() {
+        super();
         isHorizontal = game.WIDTH >= game.HEIGHT;
     }
 

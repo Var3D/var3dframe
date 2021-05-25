@@ -28,10 +28,6 @@ public class StageTouchpad extends VStage {
     private float speedX, speedY;
     private boolean isMoveing;
 
-    public StageTouchpad(VGame game) {
-        super(game);
-    }
-
     @Override
     public void init() {
         //设置背景
@@ -49,7 +45,7 @@ public class StageTouchpad extends VStage {
         btn_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 

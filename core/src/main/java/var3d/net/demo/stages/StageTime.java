@@ -17,10 +17,6 @@ public class StageTime extends VStage {
     private int time;
     private VLabel lab_time;
 
-    public StageTime(VGame game) {
-        super(game);
-    }
-
     @Override
     public void init() {
         setBackground(Color.BLACK);
@@ -34,7 +30,7 @@ public class StageTime extends VStage {
         btn_back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 

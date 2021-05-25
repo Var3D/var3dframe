@@ -15,9 +15,6 @@ import var3d.net.center.VStage;
  */
 
 public class StageStages extends VStage {
-    public StageStages(VGame game) {
-        super(game);
-    }
 
     @Override
     public void init() {
@@ -33,7 +30,7 @@ public class StageStages extends VStage {
         btn_back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 
@@ -43,7 +40,7 @@ public class StageStages extends VStage {
         btn_dialog.add(game.getLabel("等比例舞台").setFontScale(0.6f).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.setStage(StageRatio.class);
+                game.setStage(new StageRatio());
             }
         });
 
@@ -53,7 +50,7 @@ public class StageStages extends VStage {
         btn_unRatio.add(game.getLabel("非等比例舞台").setFontScale(0.6f).getActor());
         btn_unRatio.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.setStage(StageUnRatio.class);
+                game.setStage(new StageUnRatio());
             }
         });
 

@@ -38,19 +38,15 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.graphics.g3d.utils.ShapeCache;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -59,7 +55,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
@@ -68,7 +63,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -269,7 +263,7 @@ public abstract class VGame implements ApplicationListener {
         multiplexer = new InputMultiplexer();// 触控实例化
         Gdx.input.setInputProcessor(multiplexer);//
         extColors();//扩展中文颜色
-        stageTop = new StageTop(this);
+        stageTop = new StageTop();
         stageTop.setOff();
         isMusic = save.getBoolean("isMusic", true);
         isSound = save.getBoolean("isSound", true);
@@ -314,6 +308,7 @@ public abstract class VGame implements ApplicationListener {
 
     /**
      * 设置游戏统计的id
+     *
      * @param appKey
      * @param secretKey
      */
@@ -852,7 +847,19 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 允许定义名字来创建多个stage类实例
      */
-    private <T> VStage getStage(Class<T> type, String name) {
+    // private <T> VStage getStage(Class<T> type, String name) {
+    private <T> VStage getStage(Object object) {
+        VStage stageObject = null;
+        Class<T> stageCalss = null;
+        String name;
+        if (object instanceof VStage) {
+            stageObject = (VStage) object;
+            name = stageObject.getClass().getName();
+        } else {
+            stageCalss = (Class<T>) object;
+            name = stageCalss.getName();
+        }
+
         VStage dStage = pool.get(name);
         if (dStage != null) {
             stage = dStage;
@@ -862,7 +869,9 @@ public abstract class VGame implements ApplicationListener {
             return dStage;
         }
         try {
-            dStage = (VStage) type.getConstructor(VGame.class).newInstance(this);
+            if (stageCalss != null)
+                dStage = (VStage) stageCalss.getConstructor(VGame.class).newInstance(this);
+            else dStage = stageObject;
             isLoading = true;
             pool.put(name, dStage);
             return dStage;
@@ -896,7 +905,7 @@ public abstract class VGame implements ApplicationListener {
             return dStage;
         }
         try {
-            dStage = (VStage) type.getConstructor(VGame.class).newInstance(this);
+            dStage = (VStage) type.getConstructor().newInstance();
             isLoading = true;
             pool.put(name, dStage);
             return dStage;
@@ -926,8 +935,7 @@ public abstract class VGame implements ApplicationListener {
      */
     @SuppressWarnings("unchecked")
     public void goBack() {
-        if (prefStage != null)
-            setStage(prefStage);
+        if (prefStage != null) setStage(prefStage);
     }
 
     //获取上一个界面是什么
@@ -952,7 +960,18 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 列表中获取Dialog
      */
-    public <T> VDialog getDialog(Class<T> type) {
+    // public <T> VDialog getDialog(Class<T> type) {
+    public <T> VDialog getDialog(Object object) {
+        VDialog dialogObject = null;
+        Class<T> dialogClass = null;
+        Class<T> type = null;
+        if (object instanceof VDialog) {
+            dialogObject = (VDialog) object;
+            type = (Class<T>) dialogObject.getClass();
+        } else {
+            dialogClass = (Class<T>) object;
+            type = dialogClass;
+        }
         VDialog dDialog = poolDialog.get(type);
         if (dDialog != null) {
             dDialog.addBackgroundAcition();
@@ -960,7 +979,11 @@ public abstract class VGame implements ApplicationListener {
             return dDialog;
         }
         try {
-            dDialog = (VDialog) type.getConstructor(VGame.class).newInstance(this);
+            if(dialogClass!=null) {
+                dDialog = (VDialog) dialogClass.getConstructor(VGame.class).newInstance(this);
+            }else{
+                dDialog = dialogObject;
+            }
             poolDialog.put(type, dDialog);
             dDialog.init();
             dDialog.addBackgroundAcition();
@@ -984,10 +1007,11 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 显示dialog并禁止下层响应
      *
-     * @param dialog
+     * @param
      * @return
      */
-    public <T> VDialog showDialog(Class<T> dialog) {
+    // public <T> VDialog showDialog(Class<T> dialog) {
+    public <T> VDialog showDialog(Object object) {
         // 禁止其他dialog响应
         for (VDialog dia : poolDialog.values()) {
             dia.pause();
@@ -999,7 +1023,7 @@ public abstract class VGame implements ApplicationListener {
             stage.cancelTouchFocus();
             stage.getRoot().setTouchable(Touchable.disabled);
         }
-        VDialog dia = getDialog(dialog);
+        VDialog dia = getDialog(object);
         dia.setVisible(false);
         dia.setTouchable(Touchable.enabled);
         dia.playShowActions();
@@ -1014,7 +1038,7 @@ public abstract class VGame implements ApplicationListener {
 
     public void showMessege(String msg, float time) {
         setUserData(DialogMessge.MODEL, new DialogMessge.Model(msg, time));
-        showDialog(DialogMessge.class);
+        showDialog(new DialogMessge());
     }
 
     //移除调用这句代码之处的dialog
@@ -1124,16 +1148,31 @@ public abstract class VGame implements ApplicationListener {
 
     public <T> void setStage(Class<T> type) {
         HashMap<String, Object> intent = new HashMap<>();
-        setStage(type, type.getName(), intent);
+        setStage(type, intent);
+    }
+
+    /**
+     * 新增普通设置界面的方法，以便混淆
+     */
+    public void setStage(VStage newStage) {
+        HashMap<String, Object> intent = new HashMap<>();
+        setStage(newStage, intent);
     }
 
     public <T> void setNewStage(Class<T> type) {
         HashMap<String, Object> intent = new HashMap<>();
         removeStage(type);
-        setStage(type, type.getName(), intent);
+        setStage(type, intent);
     }
 
-    public <T> void setStage(Class<T> type, String name, HashMap<String, Object> intent) {
+    public void setNewStage(VStage newStage) {
+        HashMap<String, Object> intent = new HashMap<>();
+        removeStage(newStage.getClass());
+        setStage(newStage, intent);
+    }
+
+    // public <T> void setStage(Class<T> type, String name, HashMap<String, Object> intent) {
+    public <T> void setStage(Object object, HashMap<String, Object> intent) {
         isLoading = false;
         if (stage != null) {
             if (input != null) {
@@ -1151,8 +1190,10 @@ public abstract class VGame implements ApplicationListener {
         } else {
             addProcessor(stageTop);
         }
+
         stage = null;
-        stage = getStage(type, name);
+        stage = getStage(object);
+
         if (stage != null) stage.setIntent(intent);
         do {
             if (stage != null) {
@@ -1202,7 +1243,7 @@ public abstract class VGame implements ApplicationListener {
 
     public <T> void addStage(Class<T> type, HashMap<String, Object> intent) {
         stageStack.push(type);
-        setStage(type, type.getName(), intent);
+        setStage(type, intent);
 //        getStage(type).setIntent(intent);
     }
 
@@ -1210,7 +1251,7 @@ public abstract class VGame implements ApplicationListener {
         if (stageStack.size() > 0) {
             stageStack.pop();
             if (stageStack.size() > 0) {
-                setStage(stageStack.peek(), stageStack.peek().getName(), intent);
+                setStage(stageStack.peek(), intent);
 //                getStage(stageStack.peek()).setIntent(intent);
             }
         }
@@ -1496,7 +1537,7 @@ public abstract class VGame implements ApplicationListener {
                     removeAllDialog();
                 }
                 for (VDialog dialog : dialogs) {
-                    showDialog(dialog.getClass());
+                    showDialog(dialog);
                 }
                 //刷新帧,根据截图界面运行得时长得到应该刷新多少帧(针对非随机界面这样已经足够了,对于随机界面无解,包括游戏正文界面)
                 for (int i = 0; i < refushFpsNumber; i++) {

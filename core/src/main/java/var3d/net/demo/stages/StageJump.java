@@ -23,10 +23,6 @@ public class StageJump extends VStage {
     private float vx, vy;
     private float Gravity = 0.5f;
 
-    public StageJump(VGame game) {
-        super(game);
-    }
-
     @Override
     public void init() {
         //创建标题
@@ -39,7 +35,7 @@ public class StageJump extends VStage {
         btn_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 

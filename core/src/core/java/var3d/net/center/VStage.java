@@ -21,8 +21,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import var3d.net.center.freefont.FreeBitmapFont;
-import var3d.net.center.tool.Reflex;
+import var3d.net.demo.Game;
 
 public abstract class VStage extends Stage {
     public VGame game;
@@ -54,25 +53,25 @@ public abstract class VStage extends Stage {
 
     protected HashMap<String, Object> intent;
 
-    public VStage(VGame game) {
-        super(new ScalingViewport(Scaling.stretch, game.WIDTH, game.HEIGHT));
-        set(game);
+    public VStage() {
+        super(new ScalingViewport(Scaling.stretch, Game.game.WIDTH, Game.game.HEIGHT));
+        set(Game.game);
     }
 
-    public VStage(VGame game, boolean isStretching) {
-        super(new ScalingViewport(Scaling.stretch, game.WIDTH, game.HEIGHT));
+    public VStage(boolean isStretching) {
+        super(new ScalingViewport(Scaling.stretch, Game.game.WIDTH, Game.game.HEIGHT));
         this.isStretching = isStretching;
-        set(game);
+        set(Game.game);
     }
 
-    public VStage(VGame game, Batch batch) {
-        super(new ScalingViewport(Scaling.stretch, game.WIDTH, game.HEIGHT), batch);
-        set(game);
+    public VStage(Batch batch) {
+        super(new ScalingViewport(Scaling.stretch, Game.game.WIDTH, Game.game.HEIGHT), batch);
+        set(Game.game);
     }
 
-    public VStage(VGame game, int width, int height) {
+    public VStage(int width, int height) {
         super(new ScalingViewport(Scaling.stretch, width, height));
-        set(game);
+        set(Game.game);
     }
 
     private void set(VGame game) {

@@ -20,9 +20,6 @@ import var3d.net.demo.R;
  */
 
 public class StageActors extends VStage {
-    public StageActors(VGame game) {
-        super(game);
-    }
 
     @Override
     public void init() {
@@ -38,7 +35,7 @@ public class StageActors extends VStage {
         btn_back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 
@@ -82,7 +79,7 @@ public class StageActors extends VStage {
 
     @Override
     public void back() {
-        game.setStage(StageMain.class);
+        game.setStage(new StageMain());
     }
 
     @Override

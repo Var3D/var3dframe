@@ -35,6 +35,16 @@ android {
         minSdkVersion 15
         targetSdkVersion 28
     }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {//测试开启混淆
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 // called every time gradle gets executed, takes the native dependencies of

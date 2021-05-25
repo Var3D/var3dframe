@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
+import var3d.net.demo.Game;
 import var3d.net.demo.R;
 
 public class Stage3DTest extends VStage {
@@ -30,8 +31,8 @@ public class Stage3DTest extends VStage {
     public ModelBatch modelBatch;//模型绘制器（类似于Batch）
     public Array<ModelInstance> instances = new Array<>();
 
-    public Stage3DTest(VGame game) {
-        super(game);
+    public Stage3DTest() {
+        super();
         game.loadToModelAll(R.model.test);//将模型打包到模型库(多个模型的纹理将被打包为大图)
     }
 
@@ -51,7 +52,7 @@ public class Stage3DTest extends VStage {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
                 game.removeProcessor(camController);//自己添加的操控对象需要自己移除
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 

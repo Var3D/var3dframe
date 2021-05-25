@@ -15,10 +15,6 @@ import var3d.net.center.VGame;
  */
 
 public class DialogTestFull extends VDialog {
-    public DialogTestFull(VGame game) {
-        //super(game, true);//isStretching为true则为拉伸适配
-        super(game);
-    }
 
     @Override
     public void init() {

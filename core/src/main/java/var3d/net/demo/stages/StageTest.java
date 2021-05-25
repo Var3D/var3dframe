@@ -23,8 +23,8 @@ public class StageTest extends VStage {
     private VLabel txt_logo;
     private Button btn_tost, btn_dialog, btn_dialogfull;
 
-    public StageTest(VGame game) {
-        super(game, true);
+    public StageTest() {
+        super(true);
         game.loadFolderToPack(R.image.class);
     }
 
@@ -43,7 +43,7 @@ public class StageTest extends VStage {
         btn_tost.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.setUserData(DialogMessge.MODEL, new DialogMessge.Model("这是一个Tost范例"));
-                game.showDialog(DialogMessge.class);
+                game.showDialog(new DialogMessge());
             }
         });
 
@@ -53,7 +53,7 @@ public class StageTest extends VStage {
         btn_dialog.add(game.getLabel("等比例对话框").getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogRatio.class);
+                game.showDialog(new DialogRatio());
             }
         });
 
@@ -63,7 +63,7 @@ public class StageTest extends VStage {
         btn_dialogfull.add(game.getLabel("拉伸全屏对话框").getActor());
         btn_dialogfull.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogTestFull.class);
+                game.showDialog(new DialogTestFull());
             }
         });
 

@@ -29,10 +29,6 @@ public class DialogLoad extends VDialog {
     private Group group;
     public Button btn_close;
 
-    public DialogLoad(VGame game) {
-        super(game);
-    }
-
     @Override
     public void init() {
         setBackground(Color.CLEAR);

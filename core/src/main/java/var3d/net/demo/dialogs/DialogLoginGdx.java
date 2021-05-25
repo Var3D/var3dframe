@@ -23,10 +23,6 @@ import var3d.net.center.VTextField;
 public class DialogLoginGdx extends VDialog {
     private VTextField field_user,field_password;
 
-    public DialogLoginGdx(VGame game) {
-        super(game);
-    }
-
     @Override
     public void init() {
         //设置背景

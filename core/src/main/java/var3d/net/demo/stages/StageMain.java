@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Align;
 import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
+import var3d.net.demo.Game;
 import var3d.net.demo.R;
 
 /**
@@ -18,8 +19,8 @@ import var3d.net.demo.R;
  */
 
 public class StageMain extends VStage {
-    public StageMain(VGame game) {
-        super(game, false);
+    public StageMain() {
+        super(false);
     }
 
     @Override
@@ -35,7 +36,7 @@ public class StageMain extends VStage {
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageDialogs.class);
+                game.setStage(new StageDialogs());
                 game.playSound(R.sound.click);
             }
         });
@@ -47,7 +48,7 @@ public class StageMain extends VStage {
         btn_stage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageStages.class);
+                game.setStage(new StageStages());
                 game.playSound(R.sound.bear_body);
             }
         });
@@ -59,7 +60,7 @@ public class StageMain extends VStage {
         btn_actors.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageActors.class);
+                game.setStage(new StageActors());
             }
         });
 
@@ -70,7 +71,7 @@ public class StageMain extends VStage {
         btn_textfeild.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageTextFeild.class);
+                game.setStage(new StageTextFeild());
             }
         });
 
@@ -81,7 +82,7 @@ public class StageMain extends VStage {
         btn_card.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageCards.class);
+                game.setStage(new StageCards());
             }
         });
 
@@ -115,7 +116,7 @@ public class StageMain extends VStage {
         btn_touchpad.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setNewStage(StageTouchpad.class);
+                game.setNewStage(new StageTouchpad());
             }
         });
 
@@ -127,7 +128,7 @@ public class StageMain extends VStage {
         btn_jump.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setNewStage(StageJump.class);
+                game.setNewStage(new StageJump());
             }
         });
 
@@ -151,7 +152,7 @@ public class StageMain extends VStage {
         btn_time.add(game.getLabel("计时器例子").setFontScale(0.6f).getActor());
         btn_time.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.setStage(StageTime.class);
+                game.setStage(new StageTime());
             }
         });
 
@@ -161,7 +162,7 @@ public class StageMain extends VStage {
         btn_stage3d.add(game.getLabel("3D示例").setFontScale(0.6f).getActor());
         btn_stage3d.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.setStage(Stage3DTest.class);
+                game.setStage(new Stage3DTest());
             }
         });
 

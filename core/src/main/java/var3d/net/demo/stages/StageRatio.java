@@ -16,9 +16,6 @@ import var3d.net.center.VStage;
  */
 
 public class StageRatio extends VStage {
-    public StageRatio(VGame game) {
-        super(game);
-    }
 
     @Override
     public void init() {
@@ -32,7 +29,7 @@ public class StageRatio extends VStage {
         btn_close.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //舞台其实不能关闭,只能跳转
-                game.setStage(StageStages.class);
+                game.setStage(new StageStages());
             }
         });
 

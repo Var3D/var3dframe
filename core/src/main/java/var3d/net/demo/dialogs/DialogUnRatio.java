@@ -15,8 +15,8 @@ import var3d.net.center.VGame;
  */
 
 public class DialogUnRatio extends VDialog {
-    public DialogUnRatio(VGame game) {
-        super(game, true);
+    public DialogUnRatio() {
+        super(true);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class DialogUnRatio extends VDialog {
         btn_dialog.add(game.getLabel("对话框堆叠测试").setFontScale(0.5f).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogRatio.class);
+                game.showDialog(new DialogRatio());
             }
         });
         //关闭按钮

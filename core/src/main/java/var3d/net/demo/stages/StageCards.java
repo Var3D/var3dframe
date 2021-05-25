@@ -13,12 +13,7 @@ import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
 
-public class StageCards extends VStage
-{
-    public StageCards(VGame game)
-    {
-        super(game);
-    }
+public class StageCards extends VStage {
 
     VLabel[] labels = {
             game.getLabel("小").getActor(),
@@ -26,9 +21,9 @@ public class StageCards extends VStage
             game.getLabel("\n\n    大    \n\n").getActor()
     };
     int labelsIndex = 0;
+
     @Override
-    public void init()
-    {
+    public void init() {
 
         //设置背景
         setBackground(Color.DARK_GRAY);
@@ -42,14 +37,14 @@ public class StageCards extends VStage
         btn_back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 
         final VCard vCard = new VCard(labels[0], new NinePatchDrawable(game.getNinePatch("image/card_background.png", 8)).tint(Color.GRAY));
-        game.getUI(vCard).setPosition(200,200).show();
+        game.getUI(vCard).setPosition(200, 200).show();
 
-        addAction(Actions.forever(Actions.delay(1f,Actions.run(new Runnable() {
+        addAction(Actions.forever(Actions.delay(1f, Actions.run(new Runnable() {
             @Override
             public void run() {
                 vCard.changeActor(labels[labelsIndex = (labelsIndex + 1) % labels.length]);
@@ -59,8 +54,7 @@ public class StageCards extends VStage
     }
 
     @Override
-    public void draw()
-    {
+    public void draw() {
         super.draw();
     }
 
@@ -69,8 +63,7 @@ public class StageCards extends VStage
     }
 
     @Override
-    public void reStart()
-    {
+    public void reStart() {
 
     }
 
@@ -80,26 +73,22 @@ public class StageCards extends VStage
     }
 
     @Override
-    public void back()
-    {
+    public void back() {
 
     }
 
     @Override
-    public void pause()
-    {
+    public void pause() {
 
     }
 
     @Override
-    public void resume()
-    {
+    public void resume() {
 
     }
 
     @Override
-    public void changing(float width, float height)
-    {
+    public void changing(float width, float height) {
 
     }
 }

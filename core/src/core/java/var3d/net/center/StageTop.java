@@ -3,10 +3,6 @@ package var3d.net.center;
 
 public class StageTop extends VStage {
 
-	public StageTop(VGame game) {
-		super(game);
-	}
-
 	public void init() {
 
 	}

@@ -10,6 +10,7 @@ import var3d.net.center.VGame;
 import var3d.net.center.VLabel;
 import var3d.net.center.VStage;
 import var3d.net.center.component.DialogLoad;
+import var3d.net.demo.Game;
 import var3d.net.demo.dialogs.DialogAD;
 import var3d.net.demo.dialogs.DialogLoginGdx;
 import var3d.net.demo.dialogs.DialogRatio;
@@ -21,9 +22,6 @@ import var3d.net.demo.dialogs.DialogUnRatio;
  */
 
 public class StageDialogs extends VStage {
-    public StageDialogs(VGame game) {
-        super(game);
-    }
 
     @Override
     public void init() {
@@ -40,7 +38,7 @@ public class StageDialogs extends VStage {
         btn_back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 //stage跳转
-                game.setStage(StageMain.class);
+                game.setStage(new StageMain());
             }
         });
 
@@ -50,7 +48,7 @@ public class StageDialogs extends VStage {
         btn_dialog.add(game.getLabel("等比例对话框").setFontScale(0.6f).getActor());
         btn_dialog.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogRatio.class);
+                game.showDialog(new DialogRatio());
             }
         });
 
@@ -60,7 +58,7 @@ public class StageDialogs extends VStage {
         btn_unRatio.add(game.getLabel("非等比例对话框").setFontScale(0.6f).getActor());
         btn_unRatio.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogUnRatio.class);
+                game.showDialog(new DialogUnRatio());
             }
         });
 
@@ -70,7 +68,7 @@ public class StageDialogs extends VStage {
         btn_full.add(game.getLabel("全屏对话框").setFontScale(0.6f).getActor());
         btn_full.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogTestFull.class);
+                game.showDialog(new DialogTestFull());
             }
         });
 
@@ -80,7 +78,7 @@ public class StageDialogs extends VStage {
         btn_login_gdx.add(game.getLabel("登录(gdx输入)").setFontScale(0.6f).getActor());
         btn_login_gdx.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogLoginGdx.class);
+                game.showDialog(new DialogLoginGdx());
             }
         });
 
@@ -100,7 +98,7 @@ public class StageDialogs extends VStage {
         btn_ad.add(game.getLabel("自推广广告").setFontScale(0.6f).getActor());
         btn_ad.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogAD.class);
+                game.showDialog(new DialogAD());
             }
         });
 
@@ -110,7 +108,7 @@ public class StageDialogs extends VStage {
         btn_load.add(game.getLabel("Loading圈").setFontScale(0.6f).getActor());
         btn_load.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.showDialog(DialogLoad.class);
+                game.showDialog(new DialogLoad());
             }
         });
 

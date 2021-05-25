@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  */
 public class StageLoad extends VStage {
 
-    public StageLoad(VGame game) {
-        super(game);
+    public StageLoad() {
+        super();
         setBackground(Color.DARK_GRAY);
     }
 

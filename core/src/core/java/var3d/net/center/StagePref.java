@@ -8,8 +8,8 @@ public class StagePref extends VStage {
 	private Image bg;
 	private boolean isVisible = true;
 
-	public StagePref(VGame game) {
-		super(game);
+	public StagePref() {
+		super();
 		bg = game.getImage(game.WIDTH, game.HEIGHT, Color.BLACK).getActor();
 		bg.setTouchable(Touchable.disabled);
 		addActor(bg);
