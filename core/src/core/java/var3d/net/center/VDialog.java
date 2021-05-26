@@ -7,13 +7,9 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
-
-import var3d.net.demo.Game;
 
 public abstract class VDialog extends Group {
     public VGame game;
@@ -46,7 +42,7 @@ public abstract class VDialog extends Group {
 
     public VDialog(boolean isStretching) {
         this.isStretching = isStretching;
-        this.game = Game.game;
+        this.game = VGame.game;
         stageTop = game.getTopStage();
         //在有内置虚拟按钮的安卓上会出现屏幕分辨率被改变的状况造成遮盖层无法完全覆盖底层,故强制放大1.5倍解决这个问题
         bg0 = game.getImage(stageTop.getFullWidth() * 1.5f, stageTop.getFullHeight() * 1.5f, Color.BLACK)
