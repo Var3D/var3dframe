@@ -216,7 +216,7 @@ public abstract class VDialog extends Group {
 
     //设置一层看不见的背景
     public void setBackground(float width, float height) {
-        setBackground(game.getUI(Actor.class).setSize(width, height).getActor());
+        setBackground(game.getUI(new Actor()).setSize(width, height).getActor());
     }
 
     //设置全屏背景
