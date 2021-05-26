@@ -1992,43 +1992,43 @@ public abstract class VGame implements ApplicationListener {
     /**
      * 创建UI
      */
-    public <T extends Actor> UI<T> getUI(Class<T> type, Object... objects) {
-        if (objects.length == 0) {
-            try {
-                T actor = type.getConstructor().newInstance();
-                return getUI(actor);
-            } catch (Exception ex3) {
-                try {
-                    T actor = type.getConstructor(VGame.class).newInstance(this);
-                    return getUI(actor);
-                } catch (Exception ex4) {
-                }
-            }
-        } else {
-            try {
-                Class<?> types[] = new Class[objects.length];
-                for (int i = 0; i < objects.length; i++) {
-                    if (objects[i] instanceof VGame) {
-                        types[i] = VGame.class;
-                    } else types[i] = objects[i].getClass();
-                }
-                T actor = type.getConstructor(types).newInstance(objects);
-                return getUI(actor);
-            } catch (Exception ex) {
-                try {
-                    Class<?> types[] = new Class[objects.length];
-                    for (int i = 0; i < objects.length; i++) {
-                        types[i] = objects[i].getClass();
-                    }
-                    T actor = type.getConstructor(types).newInstance(objects);
-                    return getUI(actor);
-                } catch (Exception ex2) {
-                    ex2.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
+//    public <T extends Actor> UI<T> getUI(Class<T> type, Object... objects) {
+//        if (objects.length == 0) {
+//            try {
+//                T actor = type.getConstructor().newInstance();
+//                return getUI(actor);
+//            } catch (Exception ex3) {
+//                try {
+//                    T actor = type.getConstructor(VGame.class).newInstance(this);
+//                    return getUI(actor);
+//                } catch (Exception ex4) {
+//                }
+//            }
+//        } else {
+//            try {
+//                Class<?> types[] = new Class[objects.length];
+//                for (int i = 0; i < objects.length; i++) {
+//                    if (objects[i] instanceof VGame) {
+//                        types[i] = VGame.class;
+//                    } else types[i] = objects[i].getClass();
+//                }
+//                T actor = type.getConstructor(types).newInstance(objects);
+//                return getUI(actor);
+//            } catch (Exception ex) {
+//                try {
+//                    Class<?> types[] = new Class[objects.length];
+//                    for (int i = 0; i < objects.length; i++) {
+//                        types[i] = objects[i].getClass();
+//                    }
+//                    T actor = type.getConstructor(types).newInstance(objects);
+//                    return getUI(actor);
+//                } catch (Exception ex2) {
+//                    ex2.printStackTrace();
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     /**
      * 创建Image
