@@ -128,7 +128,7 @@ public abstract class VGame implements ApplicationListener {
     private final HashMap<String, FreeBitmapFont> fonts = new HashMap<String, FreeBitmapFont>();// 字体列表
     // private String prefStageName;// 上一个页面的名字
     @SuppressWarnings("rawtypes")
-    private Class prefStage;
+    private VStage prefStage;
     public int fontSize = 30;
     private FreePaint paint;
     public VBundle bundle;// 文本国际化
@@ -939,7 +939,7 @@ public abstract class VGame implements ApplicationListener {
     }
 
     //获取上一个界面是什么
-    public Class getPrefStage() {
+    public VStage getPrefStage() {
         return prefStage;
     }
 
@@ -961,46 +961,18 @@ public abstract class VGame implements ApplicationListener {
      * 列表中获取Dialog
      */
     // public <T> VDialog getDialog(Class<T> type) {
-    public <T> VDialog getDialog(Object object) {
-        VDialog dialogObject = null;
-        Class<T> dialogClass = null;
-        Class<T> type = null;
-        if (object instanceof VDialog) {
-            dialogObject = (VDialog) object;
-            type = (Class<T>) dialogObject.getClass();
-        } else {
-            dialogClass = (Class<T>) object;
-            type = dialogClass;
-        }
-        VDialog dDialog = poolDialog.get(type);
+    public <T> VDialog getDialog(VDialog dialog) {
+        VDialog dDialog = poolDialog.get(dialog.getClass());
         if (dDialog != null) {
             dDialog.addBackgroundAcition();
             dDialog.reStart();
             return dDialog;
         }
-        try {
-            if(dialogClass!=null) {
-                dDialog = (VDialog) dialogClass.getConstructor().newInstance();
-            }else{
-                dDialog = dialogObject;
-            }
-            poolDialog.put(type, dDialog);
-            dDialog.init();
-            dDialog.addBackgroundAcition();
-            dDialog.start();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        dDialog = dialog;
+        poolDialog.put(dialog.getClass(), dDialog);
+        dDialog.init();
+        dDialog.addBackgroundAcition();
+        dDialog.start();
         return dDialog;
     }
 
@@ -1011,7 +983,7 @@ public abstract class VGame implements ApplicationListener {
      * @return
      */
     // public <T> VDialog showDialog(Class<T> dialog) {
-    public <T> VDialog showDialog(Object object) {
+    public <T> VDialog showDialog(VDialog dialog) {
         // 禁止其他dialog响应
         for (VDialog dia : poolDialog.values()) {
             dia.pause();
@@ -1023,7 +995,7 @@ public abstract class VGame implements ApplicationListener {
             stage.cancelTouchFocus();
             stage.getRoot().setTouchable(Touchable.disabled);
         }
-        VDialog dia = getDialog(object);
+        VDialog dia = getDialog(dialog);
         dia.setVisible(false);
         dia.setTouchable(Touchable.enabled);
         dia.playShowActions();
@@ -1146,10 +1118,10 @@ public abstract class VGame implements ApplicationListener {
     private InputAdapter input;
     private Set<String> stageNames = new HashSet<String>();//被创建过的stage的名字会被永久保存在这里
 
-    public <T> void setStage(Class<T> type) {
-        HashMap<String, Object> intent = new HashMap<>();
-        setStage(type, intent);
-    }
+//    public <T> void setStage(Class<T> type) {
+//        HashMap<String, Object> intent = new HashMap<>();
+//        setStage(type, intent);
+//    }
 
     /**
      * 新增普通设置界面的方法，以便混淆
@@ -1159,11 +1131,11 @@ public abstract class VGame implements ApplicationListener {
         setStage(newStage, intent);
     }
 
-    public <T> void setNewStage(Class<T> type) {
-        HashMap<String, Object> intent = new HashMap<>();
-        removeStage(type);
-        setStage(type, intent);
-    }
+//    public <T> void setNewStage(Class<T> type) {
+//        HashMap<String, Object> intent = new HashMap<>();
+//        removeStage(type);
+//        setStage(type, intent);
+//    }
 
     public void setNewStage(VStage newStage) {
         HashMap<String, Object> intent = new HashMap<>();
@@ -1182,7 +1154,7 @@ public abstract class VGame implements ApplicationListener {
                 multiplexer.removeProcessor(gesture);
             }
             addProcessor(stageTop);
-            prefStage = stage.getClass();
+            prefStage = stage;
             //将当前的 stage 回归原位
             stage.getRoot().clearActions();
             stage.getRoot().setPosition(stage.getStartX(), stage.getStartY());
@@ -1501,7 +1473,7 @@ public abstract class VGame implements ApplicationListener {
         //截图前本来的语言
         String prefLanguage = language;
         //遍历多语言生成相应的界面
-        final Class<VStage> nowStage = (Class<VStage>) stage.getClass();
+        final VStage nowStage = stage;
         //判断是否正在显示dialog
         long nowTime = System.currentTimeMillis();
         long delayTime = nowTime - stageStartTime;
@@ -1516,7 +1488,7 @@ public abstract class VGame implements ApplicationListener {
         stageStartTime = System.currentTimeMillis();
     }
 
-    private void runtime(final Class<VStage> nowStage, final String in_language, final boolean isShoot, final int refushFpsNumber) {
+    private void runtime(final VStage nowStage, final String in_language, final boolean isShoot, final int refushFpsNumber) {
         Gdx.app.postRunnable(new Runnable() {
             public void run() {
                 language = in_language;
@@ -1568,7 +1540,7 @@ public abstract class VGame implements ApplicationListener {
     public void switchLanguage(boolean isInverse) {
         // 分析有多少种语言
         createLanguagesName();
-        Class<VStage> nowStage = (Class<VStage>) stage.getClass();
+        VStage nowStage = stage;
         if (isInverse) {//如果反方向轮训
             if (languageIndex == 0) {
                 languageIndex = languageNames.size - 1;

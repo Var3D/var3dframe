@@ -21,8 +21,6 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import var3d.net.demo.Game;
-
 public abstract class VStage extends Stage {
     public VGame game;
     private String name = "";
