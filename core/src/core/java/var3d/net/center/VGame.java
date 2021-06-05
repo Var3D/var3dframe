@@ -1041,6 +1041,7 @@ public abstract class VGame implements ApplicationListener {
         dialog.playHideActions(new Runnable() {
             public void run() {
                 dialog.remove();
+                dialog.onRemove();
                 // 遍历获取顶层所有对话框对象
                 Array<VDialog> dialogs = getDialogArray();
                 if (dialogs.size > 0) {

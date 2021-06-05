@@ -131,6 +131,12 @@ public abstract class VDialog extends Group {
     public abstract void show();
 
     /**
+     * 当dialog被移除时执行
+     */
+    public void onRemove() {
+    }
+
+    /**
      * 弹出dialog仅执行第一次
      */
     public abstract void start();
