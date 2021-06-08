@@ -1274,6 +1274,7 @@ public abstract class VGame implements ApplicationListener {
      * 加载一个资源
      */
     public <T> void load(Class<T> type, String name) {
+        if (assets.contains(name)) return;
         if (type.equals(TiledMap.class)) {
             assets.setLoader(TiledMap.class, new TmxMapLoader());
         } else if (isProtect && !isReProtect) {
@@ -1289,6 +1290,7 @@ public abstract class VGame implements ApplicationListener {
     private Array<String> inpacks = new Array<String>();
 
     public void loadToPack(String name) {
+        if (assets.contains(name)) return;
         try {
             if (isProtect && !isReProtect) {
                 assets.load(name, PixmapPro.class);
@@ -1321,6 +1323,7 @@ public abstract class VGame implements ApplicationListener {
     private Array<String> inModels = new Array<String>();
 
     public void loadToModel(String name) {
+        if(assets.contains(name))return;
         assets.load(name, Model.class);
         inModels.add(name);
     }
