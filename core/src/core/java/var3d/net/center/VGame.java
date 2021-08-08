@@ -1825,7 +1825,8 @@ public abstract class VGame implements ApplicationListener {
      */
     public void playMusic(String soundName) {
         if (music != null)
-            music.stop();
+            //music.stop();
+            music.pause();
         if (isMusic == false)
             return;
         if (assets.isLoaded(soundName, Music.class) == true) {
